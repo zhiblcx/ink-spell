@@ -1,0 +1,37 @@
+@import url('cn-fontsource-hongleixingshu-regular/font.css');
+.photo {
+  position: absolute;
+  top: 0;
+  border-radius: 0%;
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.photo::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent 50%, #222);
+}
+
+.card:hover .photo {
+  top: 20px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+}
+
+.ink-name {
+  transition: 0.5s;
+}
+
+.card:hover .ink-name {
+  color: black;
+  bottom: 115px;
+}
+
+.roboto {
+  font-family: 'Hongleixingshu', 'Roboto', sans-serif;
+}
