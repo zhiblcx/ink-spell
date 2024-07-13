@@ -1,22 +1,16 @@
-import InkCard from '@/features/components/InkCard'
-import { inkmock } from '@/mocke/inkmock'
+import Header from './layouts/BaseLayout/Header'
+import Content from './layouts/BaseLayout/Content'
+import Sidebar from './layouts/BaseLayout/Sidebar'
 
 function App() {
-
-
   return (
-    <main className="flex bg-slate-300 justify-center min-h-screen">
-      <div className="grid grid-cols-4 gap-4 my-8">
-        {inkmock.map((item, index) => {
-          return (
-            <InkCard
-              ink={item}
-              key={index}
-            />
-          )
-        })}
+    <div className="flex flex-col h-screen overflow-hidden">
+      <Header />
+      <div className="flex grow">
+        <Sidebar />
+        <Content />
       </div>
-    </main>
+    </div>
   )
 }
 

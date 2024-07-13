@@ -1,17 +1,27 @@
 import './index.scss'
 import { type Ink } from '@/shared/types'
+import clsx from 'clsx'
 
-export default function InkCard({ ink }: { ink: Ink }) {
-
-    function getImageUrl(name:string) {
-  return new URL(`../../../assets/images/${name}`, import.meta.url).href
+interface InkCardProps {
+  ink: Ink
+  customClassName?: string
 }
 
+export default function InkCard({ ink, customClassName }: InkCardProps) {
+  function getImageUrl(name: string) {
+    return new URL(`../../../assets/images/${name}`, import.meta.url).href
+  }
 
   return (
-    <div className="card w-[180px] h-[250px] shadow-xl bg-slate-300 rounded-2xl relative overflow-hidden flex flex-col items-center ">
+    <div
+      className={clsx(
+        customClassName,
+        'card w-[180px] h-[250px] shadow-xl bg-slate-300 rounded-2xl relative overflow-hidden flex flex-col items-center'
+      )}
+    >
       <div className="photo w-[100%] h-[100%] overflow-hidden">
-        <img src={getImageUrl(ink.ink_img)}
+        <img
+          src={getImageUrl(ink.ink_img)}
           alt=""
           className="object-cover w-[100%] h-[100%]"
         />
