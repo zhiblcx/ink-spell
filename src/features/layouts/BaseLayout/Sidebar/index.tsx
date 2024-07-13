@@ -1,5 +1,5 @@
 function Sidebar() {
-  return <div className="w-[240px] bg-slate-300">Sidebar</div>
+  return <div className="dark:bg-slate-800 w-[200px] px-4">Sidebar</div>
 }
 
 export default Sidebar

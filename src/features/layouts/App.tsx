@@ -1,6 +1,6 @@
-import Header from './layouts/BaseLayout/Header'
-import Content from './layouts/BaseLayout/Content'
-import Sidebar from './layouts/BaseLayout/Sidebar'
+import Header from './BaseLayout/Header'
+import Content from './BaseLayout/Content'
+import Sidebar from './BaseLayout/Sidebar'
 
 function App() {
   return (

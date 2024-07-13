@@ -3,13 +3,13 @@ import { inkmock } from '@/mocke/inkmock'
 
 function Content() {
   return (
-    <main className="grow bg-slate-400">
-      <div className="flex flex-wrap overflow-y-auto ml-6">
+    <main className="dark:bg-slate-800 grow overflow-y-auto h-screen pt-2">
+      <div className="flex flex-wrap ml-6">
         {inkmock.map((item, index) => {
           return (
             <InkCard
               ink={item}
-              customClassName="m-5"
+              customClassName="m-3"
               key={index}
             />
           )

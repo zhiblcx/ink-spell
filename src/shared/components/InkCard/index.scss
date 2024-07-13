@@ -29,9 +29,14 @@
 
 .card:hover .ink-name {
   color: black;
-  bottom: 115px;
+  bottom: 116px;
+}
+
+[data-theme='dark'] .card:hover .ink-name {
+  color: white;
+  bottom: 116px;
 }
 
 .roboto {
-  font-family: 'Hongleixingshu', 'Roboto', sans-serif;
+  font-family: 'Hongleixingshu', Arial, sans-serif;
 }
