@@ -1,18 +1,21 @@
 import { Switch } from 'antd'
-import { ThemeUtils } from '@/shared/utils'
 import { Theme } from '@/shared/enums/Theme'
-import { useState } from 'react'
+import { useThemeStore } from '@/shared/store'
 
 function ThemeToggle() {
-  const [theme, setTheme] = useState(Theme.LIGHT)
+  const { theme, setTheme } = useThemeStore()
 
-  function changeTheme(checked: boolean) {
+  function toggleTheme() {
     const currentTheme = theme === Theme.DARK ? Theme.LIGHT : Theme.DARK
     setTheme(currentTheme)
-    ThemeUtils.changeTheme(currentTheme)
   }
 
-  return <Switch onChange={changeTheme} />
+  return (
+    <Switch
+      onChange={toggleTheme}
+      checked={theme === Theme.DARK}
+    />
+  )
 }
 
 export default ThemeToggle
