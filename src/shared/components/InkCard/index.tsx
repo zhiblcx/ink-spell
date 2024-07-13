@@ -16,7 +16,7 @@ export default function InkCard({ ink, customClassName }: InkCardProps) {
     <div
       className={clsx(
         customClassName,
-        'dark:bg-slate-600 card w-[180px] h-[250px] shadow-xl bg-gray-200 rounded-2xl relative overflow-hidden flex flex-col items-center'
+        'dark:bg-slate-800 card w-[180px] h-[250px] shadow-xl bg-gray-200 rounded-2xl relative overflow-hidden flex flex-col items-center'
       )}
     >
       <div className="photo w-[100%] h-[100%] overflow-hidden">
@@ -37,8 +37,7 @@ export default function InkCard({ ink, customClassName }: InkCardProps) {
       </p>
       <p className="w-[80%] border-2 border-b-zinc-300"></p>
       <p className="roboto w-[80%] mt-2 text-sm overflow-hidden line-clamp-4">
-        全球大型高危险性统一考试,简称全球高考。真身刷题,及格活命。考制一月一改革,偶尔随机。
-        全球大型高危险性统一考试,简称全球高考。真身刷题,及格活命。考制一月一改革,偶尔随机。
+        {ink.detail === undefined ? '' : ink.detail}
       </p>
     </div>
   )
