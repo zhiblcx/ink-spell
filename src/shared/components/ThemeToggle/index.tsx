@@ -1,6 +1,6 @@
-import { Switch } from 'antd'
 import { Theme } from '@/shared/enums/Theme'
 import { useThemeStore } from '@/shared/store'
+import { Sun, MoonStar } from 'lucide-react'
 
 function ThemeToggle() {
   const { theme, setTheme } = useThemeStore()
@@ -10,12 +10,7 @@ function ThemeToggle() {
     setTheme(currentTheme)
   }
 
-  return (
-    <Switch
-      onChange={toggleTheme}
-      checked={theme === Theme.DARK}
-    />
-  )
+  return <div onClick={toggleTheme}>{theme === Theme.DARK ? <Sun /> : <MoonStar />}</div>
 }
 
 export default ThemeToggle

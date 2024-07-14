@@ -16,7 +16,7 @@ export default function InkCard({ ink, customClassName }: InkCardProps) {
     <div
       className={clsx(
         customClassName,
-        'dark:bg-slate-800 card w-[180px] h-[250px] shadow-xl bg-gray-200 rounded-2xl relative overflow-hidden flex flex-col items-center'
+        'dark:bg-gray-800 card w-[180px] h-[250px] shadow-xl bg-gray-200 rounded-2xl relative overflow-hidden flex flex-col items-center'
       )}
     >
       <div className="photo w-[100%] h-[100%] overflow-hidden">

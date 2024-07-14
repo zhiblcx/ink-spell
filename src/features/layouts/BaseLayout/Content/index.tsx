@@ -3,7 +3,7 @@ import { inkmock } from '@/mock/inkmock'
 
 function Content() {
   return (
-    <main className="dark:bg-slate-900 grow overflow-y-auto h-screen pt-2">
+    <main className="dark:bg-black grow overflow-y-auto h-screen pt-2">
       <div className="flex flex-wrap ml-6">
         {inkmock.map((item, index) => {
           return (

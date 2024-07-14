@@ -12,9 +12,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-router": "^1.45.0",
     "antd": "^5.19.1",
     "clsx": "^2.1.1",
     "cn-fontsource-hongleixingshu-regular": "^1.0.7",
+    "lucide-react": "^0.408.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "sass": "^1.77.8",

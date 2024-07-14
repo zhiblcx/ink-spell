@@ -10,6 +10,8 @@
 - [x] antd
 - [x] TailwindCSS
 - [x] Sass
+- [x] zustond
+- [x] tankstack Router
 
 ## function
 
