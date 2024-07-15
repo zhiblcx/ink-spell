@@ -11,7 +11,7 @@ export default function AntdProvider(props: PropsWithChildren) {
       theme={{
         algorithm: themeStore === Theme.DARK ? theme.darkAlgorithm : theme.defaultAlgorithm,
         token: {
-          colorPrimary: '#1296db'
+          colorPrimary: themeStore === Theme.DARK ? '#4b4b4b' : '#4c5155'
         }
       }}
     >
