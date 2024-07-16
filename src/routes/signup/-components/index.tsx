@@ -1,13 +1,14 @@
 import { Button, Form, Input, ConfigProvider } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
-import logoLight from '@/assets/images/logo_light.png'
 import { motion } from 'framer-motion'
 
+import logoLight from '@/assets/images/logo-light.png'
 import loginLightImg from '@/assets/images/login-light.png'
 import loginDarkImg from '@/assets/images/login-dark.png'
 import { useThemeStore } from '@/shared/store'
 import { Theme } from '@/shared/enums'
+
 import './index.scss'
 
 type SignupType = {

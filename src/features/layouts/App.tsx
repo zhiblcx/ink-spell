@@ -4,10 +4,10 @@ import Sidebar from './BaseLayout/Sidebar'
 
 function App() {
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
-      <Header />
-      <div className="flex grow">
-        <Sidebar />
+    <div className="flex h-screen overflow-hidden">
+      <Sidebar />
+      <div className="flex grow flex-col">
+        <Header />
         <Content />
       </div>
     </div>
