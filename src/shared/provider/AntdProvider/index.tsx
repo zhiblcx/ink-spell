@@ -1,5 +1,6 @@
 import { PropsWithChildren } from 'react'
 import { ConfigProvider, theme } from 'antd'
+import { HappyProvider } from '@ant-design/happy-work-theme'
 import { useThemeStore } from '@/shared/store/ThemeStore'
 import { Theme } from '@/shared/enums'
 
@@ -15,7 +16,7 @@ export default function AntdProvider(props: PropsWithChildren) {
         }
       }}
     >
-      {children}
+      <HappyProvider>{children}</HappyProvider>
     </ConfigProvider>
   )
 }

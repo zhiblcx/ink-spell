@@ -38,6 +38,7 @@ export default function Signup() {
         }}
       >
         <motion.div
+          layout
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
         >
