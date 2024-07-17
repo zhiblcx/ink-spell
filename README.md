@@ -12,6 +12,8 @@
 - [x] Sass
 - [x] zustond
 - [x] tankstack Router
+- [x] farmar-motion
+- [] i18n
 
 ## function
 

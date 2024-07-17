@@ -37,5 +37,10 @@ export const inkmock: Ink[] = [
     ink_name: '穿堂惊掠琵琶声',
     ink_img: 'cover_ink_3.png',
     protagonist: ['代如颜', '宫玉']
+  },
+  {
+    ink_name: '穿堂惊掠琵琶声',
+    ink_img: 'cover_ink_3.png',
+    protagonist: ['代如颜', '宫玉']
   }
 ]

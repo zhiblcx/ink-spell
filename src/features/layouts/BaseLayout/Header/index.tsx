@@ -78,9 +78,8 @@ function Header() {
           }}
         />
         <Search
-          className="flex justify-center items-center mx-2 min-[375px]:mx-0"
-          placeholder="请输入要搜索的书籍"
-          style={{ width: 200 }}
+          className="flex justify-center items-center mx-2 min-[375px]:mx-0 min-[375px]:w-[145px] md:w-[200px]"
+          placeholder="请输入要搜索的书"
         />
       </div>
       <div className="md:mr-10 flex justify-center items-center md:space-x-4 min-[375px]:space-x-2 min-[375px]:ml-2">

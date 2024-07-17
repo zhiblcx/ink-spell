@@ -4,7 +4,7 @@ import InkCard from '@/shared/components/InkCard'
 
 function Page() {
   return (
-    <div className="flex flex-wrap">
+    <div className="flex flex-wrap min-[375px]:justify-center md:justify-start">
       {inkmock.map((item, index) => {
         return (
           <InkCard
