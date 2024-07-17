@@ -1,20 +1,9 @@
-import InkCard from '@/shared/components/InkCard'
-import { inkmock } from '@/mock/inkmock'
+import { Outlet } from '@tanstack/react-router'
 
 function Content() {
   return (
-    <main className="dark:bg-black grow overflow-y-auto h-screen pt-2">
-      <div className="flex flex-wrap">
-        {inkmock.map((item, index) => {
-          return (
-            <InkCard
-              ink={item}
-              customClassName="mr-4 mb-3 mt-3"
-              key={index}
-            />
-          )
-        })}
-      </div>
+    <main className="grow overflow-y-auto h-screen pt-2">
+      <Outlet />
     </main>
   )
 }

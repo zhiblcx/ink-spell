@@ -1,5 +1,6 @@
 import { House, Users, Bot } from 'lucide-react'
 import clsx from 'clsx'
+import { motion } from 'framer-motion'
 
 import logoDark from '@/assets/images/logo-dark.png'
 import logoLight from '@/assets/images/logo-light.png'
@@ -17,41 +18,42 @@ function Sidebar() {
       <>
         {menu === Menu.EXTEND ? (
           <img
-            src={theme === Theme.DARK ? iconDark : iconLight}
-            className="min-[375px]:w-[76px] scale-75"
+            src={theme === Theme.DARK ? iconLight : iconDark}
+            className="w-[52px] scale-75"
           />
         ) : (
           <img
             src={theme === Theme.DARK ? logoLight : logoDark}
-            className="min-[375px]:w-[0] md:w-[220px]"
+            className="w-[200px] mt-3"
           />
         )}
       </>
     )
   }
   return (
-    <div
+    <motion.div
+      layout
       className={clsx(
-        menu === Menu.EXTEND ? 'md:w-[76px]' : '',
-        'dark:bg-black md:w-[220px] min-[375px]:w-[76px] px-4 mr-1 pt-6 transition-all'
+        'bg-white dark:bg-black p-2 w-[220px] mr-2 transition-all',
+        menu === Menu.EXTEND ? 'w-[59px]' : 'min-w-[150px]'
       )}
     >
       <Icon />
-      <ul>
-        <li className="relative flex items-center cursor-pointer hover:bg-slate-300 rounded-xl px-2 py-1 my-2 whitespace-nowrap overflow-hidden">
+      <ul className="whitespace-nowrap overflow-hidden space-y-2 mt-4">
+        <li className="dark:hover:bg-[#474c50] relative flex items-center cursor-pointer hover:bg-[#4b4b4b] hover:text-white rounded-xl px-2 py-2">
           <House className="absolute mx-[3px]" />
           <div className="relative left-9">我的书架</div>
         </li>
-        <li className="relative flex items-center cursor-pointer hover:bg-slate-300 rounded-xl px-2 py-1 my-2 whitespace-nowrap overflow-hidden">
+        <li className="dark:hover:bg-[#474c50] relative flex items-center cursor-pointer hover:bg-[#4b4b4b] hover:text-white rounded-xl px-2 py-2">
           <Users className="absolute mx-[3px]" />
-          <div className="relative left-9">我的好友我的好友</div>
+          <div className="relative left-9">我的好友</div>
         </li>
-        <li className="relative flex items-center cursor-pointer hover:bg-slate-300 rounded-xl px-2 py-1 my-2 whitespace-nowrap overflow-hidden">
+        <li className="dark:hover:bg-[#474c50] relative flex items-center cursor-pointer hover:bg-[#4b4b4b] hover:text-white rounded-xl px-2 py-2">
           <Bot className="absolute mx-[3px]" />
           <div className="relative left-9">聊天室</div>
         </li>
       </ul>
-    </div>
+    </motion.div>
   )
 }
 

@@ -1,5 +1,6 @@
 import { Input, Button, Avatar, Dropdown, type MenuProps } from 'antd'
 import { AlignLeft, AlignRight } from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
 
 import ThemeToggle from '@/shared/components/ThemeToggle'
 import avatar from '@/assets/images/avatar.png'
@@ -10,6 +11,7 @@ import { Menu } from '@/shared/enums'
 function Header() {
   const { Search } = Input
   const { menu, setMenu } = useMenuStore()
+  const navigate = useNavigate()
 
   const items: MenuProps['items'] = [
     {
@@ -38,7 +40,15 @@ function Header() {
     },
     {
       key: 3,
-      label: <div>退出登录</div>
+      label: (
+        <div
+          onClick={() => {
+            navigate({ to: '/signin', replace: true })
+          }}
+        >
+          退出登录
+        </div>
+      )
     }
   ]
 
@@ -60,7 +70,7 @@ function Header() {
     )
   }
   return (
-    <div className="dark:bg-black flex justify-between items-center py-4">
+    <div className="flex justify-between items-center py-4">
       <div className="flex items-center">
         <Icon
           onClick={() => {
@@ -73,7 +83,7 @@ function Header() {
           style={{ width: 200 }}
         />
       </div>
-      <div className="md:mr-10 flex justify-center items-center space-x-4">
+      <div className="md:mr-10 flex justify-center items-center md:space-x-4 min-[375px]:space-x-2 min-[375px]:ml-2">
         <ThemeToggle />
         <Dropdown
           menu={{ items }}

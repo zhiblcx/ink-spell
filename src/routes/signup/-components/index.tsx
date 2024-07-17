@@ -116,7 +116,7 @@ export default function Signup() {
                 htmlType="submit"
                 className="min-[375px]:w-[200px] md:w-[250px]"
               >
-                登录
+                注册
               </Button>
             </Form.Item>
           </Form>

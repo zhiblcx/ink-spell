@@ -1,6 +1,6 @@
 import { Button, Checkbox, Form, Input, ConfigProvider, Flex } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
-import { Link } from '@tanstack/react-router'
+import { Link, replaceEqualDeep, useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 
 import logoLight from '@/assets/images/logo-light.png'
@@ -18,6 +18,7 @@ type SigninType = {
 
 export default function Signin() {
   const { theme } = useThemeStore()
+  const navigate = useNavigate()
   return (
     <div className="relative overflow-hidden w-screen h-screen items-center flex justify-center">
       <img
@@ -43,6 +44,9 @@ export default function Signin() {
           <Form
             className="signin_translation backdrop-blur relative  flex flex-col justify-center items-center px-14 py-5 rounded-2xl shadow-lg"
             layout="vertical"
+            onFinish={() => {
+              navigate({ to: '/', replace: true })
+            }}
           >
             <img
               src={logoLight}
