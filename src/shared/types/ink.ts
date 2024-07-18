@@ -6,6 +6,7 @@ export type Ink = {
   detail?: string
   book_file?: string
   category_id?: number
+  checked?: boolean
 }
 
 export type Category = {

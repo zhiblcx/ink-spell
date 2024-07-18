@@ -21,8 +21,8 @@ export const useMenuStore = create<MenuStore>()(
 
 useMenuStore.subscribe(
   (state) => state.menu,
-  (Menu) => {
-    useMenuStore.getState().setMenu(Menu)
+  (menu) => {
+    useMenuStore.getState().setMenu(menu)
   },
   {
     fireImmediately: true

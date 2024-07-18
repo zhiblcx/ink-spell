@@ -62,8 +62,8 @@ function Sidebar() {
     >
       <Icon />
       <ul className="whitespace-nowrap overflow-hidden space-y-2 mt-4">
-        {menuList.map((item) => (
-          <li>
+        {menuList.map((item, index) => (
+          <li key={index}>
             <Navigation
               value={item.value}
               label={item.label}
