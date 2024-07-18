@@ -1,8 +1,9 @@
 import { Outlet } from '@tanstack/react-router'
+import './index.scss'
 
 function Content() {
   return (
-    <main className="grow overflow-y-auto h-screen pt-2">
+    <main className="grow height absolute">
       <Outlet />
     </main>
   )

@@ -2,6 +2,7 @@ import { createLazyFileRoute } from '@tanstack/react-router'
 import Header from '@/features/layouts/BaseLayout/Header'
 import Content from '@/features/layouts/BaseLayout/Content'
 import Sidebar from '@/features/layouts/BaseLayout/Sidebar'
+import Footer from '@/features/layouts/BaseLayout/Footer'
 
 export const Route = createLazyFileRoute('/_base')({
   component: () => (
@@ -9,7 +10,10 @@ export const Route = createLazyFileRoute('/_base')({
       <Sidebar />
       <div className="flex grow flex-col">
         <Header />
-        <Content />
+        <div className="flex flex-col">
+          <Content />
+          <Footer />
+        </div>
       </div>
     </div>
   )
