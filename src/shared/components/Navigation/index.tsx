@@ -4,8 +4,8 @@ import { LucideProps } from 'lucide-react'
 
 interface NavigationProps {
   value: string
-  label: string
-  Icon: React.ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>>
+  label?: string
+  Icon?: React.ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>>
 }
 
 function Navigation(props: NavigationProps) {
@@ -21,7 +21,7 @@ function Navigation(props: NavigationProps) {
               'dark:hover:bg-[#474c50] relative flex items-center cursor-pointer hover:bg-[#4b4b4b] hover:text-white rounded-xl px-2 py-2'
             )}
           >
-            <Icon className="absolute mx-[3px]" />
+            {Icon && <Icon className="absolute mx-[3px]" />}
             <div className="relative left-9">{value}</div>
           </div>
         )

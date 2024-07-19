@@ -3,11 +3,14 @@ import { useEffect, useState } from 'react'
 import { useActionBook } from '@/shared/store'
 
 import InkCard from '@/shared/components/InkCard'
+import { Ink } from '@/shared/types'
 import { inkmock } from '@/mock/inkmock'
+import { message } from 'antd'
 
 function Page() {
   const [books, setBooks] = useState(inkmock.map((item) => ({ ...item, checked: false })))
-  const { allSelectFlag, cancelFlag, updateAllSelectFlag, updateCancelFlag } = useActionBook()
+  const { allSelectFlag, cancelFlag, deleteFlag, updateAllSelectFlag, updateCancelFlag, updateDeleteFlag } =
+    useActionBook()
 
   useEffect(() => {
     if (allSelectFlag == -1) {
@@ -36,9 +39,24 @@ function Page() {
       })
       updateAllSelectFlag(-1)
       setBooks(currentBooks)
-      console.log(currentBooks)
     }
   }, [cancelFlag])
+
+  useEffect(() => {
+    if (deleteFlag) {
+      const deleteIds = books.reduce((ids: number[], book: Ink) => {
+        if (book.checked) {
+          ids.push(book.id)
+        }
+        return ids
+      }, [])
+      if (deleteIds.length != 0) {
+        setBooks(books.filter((book) => !deleteIds.includes(book.id)))
+        message.success('删除成功')
+      }
+      updateDeleteFlag(false)
+    }
+  }, [deleteFlag])
 
   return (
     <>
@@ -60,6 +78,7 @@ function Page() {
               ink={item}
               customClassName="mr-4 mb-3 mt-3"
               key={item.id}
+              cancelFlag={cancelFlag}
             />
           )
         })}

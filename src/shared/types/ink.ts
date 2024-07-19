@@ -1,5 +1,5 @@
 export type Ink = {
-  id?: number
+  id: number
   ink_name?: string
   ink_img: string
   protagonist?: Array<string>
@@ -7,6 +7,7 @@ export type Ink = {
   book_file?: string
   category_id?: number
   checked?: boolean
+  md5?: string
 }
 
 export type Category = {

@@ -19,6 +19,7 @@ import { Route as rootRoute } from './routes/__root'
 const SignupRouteLazyImport = createFileRoute('/signup')()
 const SigninRouteLazyImport = createFileRoute('/signin')()
 const BaseRouteLazyImport = createFileRoute('/_base')()
+const R404RouteLazyImport = createFileRoute('/404')()
 const BaseMyfriendRouteLazyImport = createFileRoute('/_base/myfriend')()
 const BaseChatroomRouteLazyImport = createFileRoute('/_base/chatroom')()
 const BaseIndexRouteLazyImport = createFileRoute('/_base/')()
@@ -39,6 +40,11 @@ const BaseRouteLazyRoute = BaseRouteLazyImport.update({
   id: '/_base',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/_base/route.lazy').then((d) => d.Route))
+
+const R404RouteLazyRoute = R404RouteLazyImport.update({
+  path: '/404',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/404/route.lazy').then((d) => d.Route))
 
 const BaseMyfriendRouteLazyRoute = BaseMyfriendRouteLazyImport.update({
   path: '/myfriend',
@@ -65,6 +71,13 @@ const BaseIndexRouteLazyRoute = BaseIndexRouteLazyImport.update({
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/404': {
+      id: '/404'
+      path: '/404'
+      fullPath: '/404'
+      preLoaderRoute: typeof R404RouteLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/_base': {
       id: '/_base'
       path: ''
@@ -113,6 +126,7 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren({
+  R404RouteLazyRoute,
   BaseRouteLazyRoute: BaseRouteLazyRoute.addChildren({
     BaseIndexRouteLazyRoute,
     BaseChatroomRouteLazyRoute,
@@ -130,10 +144,14 @@ export const routeTree = rootRoute.addChildren({
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
+        "/404",
         "/_base",
         "/signin",
         "/signup"
       ]
+    },
+    "/404": {
+      "filePath": "404/route.lazy.tsx"
     },
     "/_base": {
       "filePath": "_base/route.lazy.tsx",
