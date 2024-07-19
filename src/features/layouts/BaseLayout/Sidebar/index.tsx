@@ -98,14 +98,14 @@ function Sidebar() {
                 <li>
                   <Navigation
                     value="末世"
-                    label="/xiuxian"
+                    label="/bookshelf/1"
                     Icon={BookHeart}
                   />
                 </li>
                 <li>
                   <Navigation
                     value="修仙"
-                    label="/xiuxian"
+                    label="/bookshelf/2"
                     Icon={BookHeart}
                   />
                 </li>

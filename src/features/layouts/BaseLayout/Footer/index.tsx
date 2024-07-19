@@ -1,10 +1,12 @@
 import clsx from 'clsx'
 import { Modal } from 'antd'
 import { CircleX } from 'lucide-react'
-import { useActionBook } from '@/shared/store'
+import { useActionBook, useMenuStore } from '@/shared/store'
+import { Menu } from '@/shared/enums'
 
 function Footer() {
   const [modal, contextHolder] = Modal.useModal()
+  const { menu } = useMenuStore()
   const { cancelFlag, allSelectFlag, updateCancelFlag, updateAllSelectFlag, updateDeleteFlag } = useActionBook()
 
   const confirm = () => {
@@ -23,14 +25,29 @@ function Footer() {
 
   return (
     <>
-      <ul className={clsx(cancelFlag ? 'hidden' : '', 'flex space-x-3 absolute bottom-4')}>
+      <ul
+        className={clsx(
+          'flex space-x-3 absolute bottom-4',
+          menu === Menu.EXTEND ? 'min-[375px]:flex' : 'min-[375px]:hidden',
+          cancelFlag ? 'md:hidden' : 'md:flex'
+        )}
+      >
         <li
-          className="cursor-pointer"
+          className="cursor-pointer md:block min-[375px]:hidden"
           onClick={() => {
             updateCancelFlag(!cancelFlag)
           }}
         >
           取消
+        </li>
+
+        <li
+          className="cursor-pointer md:hidden min-[375px]:auto"
+          onClick={() => {
+            updateCancelFlag(!cancelFlag)
+          }}
+        >
+          展示
         </li>
 
         <li
@@ -57,7 +74,9 @@ function Footer() {
         >
           删除
         </li>
+        <li className="text-red-500 cursor-pointer">删除该书架</li>
       </ul>
+
       {contextHolder}
     </>
   )

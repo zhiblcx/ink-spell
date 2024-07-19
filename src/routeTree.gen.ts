@@ -23,6 +23,7 @@ const R404RouteLazyImport = createFileRoute('/404')()
 const BaseMyfriendRouteLazyImport = createFileRoute('/_base/myfriend')()
 const BaseChatroomRouteLazyImport = createFileRoute('/_base/chatroom')()
 const BaseIndexRouteLazyImport = createFileRoute('/_base/')()
+const BaseBookshelfIdRouteLazyImport = createFileRoute('/_base/bookshelf/$id')()
 
 // Create/Update Routes
 
@@ -65,6 +66,13 @@ const BaseIndexRouteLazyRoute = BaseIndexRouteLazyImport.update({
   getParentRoute: () => BaseRouteLazyRoute,
 } as any).lazy(() =>
   import('./routes/_base/index/route.lazy').then((d) => d.Route),
+)
+
+const BaseBookshelfIdRouteLazyRoute = BaseBookshelfIdRouteLazyImport.update({
+  path: '/bookshelf/$id',
+  getParentRoute: () => BaseRouteLazyRoute,
+} as any).lazy(() =>
+  import('./routes/_base/bookshelf/$id/route.lazy').then((d) => d.Route),
 )
 
 // Populate the FileRoutesByPath interface
@@ -120,6 +128,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BaseMyfriendRouteLazyImport
       parentRoute: typeof BaseRouteLazyImport
     }
+    '/_base/bookshelf/$id': {
+      id: '/_base/bookshelf/$id'
+      path: '/bookshelf/$id'
+      fullPath: '/bookshelf/$id'
+      preLoaderRoute: typeof BaseBookshelfIdRouteLazyImport
+      parentRoute: typeof BaseRouteLazyImport
+    }
   }
 }
 
@@ -131,6 +146,7 @@ export const routeTree = rootRoute.addChildren({
     BaseIndexRouteLazyRoute,
     BaseChatroomRouteLazyRoute,
     BaseMyfriendRouteLazyRoute,
+    BaseBookshelfIdRouteLazyRoute,
   }),
   SigninRouteLazyRoute,
   SignupRouteLazyRoute,
@@ -158,7 +174,8 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/_base/",
         "/_base/chatroom",
-        "/_base/myfriend"
+        "/_base/myfriend",
+        "/_base/bookshelf/$id"
       ]
     },
     "/signin": {
@@ -177,6 +194,10 @@ export const routeTree = rootRoute.addChildren({
     },
     "/_base/myfriend": {
       "filePath": "_base/myfriend/route.lazy.tsx",
+      "parent": "/_base"
+    },
+    "/_base/bookshelf/$id": {
+      "filePath": "_base/bookshelf/$id/route.lazy.tsx",
       "parent": "/_base"
     }
   }

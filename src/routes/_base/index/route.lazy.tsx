@@ -7,7 +7,7 @@ import { Ink } from '@/shared/types'
 import { inkmock } from '@/mock/inkmock'
 import { message } from 'antd'
 
-function Page() {
+export function Page() {
   const [books, setBooks] = useState(inkmock.map((item) => ({ ...item, checked: false })))
   const { allSelectFlag, cancelFlag, deleteFlag, updateAllSelectFlag, updateCancelFlag, updateDeleteFlag } =
     useActionBook()
