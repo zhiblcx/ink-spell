@@ -1,5 +1,5 @@
 import { Button, Form, Input, ConfigProvider } from 'antd'
-import { LockOutlined, UserOutlined } from '@ant-design/icons'
+import { LockOutlined, UserOutlined, MailOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 
@@ -99,7 +99,7 @@ export default function Signup() {
             >
               <Input
                 type="email"
-                prefix={<LockOutlined />}
+                prefix={<MailOutlined />}
                 placeholder="请输入你的邮箱"
               />
             </Form.Item>

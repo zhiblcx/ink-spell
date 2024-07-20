@@ -1,11 +1,12 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { useActionBook } from '@/shared/store'
+import { message } from 'antd'
+import { AllSelectFlag } from '@/shared/enums'
 
 import InkCard from '@/shared/components/InkCard'
+import { useActionBook } from '@/shared/store'
 import { Ink } from '@/shared/types'
 import { inkmock } from '@/mock/inkmock'
-import { message } from 'antd'
 
 export function Page() {
   const [books, setBooks] = useState(inkmock.map((item) => ({ ...item, checked: false })))
@@ -13,16 +14,16 @@ export function Page() {
     useActionBook()
 
   useEffect(() => {
-    if (allSelectFlag == -1) {
+    if (allSelectFlag == AllSelectFlag.PARTIAL_SELECT_FLAG) {
       return
     }
-    if (allSelectFlag == 0) {
+    if (allSelectFlag == AllSelectFlag.ALL_SELECT_FLAG) {
       const currentBooks = Array.from(books)
       currentBooks.forEach((item) => {
         item.checked = false
       })
       setBooks(currentBooks)
-    } else if (allSelectFlag == 1) {
+    } else if (allSelectFlag == AllSelectFlag.NOT_ALL_SELECT_FLAG) {
       const currentBooks = Array.from(books)
       currentBooks.forEach((item) => {
         item.checked = true
@@ -37,7 +38,7 @@ export function Page() {
       currentBooks.forEach((item) => {
         item.checked = false
       })
-      updateAllSelectFlag(-1)
+      updateAllSelectFlag(AllSelectFlag.PARTIAL_SELECT_FLAG)
       setBooks(currentBooks)
     }
   }, [cancelFlag])
@@ -69,7 +70,7 @@ export function Page() {
                   updateCancelFlag(false)
                 }
                 if (item.checked) {
-                  updateAllSelectFlag(-1)
+                  updateAllSelectFlag(AllSelectFlag.PARTIAL_SELECT_FLAG)
                 }
                 const currentBooks = Array.from(books)
                 currentBooks[index].checked = !item.checked

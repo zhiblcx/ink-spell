@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { Modal } from 'antd'
 import { CircleX } from 'lucide-react'
 import { useActionBook, useMenuStore } from '@/shared/store'
-import { Menu } from '@/shared/enums'
+import { Menu, AllSelectFlag } from '@/shared/enums'
 
 function Footer() {
   const [modal, contextHolder] = Modal.useModal()
@@ -62,10 +62,14 @@ function Footer() {
         <li
           className="cursor-pointer"
           onClick={() => {
-            updateAllSelectFlag(allSelectFlag == 1 ? 0 : 1)
+            updateAllSelectFlag(
+              allSelectFlag == AllSelectFlag.NOT_ALL_SELECT_FLAG
+                ? AllSelectFlag.ALL_SELECT_FLAG
+                : AllSelectFlag.NOT_ALL_SELECT_FLAG
+            )
           }}
         >
-          {allSelectFlag == 1 ? '全不选' : '全选'}
+          {allSelectFlag == AllSelectFlag.NOT_ALL_SELECT_FLAG ? '全不选' : '全选'}
         </li>
 
         <li
