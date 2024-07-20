@@ -24,6 +24,10 @@
 - [] Share books
 - [] Forum books
 
+## design sketch
+
+![](./src/assets/images/login-design.png)
+
 ## License
 
 [MIT](/LICENSE) License &copy; 2024 ink-spell
