@@ -1,7 +1,7 @@
 import clsx from 'clsx'
-import { BookText, Users, Bot, BookHeart, ChevronRight, ChevronDown } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
+import { BookHeart, ChevronRight, ChevronDown } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 import logoDark from '@/assets/images/logo-dark.png'
 import logoLight from '@/assets/images/logo-light.png'
@@ -10,30 +10,14 @@ import iconLight from '@/assets/images/icon-light.png'
 import Navigation from '@/shared/components/Navigation'
 import { Theme, Menu } from '@/shared/enums'
 import { useThemeStore, useMenuStore } from '@/shared/store'
+import { menuList, user_mock, shelf_value_mock } from '@/mock'
 import './index.scss'
 
 function Sidebar() {
   const { theme } = useThemeStore()
   const { menu } = useMenuStore()
   const [arrow, setArrow] = useState(true)
-
-  const menuList = [
-    {
-      label: '/',
-      value: '全部图书',
-      Icon: BookText
-    },
-    {
-      label: '/myfriend',
-      value: '我的好友',
-      Icon: Users
-    },
-    {
-      label: '/chatroom',
-      value: '聊天室',
-      Icon: Bot
-    }
-  ]
+  const [myMenuList] = useState(shelf_value_mock.filter((item) => item.dic_id == user_mock.dic_id))
 
   function Icon() {
     return (
@@ -52,6 +36,7 @@ function Sidebar() {
       </>
     )
   }
+
   return (
     <div
       className={clsx(
@@ -95,20 +80,15 @@ function Sidebar() {
               exit={{ opacity: 0 }}
             >
               <ul className="whitespace-nowrap space-y-2 overflow-hidden mt-2 transition-all">
-                <li>
-                  <Navigation
-                    value="末世"
-                    label="/bookshelf/1"
-                    Icon={BookHeart}
-                  />
-                </li>
-                <li>
-                  <Navigation
-                    value="修仙"
-                    label="/bookshelf/2"
-                    Icon={BookHeart}
-                  />
-                </li>
+                {myMenuList.map((menu) => (
+                  <li key={menu.id}>
+                    <Navigation
+                      value={menu.label}
+                      label={`/bookshelf/${menu.id}`}
+                      Icon={BookHeart}
+                    />
+                  </li>
+                ))}
               </ul>
             </motion.div>
           )}

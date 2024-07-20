@@ -3,7 +3,8 @@ import './index.scss'
 
 function Content() {
   return (
-    <main className="grow height absolute">
+    // TODO: remove absolute
+    <main className="height absolute">
       <Outlet />
     </main>
   )

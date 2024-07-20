@@ -7,9 +7,17 @@ import { Menu, AllSelectFlag } from '@/shared/enums'
 function Footer() {
   const [modal, contextHolder] = Modal.useModal()
   const { menu } = useMenuStore()
-  const { cancelFlag, allSelectFlag, updateCancelFlag, updateAllSelectFlag, updateDeleteFlag } = useActionBook()
+  const {
+    cancelFlag,
+    allSelectFlag,
+    showShelfFlag,
+    updateCancelFlag,
+    updateAllSelectFlag,
+    updateDeleteFlag,
+    updateDeleteShelfFlag
+  } = useActionBook()
 
-  const confirm = () => {
+  const handlerDeleteBook = () => {
     modal.confirm({
       title: '删除书籍',
       icon: <CircleX className="text-red-500 mr-2" />,
@@ -19,6 +27,20 @@ function Footer() {
       maskClosable: true,
       onOk: () => {
         updateDeleteFlag(true)
+      }
+    })
+  }
+
+  const handlerDeleteBookShelf = () => {
+    modal.confirm({
+      title: '删除该书架',
+      icon: <CircleX className="text-red-500 mr-2" />,
+      content: '确定要删除该书架吗？?',
+      okText: '确定',
+      cancelText: '取消',
+      maskClosable: true,
+      onOk: () => {
+        updateDeleteShelfFlag(true)
       }
     })
   }
@@ -74,11 +96,20 @@ function Footer() {
 
         <li
           className="text-red-500 cursor-pointer"
-          onClick={confirm}
+          onClick={handlerDeleteBook}
         >
           删除
         </li>
-        <li className="text-red-500 cursor-pointer">删除该书架</li>
+        {showShelfFlag ? (
+          <li
+            className="text-red-500 cursor-pointer"
+            onClick={handlerDeleteBookShelf}
+          >
+            删除该书架
+          </li>
+        ) : (
+          ''
+        )}
       </ul>
 
       {contextHolder}

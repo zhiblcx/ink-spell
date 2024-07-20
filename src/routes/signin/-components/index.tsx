@@ -1,6 +1,6 @@
 import { Button, Checkbox, Form, Input, ConfigProvider, Flex } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
-import { Link, replaceEqualDeep, useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 
 import logoLight from '@/assets/images/logo-light.png'
