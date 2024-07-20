@@ -8,7 +8,6 @@ import loginLightImg from '@/assets/images/login-light.png'
 import loginDarkImg from '@/assets/images/login-dark.png'
 import { useThemeStore } from '@/shared/store'
 import { Theme } from '@/shared/enums'
-
 import './index.scss'
 
 type SignupType = {
