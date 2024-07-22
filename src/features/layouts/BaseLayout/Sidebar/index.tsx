@@ -11,7 +11,6 @@ import Navigation from '@/shared/components/Navigation'
 import { Theme, Menu } from '@/shared/enums'
 import { useThemeStore, useMenuStore } from '@/shared/store'
 import { menuList, user_mock, shelf_value_mock } from '@/mock'
-import './index.scss'
 
 function Sidebar() {
   const { theme } = useThemeStore()

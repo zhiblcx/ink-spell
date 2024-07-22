@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { Modal } from 'antd'
 import { CircleX } from 'lucide-react'
-import { useActionBook, useMenuStore } from '@/shared/store'
+import { useActionBookStore, useMenuStore } from '@/shared/store'
 import { Menu, AllSelectFlag } from '@/shared/enums'
 
 function Footer() {
@@ -15,7 +15,7 @@ function Footer() {
     updateAllSelectFlag,
     updateDeleteFlag,
     updateDeleteShelfFlag
-  } = useActionBook()
+  } = useActionBookStore()
 
   const handlerDeleteBook = () => {
     modal.confirm({

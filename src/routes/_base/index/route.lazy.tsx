@@ -4,7 +4,7 @@ import { message } from 'antd'
 import { AllSelectFlag } from '@/shared/enums'
 
 import InkCard from '@/shared/components/InkCard'
-import { useActionBook } from '@/shared/store'
+import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
 import { inkmock } from '@/mock/inkmock'
 
@@ -18,7 +18,7 @@ export function Page() {
     updateCancelFlag,
     updateDeleteFlag,
     updateShowShelfFlag
-  } = useActionBook()
+  } = useActionBookStore()
 
   useEffect(() => {
     return () => {

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 
 import { AllSelectFlag } from '@/shared/enums'
 import InkCard from '@/shared/components/InkCard'
-import { useActionBook } from '@/shared/store'
+import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
 
 interface BookShelfType {
@@ -14,7 +14,7 @@ interface BookShelfType {
 
 function BookShelf({ books, setBooks }: BookShelfType) {
   const { allSelectFlag, cancelFlag, deleteFlag, updateAllSelectFlag, updateCancelFlag, updateDeleteFlag } =
-    useActionBook()
+    useActionBookStore()
 
   useEffect(() => {
     if (allSelectFlag == AllSelectFlag.PARTIAL_SELECT_FLAG) {
