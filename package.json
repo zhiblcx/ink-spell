@@ -16,6 +16,7 @@
     "@ant-design/icons": "^5.3.7",
     "@tanstack/react-router": "^1.45.0",
     "antd": "^5.19.1",
+    "axios": "^1.7.2",
     "clsx": "^2.1.1",
     "cn-fontsource-hongleixingshu-regular": "^1.0.7",
     "framer-motion": "^11.3.2",

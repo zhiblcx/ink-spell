@@ -1,4 +1,5 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
+import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import Header from '@/features/layouts/BaseLayout/Header'
 import Content from '@/features/layouts/BaseLayout/Content'
 import Sidebar from '@/features/layouts/BaseLayout/Sidebar'
@@ -15,6 +16,7 @@ export const Route = createLazyFileRoute('/_base')({
           <Footer />
         </div>
       </div>
+      <TanStackRouterDevtools />
     </div>
   )
 })

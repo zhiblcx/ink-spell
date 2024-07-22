@@ -17,10 +17,36 @@
   margin: 0;
 }
 
+a {
+  color: inherit;
+}
+
+a:hover {
+  color: inherit;
+}
+
 .dark {
   color-scheme: dark;
 }
 
 [data-theme='dark'] {
   color: #ffffff;
+}
+
+.scroll::-webkit-scrollbar {
+  width: 7px;
+  background-color: #fff;
+}
+
+[data-theme='dark'] .scroll::-webkit-scrollbar {
+  background: #000;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  background-color: #a5a5a5;
+  border-radius: 5px;
+}
+
+[data-theme='dark'] .scroll::-webkit-slider-thumb {
+  background-color: #ebebeb;
 }

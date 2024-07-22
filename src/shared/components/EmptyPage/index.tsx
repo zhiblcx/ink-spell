@@ -15,7 +15,7 @@ function EmptyPage(props: EmptyPageType) {
       <div className="absolute">
         <GoastSvg color={theme === Theme.DARK ? '#000' : '#fff'} />
       </div>
-      <div className="text-white dark:text-black">
+      <div className="text-white dark:text-black select-none">
         暂时没有书籍，请先导入书籍哦~暂时没有书籍，请先导入书籍哦~暂时没有书籍，请先导入书籍哦~
         暂时没有书籍，请先导入书籍哦~ 暂时没有书籍，请先导入书籍哦~
       </div>

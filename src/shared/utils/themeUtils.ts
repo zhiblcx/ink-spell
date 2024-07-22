@@ -6,7 +6,7 @@ export class ThemeUtils {
     return localStorage.getItem(this.#THEME_KEY)
   }
 
-  static setTheme(theme: string): void {
+  static setTheme(theme: Theme): void {
     localStorage.setItem(this.#THEME_KEY, theme)
   }
 
