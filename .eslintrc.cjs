@@ -6,6 +6,13 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: ['react-refresh'],
   rules: {
-    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }]
+    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+    'no-console': [
+      //提交时不允许有console.log
+      'warn',
+      {
+        allow: ['warn', 'error']
+      }
+    ]
   }
 }

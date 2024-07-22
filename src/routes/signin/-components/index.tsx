@@ -1,13 +1,12 @@
-import { Button, Checkbox, Form, Input, ConfigProvider, Flex } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 
-import logoLight from '@/assets/images/logo-light.png'
-import loginLightImg from '@/assets/images/login-light.png'
 import loginDarkImg from '@/assets/images/login-dark.png'
-import { useThemeStore } from '@/shared/store'
+import loginLightImg from '@/assets/images/login-light.png'
+import logoLight from '@/assets/images/logo-light.png'
 import { Theme } from '@/shared/enums'
+import { useThemeStore } from '@/shared/store'
 import './index.scss'
 
 type SigninType = {
@@ -20,9 +19,9 @@ export default function Signin() {
   const { theme } = useThemeStore()
   const navigate = useNavigate()
   return (
-    <div className="relative overflow-hidden w-screen h-screen items-center flex justify-center">
+    <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden">
       <img
-        className="absolute object-center object-cover w-full h-full"
+        className="absolute h-full w-full object-cover object-center"
         src={theme === Theme.DARK ? loginDarkImg : loginLightImg}
       />
 
@@ -42,7 +41,7 @@ export default function Signin() {
           whileInView={{ opacity: 1 }}
         >
           <Form
-            className="signin_translation backdrop-blur relative  flex flex-col justify-center items-center px-14 py-5 rounded-2xl shadow-lg"
+            className="signin_translation relative flex flex-col items-center justify-center rounded-2xl px-14 py-5 shadow-lg backdrop-blur"
             layout="vertical"
             onFinish={() => {
               navigate({ to: '/', replace: true })
@@ -50,11 +49,11 @@ export default function Signin() {
           >
             <img
               src={logoLight}
-              className="w-[200px] mb-2"
+              className="mb-2 w-[200px]"
             ></img>
             <div className="mb-2">欢迎来到 ink-spell 🎉</div>
 
-            <div className="text-xl mb-2">登录</div>
+            <div className="mb-2 text-xl">登录</div>
 
             <Form.Item<SigninType>
               className="min-[375px]:w-[200px] md:w-[250px]"
@@ -84,7 +83,7 @@ export default function Signin() {
               <Flex
                 justify="space-between"
                 align="center"
-                className="min-[375px]:w-[220px] md:w-[250px] mt-2"
+                className="mt-2 min-[375px]:w-[220px] md:w-[250px]"
               >
                 <Form.Item<SigninType>
                   name="remember"

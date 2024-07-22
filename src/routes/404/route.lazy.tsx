@@ -1,5 +1,4 @@
 import { createLazyFileRoute, Link } from '@tanstack/react-router'
-import { Button, Result } from 'antd'
 export const Route = createLazyFileRoute('/404')({
   component: () => <Page />
 })

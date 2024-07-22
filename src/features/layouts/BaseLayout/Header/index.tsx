@@ -1,12 +1,12 @@
-import { Input, Button, Avatar, Dropdown, type MenuProps } from 'antd'
-import { AlignLeft, AlignRight } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
+import { type MenuProps } from 'antd'
+import { AlignLeft, AlignRight } from 'lucide-react'
 
-import ThemeToggle from '@/shared/components/ThemeToggle'
 import avatar from '@/assets/images/avatar.png'
-import { ReactNode } from '@tanstack/react-router'
-import { useMenuStore } from '@/shared/store'
+import ThemeToggle from '@/shared/components/ThemeToggle'
 import { Menu } from '@/shared/enums'
+import { useMenuStore } from '@/shared/store'
+import { ReactNode } from '@tanstack/react-router'
 
 function Header() {
   const { Search } = Input
@@ -70,7 +70,7 @@ function Header() {
     )
   }
   return (
-    <div className="flex justify-between items-center py-4">
+    <div className="flex items-center justify-between py-4">
       <div className="flex items-center">
         <Icon
           onClick={() => {
@@ -78,11 +78,11 @@ function Header() {
           }}
         />
         <Search
-          className="flex justify-center items-center mx-2 min-[375px]:mx-0 min-[375px]:w-[145px] md:w-[200px]"
+          className="mx-2 flex items-center justify-center min-[375px]:mx-0 min-[375px]:w-[145px] md:w-[200px]"
           placeholder="请输入要搜索的书"
         />
       </div>
-      <div className="md:mr-10 flex justify-center items-center md:space-x-4 min-[375px]:space-x-2 min-[375px]:ml-2">
+      <div className="flex items-center justify-center min-[375px]:ml-2 min-[375px]:space-x-2 md:mr-10 md:space-x-4">
         <ThemeToggle />
         <Dropdown
           menu={{ items }}

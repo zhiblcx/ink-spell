@@ -1,8 +1,6 @@
-import clsx from 'clsx'
-import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Drawer } from 'antd'
+import clsx from 'clsx'
+import { AnimatePresence, motion } from 'framer-motion'
 
 import { useActionBookStore } from '@/shared/store'
 
@@ -46,15 +44,15 @@ function Sidebar({ currentChapter }: SidebarActiveType) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="dark:bg-black min-w-[220px] scroll bg-white md:hover:overflow-y-auto md:overflow-y-hidden min-[375px]:overflow-y-auto"
+              className="scroll min-w-[220px] bg-white dark:bg-black min-[375px]:overflow-y-auto md:overflow-y-hidden md:hover:overflow-y-auto"
             >
-              <div className="text-center text-xl my-3">目录</div>
-              <ul className="flex flex-col ml-2 space-y-1">
+              <div className="my-3 text-center text-xl">目录</div>
+              <ul className="ml-2 flex flex-col space-y-1">
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map((item, index) => (
                   <li
                     className={clsx(
-                      currentChapter == index ? 'dark:bg-[#4b4b4b] text-white bg-[#474c50]' : '',
-                      'px-4 py-1 truncate rounded-md dark:hover:bg-[#474c50] hover:bg-[#4b4b4b] hover:text-white'
+                      currentChapter == index ? 'bg-[#474c50] text-white dark:bg-[#4b4b4b]' : '',
+                      'truncate rounded-md px-4 py-1 hover:bg-[#4b4b4b] hover:text-white dark:hover:bg-[#474c50]'
                     )}
                     key={index}
                   >
@@ -77,18 +75,18 @@ function Sidebar({ currentChapter }: SidebarActiveType) {
           width="220px"
           closeIcon={false}
         >
-          <div className="dark:bg-black scroll bg-white md:hover:overflow-y-auto md:overflow-y-hidden min-[375px]:overflow-y-auto">
-            <ul className="flex flex-col ml-2 space-y-1">
+          <div className="scroll bg-white dark:bg-black min-[375px]:overflow-y-auto md:overflow-y-hidden md:hover:overflow-y-auto">
+            <ul className="ml-2 flex flex-col space-y-1">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map((item, index) => (
                 <li
-                  className={clsx('truncate rounded-md dark:hover:bg-[#474c50] hover:bg-[#4b4b4b] hover:text-white')}
+                  className={clsx('truncate rounded-md hover:bg-[#4b4b4b] hover:text-white dark:hover:bg-[#474c50]')}
                   key={index}
                 >
                   <Link
                     search={{ chapter: index }}
                     className={clsx(
-                      currentChapter == index ? 'dark:bg-[#4b4b4b] text-white bg-[#474c50]' : '',
-                      'px-4 py-1 block'
+                      currentChapter == index ? 'bg-[#474c50] text-white dark:bg-[#4b4b4b]' : '',
+                      'block px-4 py-1'
                     )}
                   >
                     第{item}章：你好22

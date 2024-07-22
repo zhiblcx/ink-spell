@@ -1,9 +1,8 @@
-import { useEffect, Suspense } from 'react'
-import { message, Skeleton } from 'antd'
 import { motion } from 'framer-motion'
+import { Suspense } from 'react'
 
-import { AllSelectFlag } from '@/shared/enums'
 import InkCard from '@/shared/components/InkCard'
+import { AllSelectFlag } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
 

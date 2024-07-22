@@ -1,12 +1,10 @@
-import { createLazyFileRoute } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
-import { message } from 'antd'
 import { AllSelectFlag } from '@/shared/enums'
+import { createLazyFileRoute } from '@tanstack/react-router'
 
+import { inkmock } from '@/mock/inkmock'
 import InkCard from '@/shared/components/InkCard'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
-import { inkmock } from '@/mock/inkmock'
 
 export function Page() {
   const [books, setBooks] = useState(inkmock.map((item) => ({ ...item, checked: false })))

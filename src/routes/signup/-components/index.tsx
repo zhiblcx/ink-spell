@@ -1,4 +1,3 @@
-import { Button, Form, Input, ConfigProvider } from 'antd'
 import { LockOutlined, UserOutlined, MailOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import { motion } from 'framer-motion'

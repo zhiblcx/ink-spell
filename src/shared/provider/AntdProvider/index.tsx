@@ -1,8 +1,8 @@
-import { PropsWithChildren } from 'react'
-import { ConfigProvider, theme } from 'antd'
-import { HappyProvider } from '@ant-design/happy-work-theme'
-import { useThemeStore } from '@/shared/store/ThemeStore'
 import { Theme } from '@/shared/enums'
+import { useThemeStore } from '@/shared/store/ThemeStore'
+import { HappyProvider } from '@ant-design/happy-work-theme'
+import { ConfigProvider, theme } from 'antd'
+import { PropsWithChildren } from 'react'
 
 export default function AntdProvider(props: PropsWithChildren) {
   const { children } = props

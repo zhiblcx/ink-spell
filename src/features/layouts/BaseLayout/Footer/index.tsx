@@ -1,8 +1,7 @@
-import clsx from 'clsx'
-import { Modal } from 'antd'
-import { CircleX } from 'lucide-react'
+import { AllSelectFlag, Menu } from '@/shared/enums'
 import { useActionBookStore, useMenuStore } from '@/shared/store'
-import { Menu, AllSelectFlag } from '@/shared/enums'
+import clsx from 'clsx'
+import { CircleX } from 'lucide-react'
 
 function Footer() {
   const [modal, contextHolder] = Modal.useModal()
@@ -20,7 +19,7 @@ function Footer() {
   const handlerDeleteBook = () => {
     modal.confirm({
       title: '删除书籍',
-      icon: <CircleX className="text-red-500 mr-2" />,
+      icon: <CircleX className="mr-2 text-red-500" />,
       content: '确定要删除选中的书籍吗?',
       okText: '确定',
       cancelText: '取消',
@@ -34,7 +33,7 @@ function Footer() {
   const handlerDeleteBookShelf = () => {
     modal.confirm({
       title: '删除该书架',
-      icon: <CircleX className="text-red-500 mr-2" />,
+      icon: <CircleX className="mr-2 text-red-500" />,
       content: '确定要删除该书架吗？?',
       okText: '确定',
       cancelText: '取消',
@@ -49,13 +48,13 @@ function Footer() {
     <>
       <ul
         className={clsx(
-          'flex space-x-3 absolute bottom-4',
+          'absolute bottom-4 flex space-x-3',
           menu === Menu.EXTEND ? 'min-[375px]:flex' : 'min-[375px]:hidden',
           cancelFlag ? 'md:hidden' : 'md:flex'
         )}
       >
         <li
-          className="cursor-pointer md:block min-[375px]:hidden"
+          className="cursor-pointer min-[375px]:hidden md:block"
           onClick={() => {
             updateCancelFlag(!cancelFlag)
           }}
@@ -64,7 +63,7 @@ function Footer() {
         </li>
 
         <li
-          className="cursor-pointer md:hidden min-[375px]:auto"
+          className="min-[375px]:auto cursor-pointer md:hidden"
           onClick={() => {
             updateCancelFlag(!cancelFlag)
           }}
@@ -95,14 +94,14 @@ function Footer() {
         </li>
 
         <li
-          className="text-red-500 cursor-pointer"
+          className="cursor-pointer text-red-500"
           onClick={handlerDeleteBook}
         >
           删除
         </li>
         {showShelfFlag ? (
           <li
-            className="text-red-500 cursor-pointer"
+            className="cursor-pointer text-red-500"
             onClick={handlerDeleteBookShelf}
           >
             删除该书架
