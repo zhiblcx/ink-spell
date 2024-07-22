@@ -1,5 +1,5 @@
 {
-  "name": "ink-spell",
+  "name": "@ink-spell/client",
   "description": "一个收藏的魔法网站",
   "auth": "nicole",
   "private": true,
