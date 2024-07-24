@@ -5,8 +5,13 @@ import path from 'path'
 import AutoImport from 'unplugin-auto-import/vite'
 import { defineConfig } from 'vite'
 
+const DEFAULT_PORT = 6600
+
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    port: Number(process.env.PORT) || DEFAULT_PORT
+  },
   plugins: [
     react(),
     TanStackRouterVite(),

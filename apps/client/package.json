@@ -1,6 +1,6 @@
 {
   "name": "@ink-spell/client",
-  "description": "一个收藏的魔法网站",
+  "description": "一个收藏的魔法网站的客户端",
   "auth": "nicole",
   "private": true,
   "version": "0.0.0",
