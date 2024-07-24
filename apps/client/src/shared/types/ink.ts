@@ -5,15 +5,8 @@ export type Ink = {
   protagonist?: Array<string>
   detail?: string
   book_file?: string
-  category_id?: number
-  checked?: boolean
+  bookshlef_id?: number
   md5?: string
-}
-
-export type Category = {
-  id: number
-  icon: string
-  name: string
 }
 
 export type User = {
