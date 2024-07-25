@@ -12,8 +12,8 @@ model User {
   username   String      @unique
   account    String      @unique
   password   String
-  sex        String
-  email      String
+  sex        String      @default("女")
+  email      String?
   avatar     String
   boofShlefs BookShelf[]
 }
@@ -29,10 +29,10 @@ model BookShelf {
 
 model Book {
   id          Int        @id @default(autoincrement())
-  name        String
-  cover       String
-  protagonist String
-  detail      String
+  name        String?
+  cover       String?
+  protagonist String?
+  detail      String?
   bookFile    String
   bookShelfId Int?
   BookShelf   BookShelf? @relation(fields: [bookShelfId], references: [id])
