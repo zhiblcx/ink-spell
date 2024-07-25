@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { BookModule } from './modules/book/book.module';
 import { BookshelfModule } from './modules/bookshelf/bookshelf.module';
+import { PrismaModule } from './modules/prisma/prisma.module';
 import { UserModule } from './modules/user/user.module';
 
 @Module({
@@ -22,6 +23,7 @@ import { UserModule } from './modules/user/user.module';
     BookModule,
     BookshelfModule,
     AuthModule,
+    PrismaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
