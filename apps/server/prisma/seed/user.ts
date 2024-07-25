@@ -12,6 +12,7 @@ async function seed() {
       avatar: '/static/images/avatar.png',
     },
   });
+  process.stdout.write('Seed your database successfully!\n');
 }
 
 seed()

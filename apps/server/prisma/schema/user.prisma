@@ -1,0 +1,10 @@
+model User {
+  id         Int         @id @default(autoincrement())
+  username   String      @unique
+  account    String      @unique
+  password   String
+  sex        String      @default("女")
+  email      String?
+  avatar     String
+  boofShlefs BookShelf[]
+}

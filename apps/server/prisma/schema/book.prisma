@@ -1,0 +1,11 @@
+model Book {
+  id          Int        @id @default(autoincrement())
+  name        String?
+  cover       String?
+  protagonist String?
+  detail      String?
+  bookFile    String
+  bookShelfId Int?
+  BookShelf   BookShelf? @relation(fields: [bookShelfId], references: [id])
+  md5         String
+}
