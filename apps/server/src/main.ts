@@ -11,6 +11,7 @@ async function bootstrap() {
     .setTitle(appConfig.APP_NAME)
     .setDescription(appConfig.DESCRIPTION)
     .setVersion(appConfig.VERSION)
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup(process.env.SWAGGER_URL, app, document);
