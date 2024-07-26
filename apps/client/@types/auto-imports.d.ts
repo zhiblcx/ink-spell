@@ -11,6 +11,8 @@ declare global {
   const ConfigProvider: typeof import('antd')['ConfigProvider']
   const Drawer: typeof import('antd')['Drawer']
   const Dropdown: typeof import('antd')['Dropdown']
+  const Flex: typeof import('antd')['Flex']
+  const Form: typeof import('antd')['Form']
   const Input: typeof import('antd')['Input']
   const Modal: typeof import('antd')['Modal']
   const Result: typeof import('antd')['Result']

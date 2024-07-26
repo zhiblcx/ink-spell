@@ -6,6 +6,7 @@ import { appConfig } from './config/AppConfig';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix(env.SERVER_PREFIX);
   const options = new DocumentBuilder()
     .setTitle(appConfig.APP_NAME)
     .setDescription(appConfig.DESCRIPTION)
