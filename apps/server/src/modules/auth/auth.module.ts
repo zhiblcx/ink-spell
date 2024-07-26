@@ -6,8 +6,6 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { AuthController } from './auth.controller';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
-import { JwtStrategy } from './strategy/jwt.strategy';
-import { LocalStrategy } from './strategy/local.strategy';
 
 @Module({
   imports: [
@@ -22,8 +20,6 @@ import { LocalStrategy } from './strategy/local.strategy';
   controllers: [AuthController],
   providers: [
     AuthService,
-    LocalStrategy,
-    JwtStrategy,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,

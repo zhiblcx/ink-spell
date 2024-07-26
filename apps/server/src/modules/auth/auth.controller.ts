@@ -1,25 +1,9 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../../shared/utils/setMetadata';
 import { AuthService } from './auth.service';
 import { LoginDao } from './dto/login-auth.dto';
 import { RegisterDto } from './dto/register-auth.dto';
-import { JwtAuthGuard } from './jwt-auth.guard';
 import { LoginVo } from './vo/login-auth-vo';
 
 @Controller('/auth')
@@ -29,7 +13,6 @@ export class AuthController {
 
   @Public()
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard('local'))
   @Post('login')
   @ApiOperation({ summary: '登录' })
   @ApiResponse({
@@ -37,7 +20,7 @@ export class AuthController {
     type: LoginVo,
   })
   signIn(@Body() loginDao: LoginDao) {
-    return this.authService.signIn(loginDao);
+    return this.authService.signIn(loginDao.account, loginDao.password);
   }
 
   @Public()
@@ -49,13 +32,6 @@ export class AuthController {
     type: LoginVo,
   })
   signUp(@Body() registerDto: RegisterDto) {
-    return registerDto;
-  }
-
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+    return this.authService.signUp(registerDto);
   }
 }
