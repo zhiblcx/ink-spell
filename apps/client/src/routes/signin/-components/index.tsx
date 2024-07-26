@@ -10,7 +10,7 @@ import { useThemeStore } from '@/shared/store'
 import './index.scss'
 
 type SigninType = {
-  username: string
+  account: string
   password: string
   remember: boolean
 }
@@ -57,13 +57,13 @@ export default function Signin() {
 
             <Form.Item<SigninType>
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="用户名"
-              name="username"
-              rules={[{ required: true, message: '用户名未填写' }]}
+              label="账号"
+              name="account"
+              rules={[{ required: true, message: '账号未填写' }]}
             >
               <Input
                 prefix={<UserOutlined />}
-                placeholder="请输入你的用户名"
+                placeholder="请输入你的账号"
               />
             </Form.Item>
 
@@ -94,7 +94,12 @@ export default function Signin() {
                 <Form.Item>
                   <span>
                     没有账号，
-                    <Link to="/signup">立即注册</Link>
+                    <Link
+                      to="/signup"
+                      className="hover:text-blue-200"
+                    >
+                      立即注册
+                    </Link>
                   </span>
                 </Form.Item>
               </Flex>

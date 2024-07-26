@@ -29,6 +29,8 @@
     "Input": true,
     "Checkbox": true,
     "Modal": true,
-    "Skeleton": true
+    "Skeleton": true,
+    "Flex": true,
+    "Form": true
   }
 }
