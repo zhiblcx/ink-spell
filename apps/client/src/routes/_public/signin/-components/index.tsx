@@ -1,12 +1,15 @@
-import { LockOutlined, UserOutlined } from '@ant-design/icons'
-import { Link, useNavigate } from '@tanstack/react-router'
-import { motion } from 'framer-motion'
-
 import loginDarkImg from '@/assets/images/login-dark.png'
 import loginLightImg from '@/assets/images/login-light.png'
 import logoLight from '@/assets/images/logo-light.png'
+import { SignInDao } from '@/features/auth/types'
+import request from '@/shared/API/request'
 import { Theme } from '@/shared/enums'
 import { useThemeStore } from '@/shared/store'
+import { AuthUtils } from '@/shared/utils'
+import { LockOutlined, UserOutlined } from '@ant-design/icons'
+import { useMutation } from '@tanstack/react-query'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { motion } from 'framer-motion'
 import './index.scss'
 
 type SigninType = {
@@ -16,8 +19,34 @@ type SigninType = {
 }
 
 export default function Signin() {
-  const { theme } = useThemeStore()
   const navigate = useNavigate()
+  const { theme } = useThemeStore()
+  const [form] = Form.useForm()
+
+  const { mutate } = useMutation({
+    mutationFn: (signInDao: SignInDao) => request.post('/auth/login', signInDao),
+    onSuccess: (result, variables: SigninType) => {
+      AuthUtils.setToken(result.data.data.access_token)
+      navigate({ to: '/', replace: true })
+      if (variables) {
+        AuthUtils.setRememberAccountData(
+          JSON.stringify({
+            account: variables.account,
+            password: variables.password
+          })
+        )
+      } else {
+        AuthUtils.clearRememberAccountData()
+      }
+    }
+  })
+
+  useEffect(() => {
+    const rememberAccountData = JSON.parse(AuthUtils.getRememberAccountData() ?? '')
+    if (rememberAccountData) {
+      form.setFieldsValue({ ...rememberAccountData, remember: true })
+    }
+  }, [form])
   return (
     <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden">
       <img
@@ -41,11 +70,10 @@ export default function Signin() {
           whileInView={{ opacity: 1 }}
         >
           <Form
+            form={form}
             className="signin_translation relative flex flex-col items-center justify-center rounded-2xl px-14 py-5 shadow-lg backdrop-blur"
             layout="vertical"
-            onFinish={() => {
-              navigate({ to: '/', replace: true })
-            }}
+            onFinish={mutate}
           >
             <img
               src={logoLight}
