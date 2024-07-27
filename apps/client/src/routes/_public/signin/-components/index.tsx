@@ -1,14 +1,12 @@
 import loginDarkImg from '@/assets/images/login-dark.png'
 import loginLightImg from '@/assets/images/login-light.png'
 import logoLight from '@/assets/images/logo-light.png'
-import { SignInDao } from '@/features/auth/types'
-import request from '@/shared/API/request'
+import { signinMutation } from '@/features/auth'
 import { Theme } from '@/shared/enums'
 import { useThemeStore } from '@/shared/store'
 import { AuthUtils } from '@/shared/utils'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
-import { useMutation } from '@tanstack/react-query'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import './index.scss'
 
@@ -19,27 +17,9 @@ type SigninType = {
 }
 
 export default function Signin() {
-  const navigate = useNavigate()
   const { theme } = useThemeStore()
   const [form] = Form.useForm()
-
-  const { mutate } = useMutation({
-    mutationFn: (signInDao: SignInDao) => request.post('/auth/login', signInDao),
-    onSuccess: (result, variables: SigninType) => {
-      AuthUtils.setToken(result.data.data.access_token)
-      navigate({ to: '/', replace: true })
-      if (variables) {
-        AuthUtils.setRememberAccountData(
-          JSON.stringify({
-            account: variables.account,
-            password: variables.password
-          })
-        )
-      } else {
-        AuthUtils.clearRememberAccountData()
-      }
-    }
-  })
+  const { mutate } = signinMutation()
 
   useEffect(() => {
     const rememberAccountData = JSON.parse(AuthUtils.getRememberAccountData() ?? '')

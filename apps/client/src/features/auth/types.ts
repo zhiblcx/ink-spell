@@ -5,4 +5,13 @@ export interface SignInDao {
 
 export interface SignUpDao extends SignInDao {
   username: string
+  email?: string
+}
+
+export interface SigninValue extends SignInDao {
+  remember: boolean
+}
+
+export interface SignupValue extends SignUpDao {
+  confirmPassword: string
 }
