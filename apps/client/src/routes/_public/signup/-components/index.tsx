@@ -1,51 +1,23 @@
-import { EditOutlined, LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
-import { Link, useNavigate } from '@tanstack/react-router'
-import { motion } from 'framer-motion'
-
 import loginDarkImg from '@/assets/images/login-dark.png'
 import loginLightImg from '@/assets/images/login-light.png'
 import logoLight from '@/assets/images/logo-light.png'
-import { SignUpDao } from '@/features/auth/types'
-import request from '@/shared/API/request'
+import { signupMutation, SignupValue } from '@/features/auth'
 import { Theme } from '@/shared/enums'
 import { useThemeStore } from '@/shared/store'
-import { AuthUtils } from '@/shared/utils'
 import { confirmPasswordRule } from '@/shared/utils/confirmPasswordRule'
-import { useMutation } from '@tanstack/react-query'
-import { message } from 'antd'
-import { AxiosError } from 'axios'
+import { EditOutlined, LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
+import { Link } from '@tanstack/react-router'
+import { motion } from 'framer-motion'
 import './index.scss'
-
-type SignupType = {
-  account: string
-  password: string
-  confirmPassword: string
-  username: string
-  email?: string
-}
 
 export default function Signup() {
   const { theme } = useThemeStore()
-  const navigate = useNavigate()
-  const { mutate } = useMutation({
-    mutationFn: (signUpDao: SignUpDao) => request.post('/auth/register', signUpDao),
-    onSuccess: async (result) => {
-      AuthUtils.setToken(result.data.data.access_token)
-      navigate({ to: '/', replace: true })
-    },
-    onError: (result: AxiosError) => {
-      const responseData = result.response?.data as { message?: string[] }
-      responseData.message?.forEach((item) => {
-        message.error(item)
-      })
-    }
-  })
+  const { mutate } = signupMutation()
   return (
     <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden">
       <img
         className="absolute h-full w-full object-cover object-center"
         src={theme === Theme.DARK ? loginDarkImg : loginLightImg}
-        alt=""
       />
 
       <ConfigProvider
@@ -76,10 +48,10 @@ export default function Signup() {
 
             <div className="mb-2 text-xl">注册</div>
 
-            <Form.Item<SignupType>
+            <Form.Item<SignupValue>
               className="min-[375px]:w-[200px] md:w-[250px]"
               label="账号"
-              name="username"
+              name="account"
               rules={[{ required: true, message: '账号未填写' }]}
             >
               <Input
@@ -88,7 +60,7 @@ export default function Signup() {
               />
             </Form.Item>
 
-            <Form.Item<SignupType>
+            <Form.Item<SignupValue>
               className="min-[375px]:w-[200px] md:w-[250px]"
               label="密码"
               name="password"
@@ -101,7 +73,7 @@ export default function Signup() {
               />
             </Form.Item>
 
-            <Form.Item<SignupType>
+            <Form.Item<SignupValue>
               className="min-[375px]:w-[200px] md:w-[250px]"
               label="确认密码"
               name="confirmPassword"
@@ -115,19 +87,19 @@ export default function Signup() {
               />
             </Form.Item>
 
-            <Form.Item<SignupType>
+            <Form.Item<SignupValue>
               className="min-[375px]:w-[200px] md:w-[250px]"
               label="用户名"
-              rules={[{ message: '用户名填写错误' }]}
+              name="username"
+              rules={[{ required: true, message: '用户名未填写' }]}
             >
               <Input
-                type="account"
                 prefix={<EditOutlined />}
                 placeholder="请输入你的用户名"
               />
             </Form.Item>
 
-            <Form.Item<SignupType>
+            <Form.Item<SignupValue>
               className="min-[375px]:w-[200px] md:w-[250px]"
               label="邮箱"
               name="email"
