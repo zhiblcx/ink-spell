@@ -1,25 +1,45 @@
 import { EditOutlined, LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 
 import loginDarkImg from '@/assets/images/login-dark.png'
 import loginLightImg from '@/assets/images/login-light.png'
 import logoLight from '@/assets/images/logo-light.png'
+import { SignUpDao } from '@/features/auth/types'
+import request from '@/shared/API/request'
 import { Theme } from '@/shared/enums'
 import { useThemeStore } from '@/shared/store'
+import { AuthUtils } from '@/shared/utils'
 import { confirmPasswordRule } from '@/shared/utils/confirmPasswordRule'
+import { useMutation } from '@tanstack/react-query'
+import { message } from 'antd'
+import { AxiosError } from 'axios'
 import './index.scss'
 
 type SignupType = {
   account: string
   password: string
   confirmPassword: string
-  username?: string
-  email: string
+  username: string
+  email?: string
 }
 
 export default function Signup() {
   const { theme } = useThemeStore()
+  const navigate = useNavigate()
+  const { mutate } = useMutation({
+    mutationFn: (signUpDao: SignUpDao) => request.post('/auth/register', signUpDao),
+    onSuccess: async (result) => {
+      AuthUtils.setToken(result.data.data.access_token)
+      navigate({ to: '/', replace: true })
+    },
+    onError: (result: AxiosError) => {
+      const responseData = result.response?.data as { message?: string[] }
+      responseData.message?.forEach((item) => {
+        message.error(item)
+      })
+    }
+  })
   return (
     <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden">
       <img
@@ -46,6 +66,7 @@ export default function Signup() {
           <Form
             className="signin translation relative flex flex-col items-center justify-center rounded-2xl px-14 py-5 shadow-lg backdrop-blur"
             layout="vertical"
+            onFinish={mutate}
           >
             <img
               src={logoLight}

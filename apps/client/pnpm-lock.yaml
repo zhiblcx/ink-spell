@@ -14,6 +14,9 @@ importers:
       '@ant-design/icons':
         specifier: ^5.3.7
         version: 5.3.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tanstack/react-query':
+        specifier: ^5.51.15
+        version: 5.51.15(react@18.3.1)
       '@tanstack/react-router':
         specifier: ^1.45.0
         version: 1.45.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -654,6 +657,14 @@ packages:
   '@tanstack/history@1.44.2':
     resolution: {integrity: sha512-jT+YoNzcmbyh5u2+MqqsxPTeGa8RsmaZsYQByBZhAYNxyCfhY3sUXWBV31LB9L+l2jcz1cEVN4KKYUUZhOLU3g==}
     engines: {node: '>=12'}
+
+  '@tanstack/query-core@5.51.15':
+    resolution: {integrity: sha512-xyobHDJ0yhPE3+UkSQ2/4X1fLSg7ICJI5J1JyU9yf7F3deQfEwSImCDrB1WSRrauJkMtXW7YIEcC0oA6ZZWt5A==}
+
+  '@tanstack/react-query@5.51.15':
+    resolution: {integrity: sha512-UgFg23SrdIYrmfTSxAUn9g+J64VQy11pb9/EefoY/u2+zWuNMeqEOnvpJhf52XQy0yztQoyM9p6x8PFyTNaxXg==}
+    peerDependencies:
+      react: ^18.0.0
 
   '@tanstack/react-router@1.45.0':
     resolution: {integrity: sha512-iw7+SrM1Jq8i1ALJfGNoIrynZV2plW3kPL9Gc7jJPmtLhEAzWwNRQ68byoj8IUT/cHgDYuQWuEEX+ERSXpYvlg==}
@@ -2679,6 +2690,13 @@ snapshots:
       unplugin-auto-import: 0.18.0(rollup@4.18.1)
 
   '@tanstack/history@1.44.2': {}
+
+  '@tanstack/query-core@5.51.15': {}
+
+  '@tanstack/react-query@5.51.15(react@18.3.1)':
+    dependencies:
+      '@tanstack/query-core': 5.51.15
+      react: 18.3.1
 
   '@tanstack/react-router@1.45.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:

@@ -6,6 +6,7 @@ import avatar from '@/assets/images/avatar.png'
 import ThemeToggle from '@/shared/components/ThemeToggle'
 import { Menu } from '@/shared/enums'
 import { useMenuStore } from '@/shared/store'
+import { AuthUtils } from '@/shared/utils'
 import { ReactNode } from '@tanstack/react-router'
 
 function Header() {
@@ -43,6 +44,7 @@ function Header() {
       label: (
         <div
           onClick={() => {
+            AuthUtils.clearToken()
             navigate({ to: '/signin', replace: true })
           }}
         >

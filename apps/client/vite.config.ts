@@ -10,7 +10,14 @@ const DEFAULT_PORT = 6600
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
-    port: Number(process.env.PORT) || DEFAULT_PORT
+    port: DEFAULT_PORT,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8800',
+        changeOrigin: true
+        // rewrite: path => path.replace(RegExp('^api', ''))
+      }
+    }
   },
   plugins: [
     react(),

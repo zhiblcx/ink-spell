@@ -9,19 +9,6 @@
 - client: Front-end client application based on React and Vite.
 - server: Back-end server based on Next.js.
 
-## Tech Stack
-
-- [x] React
-- [x] Vite
-- [x] TypeScript
-- [x] antd
-- [x] TailwindCSS
-- [x] Sass
-- [x] zustond
-- [x] tankstack Router
-- [x] farmar-motion
-- [] i18n
-
 ## function
 
 - [] Collect books

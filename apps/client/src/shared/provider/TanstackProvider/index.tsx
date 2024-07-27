@@ -1,13 +1,16 @@
-import { routeTree } from '../../../routeTree.gen'
-import { RouterProvider, createRouter } from '@tanstack/react-router'
-import GlobalPending from '@/shared/components/GlobalPending'
 import NotFound from '@/routes/404/route.lazy.tsx'
+import GlobalPending from '@/shared/components/GlobalPending'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { RouterProvider, createRouter } from '@tanstack/react-router'
+import { routeTree } from '../../../routeTree.gen'
 
 const router = createRouter({
   routeTree,
   defaultPendingComponent: GlobalPending,
   defaultNotFoundComponent: NotFound
 })
+
+const queryClient = new QueryClient()
 
 declare module '@tanstack/react-router' {
   interface Register {
@@ -16,7 +19,11 @@ declare module '@tanstack/react-router' {
 }
 
 function TanstackProvider() {
-  return <RouterProvider router={router} />
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  )
 }
 
 export default TanstackProvider
