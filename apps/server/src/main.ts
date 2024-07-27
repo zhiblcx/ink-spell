@@ -15,7 +15,11 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup(process.env.SWAGGER_URL, app, document);
+  SwaggerModule.setup(process.env.SWAGGER_URL, app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  });
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(env.SERVER_PORT);
 }

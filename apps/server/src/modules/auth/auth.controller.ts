@@ -16,6 +16,7 @@ export class AuthController {
   @Post('login')
   @ApiOperation({ summary: '登录' })
   @ApiResponse({
+    status: 200,
     description: '返回实例',
     type: LoginVo,
   })
@@ -28,6 +29,7 @@ export class AuthController {
   @Post('register')
   @ApiOperation({ summary: '注册' })
   @ApiResponse({
+    status: 200,
     description: '返回示例',
     type: LoginVo,
   })
