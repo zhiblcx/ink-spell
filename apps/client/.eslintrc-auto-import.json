@@ -31,6 +31,7 @@
     "Modal": true,
     "Skeleton": true,
     "Flex": true,
-    "Form": true
+    "Form": true,
+    "Upload": true
   }
 }

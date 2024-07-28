@@ -2,9 +2,10 @@ import { motion } from 'framer-motion'
 import { Suspense } from 'react'
 
 import InkCard from '@/shared/components/InkCard'
-import { AllSelectFlag } from '@/shared/enums'
+import { AllSelectBookFlag } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
+import { message } from 'antd'
 
 interface BookShelfType {
   books: Ink[]
@@ -12,27 +13,27 @@ interface BookShelfType {
 }
 
 function BookShelf({ books, setBooks }: BookShelfType) {
-  const { allSelectFlag, cancelFlag, deleteFlag, updateAllSelectFlag, updateCancelFlag, updateDeleteFlag } =
+  const { allSelectBookFlag, cancelFlag, deleteBookFlag, updateAllSelectFlag, updateCancelFlag, updateDeleteFlag } =
     useActionBookStore()
 
   useEffect(() => {
-    if (allSelectFlag == AllSelectFlag.PARTIAL_SELECT_FLAG) {
+    if (allSelectBookFlag == AllSelectBookFlag.PARTIAL_SELECT_FLAG) {
       return
     }
-    if (allSelectFlag == AllSelectFlag.ALL_SELECT_FLAG) {
+    if (allSelectBookFlag == AllSelectBookFlag.ALL_SELECT_FLAG) {
       const currentBooks = Array.from(books)
       currentBooks.forEach((item) => {
         item.checked = false
       })
       setBooks(currentBooks)
-    } else if (allSelectFlag == AllSelectFlag.NOT_ALL_SELECT_FLAG) {
+    } else if (allSelectBookFlag == AllSelectBookFlag.NOT_ALL_SELECT_FLAG) {
       const currentBooks = Array.from(books)
       currentBooks.forEach((item) => {
         item.checked = true
       })
       setBooks(currentBooks)
     }
-  }, [allSelectFlag])
+  }, [allSelectBookFlag])
 
   useEffect(() => {
     if (cancelFlag) {
@@ -40,13 +41,13 @@ function BookShelf({ books, setBooks }: BookShelfType) {
       currentBooks.forEach((item) => {
         item.checked = false
       })
-      updateAllSelectFlag(AllSelectFlag.PARTIAL_SELECT_FLAG)
+      updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
       setBooks(currentBooks)
     }
   }, [cancelFlag])
 
   useEffect(() => {
-    if (deleteFlag) {
+    if (deleteBookFlag) {
       const deleteIds = books.reduce((ids: number[], book: Ink) => {
         if (book.checked) {
           ids.push(book.id)
@@ -59,7 +60,7 @@ function BookShelf({ books, setBooks }: BookShelfType) {
       }
       updateDeleteFlag(false)
     }
-  }, [deleteFlag])
+  }, [deleteBookFlag])
 
   return (
     <Suspense fallback={<Skeleton />}>
@@ -71,18 +72,18 @@ function BookShelf({ books, setBooks }: BookShelfType) {
         {books.map((item, index) => {
           return (
             <InkCard
-              onClick={() => {
+              onClickCheckbox={() => {
                 if (!item.checked) {
                   updateCancelFlag(false)
                 }
                 if (item.checked) {
-                  updateAllSelectFlag(AllSelectFlag.PARTIAL_SELECT_FLAG)
+                  updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
                 }
                 const currentBooks = Array.from(books)
                 currentBooks[index].checked = !item.checked
                 setBooks(currentBooks)
                 if (books.every((book) => book.checked)) {
-                  updateAllSelectFlag(AllSelectFlag.NOT_ALL_SELECT_FLAG)
+                  updateAllSelectFlag(AllSelectBookFlag.NOT_ALL_SELECT_FLAG)
                 }
               }}
               ink={item}

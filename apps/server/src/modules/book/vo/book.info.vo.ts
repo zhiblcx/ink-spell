@@ -8,7 +8,7 @@ export class BookInfoVo {
   name: string;
 
   @ApiProperty({
-    example: '/static/images/123213t37123.png',
+    example: '/static/cover/1722152856838.jpg',
     description: '书的封面',
   })
   cover?: string;

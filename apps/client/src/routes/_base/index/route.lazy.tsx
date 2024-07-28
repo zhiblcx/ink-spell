@@ -1,17 +1,17 @@
-import { AllSelectFlag } from '@/shared/enums'
-import { createLazyFileRoute } from '@tanstack/react-router'
-
 import { inkmock } from '@/mock/inkmock'
 import InkCard from '@/shared/components/InkCard'
+import { AllSelectBookFlag } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
+import { createLazyFileRoute } from '@tanstack/react-router'
+import { message } from 'antd'
 
 export function Page() {
   const [books, setBooks] = useState(inkmock.map((item) => ({ ...item, checked: false })))
   const {
-    allSelectFlag,
+    allSelectBookFlag,
     cancelFlag,
-    deleteFlag,
+    deleteBookFlag,
     updateAllSelectFlag,
     updateCancelFlag,
     updateDeleteFlag,
@@ -26,23 +26,23 @@ export function Page() {
   }, [])
 
   useEffect(() => {
-    if (allSelectFlag == AllSelectFlag.PARTIAL_SELECT_FLAG) {
+    if (allSelectBookFlag == AllSelectBookFlag.PARTIAL_SELECT_FLAG) {
       return
     }
-    if (allSelectFlag == AllSelectFlag.ALL_SELECT_FLAG) {
+    if (allSelectBookFlag == AllSelectBookFlag.ALL_SELECT_FLAG) {
       const currentBooks = Array.from(books)
       currentBooks.forEach((item) => {
         item.checked = false
       })
       setBooks(currentBooks)
-    } else if (allSelectFlag == AllSelectFlag.NOT_ALL_SELECT_FLAG) {
+    } else if (allSelectBookFlag == AllSelectBookFlag.NOT_ALL_SELECT_FLAG) {
       const currentBooks = Array.from(books)
       currentBooks.forEach((item) => {
         item.checked = true
       })
       setBooks(currentBooks)
     }
-  }, [allSelectFlag])
+  }, [allSelectBookFlag])
 
   useEffect(() => {
     if (cancelFlag) {
@@ -50,13 +50,13 @@ export function Page() {
       currentBooks.forEach((item) => {
         item.checked = false
       })
-      updateAllSelectFlag(AllSelectFlag.PARTIAL_SELECT_FLAG)
+      updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
       setBooks(currentBooks)
     }
   }, [cancelFlag])
 
   useEffect(() => {
-    if (deleteFlag) {
+    if (deleteBookFlag) {
       const deleteIds = books.reduce((ids: number[], book: Ink) => {
         if (book.checked) {
           ids.push(book.id)
@@ -69,7 +69,7 @@ export function Page() {
       }
       updateDeleteFlag(false)
     }
-  }, [deleteFlag])
+  }, [deleteBookFlag])
 
   return (
     <>
@@ -78,12 +78,12 @@ export function Page() {
           {books.map((item, index) => {
             return (
               <InkCard
-                onClick={() => {
+                onClickCheckbox={() => {
                   if (!item.checked) {
                     updateCancelFlag(false)
                   }
                   if (item.checked) {
-                    updateAllSelectFlag(AllSelectFlag.PARTIAL_SELECT_FLAG)
+                    updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
                   }
                   const currentBooks = Array.from(books)
                   currentBooks[index].checked = !item.checked

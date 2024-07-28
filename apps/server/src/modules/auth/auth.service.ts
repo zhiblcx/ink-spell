@@ -4,6 +4,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { appConfig } from '../../config/AppConfig';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register-auth.dto';
 import { LoginVo } from './vo/login-auth-vo';
@@ -43,7 +44,7 @@ export class AuthService {
           password,
           username,
           email,
-          avatar: process.env.DEFAULT_AVATAR,
+          avatar: appConfig.DEFAULT_AVATAR,
         },
       });
       const payload = { userId: currentUser.id, account: currentUser.account };

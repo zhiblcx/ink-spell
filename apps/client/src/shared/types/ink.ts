@@ -1,12 +1,14 @@
 export type Ink = {
   id: number
-  ink_name?: string
+  name?: string
   ink_img: string
   protagonist?: Array<string>
-  detail?: string
+  description?: string
   book_file?: string
   bookshlef_id?: number
+  author?: string
   md5?: string
+  checked?: boolean
 }
 
 export type User = {
