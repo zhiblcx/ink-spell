@@ -6,9 +6,8 @@ export const inkmock: Ink[] = [
     name: '翔阳',
     ink_img: 'xiangyang.png',
     protagonist: ['代如颜', '宫玉'],
-    description: '全球大型高危险性统一考试,简称全球高考。真身刷题,及格活命。考制一月一改革,偶尔随机。',
-    bookshlef_id: 1,
-    author: '闵然'
+    detail: '全球大型高危险性统一考试,简称全球高考。真身刷题,及格活命。考制一月一改革,偶尔随机。',
+    category_id: 1
   },
   {
     id: 2,
