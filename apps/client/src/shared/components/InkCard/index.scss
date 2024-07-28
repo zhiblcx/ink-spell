@@ -12,6 +12,9 @@
   position: absolute;
   width: 100%;
   height: 100%;
+}
+
+.photo-visible::before {
   background: linear-gradient(to bottom, transparent 50%, #222);
 }
 

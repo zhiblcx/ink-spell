@@ -1,16 +1,16 @@
+import { AllSelectBookFlag } from '@/shared/enums'
 import { create } from 'zustand'
-import { AllSelectFlag } from '@/shared/enums'
 
 type ActionBookStore = {
-  deleteFlag: boolean
-  allSelectFlag: AllSelectFlag
+  deleteBookFlag: boolean
+  allSelectBookFlag: AllSelectBookFlag
   addSheftFlag: boolean
   cancelFlag: boolean
   showShelfFlag: boolean
   deleteShelfFlag: boolean
   showDirectoryFlag: boolean
   updateDeleteFlag: (flag: boolean) => void
-  updateAllSelectFlag: (flag: AllSelectFlag) => void
+  updateAllSelectFlag: (flag: AllSelectBookFlag) => void
   updateAddSheftFlag: (flag: boolean) => void
   updateCancelFlag: (flag: boolean) => void
   updateShowShelfFlag: (flag: boolean) => void
@@ -19,8 +19,8 @@ type ActionBookStore = {
 }
 
 export const useActionBookStore = create<ActionBookStore>()((set) => ({
-  deleteFlag: false,
-  allSelectFlag: AllSelectFlag.NOT_ALL_SELECT_FLAG,
+  deleteBookFlag: false,
+  allSelectBookFlag: AllSelectBookFlag.NOT_ALL_SELECT_FLAG,
   addSheftFlag: false,
   cancelFlag: true,
   showShelfFlag: false,
@@ -28,11 +28,11 @@ export const useActionBookStore = create<ActionBookStore>()((set) => ({
   showDirectoryFlag: true,
 
   updateDeleteFlag: (flag: boolean) => {
-    set({ deleteFlag: flag })
+    set({ deleteBookFlag: flag })
   },
 
-  updateAllSelectFlag: (flag: AllSelectFlag) => {
-    set({ allSelectFlag: flag })
+  updateAllSelectFlag: (flag: AllSelectBookFlag) => {
+    set({ allSelectBookFlag: flag })
   },
 
   updateAddSheftFlag: (flag: boolean) => {

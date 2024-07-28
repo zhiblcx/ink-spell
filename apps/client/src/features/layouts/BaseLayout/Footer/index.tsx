@@ -1,4 +1,4 @@
-import { AllSelectFlag, Menu } from '@/shared/enums'
+import { AllSelectBookFlag, Menu } from '@/shared/enums'
 import { useActionBookStore, useMenuStore } from '@/shared/store'
 import clsx from 'clsx'
 import { CircleX } from 'lucide-react'
@@ -8,7 +8,7 @@ function Footer() {
   const { menu } = useMenuStore()
   const {
     cancelFlag,
-    allSelectFlag,
+    allSelectBookFlag,
     showShelfFlag,
     updateCancelFlag,
     updateAllSelectFlag,
@@ -84,13 +84,13 @@ function Footer() {
           className="cursor-pointer"
           onClick={() => {
             updateAllSelectFlag(
-              allSelectFlag == AllSelectFlag.NOT_ALL_SELECT_FLAG
-                ? AllSelectFlag.ALL_SELECT_FLAG
-                : AllSelectFlag.NOT_ALL_SELECT_FLAG
+              allSelectBookFlag == AllSelectBookFlag.NOT_ALL_SELECT_FLAG
+                ? AllSelectBookFlag.ALL_SELECT_FLAG
+                : AllSelectBookFlag.NOT_ALL_SELECT_FLAG
             )
           }}
         >
-          {allSelectFlag == AllSelectFlag.NOT_ALL_SELECT_FLAG ? '全不选' : '全选'}
+          {allSelectBookFlag == AllSelectBookFlag.NOT_ALL_SELECT_FLAG ? '全不选' : '全选'}
         </li>
 
         <li

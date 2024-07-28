@@ -17,6 +17,7 @@ declare global {
   const Modal: typeof import('antd')['Modal']
   const Result: typeof import('antd')['Result']
   const Skeleton: typeof import('antd')['Skeleton']
+  const Upload: typeof import('antd')['Upload']
   const createRef: typeof import('react')['createRef']
   const forwardRef: typeof import('react')['forwardRef']
   const lazy: typeof import('react')['lazy']

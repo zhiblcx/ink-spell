@@ -1,8 +1,8 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 
-import BookShelf from '@/shared/components/BookShelf'
 import { inkmock } from '@/mock'
+import BookShelf from '@/shared/components/BookShelf'
 import { useActionBookStore } from '@/shared/store'
 
 interface pageType {
@@ -18,14 +18,14 @@ export function Page() {
   const { inkId }: pageType = Route.useParams()
   const [inks, setInks] = useState(
     inkmock.filter((item) => {
-      return item.category_id == inkId
+      return item.bookshlef_id == inkId
     })
   )
 
   useEffect(() => {
     setInks(
       inkmock.filter((item) => {
-        return item.category_id == inkId
+        return item.bookshlef_id == inkId
       })
     )
     return () => {
