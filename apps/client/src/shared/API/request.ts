@@ -1,7 +1,6 @@
 // 创建 axios 实例
 
 import { AuthUtils } from '@/shared/utils'
-import { redirect } from '@tanstack/react-router'
 import axios from 'axios'
 
 const request = axios.create({
@@ -26,13 +25,13 @@ request.interceptors.request.use(
 )
 
 // 设置响应拦截器
-request.interceptors.request.use(
+request.interceptors.response.use(
   (response) => {
     return response
   },
   (error) => {
     if (error.response && error.response.status == 401) {
-      redirect({ to: '/signin' })
+      window.location.href = '/signin'
       AuthUtils.clearToken()
     }
   }

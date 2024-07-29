@@ -1,18 +1,69 @@
-import { useNavigate } from '@tanstack/react-router'
-import { type MenuProps } from 'antd'
-import { AlignLeft, AlignRight } from 'lucide-react'
-
 import avatar from '@/assets/images/avatar.png'
+import request from '@/shared/API/request'
 import ThemeToggle from '@/shared/components/ThemeToggle'
 import { Menu } from '@/shared/enums'
 import { useMenuStore } from '@/shared/store'
 import { AuthUtils } from '@/shared/utils'
-import { ReactNode } from '@tanstack/react-router'
+import { Md5Utils } from '@/shared/utils/Md5Utils'
+import { ReactNode, useNavigate } from '@tanstack/react-router'
+import type { UploadFile, UploadProps } from 'antd'
+import { message, type MenuProps } from 'antd'
+import { AlignLeft, AlignRight } from 'lucide-react'
 
 function Header() {
   const { Search } = Input
   const { menu, setMenu } = useMenuStore()
   const navigate = useNavigate()
+
+  interface FileWithMD5 extends File {
+    md5?: string
+  }
+
+  interface UploadFileMD5 extends UploadFile {
+    md5?: string
+  }
+
+  const getExtraData: UploadProps['data'] = (file: UploadFileMD5) => {
+    return {
+      md5: file.md5
+    }
+  }
+
+  const props: UploadProps = {
+    accept: 'text/plain',
+    action: '/api/book/upload/file',
+    data: getExtraData,
+    headers: {
+      authorization: `Bearer ${AuthUtils.getToken()}`
+    },
+    showUploadList: false,
+    method: 'post',
+    maxCount: 3,
+    name: 'file',
+    beforeUpload: async (file: FileWithMD5) => {
+      const isTxt = file.type === 'text/plain'
+      if (!isTxt) {
+        message.error(`仅支持上传 txt 文件`)
+      }
+
+      file.md5 = await Md5Utils.getFileMD5(file)
+      const result = await request.get(`/book/md5?md5=${file.md5}`)
+      if (result.data.md5) {
+        if (result.data.path == '') {
+          message.error('请勿重复上传')
+          return
+        }
+      }
+      return isTxt || Upload.LIST_IGNORE
+    },
+    onChange: (info) => {
+      if (info.file.status === 'done') {
+        message.success('上传成功')
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`)
+      }
+    }
+  }
 
   const items: MenuProps['items'] = [
     {
@@ -95,7 +146,12 @@ function Header() {
             size={34}
           />
         </Dropdown>
-        <Button type="primary">导入图书</Button>
+        <Upload
+          {...props}
+          multiple
+        >
+          <Button type="primary">导入图书</Button>
+        </Upload>
       </div>
     </div>
   )

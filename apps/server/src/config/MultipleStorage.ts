@@ -4,7 +4,6 @@ import { diskStorage } from 'multer';
 export function MultipleStorage(fileType, dest = 'public') {
   return {
     fileFilter: (_, file, cb) => {
-      console.log(file);
       if (!fileType.test(file.originalname)) {
         const allowedFileTypes = fileType
           .toString()
