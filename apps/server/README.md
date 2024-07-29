@@ -7,4 +7,5 @@
 - [x] Mysql
 - [x] class-validator
 - [x] jwt
-- [x] spark-md5
+- [x] jschardet
+- [x] iconv-lite

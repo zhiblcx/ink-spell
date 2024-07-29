@@ -1,3 +1,7 @@
+import {
+  detectFileEncoding,
+  readFileContent,
+} from '@/shared/utils/fileOperate';
 import { Injectable } from '@nestjs/common';
 import * as path from 'node:path';
 import { PrismaService } from '../prisma/prisma.service';
@@ -6,6 +10,7 @@ import { PrismaService } from '../prisma/prisma.service';
 export class BookService {
   constructor(private prisma: PrismaService) {}
   async uploadFile(req, file, md5) {
+    const encoding = detectFileEncoding(file.path);
     const filePath = file.path.replace(/\\/g, '/').replace('public', '/static');
     const name = path.parse(file.originalname).name;
     try {
@@ -14,6 +19,7 @@ export class BookService {
       });
       await this.prisma.book.create({
         data: {
+          encoding,
           name: name,
           bookFile: filePath,
           md5,
@@ -50,5 +56,15 @@ export class BookService {
       }
     }
     return result;
+  }
+
+  async showBookContent(bookID) {
+    const currentBook = await this.prisma.book.findUnique({
+      where: { id: Number(bookID) },
+    });
+    console.log(currentBook);
+    const fileName = currentBook.bookFile.replace(/static/, 'public');
+    const content = await readFileContent(fileName, currentBook.encoding);
+    return content;
   }
 }

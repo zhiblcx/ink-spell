@@ -6,6 +6,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   Query,
   Request,
@@ -25,8 +26,10 @@ import {
 import { MultipleStorage } from 'src/config/MultipleStorage';
 import { BookService } from './book.service';
 import { BookFileDto } from './dto/book-file.dto';
+import { BookContentDto } from './dto/book.content.dto';
 import { CoverLoadDto } from './dto/cover-load.dto';
 import { Md5Dto } from './dto/md5.dto';
+import { BookContentVo } from './vo/book.content.vo';
 import { CoverVo } from './vo/cover.vo';
 import { FileVo } from './vo/file.vo';
 import { Md5Vo } from './vo/md5.vo';
@@ -111,7 +114,20 @@ export class BookController {
     description: '返回实例',
     type: Md5Vo,
   })
-  async compareMd5(@Request() req, @Query() query: Md5Dto) {
-    return new Md5Vo(await this.bookService.compareMd5(req, query.md5));
+  async compareMd5(@Request() req, @Query() md5Dto: Md5Dto) {
+    return new Md5Vo(await this.bookService.compareMd5(req, md5Dto.md5));
+  }
+
+  @Get(':bookID')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: '查看书籍' })
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: 200,
+    description: '返回实例',
+    type: BookContentVo,
+  })
+  async showBookContent(@Param() bookContentDto: BookContentDto) {
+    return await this.bookService.showBookContent(bookContentDto.bookID);
   }
 }
