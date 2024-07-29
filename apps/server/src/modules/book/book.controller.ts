@@ -88,11 +88,13 @@ export class BookController {
     type: FileVo,
   })
   async uploadFile(
+    @Request() req,
     @UploadedFile()
     file: Express.Multer.File,
     @Body('md5') md5: string,
   ) {
-    if (await this.bookService.uploadFile(file, md5)) {
+    console.log(file, md5);
+    if (await this.bookService.uploadFile(req, file, md5)) {
       return new FileVo({
         path: file.originalname,
         message: '上传成功',

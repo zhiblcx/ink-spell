@@ -4,6 +4,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import * as dayjs from 'dayjs';
 import { appConfig } from '../../config/AppConfig';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register-auth.dto';
@@ -45,6 +46,13 @@ export class AuthService {
           username,
           email,
           avatar: appConfig.DEFAULT_AVATAR,
+          boofShlefs: {
+            create: {
+              label: '全部图书',
+              createTimer: dayjs().toDate(),
+              allFlag: true,
+            },
+          },
         },
       });
       const payload = { userId: currentUser.id, account: currentUser.account };

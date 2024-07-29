@@ -5,15 +5,19 @@ import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class BookService {
   constructor(private prisma: PrismaService) {}
-  async uploadFile(file, md5) {
+  async uploadFile(req, file, md5) {
     const filePath = file.path.replace(/\\/g, '/').replace('public', '/static');
     const name = path.parse(file.originalname).name;
     try {
+      const currentBookShelf = await this.prisma.bookShelf.findFirst({
+        where: { allFlag: true, userId: req.userId },
+      });
       await this.prisma.book.create({
         data: {
           name: name,
           bookFile: filePath,
           md5,
+          bookShelfId: currentBookShelf.id,
         },
       });
       return true;

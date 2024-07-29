@@ -5,4 +5,5 @@ model BookShelf {
   userId      Int      @map("user_id")
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   books       Book[]
+  allFlag     Boolean  @map("all_flag")
 }
