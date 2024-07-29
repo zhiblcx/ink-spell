@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
+import * as fs from 'node:fs';
 
 @Injectable()
 export class FileValidationPipe implements PipeTransform {
@@ -19,7 +20,12 @@ export class FileValidationPipe implements PipeTransform {
       unit = 'KB';
     }
 
+    console.log(file);
+
     if (file.size > this.fileSize) {
+      fs.unlink(file.path, (err) => {
+        if (err) throw err;
+      });
       throw new BadRequestException(`上传文件不能超过${sizeLimit}${unit}`);
     }
     return file;
