@@ -1,10 +1,10 @@
-import avatar from '@/assets/images/avatar.png'
 import request from '@/shared/API/request'
 import ThemeToggle from '@/shared/components/ThemeToggle'
 import { Menu } from '@/shared/enums'
 import { useMenuStore } from '@/shared/store'
 import { AuthUtils } from '@/shared/utils'
 import { Md5Utils } from '@/shared/utils/Md5Utils'
+import { useQuery } from '@tanstack/react-query'
 import { ReactNode, useNavigate } from '@tanstack/react-router'
 import type { UploadFile, UploadProps } from 'antd'
 import { message, type MenuProps } from 'antd'
@@ -14,6 +14,9 @@ function Header() {
   const { Search } = Input
   const { menu, setMenu } = useMenuStore()
   const navigate = useNavigate()
+
+  const query = useQuery({ queryKey: ['todos'], queryFn: () => request.get('/user/profile') })
+  console.log(query)
 
   interface FileWithMD5 extends File {
     md5?: string
@@ -142,7 +145,7 @@ function Header() {
           placement="bottomLeft"
         >
           <Avatar
-            src={avatar}
+            src={'http://localhost:8800' + query.data?.data.avatar}
             size={34}
           />
         </Dropdown>

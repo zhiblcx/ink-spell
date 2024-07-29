@@ -10,13 +10,3 @@ export type Ink = {
   md5?: string
   checked?: boolean
 }
-
-export type User = {
-  id: number
-  username: string
-  account: string
-  password: string
-  email: string
-  sex: string
-  avatar: string
-}
