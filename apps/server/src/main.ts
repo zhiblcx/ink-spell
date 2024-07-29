@@ -8,8 +8,8 @@ import { appConfig } from './config/AppConfig';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.setGlobalPrefix(env.SERVER_PREFIX);
   app.useStaticAssets('public/', { prefix: '/static' });
+  app.setGlobalPrefix(env.SERVER_PREFIX);
   app.useGlobalPipes(new ValidationPipe());
   const options = new DocumentBuilder()
     .setTitle(appConfig.APP_NAME)
@@ -18,7 +18,11 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup(process.env.SWAGGER_URL, app, document);
+  SwaggerModule.setup(process.env.SWAGGER_URL, app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  });
   await app.listen(env.SERVER_PORT);
 }
 
