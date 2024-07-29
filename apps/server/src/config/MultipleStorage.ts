@@ -11,8 +11,9 @@ export function MultipleStorage(fileType, dest = 'public') {
           .replace(/[()\.$\/\\]/g, '')
           .replace(/[|]/g, '/');
         cb(new BadRequestException(`仅支持 ${allowedFileTypes} 类型`), false);
+      } else {
+        cb(null, true);
       }
-      cb(null, true);
     },
     storage: diskStorage({
       destination: dest,

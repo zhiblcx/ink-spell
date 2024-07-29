@@ -1,10 +1,14 @@
 import { appConfig } from '@/config/AppConfig';
 import { FileValidationPipe } from '@/shared/pipe/ParseFilePipeBuilder';
 import {
+  Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
+  Query,
+  Request,
   UploadedFile,
   UseInterceptors,
   UsePipes,
@@ -22,8 +26,10 @@ import { MultipleStorage } from 'src/config/MultipleStorage';
 import { BookService } from './book.service';
 import { BookFileDto } from './dto/book-file.dto';
 import { CoverLoadDto } from './dto/cover-load.dto';
+import { Md5Dto } from './dto/md5.dto';
 import { CoverVo } from './vo/cover.vo';
 import { FileVo } from './vo/file.vo';
+import { Md5Vo } from './vo/md5.vo';
 
 @Controller('book')
 @ApiTags('书籍管理')
@@ -84,8 +90,26 @@ export class BookController {
   async uploadFile(
     @UploadedFile()
     file: Express.Multer.File,
+    @Body('md5') md5: string,
   ) {
-    const filePath = file.path.replace(/\\/g, '/').replace('public', '/static');
-    this.bookService.uploadFile(filePath);
+    if (await this.bookService.uploadFile(file, md5)) {
+      return new FileVo({
+        path: file.originalname,
+        message: '上传成功',
+      });
+    }
+  }
+
+  @Get('md5')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: '查询是否有重复的书籍' })
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: 200,
+    description: '返回实例',
+    type: Md5Vo,
+  })
+  async compareMd5(@Request() req, @Query() query: Md5Dto) {
+    return new Md5Vo(await this.bookService.compareMd5(req, query.md5));
   }
 }

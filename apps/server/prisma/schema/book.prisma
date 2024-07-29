@@ -8,5 +8,5 @@ model Book {
   bookFile    String     @map("book_file")
   bookShelfId Int?       @map("book_shelf_id")
   BookShelf   BookShelf? @relation(fields: [bookShelfId], references: [id], onDelete: Cascade)
-  md5         String
+  md5         String     @unique
 }

@@ -30,7 +30,7 @@ export class BookInfoVo {
   description?: string;
 
   @ApiProperty({
-    example: '/static/images/123213t37123.txt',
+    example: '/static/book_file/123213t37123.txt',
     description: 'txt文件',
   })
   bookFile: string;

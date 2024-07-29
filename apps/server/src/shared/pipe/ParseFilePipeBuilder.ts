@@ -20,8 +20,6 @@ export class FileValidationPipe implements PipeTransform {
       unit = 'KB';
     }
 
-    console.log(file);
-
     if (file.size > this.fileSize) {
       fs.unlink(file.path, (err) => {
         if (err) throw err;
