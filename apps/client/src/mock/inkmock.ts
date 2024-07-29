@@ -11,25 +11,25 @@ export const inkmock: Ink[] = [
   {
     id: 2,
     name: '全球高考',
-    ink_img: 'cover_ink_1.png',
+    cover: 'cover_ink_1.png',
     bookshlef_id: 2
   },
   {
     id: 3,
     name: '你却爱着一个sb',
-    ink_img: 'cover_ink_2.png',
+    cover: 'cover_ink_2.png',
     protagonist: ['代如颜', '宫玉'],
     bookshlef_id: 1
   },
   {
     id: 4,
     name: '穿堂惊掠琵琶声',
-    ink_img: 'cover_ink_3.png',
+    cover: 'cover_ink_3.png',
     bookshlef_id: 2
   },
   {
     id: 5,
-    ink_img: 'cover_ink_4.jpg',
+    cover: 'cover_ink_4.jpg',
     protagonist: ['季侑言', '景琇'],
     author: '闵然',
     description:
@@ -39,19 +39,19 @@ export const inkmock: Ink[] = [
   {
     id: 6,
     name: '别来无恙',
-    ink_img: 'cover_ink_5.jpg',
+    cover: 'cover_ink_5.jpg',
     bookshlef_id: 3
   },
   {
     id: 7,
     name: '我喜欢你男朋友很久了',
-    ink_img: 'cover_ink_6.jpg',
+    cover: 'cover_ink_6.jpg',
     bookshlef_id: 3
   },
   {
     id: 8,
     name: '天官赐福',
-    ink_img: 'cover_ink_7.jpg',
+    cover: 'cover_ink_7.jpg',
     bookshlef_id: 3
   }
 ]

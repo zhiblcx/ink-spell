@@ -1,7 +1,7 @@
 export type Ink = {
   id: number
   name?: string
-  ink_img?: string
+  cover?: string
   protagonist?: Array<string>
   description?: string
   book_file?: string

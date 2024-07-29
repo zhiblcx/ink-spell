@@ -1,3 +1,4 @@
+import defaultCover from '@/assets/images/cover.png'
 import { type Ink } from '@/shared/types'
 import { type UploadFile, type UploadProps, Input } from 'antd'
 import ImgCrop from 'antd-img-crop'
@@ -56,10 +57,17 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
         />
 
         <div className={clsx(ink.name ? 'photo-visible' : '', 'photo h-[100%] w-[100%] overflow-hidden')}>
-          <img
-            src={getImageUrl(ink.ink_img)}
-            className="h-[100%] w-[100%] object-cover"
-          />
+          {ink.cover ? (
+            <img
+              src={getImageUrl(ink.cover)}
+              className="h-[100%] w-[100%] object-cover"
+            />
+          ) : (
+            <img
+              src={defaultCover}
+              className="h-[100%] w-[100%] object-cover"
+            />
+          )}
         </div>
         <p className="ink-name roboto absolute bottom-4 w-[90%] truncate text-center text-xl text-white">
           {ink.name ? `${ink.name}` : ''}
