@@ -8,8 +8,8 @@ const baseTypeNames = ['String', 'Number', 'Boolean'];
 
 export const APIResponse = <T extends Type<any>>(
   type?: T | T[],
+  msg: string = '请求成功',
   isPage?: boolean,
-  message: string = '请求成功',
 ) => {
   let prop = null;
   // 判断type是否为数组
@@ -56,7 +56,7 @@ export const APIResponse = <T extends Type<any>>(
   const resProps = {
     type: 'object',
     properties: {
-      msg: { type: 'string', value: message },
+      message: { type: 'string', default: msg },
       data: prop,
     },
   };

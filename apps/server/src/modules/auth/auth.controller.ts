@@ -1,5 +1,6 @@
+import { APIResponse } from '@/core/decorator/APIResponse';
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Public } from '../../shared/utils/setMetadata';
 import { AuthService } from './auth.service';
 import { LoginDao } from './dto/login-auth.dto';
@@ -15,7 +16,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   @ApiOperation({ summary: '登录' })
-  @ApiOkResponse({ type: LoginVo })
+  @APIResponse(LoginVo, '登录成功')
   signIn(@Body() loginDao: LoginDao) {
     return this.authService.signIn(loginDao.account, loginDao.password);
   }
@@ -24,7 +25,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('register')
   @ApiOperation({ summary: '注册' })
-  @ApiOkResponse({ type: LoginVo })
+  @APIResponse(LoginVo, '登录成功')
   signUp(@Body() registerDto: RegisterDto) {
     return this.authService.signUp(registerDto);
   }

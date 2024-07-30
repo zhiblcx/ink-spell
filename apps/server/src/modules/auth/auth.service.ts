@@ -1,3 +1,4 @@
+import { R } from '@/shared/res/r';
 import {
   Injectable,
   UnauthorizedException,
@@ -8,7 +9,6 @@ import * as dayjs from 'dayjs';
 import { appConfig } from '../../config/AppConfig';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register-auth.dto';
-import { LoginVo } from './vo/login-auth-vo';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +20,7 @@ export class AuthService {
   async signIn(account: string, password: string) {
     const user = await this.validateLogin(account, password);
     const payload = { userId: user.id, account: user.account };
-    return new LoginVo({
+    return new R({
       data: { access_token: await this.jwtService.signAsync(payload) },
       message: '登录成功',
     });
@@ -56,7 +56,7 @@ export class AuthService {
         },
       });
       const payload = { userId: currentUser.id, account: currentUser.account };
-      return new LoginVo({
+      return new R({
         data: { access_token: await this.jwtService.signAsync(payload) },
         message: '登录成功',
       });

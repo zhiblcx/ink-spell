@@ -1,4 +1,5 @@
 import { appConfig } from '@/config/AppConfig';
+import { APIResponse } from '@/core/decorator/APIResponse';
 import { FileValidationPipe } from '@/core/pipe/ParseFilePipeBuilder';
 import {
   Body,
@@ -57,7 +58,7 @@ export class BookController {
     }),
   )
   @UsePipes(new FileValidationPipe(appConfig.COVER_MAX_FILE_SIZE))
-  @ApiOkResponse({ type: CoverVo })
+  @APIResponse(CoverVo, '上传成功')
   async uploadCover(
     @UploadedFile()
     file: Express.Multer.File,
@@ -80,14 +81,13 @@ export class BookController {
     }),
   )
   @UsePipes(new FileValidationPipe(appConfig.FILE_MAX_FILE_SIZE))
-  @ApiOkResponse({ type: FileVo })
+  @APIResponse(FileVo, '上传成功')
   async uploadFile(
     @Request() req,
     @UploadedFile()
     file: Express.Multer.File,
     @Body('md5') md5: string,
   ) {
-    console.log(file, md5);
     if (await this.bookService.uploadFile(req, file, md5)) {
       return new FileVo({
         path: file.originalname,
@@ -107,7 +107,7 @@ export class BookController {
   @Get(':bookID')
   @ApiOperation({ summary: '查看书籍' })
   @HttpCode(HttpStatus.OK)
-  @ApiOkResponse({ type: BookContentVo })
+  @APIResponse(BookContentVo)
   async showBookContent(@Param() bookContentDto: BookContentDto) {
     return await this.bookService.showBookContent(bookContentDto.bookID);
   }
