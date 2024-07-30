@@ -1,5 +1,5 @@
 import { appConfig } from '@/config/AppConfig';
-import { FileValidationPipe } from '@/shared/pipe/ParseFilePipeBuilder';
+import { FileValidationPipe } from '@/core/pipe/ParseFilePipeBuilder';
 import {
   Body,
   Controller,
@@ -36,11 +36,11 @@ import { Md5Vo } from './vo/md5.vo';
 
 @Controller('book')
 @ApiTags('书籍管理')
+@ApiBearerAuth()
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 
   @Post('upload/cover')
-  @ApiBearerAuth()
   @ApiOperation({ summary: '上传封面' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -71,7 +71,6 @@ export class BookController {
   }
 
   @Post('upload/file')
-  @ApiBearerAuth()
   @ApiOperation({ summary: '上传书籍文件' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -106,7 +105,6 @@ export class BookController {
   }
 
   @Get('md5')
-  @ApiBearerAuth()
   @ApiOperation({ summary: '查询是否有重复的书籍' })
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
@@ -119,7 +117,6 @@ export class BookController {
   }
 
   @Get(':bookID')
-  @ApiBearerAuth()
   @ApiOperation({ summary: '查看书籍' })
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
