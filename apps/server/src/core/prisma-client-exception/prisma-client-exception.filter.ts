@@ -28,7 +28,6 @@ export class PrismaExceptionFilter extends BaseExceptionFilter {
     }
 
     response.status(status).json({
-      statusCode: status,
       message: message,
     });
   }
