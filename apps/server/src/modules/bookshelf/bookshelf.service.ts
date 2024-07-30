@@ -5,7 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 export class BookshelfService {
   constructor(private prisma: PrismaService) {}
   async createBookShelf(req, createBookshelfDto) {
-    await this.prisma.bookShelf.create({
+    return await this.prisma.bookShelf.create({
       data: {
         userId: req.user.userId,
         label: createBookshelfDto.bookShelfName,
@@ -13,5 +13,9 @@ export class BookshelfService {
         allFlag: false,
       },
     });
+  }
+
+  async deleteBookShelf(bookShelfId: number) {
+    await this.prisma.bookShelf.delete({ where: { id: bookShelfId } });
   }
 }

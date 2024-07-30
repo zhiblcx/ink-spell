@@ -19,8 +19,8 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiConsumes,
+  ApiOkResponse,
   ApiOperation,
-  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { MultipleStorage } from 'src/config/MultipleStorage';
@@ -42,6 +42,7 @@ export class BookController {
 
   @Post('upload/cover')
   @ApiOperation({ summary: '上传封面' })
+  @HttpCode(HttpStatus.OK)
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: '选择书的图片',
@@ -56,12 +57,7 @@ export class BookController {
     }),
   )
   @UsePipes(new FileValidationPipe(appConfig.COVER_MAX_FILE_SIZE))
-  @HttpCode(HttpStatus.OK)
-  @ApiResponse({
-    status: 200,
-    description: '返回示例',
-    type: CoverVo,
-  })
+  @ApiOkResponse({ type: CoverVo })
   async uploadCover(
     @UploadedFile()
     file: Express.Multer.File,
@@ -72,6 +68,7 @@ export class BookController {
 
   @Post('upload/file')
   @ApiOperation({ summary: '上传书籍文件' })
+  @HttpCode(HttpStatus.OK)
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: '选择书的文件',
@@ -83,12 +80,7 @@ export class BookController {
     }),
   )
   @UsePipes(new FileValidationPipe(appConfig.FILE_MAX_FILE_SIZE))
-  @HttpCode(HttpStatus.OK)
-  @ApiResponse({
-    status: 200,
-    description: '返回示例',
-    type: FileVo,
-  })
+  @ApiOkResponse({ type: FileVo })
   async uploadFile(
     @Request() req,
     @UploadedFile()
@@ -107,11 +99,7 @@ export class BookController {
   @Get('md5')
   @ApiOperation({ summary: '查询是否有重复的书籍' })
   @HttpCode(HttpStatus.OK)
-  @ApiResponse({
-    status: 200,
-    description: '返回实例',
-    type: Md5Vo,
-  })
+  @ApiOkResponse({ type: Md5Vo })
   async compareMd5(@Request() req, @Query() md5Dto: Md5Dto) {
     return new Md5Vo(await this.bookService.compareMd5(req, md5Dto.md5));
   }
@@ -119,11 +107,7 @@ export class BookController {
   @Get(':bookID')
   @ApiOperation({ summary: '查看书籍' })
   @HttpCode(HttpStatus.OK)
-  @ApiResponse({
-    status: 200,
-    description: '返回实例',
-    type: BookContentVo,
-  })
+  @ApiOkResponse({ type: BookContentVo })
   async showBookContent(@Param() bookContentDto: BookContentDto) {
     return await this.bookService.showBookContent(bookContentDto.bookID);
   }

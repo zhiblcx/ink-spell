@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Public } from '../../shared/utils/setMetadata';
 import { AuthService } from './auth.service';
 import { LoginDao } from './dto/login-auth.dto';
@@ -15,11 +15,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   @ApiOperation({ summary: '登录' })
-  @ApiResponse({
-    status: 200,
-    description: '返回实例',
-    type: LoginVo,
-  })
+  @ApiOkResponse({ type: LoginVo })
   signIn(@Body() loginDao: LoginDao) {
     return this.authService.signIn(loginDao.account, loginDao.password);
   }
@@ -28,11 +24,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('register')
   @ApiOperation({ summary: '注册' })
-  @ApiResponse({
-    status: 200,
-    description: '返回示例',
-    type: LoginVo,
-  })
+  @ApiOkResponse({ type: LoginVo })
   signUp(@Body() registerDto: RegisterDto) {
     return this.authService.signUp(registerDto);
   }

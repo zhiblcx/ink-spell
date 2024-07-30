@@ -1,8 +1,8 @@
 import { Controller, Delete, Get, Param, Put, Request } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiOkResponse,
   ApiOperation,
-  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { UserService } from './user.service';
@@ -14,11 +14,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
   @Get('profile')
   @ApiOperation({ summary: '获取个人信息' })
-  @ApiResponse({
-    status: 200,
-    description: '返回示例',
-    type: UserInfoVo,
-  })
+  @ApiOkResponse({ type: UserInfoVo })
   async getProfile(@Request() req) {
     const user = this.userService.getProfile(req['user']);
     return user;
