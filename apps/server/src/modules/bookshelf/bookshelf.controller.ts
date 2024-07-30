@@ -15,7 +15,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BookshelfService } from './bookshelf.service';
 import { CreateBookshelfDto } from './dto/create-bookshelf.dto';
-import { BookSehlfInfoVo } from './vo/bookshelf.info.vo';
+import { BookShelfInfoVo } from './vo/bookshelf.info.vo';
 import { CreateBookShelfVo } from './vo/create-bookshelf.vo';
 
 @Controller('bookshelf')
@@ -65,7 +65,7 @@ export class BookshelfController {
   @Get(':bookShelfId')
   @ApiOperation({ summary: '查询书架书本' })
   @HttpCode(HttpStatus.OK)
-  @APIResponse(BookSehlfInfoVo, '查询成功')
+  @APIResponse(BookShelfInfoVo, '查询成功')
   async acquireBookShelftByBookShelfId(
     @Param('bookShelfId') bookShelfId: number,
   ) {

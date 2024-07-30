@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BookInfoVo } from 'src/modules/book/vo/book.info.vo';
 
-export class BookSehlfInfoVo {
+export class BookShelfInfoVo {
   @ApiProperty({
     example: 1,
     description: '书架ID',
