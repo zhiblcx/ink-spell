@@ -15,7 +15,16 @@ export class BookshelfService {
     });
   }
 
-  async deleteBookShelf(bookShelfId: number) {
-    await this.prisma.bookShelf.delete({ where: { id: bookShelfId } });
+  async deleteBookShelf(bookShelfId) {
+    await this.prisma.bookShelf.delete({
+      where: { id: parseInt(bookShelfId) },
+    });
+  }
+
+  async updateBookShelf(bookShelfId, updateBookshelfDto) {
+    await this.prisma.bookShelf.update({
+      data: { label: updateBookshelfDto.bookShelfName },
+      where: { id: parseInt(bookShelfId) },
+    });
   }
 }

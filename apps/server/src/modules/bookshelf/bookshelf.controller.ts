@@ -14,6 +14,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BookshelfService } from './bookshelf.service';
 import { CreateBookshelfDto } from './dto/create-bookshelf.dto';
+import { UpdateBookshelfDto } from './dto/update-bookshelf.dto';
 import { CreateBookShelfVo } from './vo/create-bookshelf.vo';
 
 @Controller('bookshelf')
@@ -55,8 +56,14 @@ export class BookshelfController {
   @APIResponse(CreateBookShelfVo, '更新成功')
   async updateBookShelf(
     @Param('bookShelfId') bookShelfId: number,
-    @Body() createBookshelfDto: CreateBookshelfDto,
+    @Body() updateBookshelfDto: UpdateBookshelfDto,
   ) {
-    console.log(bookShelfId, createBookshelfDto);
+    return new R({
+      message: '更新成功',
+      data: await this.bookshelfService.updateBookShelf(
+        bookShelfId,
+        updateBookshelfDto,
+      ),
+    });
   }
 }
