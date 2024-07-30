@@ -9,9 +9,17 @@ export class UserService {
     const { password: _, ...userInfo } = await this.prisma.user.findUnique({
       where: { id: user.userId },
     });
-    const bookSehlfs = await this.prisma.bookShelf.findMany({
-      where: { userId: user.userId },
+    return userInfo;
+  }
+
+  async deleteUser(userId) {
+    await this.prisma.user.delete({ where: { id: parseInt(userId) } });
+  }
+
+  async updatePersonUserInfo(userId, updateUserDto) {
+    return await this.prisma.user.update({
+      data: { ...updateUserDto },
+      where: { id: parseInt(userId) },
     });
-    return { bookSehlfs, ...userInfo };
   }
 }

@@ -7,6 +7,9 @@ export class R<T = any> {
   data?: T;
 
   constructor(r?: R<T>) {
+    if (r.message === undefined) {
+      this.message = '请求成功';
+    }
     Object.assign(this, r);
   }
 }
