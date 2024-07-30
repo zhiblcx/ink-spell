@@ -21,6 +21,18 @@ export class BookshelfService {
     });
   }
 
+  async acquireBookShelft(userId) {
+    return await this.prisma.bookShelf.findMany({
+      where: { userId },
+    });
+  }
+
+  async acquireBookShelftByBookShelfId(bookShelfId) {
+    return await this.prisma.book.findMany({
+      where: { bookShelfId: parseInt(bookShelfId) },
+    });
+  }
+
   async updateBookShelf(bookShelfId, updateBookshelfDto) {
     await this.prisma.bookShelf.update({
       data: { label: updateBookshelfDto.bookShelfName },

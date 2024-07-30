@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BookInfoVo } from 'src/modules/book/vo/book.info.vo';
 
-export class bookSehlfInfoVo {
+export class BookSehlfInfoVo {
   @ApiProperty({
     example: 1,
     description: '书架ID',
@@ -29,15 +29,16 @@ export class bookSehlfInfoVo {
   @ApiProperty({
     example: [
       {
-        id: 1,
-        bookShelfId: 1,
-        name: '平凡的世界',
-        protagonist: '[孙少安, 田润叶]',
-        cover: '/static/images/123213t37123.png',
-        bookFile: '/static/book_file/123213t37123.txt',
-        md5: '',
-        description:
-          '该书以中国70年代中期到80年代中期十年间为背景，通过复杂的矛盾纠葛，以孙少安和孙少平两兄弟为中心，刻画了当时社会各阶层众多普通人的形象；劳动与爱情、挫折与追求、痛苦与欢乐、日常生活与巨大社会冲突纷繁地交织在一起，深刻地展示了普通人在大时代历史进程中所走过的艰难曲折的道路。',
+        id: 72,
+        name: 'book',
+        cover: null,
+        protagonist: null,
+        description: null,
+        author: null,
+        bookFile: '/static/book_file/1722266450547.txt',
+        bookShelfId: 3,
+        md5: '097e2a121d0e261a8db2522b6d413f71',
+        encoding: 'UTF-8',
       },
     ],
     description: '书籍',

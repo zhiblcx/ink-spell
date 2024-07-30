@@ -4,6 +4,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
@@ -14,7 +15,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BookshelfService } from './bookshelf.service';
 import { CreateBookshelfDto } from './dto/create-bookshelf.dto';
-import { UpdateBookshelfDto } from './dto/update-bookshelf.dto';
+import { BookSehlfInfoVo } from './vo/bookshelf.info.vo';
 import { CreateBookShelfVo } from './vo/create-bookshelf.vo';
 
 @Controller('bookshelf')
@@ -50,13 +51,39 @@ export class BookshelfController {
     });
   }
 
+  @Get()
+  @ApiOperation({ summary: '查询书架' })
+  @HttpCode(HttpStatus.OK)
+  @APIResponse([CreateBookShelfVo], '查询成功')
+  async acquireBookShelft(@Request() req) {
+    return new R({
+      message: '查询成功',
+      data: await this.bookshelfService.acquireBookShelft(req.user.userId),
+    });
+  }
+
+  @Get(':bookShelfId')
+  @ApiOperation({ summary: '查询书架书本' })
+  @HttpCode(HttpStatus.OK)
+  @APIResponse(BookSehlfInfoVo, '查询成功')
+  async acquireBookShelftByBookShelfId(
+    @Param('bookShelfId') bookShelfId: number,
+  ) {
+    return new R({
+      message: '查询成功',
+      data: await this.bookshelfService.acquireBookShelftByBookShelfId(
+        bookShelfId,
+      ),
+    });
+  }
+
   @Put(':bookShelfId')
   @ApiOperation({ summary: '更新书架' })
   @HttpCode(HttpStatus.OK)
   @APIResponse(CreateBookShelfVo, '更新成功')
   async updateBookShelf(
     @Param('bookShelfId') bookShelfId: number,
-    @Body() updateBookshelfDto: UpdateBookshelfDto,
+    @Body() updateBookshelfDto: CreateBookshelfDto,
   ) {
     return new R({
       message: '更新成功',
