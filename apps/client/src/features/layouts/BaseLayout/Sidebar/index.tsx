@@ -6,16 +6,19 @@ import iconDark from '@/assets/images/icon-dark.png'
 import iconLight from '@/assets/images/icon-light.png'
 import logoDark from '@/assets/images/logo-dark.png'
 import logoLight from '@/assets/images/logo-light.png'
-import { menuList, shelf_value_mock, user_mock } from '@/mock'
+import { menuList } from '@/mock'
+import request from '@/shared/API/request'
 import Navigation from '@/shared/components/Navigation'
 import { Menu, Theme } from '@/shared/enums'
 import { useMenuStore, useThemeStore } from '@/shared/store'
+import { useQuery } from '@tanstack/react-query'
 
 function Sidebar() {
   const { theme } = useThemeStore()
   const { menu } = useMenuStore()
   const [arrow, setArrow] = useState(true)
-  const [myMenuList] = useState(shelf_value_mock.filter((item) => item.dic_id == user_mock.dic_id))
+
+  const query = useQuery({ queryKey: ['bookshelf'], queryFn: () => request.get('bookshelf') })
 
   function Icon() {
     return (
@@ -78,15 +81,19 @@ function Sidebar() {
               exit={{ opacity: 0 }}
             >
               <ul className="mt-2 space-y-2 overflow-hidden whitespace-nowrap transition-all">
-                {myMenuList.map((menu) => (
-                  <li key={menu.id}>
-                    <Navigation
-                      value={menu.label}
-                      label={`/bookshelf/${menu.id}`}
-                      Icon={BookHeart}
-                    />
-                  </li>
-                ))}
+                {query.data?.data.data.map((menu) =>
+                  !menu.allFlag ? (
+                    <li key={menu.id}>
+                      <Navigation
+                        value={menu.label}
+                        label={`/bookshelf/${menu.id}`}
+                        Icon={BookHeart}
+                      />
+                    </li>
+                  ) : (
+                    ''
+                  )
+                )}
               </ul>
             </motion.div>
           )}
