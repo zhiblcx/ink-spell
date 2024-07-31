@@ -1,8 +1,10 @@
 import { inkmock } from '@/mock/inkmock'
+import request from '@/shared/API/request'
 import InkCard from '@/shared/components/InkCard'
 import { AllSelectBookFlag } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
+import { useQuery } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { message } from 'antd'
 
@@ -17,6 +19,20 @@ export function Page() {
     updateDeleteFlag,
     updateShowShelfFlag
   } = useActionBookStore()
+
+  const { data } = useQuery({
+    queryKey: ['bookshelf'],
+    queryFn: () => request.get('/bookshelf')
+  })
+
+  const bookShelfId = data?.data.data[0].id
+
+  const queryBook = useQuery({
+    queryKey: ['bookshelf_book', bookShelfId],
+    queryFn: () => request.get(`/bookshelf/${bookShelfId}`)
+  })
+
+  console.log(queryBook)
 
   useEffect(() => {
     return () => {
@@ -75,7 +91,7 @@ export function Page() {
     <>
       <div className="">
         <div className="flex flex-wrap min-[375px]:justify-center md:justify-start">
-          {books.map((item, index) => {
+          {queryBook.data?.data.data.map((item, index) => {
             return (
               <InkCard
                 onClickCheckbox={() => {

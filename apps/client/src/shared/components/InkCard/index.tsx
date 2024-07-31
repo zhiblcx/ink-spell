@@ -20,7 +20,7 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
   const [bookCover, setBookCover] = useState<UploadFile[]>([])
 
   useEffect(() => {
-    const [role1, role2] = book.protagonist === undefined ? ['', ''] : book.protagonist.slice()
+    const [role1, role2] = book.protagonist === null ? ['', ''] : book.protagonist.slice()
     form.setFieldsValue({ ...book, role1, role2 })
   }, [book])
 
