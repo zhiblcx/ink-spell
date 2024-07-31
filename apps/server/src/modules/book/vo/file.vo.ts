@@ -7,9 +7,6 @@ export class FileVo {
   })
   path: string;
 
-  @ApiProperty({ example: '保存成功' })
-  message: string;
-
   constructor(filevo: FileVo) {
     Object.assign(this, filevo);
   }

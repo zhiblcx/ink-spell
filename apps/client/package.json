@@ -6,7 +6,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --force --host",
     "build": "tsc -b && vite build --mode local",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -21,7 +21,6 @@
     "antd-img-crop": "^4.22.0",
     "axios": "^1.7.2",
     "clsx": "^2.1.1",
-    "cn-fontsource-hongleixingshu-regular": "^1.0.7",
     "framer-motion": "^11.3.2",
     "lucide-react": "^0.408.0",
     "react": "^18.3.1",

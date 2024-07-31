@@ -1,13 +1,13 @@
+import Content from '@/features/layouts/BaseLayout/Content'
+import Footer from '@/features/layouts/BaseLayout/Footer'
+import Header from '@/features/layouts/BaseLayout/Header'
+import Sidebar from '@/features/layouts/BaseLayout/Sidebar'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
-import Header from '@/features/layouts/BaseLayout/Header'
-import Content from '@/features/layouts/BaseLayout/Content'
-import Sidebar from '@/features/layouts/BaseLayout/Sidebar'
-import Footer from '@/features/layouts/BaseLayout/Footer'
 
 export const Route = createLazyFileRoute('/_base')({
   component: () => (
-    <div className="dark:bg-black flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden dark:bg-black">
       <Sidebar />
       <div className="flex grow flex-col">
         <Header />

@@ -16,7 +16,7 @@ interface AppConfig {
   VERSION: string;
   /**
    * the default avatar url
-   *@default '/static/images/avatar.png''
+   *@default '/static/images/avatar.jpg''
    */
   DEFAULT_AVATAR: string;
   /**
@@ -55,7 +55,7 @@ const appConfig = Object.freeze<Readonly<AppConfig>>({
   APP_NAME: 'ink-spell',
   DESCRIPTION: '一个收藏的魔法网站',
   VERSION: '0.0.1',
-  DEFAULT_AVATAR: '/static/images/avatar.png',
+  DEFAULT_AVATAR: '/static/images/avatar.jpg',
   BOOK_COVER_URL: 'public/cover',
   BOOK_FILE_URL: 'public/book_file',
   COVER_MAX_FILE_SIZE: 500 * 1024,

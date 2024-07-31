@@ -22,7 +22,7 @@ export default function Signin() {
   const { mutate } = signinMutation()
 
   useEffect(() => {
-    const rememberAccountData = JSON.parse(AuthUtils.getRememberAccountData() ?? '')
+    const rememberAccountData = JSON.parse(AuthUtils.getRememberAccountData() ?? 'null')
     if (rememberAccountData) {
       form.setFieldsValue({ ...rememberAccountData, remember: true })
     }

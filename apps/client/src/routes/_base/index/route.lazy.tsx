@@ -73,7 +73,7 @@ export function Page() {
 
   return (
     <>
-      <div>
+      <div className="">
         <div className="flex flex-wrap min-[375px]:justify-center md:justify-start">
           {books.map((item, index) => {
             return (

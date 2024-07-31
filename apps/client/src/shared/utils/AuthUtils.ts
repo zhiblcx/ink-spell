@@ -17,7 +17,7 @@ export class AuthUtils {
    *
    * @example
    * ```ts
-   * JSON.parse(AuthUtils.getRememberAccountData() ?? '')
+   * JSON.parse(AuthUtils.getRememberAccountData() ?? 'null')
    * ```
    */
 

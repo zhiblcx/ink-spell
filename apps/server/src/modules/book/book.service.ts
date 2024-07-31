@@ -58,11 +58,14 @@ export class BookService {
     return result;
   }
 
+  async deleteBook(bookId) {
+    this.prisma.book.delete({ where: { id: parseInt(bookId) } });
+  }
+
   async showBookContent(bookID) {
     const currentBook = await this.prisma.book.findUnique({
       where: { id: Number(bookID) },
     });
-    console.log(currentBook);
     const fileName = currentBook.bookFile.replace(/static/, 'public');
     const content = await readFileContent(fileName, currentBook.encoding);
     return content;

@@ -15,8 +15,7 @@ function Header() {
   const { menu, setMenu } = useMenuStore()
   const navigate = useNavigate()
 
-  const query = useQuery({ queryKey: ['todos'], queryFn: () => request.get('/user/profile') })
-  console.log(query)
+  const query = useQuery({ queryKey: ['user'], queryFn: () => request.get('/user/profile') })
 
   interface FileWithMD5 extends File {
     md5?: string
@@ -74,7 +73,7 @@ function Header() {
       label: (
         <div
           onClick={() => {
-            console.log('个人资料')
+            navigate({ to: '/profile' })
           }}
         >
           个人资料
@@ -145,7 +144,7 @@ function Header() {
           placement="bottomLeft"
         >
           <Avatar
-            src={'http://localhost:8800' + query.data?.data.avatar}
+            src={process.env.VITE_SERVER_URL + query.data?.data.data.avatar}
             size={34}
           />
         </Dropdown>

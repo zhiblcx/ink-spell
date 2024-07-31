@@ -32,6 +32,7 @@
     "Skeleton": true,
     "Flex": true,
     "Form": true,
-    "Upload": true
+    "Upload": true,
+    "Image": true
   }
 }

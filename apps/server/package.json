@@ -8,7 +8,7 @@
   "scripts": {
     "set:env": "dotenv -e .env.local -e .env.example",
     "build": "nest build",
-    "dev": "pnpm set:env -- nest start --watch",
+    "dev": "pnpm set:env -- nest start --force --host --watch",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:debug": "nest start --debug --watch",

@@ -1,9 +1,11 @@
 import { appConfig } from '@/config/AppConfig';
 import { APIResponse } from '@/core/decorator/APIResponse';
 import { FileValidationPipe } from '@/core/pipe/ParseFilePipeBuilder';
+import { R } from '@/shared/res/r';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -20,7 +22,6 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiConsumes,
-  ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
@@ -42,11 +43,11 @@ export class BookController {
   constructor(private readonly bookService: BookService) {}
 
   @Post('upload/cover')
-  @ApiOperation({ summary: '上传封面' })
+  @ApiOperation({ summary: '上传图片' })
   @HttpCode(HttpStatus.OK)
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: '选择书的图片',
+    description: '图片',
     type: CoverLoadDto,
   })
   @UseInterceptors(
@@ -64,7 +65,10 @@ export class BookController {
     file: Express.Multer.File,
   ) {
     const filePath = file.path.replace(/\\/g, '/').replace('public', '/static');
-    return { filePath };
+    return new R({
+      message: '上传成功',
+      data: { filePath },
+    });
   }
 
   @Post('upload/file')
@@ -89,9 +93,11 @@ export class BookController {
     @Body('md5') md5: string,
   ) {
     if (await this.bookService.uploadFile(req, file, md5)) {
-      return new FileVo({
-        path: file.originalname,
+      return new R({
         message: '上传成功',
+        data: {
+          path: file.originalname,
+        },
       });
     }
   }
@@ -99,9 +105,22 @@ export class BookController {
   @Get('md5')
   @ApiOperation({ summary: '查询是否有重复的书籍' })
   @HttpCode(HttpStatus.OK)
-  @ApiOkResponse({ type: Md5Vo })
+  @APIResponse(Md5Vo)
   async compareMd5(@Request() req, @Query() md5Dto: Md5Dto) {
-    return new Md5Vo(await this.bookService.compareMd5(req, md5Dto.md5));
+    return new R({
+      data: await this.bookService.compareMd5(req, md5Dto.md5),
+    });
+  }
+
+  @Delete(':bookID')
+  @ApiOperation({ summary: '删除书籍' })
+  @HttpCode(HttpStatus.OK)
+  @APIResponse(null, '删除成功')
+  async deleteBook(@Param('bookID') bookContentDto: BookContentDto) {
+    return new R({
+      message: '删除成功',
+      data: await this.bookService.deleteBook(bookContentDto.bookID),
+    });
   }
 
   @Get(':bookID')
@@ -109,6 +128,9 @@ export class BookController {
   @HttpCode(HttpStatus.OK)
   @APIResponse(BookContentVo)
   async showBookContent(@Param() bookContentDto: BookContentDto) {
-    return await this.bookService.showBookContent(bookContentDto.bookID);
+    return new R({
+      message: '查询成功',
+      data: await this.bookService.showBookContent(bookContentDto.bookID),
+    });
   }
 }

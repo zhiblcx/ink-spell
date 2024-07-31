@@ -13,6 +13,7 @@ declare global {
   const Dropdown: typeof import('antd')['Dropdown']
   const Flex: typeof import('antd')['Flex']
   const Form: typeof import('antd')['Form']
+  const Image: typeof import('antd')['Image']
   const Input: typeof import('antd')['Input']
   const Modal: typeof import('antd')['Modal']
   const Result: typeof import('antd')['Result']

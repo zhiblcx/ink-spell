@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsNotEmpty,
-  IsOptional,
   IsString,
   Length,
   NotContains,
@@ -37,11 +36,17 @@ export class CreateUserDto {
   username: string;
 
   @IsEmail(undefined, { message: '邮箱格式不正确' })
-  @IsOptional()
   @ApiProperty({
     example: 'nicolezhi@qq.com',
     description: '邮箱',
     required: false,
   })
   email?: string;
+
+  @IsString({ message: '必须为字符串' })
+  @ApiProperty({
+    example: '',
+    description: '头像',
+  })
+  avatar: string;
 }
