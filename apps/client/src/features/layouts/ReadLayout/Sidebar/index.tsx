@@ -68,6 +68,7 @@ function Sidebar({ currentChapter }: SidebarActiveType) {
         </>
       ) : showDirectoryFlag ? (
         <Drawer
+          className="scroll"
           title={<div className="text-center text-xl">目录</div>}
           onClose={onClose}
           open={open}
@@ -75,7 +76,7 @@ function Sidebar({ currentChapter }: SidebarActiveType) {
           width="220px"
           closeIcon={false}
         >
-          <div className="scroll bg-white dark:bg-black min-[375px]:overflow-y-auto md:overflow-y-hidden md:hover:overflow-y-auto">
+          <div className="bg-white dark:bg-black min-[375px]:overflow-y-auto md:overflow-y-hidden md:hover:overflow-y-auto">
             <ul className="ml-2 flex flex-col space-y-1">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map((item, index) => (
                 <li
