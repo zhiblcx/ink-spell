@@ -1,5 +1,6 @@
 import defaultCover from '@/assets/images/cover.png'
 import { type Ink } from '@/shared/types'
+import { useNavigate } from '@tanstack/react-router'
 import { type UploadFile, type UploadProps, Input } from 'antd'
 import ImgCrop from 'antd-img-crop'
 import clsx from 'clsx'
@@ -18,9 +19,10 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
   const [openFlag, setOpenFlag] = useState(false)
   const [book, setBook] = useState(ink)
   const [bookCover, setBookCover] = useState<UploadFile[]>([])
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const [role1, role2] = book.protagonist === null ? ['', ''] : book.protagonist.slice()
+    const [role1, role2] = book.protagonist?.slice() || ['', '']
     form.setFieldsValue({ ...book, role1, role2 })
   }, [book])
 
@@ -56,7 +58,12 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
           onClick={handlerEditBook}
         />
 
-        <div className={clsx(ink.name ? 'photo-visible' : '', 'photo h-[100%] w-[100%] overflow-hidden')}>
+        <div
+          className={clsx(ink.name ? 'photo-visible' : '', 'photo h-[100%] w-[100%] overflow-hidden')}
+          onClick={() => {
+            navigate({ to: `/book/${ink.id}`, search: { chapter: 1 } })
+          }}
+        >
           {ink.cover ? (
             <img
               src={getImageUrl(ink.cover)}

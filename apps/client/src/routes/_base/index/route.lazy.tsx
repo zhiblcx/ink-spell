@@ -91,7 +91,7 @@ export function Page() {
     <>
       <div className="">
         <div className="flex flex-wrap min-[375px]:justify-center md:justify-start">
-          {queryBook.data?.data.data.map((item, index) => {
+          {queryBook.data?.data.data.map((item, index: number) => {
             return (
               <InkCard
                 onClickCheckbox={() => {
