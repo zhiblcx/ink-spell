@@ -1,6 +1,6 @@
 import Content from '@/features/layouts/ReadLayout/Content'
 import Sidebar from '@/features/layouts/ReadLayout/Sidebar'
-import request from '@/shared/API/request'
+import { getBookByBookIdAPI } from '@/shared/API/book'
 import { useQuery } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { Suspense } from 'react'
@@ -19,7 +19,7 @@ function Page() {
 
   const query = useQuery({
     queryKey: ['book', bookID],
-    queryFn: () => request.get(`/book/${bookID}`)
+    queryFn: () => getBookByBookIdAPI(bookID)
   })
 
   return (
@@ -30,6 +30,7 @@ function Page() {
           currentChapter={chapter - 1}
         />
         <Content
+          allChapterTotal={query.data?.data.data.chapter.length}
           currentChapter={query.data?.data.data.chapter[chapter - 1]}
           currentContent={query.data?.data.data.content[chapter - 1]}
         />

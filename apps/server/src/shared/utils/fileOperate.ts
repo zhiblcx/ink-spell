@@ -17,7 +17,7 @@ export function readFileContent(path, detectedEncoding) {
     crlfDelay: Infinity,
   });
   const chapterPattern =
-    /^(.{0,15}第\s*[一二三四五六七八九十零\d]+\s*章|[\d]+[.|、]\s*第\s*[一二三四五六七八九十零\d]+\s*章)\s*(.*)/;
+    /^(.{0,5}第\s*[一二三四五六七八九十零\d]+\s*章|[\d]+[.|、]\s*第\s*[一二三四五六七八九十零\d]+\s*章)\s*(.{0,10})$/;
 
   const chapter = ['简介'];
   const content = [[]];

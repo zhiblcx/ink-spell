@@ -1,5 +1,6 @@
 import defaultCover from '@/assets/images/cover.png'
 import { type Ink } from '@/shared/types'
+import { BookUtils } from '@/shared/utils'
 import { useNavigate } from '@tanstack/react-router'
 import { type UploadFile, type UploadProps, Input } from 'antd'
 import ImgCrop from 'antd-img-crop'
@@ -61,8 +62,18 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
         <div
           className={clsx(ink.name ? 'photo-visible' : '', 'photo h-[100%] w-[100%] overflow-hidden')}
           onClick={() => {
-            // navigate({ to: `/book/${ink.id}`, search: { chapter: 1 } })
-            window.open(`/book/${ink.id}?chapter=1`, '_blank')
+            const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
+            let chapter = -1
+            if (localBooks.length !== 0) {
+              const book = localBooks.find((item: Array<string>) => {
+                return parseInt(item[0]) === ink.id
+              })
+              if (book !== undefined) {
+                chapter = book[1]
+              }
+            }
+
+            window.open(`/book/${ink.id}?chapter=${chapter != -1 ? chapter : 1}`, '_blank')
           }}
         >
           {ink.cover ? (

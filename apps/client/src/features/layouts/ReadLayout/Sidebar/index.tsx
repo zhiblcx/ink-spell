@@ -1,5 +1,7 @@
 import BookDirectory from '@/shared/components/BookDirectory'
 import { useActionBookStore } from '@/shared/store'
+import { BookUtils } from '@/shared/utils'
+import { useRouter } from '@tanstack/react-router'
 import { AnimatePresence } from 'framer-motion'
 
 interface SidebarActiveType {
@@ -8,6 +10,7 @@ interface SidebarActiveType {
 }
 
 function Sidebar({ currentChapter, allChapter = [] }: SidebarActiveType) {
+  const router = useRouter()
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const [open, setOpen] = useState(false)
   const { showDirectoryFlag } = useActionBookStore()
@@ -21,6 +24,36 @@ function Sidebar({ currentChapter, allChapter = [] }: SidebarActiveType) {
       setOpen(true)
     }
   }, [showDirectoryFlag])
+
+  useEffect(() => {
+    const reg = /\d+/
+    const match = router.latestLocation.href.match(reg)
+    if (match) {
+      const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
+      // 如果一本书都没存
+      if (localBooks.length === 0) {
+        const localBook = new Map()
+        localBook.set(match[0], currentChapter + 1)
+        BookUtils.setBooks(JSON.stringify(Array.from(localBook)))
+      } else {
+        // 存了书
+        const lastChapterIndex = localBooks.findIndex((item: Array<string>) => {
+          return item[0] === match[0]
+        })
+        if (lastChapterIndex >= 0) {
+          // 存了当前阅读的书
+          localBooks[lastChapterIndex][1] = currentChapter + 1
+          BookUtils.setBooks(JSON.stringify(localBooks))
+        } else {
+          // 没存当前阅读的书
+          const localBook = new Map()
+          localBook.set(match[0], currentChapter + 1)
+          localBooks.push(...Array.from(localBook))
+          BookUtils.setBooks(JSON.stringify(localBooks))
+        }
+      }
+    }
+  }, [currentChapter])
 
   useEffect(() => {
     const handleResize = () => {

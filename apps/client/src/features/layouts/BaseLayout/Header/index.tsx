@@ -1,3 +1,4 @@
+import { gerProfileAPI } from '@/shared/API'
 import request from '@/shared/API/request'
 import ThemeToggle from '@/shared/components/ThemeToggle'
 import { Menu } from '@/shared/enums'
@@ -15,7 +16,10 @@ function Header() {
   const { menu, setMenu } = useMenuStore()
   const navigate = useNavigate()
 
-  const query = useQuery({ queryKey: ['user'], queryFn: () => request.get('/user/profile') })
+  const query = useQuery({
+    queryKey: ['user'],
+    queryFn: () => gerProfileAPI()
+  })
 
   interface FileWithMD5 extends File {
     md5?: string

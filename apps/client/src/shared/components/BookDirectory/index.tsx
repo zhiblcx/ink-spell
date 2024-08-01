@@ -1,3 +1,4 @@
+import { useActionBookStore } from '@/shared/store'
 import { Link, useRouter } from '@tanstack/react-router'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
@@ -14,6 +15,7 @@ export default function BookDirectory({
   allChapter = [],
   showDirectoryFlag = true
 }: SidebarActiveType) {
+  const { updateShowDirectoryFlag } = useActionBookStore()
   const router = useRouter()
   const ref = useRef(null)
   const { scrollTo } = useSmoothScroll({
@@ -38,7 +40,18 @@ export default function BookDirectory({
       exit={{ opacity: 0 }}
       className="scroll min-w-[220px] max-w-[220px] min-[375px]:overflow-y-auto md:overflow-y-hidden md:hover:overflow-y-auto"
     >
-      {showDirectoryFlag ? <div className="my-3 text-center text-xl">目录</div> : ''}
+      {showDirectoryFlag ? (
+        <div
+          className="my-3 text-center text-xl"
+          onClick={() => {
+            updateShowDirectoryFlag(!showDirectoryFlag)
+          }}
+        >
+          目录
+        </div>
+      ) : (
+        ''
+      )}
       <ul className="ml-2 flex flex-col space-y-1">
         {allChapter.map((item, index) => (
           <li
