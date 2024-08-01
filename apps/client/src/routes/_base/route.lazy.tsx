@@ -7,7 +7,7 @@ import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 
 export const Route = createLazyFileRoute('/_base')({
   component: () => (
-    <div className="flex h-screen overflow-hidden dark:bg-black">
+    <div className="flex h-screen overflow-hidden dark:bg-[#1f1f1f]">
       <Sidebar />
       <div className="flex grow flex-col">
         <Header />

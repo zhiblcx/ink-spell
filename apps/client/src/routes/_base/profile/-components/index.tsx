@@ -58,7 +58,7 @@ export default function Profile() {
 
   return (
     <div className="relative flex h-full items-center justify-center overflow-hidden">
-      <div className="select-none text-white dark:text-black">
+      <div className="select-none text-white dark:text-[#1f1f1f]">
         暂时没有书籍，请先导入书籍哦~暂时没有书籍，请先导入书籍哦~暂时没有书籍，请先导入书籍哦~
         暂时没有书籍，请先导入书籍哦~ 暂时没有书籍，请先导入书籍哦~
       </div>

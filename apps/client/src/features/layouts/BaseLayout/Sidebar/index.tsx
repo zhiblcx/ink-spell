@@ -40,10 +40,7 @@ function Sidebar() {
 
   return (
     <div
-      className={clsx(
-        'mr-2 bg-white p-2 transition-all dark:bg-black',
-        menu === Menu.EXTEND ? 'min-[375px]:w-0 md:w-[60px]' : 'w-[220px]'
-      )}
+      className={clsx('mr-2 p-2 transition-all', menu === Menu.EXTEND ? 'min-[375px]:w-0 md:w-[60px]' : 'w-[220px]')}
     >
       <Icon />
 

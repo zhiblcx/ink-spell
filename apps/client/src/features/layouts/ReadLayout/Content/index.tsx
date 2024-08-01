@@ -1,8 +1,10 @@
 import { useActionBookStore } from '@/shared/store'
 import { Link, useLocation } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
+import useSmoothScroll from 'react-smooth-scroll-hook'
 
 interface ContentActiveType {
+  currentChapter: string
   currentContent: Array<string>
 }
 
@@ -10,19 +12,25 @@ interface SearchType {
   chapter: number
 }
 
-function Content({ currentContent }: ContentActiveType) {
+function Content({ currentContent = [], currentChapter }: ContentActiveType) {
+  console.log(currentChapter)
   const { showDirectoryFlag, updateShowDirectoryFlag } = useActionBookStore()
   const location = useLocation()
   const { chapter } = location.search as SearchType
-
-  console.log(currentContent)
+  const ref = useRef(null)
+  const { scrollTo } = useSmoothScroll({
+    ref,
+    speed: Infinity,
+    direction: 'y'
+  })
 
   return (
     <motion.div
       layout
-      className="scroll grow overflow-y-auto px-3 dark:bg-black"
+      ref={ref}
+      className="scroll grow overflow-y-auto px-3"
     >
-      <div className="my-3 text-center text-3xl font-bold">第001章 恭喜您</div>
+      <div className="my-3 text-center text-3xl font-bold">{currentChapter}</div>
       <ul className="text-xl leading-10">
         {currentContent.map((item, index) => (
           <li key={index}>{item}</li>
@@ -39,7 +47,12 @@ function Content({ currentContent }: ContentActiveType) {
         >
           目录
         </li>
-        <li>
+        <li
+          onClick={() => {
+            console.log(ref)
+            scrollTo(-Infinity)
+          }}
+        >
           <Link search={{ chapter: chapter + 1 }}>下一章</Link>
         </li>
       </ul>

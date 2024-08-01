@@ -19,7 +19,7 @@ export function readFileContent(path, detectedEncoding) {
   const chapterPattern =
     /^(.*第\s*[一二三四五六七八九十零\d]+\s*章|[\d]+[.|、]\s*第\s*[一二三四五六七八九十零\d]+\s*章)\s*(.*)/;
 
-  const charpter = ['简介'];
+  const chapter = ['简介'];
   const content = [[]];
   let currentChapterIndex = 0; // 当前章节的下标
 
@@ -28,7 +28,7 @@ export function readFileContent(path, detectedEncoding) {
       const chapterMatch = line.match(chapterPattern);
       if (chapterMatch) {
         const chapterTitle = chapterMatch[0];
-        charpter.push(chapterTitle);
+        chapter.push(chapterTitle);
         content.push([]); // 创建一个空数组用于存储该章节的内容
         currentChapterIndex++; // 更新当前章节的下标
       } else if (currentChapterIndex > 0) {
@@ -41,7 +41,7 @@ export function readFileContent(path, detectedEncoding) {
     rl.on('close', () => {
       console.log('文件读取完成。');
       resolve({
-        charpter,
+        chapter,
         content,
       });
     });
