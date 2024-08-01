@@ -13,7 +13,6 @@ interface SearchType {
 }
 
 function Content({ currentContent = [], currentChapter }: ContentActiveType) {
-  console.log(currentChapter)
   const { showDirectoryFlag, updateShowDirectoryFlag } = useActionBookStore()
   const location = useLocation()
   const { chapter } = location.search as SearchType
@@ -23,6 +22,12 @@ function Content({ currentContent = [], currentChapter }: ContentActiveType) {
     speed: Infinity,
     direction: 'y'
   })
+
+  useEffect(() => {
+    if (ref !== null) {
+      scrollTo(-Infinity)
+    }
+  }, [currentContent])
 
   return (
     <motion.div
@@ -38,7 +43,14 @@ function Content({ currentContent = [], currentChapter }: ContentActiveType) {
       </ul>
       <ul className="my-5 flex justify-around text-xl font-bold">
         <li>
-          <Link search={{ chapter: chapter - 1 }}>上一章</Link>
+          <Link
+            search={{ chapter: chapter - 1 }}
+            onClick={() => {
+              scrollTo(-Infinity)
+            }}
+          >
+            上一章
+          </Link>
         </li>
         <li
           onClick={() => {
@@ -49,7 +61,6 @@ function Content({ currentContent = [], currentChapter }: ContentActiveType) {
         </li>
         <li
           onClick={() => {
-            console.log(ref)
             scrollTo(-Infinity)
           }}
         >
@@ -59,4 +70,5 @@ function Content({ currentContent = [], currentChapter }: ContentActiveType) {
     </motion.div>
   )
 }
+
 export default Content

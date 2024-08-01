@@ -1,6 +1,7 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useRouter } from '@tanstack/react-router'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
+import useSmoothScroll from 'react-smooth-scroll-hook'
 
 interface SidebarActiveType {
   currentChapter: number
@@ -13,9 +14,26 @@ export default function BookDirectory({
   allChapter = [],
   showDirectoryFlag = true
 }: SidebarActiveType) {
+  const router = useRouter()
+  const ref = useRef(null)
+  const { scrollTo } = useSmoothScroll({
+    ref,
+    speed: 1000,
+    direction: 'y'
+  })
+
+  useEffect(() => {
+    if (ref !== null) {
+      console.log(ref)
+      const chapter = router.latestLocation.search as { chapter: number }
+      scrollTo(`#y-item-${chapter.chapter}`, -300)
+    }
+  }, [router.latestLocation.search])
+
   return (
     <motion.div
       layout
+      ref={ref}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -30,8 +48,9 @@ export default function BookDirectory({
               'truncate rounded-md px-4 py-1 hover:bg-[#4b4b4b] hover:text-white dark:hover:bg-[#474c50]'
             )}
             key={index}
+            id={`y-item-${index + 1}`}
           >
-            <Link search={{ chapter: index + 1 }}> {item}</Link>
+            <Link search={{ chapter: index + 1 }}> {item} </Link>
           </li>
         ))}
       </ul>

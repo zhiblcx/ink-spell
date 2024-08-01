@@ -35,7 +35,7 @@ function Sidebar({ currentChapter, allChapter = [] }: SidebarActiveType) {
 
   return (
     <AnimatePresence initial={false}>
-      {windowWidth > 375 ? (
+      {windowWidth > 400 ? (
         <>
           {showDirectoryFlag ? (
             <BookDirectory

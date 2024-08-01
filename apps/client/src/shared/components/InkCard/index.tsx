@@ -61,7 +61,8 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
         <div
           className={clsx(ink.name ? 'photo-visible' : '', 'photo h-[100%] w-[100%] overflow-hidden')}
           onClick={() => {
-            navigate({ to: `/book/${ink.id}`, search: { chapter: 1 } })
+            // navigate({ to: `/book/${ink.id}`, search: { chapter: 1 } })
+            window.open(`/book/${ink.id}?chapter=1`, '_blank')
           }}
         >
           {ink.cover ? (
