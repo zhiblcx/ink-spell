@@ -24,7 +24,6 @@ export default function BookDirectory({
 
   useEffect(() => {
     if (ref !== null) {
-      console.log(ref)
       const chapter = router.latestLocation.search as { chapter: number }
       scrollTo(`#y-item-${chapter.chapter}`, -300)
     }
