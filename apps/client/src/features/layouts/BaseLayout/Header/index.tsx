@@ -50,10 +50,11 @@ function Header() {
 
       file.md5 = await Md5Utils.getFileMD5(file)
       const result = await request.get(`/book/md5?md5=${file.md5}`)
-      if (result.data.md5) {
-        if (result.data.path == '') {
+
+      if (result.data.data.md5) {
+        if (result.data.data.path == '') {
           message.error('请勿重复上传')
-          return
+          return false
         }
       }
       return isTxt || Upload.LIST_IGNORE
