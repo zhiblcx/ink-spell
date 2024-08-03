@@ -5,7 +5,7 @@ import { useMenuStore } from '@/shared/store'
 import { AuthUtils } from '@/shared/utils'
 import { Md5Utils } from '@/shared/utils/Md5Utils'
 import { useQuery } from '@tanstack/react-query'
-import { ReactNode, useNavigate } from '@tanstack/react-router'
+import { ReactNode, useNavigate, useRouter } from '@tanstack/react-router'
 import type { MenuProps, UploadFile, UploadProps } from 'antd'
 import { message } from 'antd'
 import { AlignLeft, AlignRight } from 'lucide-react'
@@ -14,6 +14,8 @@ function Header() {
   const { Search } = Input
   const { menu, setMenu } = useMenuStore()
   const navigate = useNavigate()
+  const router = useRouter()
+  const showSearchReg = /^\/$|^\/bookshelf\/.*$/
 
   const query = useQuery({
     queryKey: ['user'],
@@ -138,10 +140,14 @@ function Header() {
             setMenu(menu === Menu.EXTEND ? Menu.SHRINK : Menu.EXTEND)
           }}
         />
-        <Search
-          className="mx-2 flex items-center justify-center min-[375px]:mx-0 min-[375px]:w-[145px] md:w-[200px]"
-          placeholder="请输入要搜索的书"
-        />
+        {showSearchReg.test(router.latestLocation.pathname) ? (
+          <Search
+            className="mx-2 flex items-center justify-center min-[375px]:mx-0 min-[375px]:w-[145px] md:w-[200px]"
+            placeholder="请输入要搜索的书"
+          />
+        ) : (
+          ''
+        )}
       </div>
       <div className="flex items-center justify-center min-[375px]:ml-2 min-[375px]:space-x-2 md:mr-10 md:space-x-4">
         <ThemeToggle />
