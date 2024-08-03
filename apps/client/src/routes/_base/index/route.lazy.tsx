@@ -1,10 +1,11 @@
-import request from '@/shared/API/request'
+import { deleteBookByBookIdAPI, request } from '@/shared/API'
 import InkCard from '@/shared/components/InkCard'
 import { AllSelectBookFlag } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
+import { message } from 'antd'
 
 export function Page() {
   const [books, setBooks] = useState([] as Ink[])
@@ -22,12 +23,19 @@ export function Page() {
     queryKey: ['bookshelf'],
     queryFn: () => request.get('/bookshelf')
   })
-
   const bookShelfId = data?.data.data[0].id
-
   const { data: queryBook, isSuccess } = useQuery({
     queryKey: ['bookshelf_book', bookShelfId],
     queryFn: () => request.get(`/bookshelf/${bookShelfId}`)
+  })
+
+  const queryClient = useQueryClient()
+  const { mutate } = useMutation({
+    mutationFn: (item: Ink) => deleteBookByBookIdAPI(item.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['bookshelf_book'] })
+      message.success('删除成功')
+    }
   })
 
   useEffect(() => {
@@ -38,7 +46,7 @@ export function Page() {
       updateShowShelfFlag(false)
       updateCancelFlag(true)
     }
-  }, [isSuccess])
+  }, [queryBook?.data?.data])
 
   useEffect(() => {
     if (books.length !== 0) {
@@ -49,7 +57,7 @@ export function Page() {
         setBooks(currentBooks)
       }
     }
-  }, [books, cancelFlag])
+  }, [cancelFlag])
 
   useEffect(() => {
     if (allSelectBookFlag == AllSelectBookFlag.PARTIAL_SELECT_FLAG) {
@@ -68,36 +76,48 @@ export function Page() {
 
   useEffect(() => {
     if (deleteBookFlag) {
+      // 删除书本
+      const remainBook = books.filter((item) => {
+        if (item.checked) {
+          mutate(item)
+          return false
+        }
+        return true
+      })
+      setBooks(remainBook)
       updateDeleteFlag(false)
+      updateCancelFlag(true)
     }
   }, [deleteBookFlag])
 
   return (
     <>
-      <div className="">
-        <div className="flex flex-wrap min-[375px]:justify-center md:justify-start">
-          {books.map((item: Ink, index: number) => {
-            return (
-              <InkCard
-                onClickCheckbox={() => {
-                  if (!item.checked) {
-                    updateCancelFlag(false)
-                  }
-                  if (item.checked) {
-                    updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
-                  }
-                  const currentBooks: Ink[] = Array.from(books)
-                  currentBooks[index].checked = !item.checked
-                  setBooks(currentBooks)
-                }}
-                ink={item}
-                customClassName="mr-4 mb-3 mt-3"
-                key={item.id}
-                cancelFlag={cancelFlag}
-              />
-            )
-          })}
-        </div>
+      <div className="flex flex-wrap min-[375px]:justify-center md:justify-start">
+        {books.map((item: Ink, index: number) => {
+          return (
+            <InkCard
+              onClickCheckbox={() => {
+                // 显示地下那一行菜单
+                if (!item.checked) {
+                  updateCancelFlag(false)
+                }
+                const currentBooks: Ink[] = Array.from(books)
+                currentBooks[index].checked = !item.checked
+                setBooks(currentBooks)
+
+                // 判断用户是否是部分选择
+                const flag = currentBooks.some((item) => !item.checked)
+                !flag
+                  ? updateAllSelectFlag(AllSelectBookFlag.NOT_ALL_SELECT_FLAG)
+                  : updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
+              }}
+              ink={item}
+              customClassName="mr-4 mb-3 mt-3"
+              key={item.id}
+              cancelFlag={cancelFlag}
+            />
+          )
+        })}
       </div>
     </>
   )

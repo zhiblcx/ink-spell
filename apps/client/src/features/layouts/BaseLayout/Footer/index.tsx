@@ -68,7 +68,7 @@ function Footer() {
             updateCancelFlag(!cancelFlag)
           }}
         >
-          展示
+          {cancelFlag ? '展示' : '隐藏'}
         </li>
 
         <li

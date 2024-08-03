@@ -16,20 +16,21 @@ export class BookshelfService {
   }
 
   async deleteBookShelf(bookShelfId) {
-    await this.prisma.bookShelf.delete({
+    await this.prisma.bookShelf.update({
+      data: { isDelete: true },
       where: { id: parseInt(bookShelfId) },
     });
   }
 
   async acquireBookShelft(userId) {
     return await this.prisma.bookShelf.findMany({
-      where: { userId },
+      where: { userId, isDelete: false },
     });
   }
 
   async acquireBookShelftByBookShelfId(bookShelfId) {
     return await this.prisma.book.findMany({
-      where: { bookShelfId: parseInt(bookShelfId) },
+      where: { bookShelfId: parseInt(bookShelfId), isDelete: false },
     });
   }
 

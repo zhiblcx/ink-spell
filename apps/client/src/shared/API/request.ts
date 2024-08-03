@@ -3,7 +3,7 @@
 import { AuthUtils } from '@/shared/utils'
 import axios from 'axios'
 
-const request = axios.create({
+export const request = axios.create({
   // 请求 api 公共部分
   baseURL: process.env.VITE_BASE_API_PREFIX,
   // 超时
@@ -36,5 +36,3 @@ request.interceptors.response.use(
     }
   }
 )
-
-export default request

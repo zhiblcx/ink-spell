@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 
 import { inkmock } from '@/mock'
 import BookShelf from '@/shared/components/BookShelf'
+import EmptyPage from '@/shared/components/EmptyPage'
 import { useActionBookStore } from '@/shared/store'
 
 interface pageType {
@@ -36,10 +37,14 @@ export function Page() {
 
   return (
     <>
-      <BookShelf
-        books={inks}
-        setBooks={setInks}
-      />
+      {inks.length === 0 ? (
+        <EmptyPage name="暂时没有书籍，请先导入书籍哦~" />
+      ) : (
+        <BookShelf
+          books={inks}
+          setBooks={setInks}
+        />
+      )}
     </>
   )
 }

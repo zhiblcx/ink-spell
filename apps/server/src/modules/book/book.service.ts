@@ -20,7 +20,7 @@ export class BookService {
       await this.prisma.book.create({
         data: {
           encoding,
-          name: name,
+          name: decodeURIComponent(escape(name)),
           bookFile: filePath,
           md5,
           bookShelfId: currentBookShelf.id,
@@ -48,10 +48,36 @@ export class BookService {
         // 书籍是自己上传的
         if (currentBookShelf.userId == req.user.userId) {
           result.md5 = true;
+          if (currentBook.isDelete) {
+            // 如果删除了直接恢复
+            await this.prisma.book.delete({ where: { id: currentBook.id } });
+            const { id: _, ...restoreBook } = currentBook;
+            await this.prisma.book.create({
+              data: {
+                ...restoreBook,
+                isDelete: false,
+              },
+            });
+            result.path = currentBook.bookFile;
+          }
         } else {
           // 书籍是别人上传的
           result.md5 = true;
           result.path = currentBook.bookFile;
+          // 找到当前用户的默认书籍
+          const defaultBookShelft = await this.prisma.bookShelf.findFirst({
+            where: { allFlag: true, userId: req.user.userId },
+          });
+          // 把书籍移动到当前用户的默认书籍
+          await this.prisma.book.create({
+            data: {
+              bookFile: currentBook.bookFile,
+              bookShelfId: defaultBookShelft.id,
+              md5,
+              isDelete: false,
+              encoding: currentBook.encoding,
+            },
+          });
         }
       }
     }
@@ -59,12 +85,15 @@ export class BookService {
   }
 
   async deleteBook(bookId) {
-    this.prisma.book.delete({ where: { id: parseInt(bookId) } });
+    await this.prisma.book.update({
+      data: { isDelete: true },
+      where: { id: parseInt(bookId) },
+    });
   }
 
   async showBookContent(bookID) {
     const currentBook = await this.prisma.book.findUnique({
-      where: { id: Number(bookID) },
+      where: { id: Number(bookID), isDelete: false },
     });
     const fileName = currentBook.bookFile.replace(/static/, 'public');
     const content = await readFileContent(fileName, currentBook.encoding);

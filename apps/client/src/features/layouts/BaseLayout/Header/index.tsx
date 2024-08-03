@@ -1,5 +1,4 @@
-import { gerProfileAPI } from '@/shared/API'
-import request from '@/shared/API/request'
+import { gerProfileAPI, request } from '@/shared/API'
 import ThemeToggle from '@/shared/components/ThemeToggle'
 import { Menu } from '@/shared/enums'
 import { useMenuStore } from '@/shared/store'
@@ -7,8 +6,8 @@ import { AuthUtils } from '@/shared/utils'
 import { Md5Utils } from '@/shared/utils/Md5Utils'
 import { useQuery } from '@tanstack/react-query'
 import { ReactNode, useNavigate } from '@tanstack/react-router'
-import type { UploadFile, UploadProps } from 'antd'
-import { message, type MenuProps } from 'antd'
+import type { MenuProps, UploadFile, UploadProps } from 'antd'
+import { message } from 'antd'
 import { AlignLeft, AlignRight } from 'lucide-react'
 
 function Header() {
@@ -56,10 +55,12 @@ function Header() {
       const result = await request.get(`/book/md5?md5=${file.md5}`)
 
       if (result.data.data.md5) {
-        if (result.data.data.path == '') {
+        if (result.data.data.path === '') {
           message.error('请勿重复上传')
-          return false
+        } else {
+          message.success('上传成功')
         }
+        return false
       }
       return isTxt || Upload.LIST_IGNORE
     },

@@ -3,7 +3,6 @@ import Footer from '@/features/layouts/BaseLayout/Footer'
 import Header from '@/features/layouts/BaseLayout/Header'
 import Sidebar from '@/features/layouts/BaseLayout/Sidebar'
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 
 export const Route = createLazyFileRoute('/_base')({
   component: () => (
@@ -16,7 +15,6 @@ export const Route = createLazyFileRoute('/_base')({
           <Footer />
         </div>
       </div>
-      <TanStackRouterDevtools />
     </div>
   )
 })

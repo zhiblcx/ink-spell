@@ -13,7 +13,10 @@ export class UserService {
   }
 
   async deleteUser(userId) {
-    await this.prisma.user.delete({ where: { id: parseInt(userId) } });
+    await this.prisma.user.update({
+      data: { isDelete: true },
+      where: { id: parseInt(userId) },
+    });
   }
 
   async updatePersonUserInfo(userId, updateUserDto) {

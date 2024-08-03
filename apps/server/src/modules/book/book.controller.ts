@@ -116,7 +116,7 @@ export class BookController {
   @ApiOperation({ summary: '删除书籍' })
   @HttpCode(HttpStatus.OK)
   @APIResponse(null, '删除成功')
-  async deleteBook(@Param('bookID') bookContentDto: BookContentDto) {
+  async deleteBook(@Param() bookContentDto: BookContentDto) {
     return new R({
       message: '删除成功',
       data: await this.bookService.deleteBook(bookContentDto.bookID),

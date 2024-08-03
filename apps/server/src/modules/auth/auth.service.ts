@@ -64,7 +64,9 @@ export class AuthService {
   }
 
   async validateLogin(account: string, pass: string) {
-    const user = await this.prisma.user.findUnique({ where: { account } });
+    const user = await this.prisma.user.findUnique({
+      where: { account, isDelete: false },
+    });
     if (user && user.password === pass) {
       const { password: _, ...result } = user;
       return result;

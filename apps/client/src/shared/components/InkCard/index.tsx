@@ -46,9 +46,9 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
         )}
       >
         <Checkbox
-          onClick={onClickCheckbox}
           className={clsx('absolute right-3 top-2', cancelFlag ? 'checkbox' : 'visible z-50')}
           checked={ink.checked}
+          onClick={onClickCheckbox}
         />
 
         <Pencil

@@ -1,4 +1,4 @@
-import request from '@/shared/API/request'
+import {request} from '@/shared/API'
 import { User } from '@/shared/types/user'
 import { AuthUtils } from '@/shared/utils'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
