@@ -1,6 +1,6 @@
 import defaultCover from '@/assets/images/cover.png'
 import { type Ink } from '@/shared/types'
-import { BookUtils } from '@/shared/utils'
+import { AuthUtils, BookUtils } from '@/shared/utils'
 import { type UploadFile, type UploadProps, Input } from 'antd'
 import ImgCrop from 'antd-img-crop'
 import clsx from 'clsx'
@@ -18,16 +18,43 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
   const [form] = Form.useForm()
   const [openFlag, setOpenFlag] = useState(false)
   const [book, setBook] = useState(ink)
-  const [bookCover, setBookCover] = useState<UploadFile[]>([])
+  const [bookCover, setBookCover] = useState<UploadFile[]>([
+    {
+      uid: '1',
+      name: 'xxx.png',
+      status: 'done',
+      url: ink.cover ?? defaultCover
+    }
+  ])
+
+  const props: UploadProps = {
+    accept: 'image/png, image/jpeg, image/jpg',
+    action: '/api/book/upload/cover',
+    headers: {
+      authorization: `Bearer ${AuthUtils.getToken()}`
+    },
+    listType: 'picture-card',
+    method: 'post',
+    name: 'file',
+    fileList: bookCover,
+    maxCount: 1,
+    beforeUpload: async (file) => {
+      const image = file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg'
+      return image || Upload.LIST_IGNORE
+    },
+
+    onChange: (info) => {
+      setBookCover(info.fileList)
+      if (info.file.response?.data?.filePath !== undefined) {
+        form.setFieldValue('cover', info.file.response.data.filePath)
+      }
+    }
+  }
 
   useEffect(() => {
     const [role1, role2] = book.protagonist?.slice() || ['', '']
     form.setFieldsValue({ ...book, role1, role2 })
   }, [book])
-
-  function getImageUrl(name: string) {
-    return new URL(`../../../assets/images/${name}`, import.meta.url).href
-  }
 
   function handlerEditBook() {
     setOpenFlag(true)
@@ -75,7 +102,7 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
         >
           {ink.cover ? (
             <img
-              src={getImageUrl(ink.cover)}
+              src={ink.cover}
               className="h-[100%] w-[100%] object-cover"
             />
           ) : (
@@ -105,13 +132,11 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
         title="编辑图书"
         open={openFlag}
         onOk={() => {
+          form.submit()
           setOpenFlag(false)
         }}
         onCancel={() => {
           setOpenFlag(false)
-        }}
-        afterClose={() => {
-          setBook({ ...ink })
         }}
         okText="保存"
         cancelText="取消"
@@ -131,6 +156,7 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
             className="flex flex-col justify-center p-5 px-8"
             layout="vertical"
             form={form}
+            onFinish={mutate}
           >
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
@@ -138,14 +164,7 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
               name="cover"
             >
               <ImgCrop rotationSlider>
-                <Upload
-                  action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-                  listType="picture-card"
-                  fileList={bookCover}
-                  onChange={onChange}
-                >
-                  {bookCover.length < 1 && '+ Upload'}
-                </Upload>
+                <Upload {...props}>{bookCover.length < 1 && '+ Upload'}</Upload>
               </ImgCrop>
             </Form.Item>
             <Form.Item

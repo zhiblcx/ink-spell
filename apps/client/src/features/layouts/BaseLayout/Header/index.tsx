@@ -1,7 +1,7 @@
 import { gerProfileAPI, request } from '@/shared/API'
 import ThemeToggle from '@/shared/components/ThemeToggle'
 import { Menu } from '@/shared/enums'
-import { useMenuStore } from '@/shared/store'
+import { useActionBookStore, useMenuStore } from '@/shared/store'
 import { AuthUtils } from '@/shared/utils'
 import { Md5Utils } from '@/shared/utils/Md5Utils'
 import { useQuery } from '@tanstack/react-query'
@@ -16,6 +16,7 @@ function Header() {
   const navigate = useNavigate()
   const router = useRouter()
   const showSearchReg = /^\/$|^\/bookshelf\/.*$/
+  const { uploadFileFlag, updateUploadFileFlag } = useActionBookStore()
 
   const query = useQuery({
     queryKey: ['user'],
@@ -60,6 +61,9 @@ function Header() {
           message.error('请勿重复上传')
         } else {
           message.success('上传成功')
+          if (!uploadFileFlag) {
+            updateUploadFileFlag(true)
+          }
         }
         return false
       }
@@ -68,6 +72,9 @@ function Header() {
     onChange: (info) => {
       if (info.file.status === 'done') {
         message.success('上传成功')
+        if (!uploadFileFlag) {
+          updateUploadFileFlag(true)
+        }
       } else if (info.file.status === 'error') {
         message.error(`${info.file.name} file upload failed.`)
       }

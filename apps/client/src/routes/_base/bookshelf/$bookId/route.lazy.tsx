@@ -1,3 +1,6 @@
+import { createLazyFileRoute } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
+
 import { request } from '@/shared/API'
 import BookShelf from '@/shared/components/BookShelf'
 import EmptyPage from '@/shared/components/EmptyPage'
@@ -5,21 +8,20 @@ import { AllSelectBookFlag } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { createLazyFileRoute } from '@tanstack/react-router'
+
+interface pageType {
+  bookId: number
+}
 
 export function Page() {
+  const { bookId }: pageType = Route.useParams()
+
   const [books, setBooks] = useState([] as Ink[])
   const { uploadFileFlag, updateAllSelectFlag, updateCancelFlag, updateShowShelfFlag, updateUploadFileFlag } =
     useActionBookStore()
-
-  const { data } = useQuery({
-    queryKey: ['bookshelf'],
-    queryFn: () => request.get('/bookshelf')
-  })
-  const bookShelfId = data?.data.data[0].id
   const { data: queryBook, isSuccess } = useQuery({
-    queryKey: ['bookshelf_book', bookShelfId],
-    queryFn: () => request.get(`/bookshelf/${bookShelfId}`)
+    queryKey: ['bookshelf_book', bookId],
+    queryFn: () => request.get(`/bookshelf/${bookId}`)
   })
 
   const queryClient = useQueryClient()
@@ -52,6 +54,6 @@ export function Page() {
   )
 }
 
-export const Route = createLazyFileRoute('/_base/')({
+export const Route = createLazyFileRoute('/_base/bookshelf/$bookId')({
   component: () => <Page />
 })

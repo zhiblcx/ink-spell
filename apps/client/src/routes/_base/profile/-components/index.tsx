@@ -1,4 +1,4 @@
-import {request} from '@/shared/API'
+import { request } from '@/shared/API'
 import { User } from '@/shared/types/user'
 import { AuthUtils } from '@/shared/utils'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -122,7 +122,6 @@ export default function Profile() {
         onCancel={() => {
           setOpenFlag(false)
         }}
-        afterClose={() => {}}
         okText="保存"
         cancelText="取消"
         className="flex justify-center"
@@ -159,14 +158,15 @@ export default function Profile() {
               name="username"
               rules={[{ required: true, message: '用户名未填写' }]}
             >
-              <Input />
+              <Input placeholder="请输入用户名" />
             </Form.Item>
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
               label="邮箱"
               name="email"
+              rules={[{ type: 'email', message: '请输入正确的邮箱' }]}
             >
-              <Input />
+              <Input placeholder="请输入邮箱" />
             </Form.Item>
           </Form>
         </ConfigProvider>

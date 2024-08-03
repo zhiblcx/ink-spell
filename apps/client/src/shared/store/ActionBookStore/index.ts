@@ -9,6 +9,7 @@ type ActionBookStore = {
   showShelfFlag: boolean
   deleteShelfFlag: boolean
   showDirectoryFlag: boolean
+  uploadFileFlag: boolean
   updateDeleteFlag: (flag: boolean) => void
   updateAllSelectFlag: (flag: AllSelectBookFlag) => void
   updateAddSheftFlag: (flag: boolean) => void
@@ -16,6 +17,7 @@ type ActionBookStore = {
   updateShowShelfFlag: (flag: boolean) => void
   updateDeleteShelfFlag: (flag: boolean) => void
   updateShowDirectoryFlag: (flag: boolean) => void
+  updateUploadFileFlag: (flag: boolean) => void
 }
 
 export const useActionBookStore = create<ActionBookStore>()((set) => ({
@@ -26,6 +28,7 @@ export const useActionBookStore = create<ActionBookStore>()((set) => ({
   showShelfFlag: false,
   deleteShelfFlag: false,
   showDirectoryFlag: true,
+  uploadFileFlag: false,
 
   updateDeleteFlag: (flag: boolean) => {
     set({ deleteBookFlag: flag })
@@ -53,5 +56,9 @@ export const useActionBookStore = create<ActionBookStore>()((set) => ({
 
   updateShowDirectoryFlag: (flag: boolean) => {
     set({ showDirectoryFlag: flag })
+  },
+
+  updateUploadFileFlag: (flag: boolean) => {
+    set({ uploadFileFlag: flag })
   }
 }))
