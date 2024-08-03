@@ -1,7 +1,6 @@
 import defaultCover from '@/assets/images/cover.png'
 import { type Ink } from '@/shared/types'
 import { BookUtils } from '@/shared/utils'
-import { useNavigate } from '@tanstack/react-router'
 import { type UploadFile, type UploadProps, Input } from 'antd'
 import ImgCrop from 'antd-img-crop'
 import clsx from 'clsx'
@@ -20,7 +19,6 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
   const [openFlag, setOpenFlag] = useState(false)
   const [book, setBook] = useState(ink)
   const [bookCover, setBookCover] = useState<UploadFile[]>([])
-  const navigate = useNavigate()
 
   useEffect(() => {
     const [role1, role2] = book.protagonist?.slice() || ['', '']
@@ -72,7 +70,6 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
                 chapter = book[1]
               }
             }
-
             window.open(`/book/${ink.id}?chapter=${chapter != -1 ? chapter : 1}`, '_blank')
           }}
         >
@@ -156,28 +153,28 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
               label="书名"
               name="name"
             >
-              <Input />
+              <Input placeholder="请输入书名" />
             </Form.Item>
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
               label="作者"
               name="author"
             >
-              <Input />
+              <Input placeholder="请输入作者姓名" />
             </Form.Item>
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
               label="主角1"
               name="role1"
             >
-              <Input />
+              <Input placeholder="请输入主角1的名字" />
             </Form.Item>
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
               label="主角2"
               name="role2"
             >
-              <Input />
+              <Input placeholder="请输入主角2的名字" />
             </Form.Item>
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"

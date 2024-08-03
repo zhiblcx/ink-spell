@@ -9,13 +9,13 @@ interface BookChapterType {
   chapter: number
 }
 
-export const Route = createLazyFileRoute('/_public/book/$bookID')({
+export const Route = createLazyFileRoute('/_public/book/$bookId')({
   component: Page
 })
 
 function Page() {
   const { chapter } = Route.useSearch<BookChapterType>()
-  const bookID = Route.useParams().bookID
+  const bookID = Route.useParams().bookId
 
   const query = useQuery({
     queryKey: ['book', bookID],

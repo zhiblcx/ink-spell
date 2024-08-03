@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_public/book/$bookID')({
+export const Route = createFileRoute('/_public/book/$bookId')({
   beforeLoad: async ({ search }) => {
     const flag = (search as { chapter?: number }).chapter !== undefined
     if (!flag) {

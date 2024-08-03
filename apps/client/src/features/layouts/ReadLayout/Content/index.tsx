@@ -81,6 +81,7 @@ function Content({ currentContent = [], currentChapter, allChapterTotal }: Conte
           />
         </li>
         <li
+          className="cursor-pointer"
           onClick={() => {
             updateShowDirectoryFlag(!showDirectoryFlag)
           }}

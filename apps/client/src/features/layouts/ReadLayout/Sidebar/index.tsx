@@ -12,18 +12,7 @@ interface SidebarActiveType {
 function Sidebar({ currentChapter, allChapter = [] }: SidebarActiveType) {
   const router = useRouter()
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
-  const [open, setOpen] = useState(false)
   const { showDirectoryFlag } = useActionBookStore()
-
-  const onClose = () => {
-    setOpen(false)
-  }
-
-  useEffect(() => {
-    if (showDirectoryFlag) {
-      setOpen(true)
-    }
-  }, [showDirectoryFlag])
 
   useEffect(() => {
     const reg = /\d+/
@@ -80,22 +69,13 @@ function Sidebar({ currentChapter, allChapter = [] }: SidebarActiveType) {
           )}
         </>
       ) : showDirectoryFlag ? (
-        <Drawer
-          className="scroll dark:text-[#929493]"
-          title={<div className="text-center text-xl">目录</div>}
-          onClose={onClose}
-          open={open}
-          placement="left"
-          width="248px"
-          closeIcon={false}
-          styles={{ body: { padding: '15px' } }}
-        >
+        <div>
           <BookDirectory
             currentChapter={currentChapter}
             allChapter={allChapter}
             showDirectoryFlag={false}
           />
-        </Drawer>
+        </div>
       ) : (
         ''
       )}

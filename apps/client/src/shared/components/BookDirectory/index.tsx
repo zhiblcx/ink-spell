@@ -16,29 +16,42 @@ export default function BookDirectory({
   showDirectoryFlag = true
 }: SidebarActiveType) {
   const { updateShowDirectoryFlag } = useActionBookStore()
+  const { showDirectoryFlag: showLeftDirectoryFlag } = useActionBookStore()
   const router = useRouter()
   const ref = useRef(null)
+  const [open, setOpen] = useState(false)
+
   const { scrollTo } = useSmoothScroll({
     ref,
-    speed: 1000,
+    speed: 200,
     direction: 'y'
   })
 
+  const onClose = () => {
+    setOpen(false)
+  }
+
   useEffect(() => {
+    if (showLeftDirectoryFlag) {
+      setOpen(true)
+    }
     if (ref !== null) {
       const chapter = router.latestLocation.search as { chapter: number }
-      scrollTo(`#y-item-${chapter.chapter}`, -300)
+      setTimeout(() => {
+        scrollTo(`#y-item-${chapter.chapter}`, -300)
+      }, 100)
     }
-  }, [router.latestLocation.search])
+  }, [router.latestLocation.search, showLeftDirectoryFlag, ref])
 
-  return (
+  const directoryContent = (
     <motion.div
       layout
       ref={ref}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="scroll min-w-[220px] max-w-[220px] min-[375px]:overflow-y-auto md:overflow-y-hidden md:hover:overflow-y-auto"
+      style={{ overflowY: 'scroll', overflowX: 'hidden', maxHeight: '100%' }}
+      className="scroll min-w-[220px] max-w-[220px]"
     >
       {showDirectoryFlag ? (
         <div
@@ -68,5 +81,22 @@ export default function BookDirectory({
       </ul>
       <div className="h-[10px]" />
     </motion.div>
+  )
+
+  return showDirectoryFlag ? (
+    <>{directoryContent}</>
+  ) : (
+    <Drawer
+      className="dark:text-[#929493]"
+      title={<div className="text-center text-xl">目录</div>}
+      onClose={onClose}
+      open={open}
+      closeIcon={false}
+      placement="left"
+      width={230}
+      styles={{ body: { padding: '10px', overflow: 'hidden' } }}
+    >
+      {directoryContent}
+    </Drawer>
   )
 }

@@ -16,7 +16,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as PublicRouteImport } from './routes/_public/route'
 import { Route as BaseRouteImport } from './routes/_base/route'
 import { Route as SplatRouteImport } from './routes/$/route'
-import { Route as PublicBookBookIDRouteImport } from './routes/_public/book/$bookID/route'
+import { Route as PublicBookBookIdRouteImport } from './routes/_public/book/$bookId/route'
 
 // Create Virtual Routes
 
@@ -103,11 +103,11 @@ const BaseBookshelfInkIdRouteLazyRoute =
     import('./routes/_base/bookshelf/$inkId/route.lazy').then((d) => d.Route),
   )
 
-const PublicBookBookIDRouteRoute = PublicBookBookIDRouteImport.update({
-  path: '/book/$bookID',
+const PublicBookBookIdRouteRoute = PublicBookBookIdRouteImport.update({
+  path: '/book/$bookId',
   getParentRoute: () => PublicRouteRoute,
 } as any).lazy(() =>
-  import('./routes/_public/book/$bookID/route.lazy').then((d) => d.Route),
+  import('./routes/_public/book/$bookId/route.lazy').then((d) => d.Route),
 )
 
 // Populate the FileRoutesByPath interface
@@ -184,11 +184,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicSignupRouteLazyImport
       parentRoute: typeof PublicRouteImport
     }
-    '/_public/book/$bookID': {
-      id: '/_public/book/$bookID'
-      path: '/book/$bookID'
-      fullPath: '/book/$bookID'
-      preLoaderRoute: typeof PublicBookBookIDRouteImport
+    '/_public/book/$bookId': {
+      id: '/_public/book/$bookId'
+      path: '/book/$bookId'
+      fullPath: '/book/$bookId'
+      preLoaderRoute: typeof PublicBookBookIdRouteImport
       parentRoute: typeof PublicRouteImport
     }
     '/_base/bookshelf/$inkId': {
@@ -215,7 +215,7 @@ export const routeTree = rootRoute.addChildren({
   PublicRouteRoute: PublicRouteRoute.addChildren({
     PublicSigninRouteLazyRoute,
     PublicSignupRouteLazyRoute,
-    PublicBookBookIDRouteRoute,
+    PublicBookBookIdRouteRoute,
   }),
   R404RouteLazyRoute,
 })
@@ -252,7 +252,7 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/_public/signin",
         "/_public/signup",
-        "/_public/book/$bookID"
+        "/_public/book/$bookId"
       ]
     },
     "/404": {
@@ -282,8 +282,8 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_public/signup/route.lazy.tsx",
       "parent": "/_public"
     },
-    "/_public/book/$bookID": {
-      "filePath": "_public/book/$bookID/route.tsx",
+    "/_public/book/$bookId": {
+      "filePath": "_public/book/$bookId/route.tsx",
       "parent": "/_public"
     },
     "/_base/bookshelf/$inkId": {
