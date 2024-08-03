@@ -21,6 +21,11 @@ interface AppConfig {
   DEFAULT_AVATAR: string;
   /**
    * the default book cover url
+   * @default '/static/images/cover.png''
+   */
+  DEFAULT_COVER: string;
+  /**
+   * the default book cover url
    * @default 'public/cover'
    */
   BOOK_COVER_URL: string;
@@ -56,6 +61,7 @@ const appConfig = Object.freeze<Readonly<AppConfig>>({
   DESCRIPTION: '一个收藏的魔法网站',
   VERSION: '0.0.1',
   DEFAULT_AVATAR: '/static/images/avatar.jpg',
+  DEFAULT_COVER: '/static/images/cover.png',
   BOOK_COVER_URL: 'public/cover',
   BOOK_FILE_URL: 'public/book_file',
   COVER_MAX_FILE_SIZE: 500 * 1024,
