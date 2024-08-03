@@ -10,4 +10,5 @@ model Book {
   BookShelf   BookShelf? @relation(fields: [bookShelfId], references: [id], onDelete: Cascade)
   md5         String     @unique
   encoding    String
+  isDelete    Boolean    @default(false) @map("is_delete")
 }

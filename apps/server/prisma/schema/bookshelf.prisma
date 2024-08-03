@@ -6,6 +6,7 @@ model BookShelf {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   books       Book[]
   allFlag     Boolean  @map("all_flag")
+  isDelete    Boolean  @default(false) @map("is_delete")
 
   @@unique([label, userId])
 }

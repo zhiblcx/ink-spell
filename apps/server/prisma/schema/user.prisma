@@ -7,4 +7,5 @@ model User {
   email      String?
   avatar     String
   boofShlefs BookShelf[]
+  isDelete   Boolean     @default(false) @map("is_delete")
 }
