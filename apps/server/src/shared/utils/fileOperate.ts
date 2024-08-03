@@ -39,7 +39,6 @@ export function readFileContent(path, detectedEncoding) {
     });
 
     rl.on('close', () => {
-      console.log('文件读取完成。');
       resolve({
         chapter,
         content,
