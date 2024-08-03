@@ -1,7 +1,9 @@
-import defaultCover from '@/assets/images/cover.png'
+import { request } from '@/shared/API'
 import { type Ink } from '@/shared/types'
+import { Book } from '@/shared/types/book'
 import { AuthUtils, BookUtils } from '@/shared/utils'
-import { type UploadFile, type UploadProps, Input } from 'antd'
+import { useMutation } from '@tanstack/react-query'
+import { type UploadFile, type UploadProps, Input, message } from 'antd'
 import ImgCrop from 'antd-img-crop'
 import clsx from 'clsx'
 import { Pencil } from 'lucide-react'
@@ -20,12 +22,20 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
   const [book, setBook] = useState(ink)
   const [bookCover, setBookCover] = useState<UploadFile[]>([
     {
-      uid: '1',
-      name: 'xxx.png',
+      uid: book.id.toString(),
+      name: book.name ?? '',
       status: 'done',
-      url: ink.cover ?? defaultCover
+      url: import.meta.env.VITE_SERVER_URL + book.cover
     }
   ])
+
+  const { mutate } = useMutation({
+    mutationFn: (book: Book) => request.put(`/book/${book.id}`, book),
+    onSuccess: (result) => {
+      setBook({ ...result.data.data })
+      message.success('修改成功')
+    }
+  })
 
   const props: UploadProps = {
     accept: 'image/png, image/jpeg, image/jpg',
@@ -52,16 +62,12 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
   }
 
   useEffect(() => {
-    const [role1, role2] = book.protagonist?.slice() || ['', '']
+    const [role1, role2] = book.protagonist?.split('|') || ['', '']
     form.setFieldsValue({ ...book, role1, role2 })
   }, [book])
 
   function handlerEditBook() {
     setOpenFlag(true)
-  }
-
-  const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-    setBookCover(newFileList)
   }
 
   return (
@@ -74,7 +80,7 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
       >
         <Checkbox
           className={clsx('absolute right-3 top-2', cancelFlag ? 'checkbox' : 'visible z-50')}
-          checked={ink.checked}
+          checked={book.checked}
           onClick={onClickCheckbox}
         />
 
@@ -85,46 +91,40 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
         />
 
         <div
-          className={clsx(ink.name ? 'photo-visible' : '', 'photo h-[100%] w-[100%] overflow-hidden')}
+          className={clsx(book.name ? 'photo-visible' : '', 'photo h-[100%] w-[100%] overflow-hidden')}
           onClick={() => {
             const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
             let chapter = -1
             if (localBooks.length !== 0) {
               const book = localBooks.find((item: Array<string>) => {
-                return parseInt(item[0]) === ink.id
+                return parseInt(item[0]) === book.id
               })
               if (book !== undefined) {
                 chapter = book[1]
               }
             }
-            window.open(`/book/${ink.id}?chapter=${chapter != -1 ? chapter : 1}`, '_blank')
+            window.open(`/book/${book.id}?chapter=${chapter != -1 ? chapter : 1}`, '_blank')
           }}
         >
-          {ink.cover ? (
-            <img
-              src={ink.cover}
-              className="h-[100%] w-[100%] object-cover"
-            />
-          ) : (
-            <img
-              src={defaultCover}
-              className="h-[100%] w-[100%] object-cover"
-            />
-          )}
+          <img
+            src={import.meta.env.VITE_SERVER_URL + book.cover}
+            className="h-[100%] w-[100%] object-cover"
+          />
+          )
         </div>
         <p className="ink-name roboto absolute bottom-4 w-[90%] truncate text-center text-xl text-white">
-          {ink.name ? `${ink.name}` : ''}
+          {book.name ? `${book.name}` : ''}
         </p>
-        <p className="roboto mt-[130px] text-sm">{ink.author ? ink.author : '无作者'}</p>
+        <p className="roboto mt-[130px] text-sm">{book.author ? book.author : '无作者'}</p>
         <p className="roboto text-sm">
-          {ink.protagonist
+          {book.protagonist
             ? `
-      ${ink.protagonist[0]}|${ink.protagonist[1]}`
+      ${book.protagonist.split('|')[0]}|${book.protagonist.split('|')[1]}`
             : '无主角'}
         </p>
         <p className="w-[80%] border-2 border-b-zinc-300"></p>
         <p className="roboto mt-2 line-clamp-3 w-[80%] overflow-hidden text-sm">
-          {ink.description === undefined ? '' : ink.description}
+          {book.description === undefined ? '' : book.description}
         </p>
       </div>
 
@@ -156,7 +156,15 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
             className="flex flex-col justify-center p-5 px-8"
             layout="vertical"
             form={form}
-            onFinish={mutate}
+            onFinish={(inputBook) => {
+              const currentBook = { ...book, ...inputBook }
+              if (inputBook.role1 != '' || inputBook.role2 != '') {
+                currentBook.protagonist = inputBook.role1 + '|' + inputBook.role2
+              } else {
+                currentBook.protagonist = ''
+              }
+              mutate(currentBook)
+            }}
           >
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
