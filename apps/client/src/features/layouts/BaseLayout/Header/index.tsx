@@ -25,7 +25,6 @@ function Header() {
   interface FileWithMD5 extends File {
     md5?: string
   }
-
   interface UploadFileMD5 extends UploadFile {
     md5?: string
   }
@@ -45,7 +44,7 @@ function Header() {
     },
     showUploadList: false,
     method: 'post',
-    maxCount: 3,
+    maxCount: 5,
     name: 'file',
     beforeUpload: async (file: FileWithMD5) => {
       const isTxt = file.type === 'text/plain'

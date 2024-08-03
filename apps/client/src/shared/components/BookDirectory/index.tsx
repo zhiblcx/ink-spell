@@ -15,8 +15,7 @@ export default function BookDirectory({
   allChapter = [],
   showDirectoryFlag = true
 }: SidebarActiveType) {
-  const { updateShowDirectoryFlag } = useActionBookStore()
-  const { showDirectoryFlag: showLeftDirectoryFlag } = useActionBookStore()
+  const { updateShowDirectoryFlag, showDirectoryFlag: showLeftDirectoryFlag } = useActionBookStore()
   const router = useRouter()
   const ref = useRef(null)
   const [open, setOpen] = useState(false)
@@ -28,6 +27,7 @@ export default function BookDirectory({
   })
 
   const onClose = () => {
+    updateShowDirectoryFlag(false)
     setOpen(false)
   }
 
@@ -41,7 +41,7 @@ export default function BookDirectory({
         scrollTo(`#y-item-${chapter.chapter}`, -300)
       }, 100)
     }
-  }, [router.latestLocation.search, showLeftDirectoryFlag, ref])
+  }, [router.latestLocation.search, showLeftDirectoryFlag])
 
   const directoryContent = (
     <motion.div
@@ -87,6 +87,7 @@ export default function BookDirectory({
     <>{directoryContent}</>
   ) : (
     <Drawer
+      loading={allChapter.length === 0}
       className="dark:text-[#929493]"
       title={<div className="text-center text-xl">目录</div>}
       onClose={onClose}
