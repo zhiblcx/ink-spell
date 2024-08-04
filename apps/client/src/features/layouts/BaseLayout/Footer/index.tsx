@@ -13,7 +13,8 @@ function Footer() {
     updateCancelFlag,
     updateAllSelectFlag,
     updateDeleteFlag,
-    updateDeleteShelfFlag
+    updateDeleteShelfFlag,
+    updateBookToBookShelfFlag
   } = useActionBookStore()
 
   const handlerDeleteBook = () => {
@@ -74,7 +75,7 @@ function Footer() {
         <li
           className="cursor-pointer"
           onClick={() => {
-            console.log('添加书架')
+            updateBookToBookShelfFlag(true)
           }}
         >
           添加到书架

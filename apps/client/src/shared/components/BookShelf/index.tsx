@@ -1,21 +1,51 @@
-import { deleteBookByBookIdAPI } from '@/shared/API'
+import { deleteBookByBookIdAPI, request } from '@/shared/API'
 import InkCard from '@/shared/components/InkCard'
 import { AllSelectBookFlag } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { BookShelfType } from '@/shared/types/bookshelf'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { message } from 'antd'
 import { motion } from 'framer-motion'
 import { Suspense } from 'react'
 
-interface BookShelfType {
+interface BookShelfPropsType {
   books: Ink[]
   setBooks: React.Dispatch<React.SetStateAction<Ink[]>>
 }
 
-function BookShelf({ books = [], setBooks }: BookShelfType) {
-  const { allSelectBookFlag, cancelFlag, deleteBookFlag, updateAllSelectFlag, updateCancelFlag, updateDeleteFlag } =
-    useActionBookStore()
+interface operateBookShelfType {
+  operate: string
+  bookShelfInfo: object
+  api: string
+}
+
+function BookShelf({ books = [], setBooks }: BookShelfPropsType) {
+  const {
+    allSelectBookFlag,
+    cancelFlag,
+    deleteBookFlag,
+    bookToBookShelfFlag,
+    updateAllSelectFlag,
+    updateCancelFlag,
+    updateDeleteFlag,
+    updateBookToBookShelfFlag
+  } = useActionBookStore()
+  const [form] = Form.useForm()
+  const [addBookShelfOpenFlag, setAddBookShelfOpenFlag] = useState(false)
+  const [selectOptions] = useState([
+    {
+      value: 'new',
+      label: '新建书架'
+    }
+  ])
+  let acquireBookShelfFlag = false
+  const [selectBookShelfValue, setSelectBookShelfValue] = useState('new')
+
+  const { data, isSuccess } = useQuery({
+    queryKey: ['bookshelf'],
+    queryFn: () => request.get('/bookshelf')
+  })
 
   const queryClient = useQueryClient()
   const { mutate } = useMutation({
@@ -25,6 +55,37 @@ function BookShelf({ books = [], setBooks }: BookShelfType) {
       message.success('删除成功')
     }
   })
+
+  const { mutate: operateBookShelfMutate } = useMutation({
+    mutationFn: (result: operateBookShelfType) => {
+      if (result.operate === 'add') {
+        return request.post(result.api, result.bookShelfInfo)
+      } else {
+        return request.put(result.api, result.bookShelfInfo)
+      }
+    },
+    onSuccess: (data) => {
+      if (data.data.data.md5 === undefined) {
+        books.map((item) => {
+          if (item.checked) {
+            const obj = {
+              api: `/book/${item.id}`,
+              operate: 'update',
+              bookShelfInfo: {
+                ...item,
+                bookShelfId: data.data.data.id
+              }
+            }
+            operateBookShelfMutate(obj)
+          }
+        })
+      }
+    }
+  })
+
+  const handleChange = (value: string) => {
+    setSelectBookShelfValue(value)
+  }
 
   useEffect(() => {
     if (books.length !== 0) {
@@ -36,6 +97,12 @@ function BookShelf({ books = [], setBooks }: BookShelfType) {
       }
     }
   }, [cancelFlag])
+
+  useEffect(() => {
+    if (bookToBookShelfFlag) {
+      setAddBookShelfOpenFlag(true)
+    }
+  }, [bookToBookShelfFlag])
 
   useEffect(() => {
     if (allSelectBookFlag == AllSelectBookFlag.PARTIAL_SELECT_FLAG) {
@@ -67,6 +134,20 @@ function BookShelf({ books = [], setBooks }: BookShelfType) {
       updateCancelFlag(true)
     }
   }, [deleteBookFlag])
+
+  useEffect(() => {
+    if (isSuccess) {
+      if (!acquireBookShelfFlag) {
+        data.data.data.forEach((item: BookShelfType) => {
+          selectOptions.push({
+            value: item.id.toString(),
+            label: item.label
+          })
+        })
+        acquireBookShelfFlag = true
+      }
+    }
+  }, [data?.data.data])
 
   return (
     <Suspense fallback={<Skeleton />}>
@@ -101,6 +182,80 @@ function BookShelf({ books = [], setBooks }: BookShelfType) {
           )
         })}
       </motion.div>
+
+      <Modal
+        title="添加到书架"
+        open={addBookShelfOpenFlag}
+        onOk={() => {
+          form.submit()
+          setAddBookShelfOpenFlag(false)
+        }}
+        onCancel={() => {
+          setAddBookShelfOpenFlag(false)
+        }}
+        afterClose={() => {
+          updateBookToBookShelfFlag(false)
+        }}
+        okText="保存"
+        cancelText="取消"
+        className="flex justify-center text-center"
+      >
+        <Form
+          className="flex flex-col justify-center p-5 px-8"
+          form={form}
+          onFinish={(bookShelf) => {
+            const obj = {
+              api: '/bookshelf',
+              operate: 'add',
+              bookShelfInfo: {
+                bookShelfName: bookShelf.bookShelfName,
+                bookShelfId: -1
+              }
+            }
+            if (bookShelf.bookShelfId == 'new') {
+              operateBookShelfMutate(obj)
+            } else {
+              books.map((item) => {
+                if (item.checked) {
+                  obj.api = `/book/${item.id}`
+                  obj.operate = 'update'
+                  obj.bookShelfInfo = {
+                    bookShelfName: bookShelf.bookShelfName,
+                    ...item,
+                    bookShelfId: Number(bookShelf.bookShelfId)
+                  }
+                  operateBookShelfMutate(obj)
+                }
+              })
+            }
+          }}
+          initialValues={{ bookShelfId: selectOptions[0].value }}
+        >
+          <Form.Item
+            className="min-[375px]:w-[200px] md:w-[250px]"
+            label="选择书架"
+            name="bookShelfId"
+          >
+            <Select
+              onChange={handleChange}
+              style={{ width: 180 }}
+              options={selectOptions}
+            />
+          </Form.Item>
+          {selectBookShelfValue === 'new' ? (
+            <Form.Item
+              className="min-[375px]:w-[200px] md:w-[250px]"
+              label="书架名"
+              name="bookShelfName"
+              rules={[{ required: true, message: '请填写完整' }]}
+            >
+              <Input placeholder="请输入书架名" />
+            </Form.Item>
+          ) : (
+            ''
+          )}
+        </Form>
+      </Modal>
     </Suspense>
   )
 }

@@ -111,6 +111,7 @@ export class BookService {
         protagonist: bookDescription.protagonist,
         cover: bookDescription.cover,
         description: bookDescription.description,
+        bookShelfId: bookDescription.bookShelfId,
       },
       where: { id: Number(bookID) },
     });

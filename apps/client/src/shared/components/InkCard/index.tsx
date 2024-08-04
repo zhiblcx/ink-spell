@@ -80,7 +80,7 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
       >
         <Checkbox
           className={clsx('absolute right-3 top-2', cancelFlag ? 'checkbox' : 'visible z-50')}
-          checked={book.checked}
+          checked={ink.checked}
           onClick={onClickCheckbox}
         />
 
@@ -96,14 +96,14 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
             const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
             let chapter = -1
             if (localBooks.length !== 0) {
-              const book = localBooks.find((item: Array<string>) => {
+              const ink = localBooks.find((item: Array<string>) => {
                 return parseInt(item[0]) === book.id
               })
-              if (book !== undefined) {
-                chapter = book[1]
+              if (ink !== undefined) {
+                chapter = ink[1]
               }
             }
-            window.open(`/book/${book.id}?chapter=${chapter != -1 ? chapter : 1}`, '_blank')
+            window.open(`/book/${ink.id}?chapter=${chapter != -1 ? chapter : 1}`, '_blank')
           }}
         >
           <img

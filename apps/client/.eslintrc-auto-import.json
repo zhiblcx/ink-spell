@@ -33,6 +33,7 @@
     "Flex": true,
     "Form": true,
     "Upload": true,
-    "Image": true
+    "Image": true,
+    "Select": true
   }
 }

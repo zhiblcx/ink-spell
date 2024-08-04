@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber } from 'class-validator';
 
 export class BookContentDto {
   @ApiProperty({
@@ -34,4 +35,11 @@ export class BookContentDto {
     description: '简介',
   })
   description?: string;
+
+  @ApiProperty({
+    example: '1',
+    description: '书架ID',
+  })
+  @IsNumber()
+  bookShelfId: number;
 }

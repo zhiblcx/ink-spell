@@ -77,7 +77,7 @@ function Sidebar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <ul className="mt-2 space-y-2 overflow-hidden whitespace-nowrap transition-all">
+              <ul className="mb-6 mt-2 space-y-2 overflow-hidden whitespace-nowrap transition-all">
                 {query.data?.data.data.map((menu) =>
                   !menu.allFlag ? (
                     <li key={menu.id}>
