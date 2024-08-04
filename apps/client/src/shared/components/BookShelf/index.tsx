@@ -66,25 +66,50 @@ function BookShelf({ books = [], setBooks }: BookShelfPropsType) {
     },
     onSuccess: (data) => {
       if (data.data.data.md5 === undefined) {
-        books.map((item) => {
-          if (item.checked) {
-            const obj = {
-              api: `/book/${item.id}`,
-              operate: 'update',
-              bookShelfInfo: {
-                ...item,
-                bookShelfId: data.data.data.id
-              }
-            }
-            operateBookShelfMutate(obj)
-          }
-        })
+        handlerUpdateBookShelf(data.data.data.id)
       }
+      message.success(data.data.message)
     }
   })
 
   const handleChange = (value: string) => {
     setSelectBookShelfValue(value)
+  }
+
+  const handlerFinish = (bookShelf) => {
+    const obj = {
+      api: '/bookshelf',
+      operate: 'add',
+      bookShelfInfo: {
+        bookShelfName: bookShelf.bookShelfName,
+        bookShelfId: -1
+      }
+    }
+    if (bookShelf.bookShelfId == 'new') {
+      operateBookShelfMutate(obj)
+    } else {
+      handlerUpdateBookShelf(Number(bookShelf.bookShelfId))
+    }
+  }
+
+  const handlerUpdateBookShelf = (bookShelfId: number) => {
+    setBooks(
+      books.filter((item) => {
+        if (item.checked) {
+          const obj = {
+            api: `/book/${item.id}`,
+            operate: 'update',
+            bookShelfInfo: {
+              ...item,
+              bookShelfId: bookShelfId
+            }
+          }
+          operateBookShelfMutate(obj)
+          return false
+        }
+        return true
+      }) ?? []
+    )
   }
 
   useEffect(() => {
@@ -203,32 +228,7 @@ function BookShelf({ books = [], setBooks }: BookShelfPropsType) {
         <Form
           className="flex flex-col justify-center p-5 px-8"
           form={form}
-          onFinish={(bookShelf) => {
-            const obj = {
-              api: '/bookshelf',
-              operate: 'add',
-              bookShelfInfo: {
-                bookShelfName: bookShelf.bookShelfName,
-                bookShelfId: -1
-              }
-            }
-            if (bookShelf.bookShelfId == 'new') {
-              operateBookShelfMutate(obj)
-            } else {
-              books.map((item) => {
-                if (item.checked) {
-                  obj.api = `/book/${item.id}`
-                  obj.operate = 'update'
-                  obj.bookShelfInfo = {
-                    bookShelfName: bookShelf.bookShelfName,
-                    ...item,
-                    bookShelfId: Number(bookShelf.bookShelfId)
-                  }
-                  operateBookShelfMutate(obj)
-                }
-              })
-            }
-          }}
+          onFinish={(bookShelf) => handlerFinish(bookShelf)}
           initialValues={{ bookShelfId: selectOptions[0].value }}
         >
           <Form.Item
