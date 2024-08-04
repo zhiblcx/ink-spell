@@ -32,12 +32,20 @@ export class BookshelfController {
     @Request() req,
     @Body() createBookshelfDto: CreateBookshelfDto,
   ) {
-    return new R({
-      message: '新增成功',
-      data: new CreateBookShelfVo(
-        await this.bookshelfService.createBookShelf(req, createBookshelfDto),
-      ),
-    });
+    const result = await this.bookshelfService.createBookShelf(
+      req,
+      createBookshelfDto,
+    );
+    if (result == undefined) {
+      return new R({
+        message: '书架名称重复',
+      });
+    } else {
+      return new R({
+        message: '新增成功',
+        data: new CreateBookShelfVo(result),
+      });
+    }
   }
 
   @Delete(':bookShelfId')
