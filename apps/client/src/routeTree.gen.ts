@@ -17,6 +17,7 @@ import { Route as PublicRouteImport } from './routes/_public/route'
 import { Route as BaseRouteImport } from './routes/_base/route'
 import { Route as SplatRouteImport } from './routes/$/route'
 import { Route as PublicBookBookIdRouteImport } from './routes/_public/book/$bookId/route'
+import { Route as BaseBookshelfBookIdRouteImport } from './routes/_base/bookshelf/$bookId/route'
 
 // Create Virtual Routes
 
@@ -27,9 +28,6 @@ const BaseProfileRouteLazyImport = createFileRoute('/_base/profile')()
 const BaseMyfriendRouteLazyImport = createFileRoute('/_base/myfriend')()
 const BaseChatroomRouteLazyImport = createFileRoute('/_base/chatroom')()
 const BaseIndexRouteLazyImport = createFileRoute('/_base/')()
-const BaseBookshelfBookIdRouteLazyImport = createFileRoute(
-  '/_base/bookshelf/$bookId',
-)()
 
 // Create/Update Routes
 
@@ -95,19 +93,18 @@ const BaseIndexRouteLazyRoute = BaseIndexRouteLazyImport.update({
   import('./routes/_base/index/route.lazy').then((d) => d.Route),
 )
 
-const BaseBookshelfBookIdRouteLazyRoute =
-  BaseBookshelfBookIdRouteLazyImport.update({
-    path: '/bookshelf/$bookId',
-    getParentRoute: () => BaseRouteRoute,
-  } as any).lazy(() =>
-    import('./routes/_base/bookshelf/$bookId/route.lazy').then((d) => d.Route),
-  )
-
 const PublicBookBookIdRouteRoute = PublicBookBookIdRouteImport.update({
   path: '/book/$bookId',
   getParentRoute: () => PublicRouteRoute,
 } as any).lazy(() =>
   import('./routes/_public/book/$bookId/route.lazy').then((d) => d.Route),
+)
+
+const BaseBookshelfBookIdRouteRoute = BaseBookshelfBookIdRouteImport.update({
+  path: '/bookshelf/$bookId',
+  getParentRoute: () => BaseRouteRoute,
+} as any).lazy(() =>
+  import('./routes/_base/bookshelf/$bookId/route.lazy').then((d) => d.Route),
 )
 
 // Populate the FileRoutesByPath interface
@@ -184,19 +181,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicSignupRouteLazyImport
       parentRoute: typeof PublicRouteImport
     }
+    '/_base/bookshelf/$bookId': {
+      id: '/_base/bookshelf/$bookId'
+      path: '/bookshelf/$bookId'
+      fullPath: '/bookshelf/$bookId'
+      preLoaderRoute: typeof BaseBookshelfBookIdRouteImport
+      parentRoute: typeof BaseRouteImport
+    }
     '/_public/book/$bookId': {
       id: '/_public/book/$bookId'
       path: '/book/$bookId'
       fullPath: '/book/$bookId'
       preLoaderRoute: typeof PublicBookBookIdRouteImport
       parentRoute: typeof PublicRouteImport
-    }
-    '/_base/bookshelf/$bookId': {
-      id: '/_base/bookshelf/$bookId'
-      path: '/bookshelf/$bookId'
-      fullPath: '/bookshelf/$bookId'
-      preLoaderRoute: typeof BaseBookshelfBookIdRouteLazyImport
-      parentRoute: typeof BaseRouteImport
     }
   }
 }
@@ -210,7 +207,7 @@ export const routeTree = rootRoute.addChildren({
     BaseChatroomRouteLazyRoute,
     BaseMyfriendRouteLazyRoute,
     BaseProfileRouteLazyRoute,
-    BaseBookshelfBookIdRouteLazyRoute,
+    BaseBookshelfBookIdRouteRoute,
   }),
   PublicRouteRoute: PublicRouteRoute.addChildren({
     PublicSigninRouteLazyRoute,
@@ -282,13 +279,13 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_public/signup/route.lazy.tsx",
       "parent": "/_public"
     },
+    "/_base/bookshelf/$bookId": {
+      "filePath": "_base/bookshelf/$bookId/route.tsx",
+      "parent": "/_base"
+    },
     "/_public/book/$bookId": {
       "filePath": "_public/book/$bookId/route.tsx",
       "parent": "/_public"
-    },
-    "/_base/bookshelf/$bookId": {
-      "filePath": "_base/bookshelf/$bookId/route.lazy.tsx",
-      "parent": "/_base"
     }
   }
 }

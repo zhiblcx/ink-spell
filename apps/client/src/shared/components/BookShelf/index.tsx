@@ -50,9 +50,9 @@ function BookShelf({ books = [], setBooks }: BookShelfPropsType) {
   const queryClient = useQueryClient()
   const { mutate } = useMutation({
     mutationFn: (item: Ink) => deleteBookByBookIdAPI(item.id),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['bookshelf_book'] })
-      message.success('删除成功')
+      message.success(data.data.data.message)
     }
   })
 

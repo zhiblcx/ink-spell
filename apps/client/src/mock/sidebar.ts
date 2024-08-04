@@ -1,4 +1,4 @@
-import { BookText, Users, Bot } from 'lucide-react'
+import { BookText, Bot, Users } from 'lucide-react'
 
 export const menuList = [
   {

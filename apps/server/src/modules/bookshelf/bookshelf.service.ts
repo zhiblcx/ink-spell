@@ -20,6 +20,15 @@ export class BookshelfService {
       data: { isDelete: true },
       where: { id: parseInt(bookShelfId) },
     });
+    const books = await this.prisma.book.findMany({
+      where: { bookShelfId: parseInt(bookShelfId) },
+    });
+    books.map(async (item) => {
+      await this.prisma.book.update({
+        data: { isDelete: true },
+        where: { id: item.id },
+      });
+    });
   }
 
   async acquireBookShelft(userId) {

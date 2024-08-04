@@ -15,9 +15,9 @@ export default function Profile() {
   const query = useQuery({ queryKey: ['user'], queryFn: () => request.get('/user/profile') })
   const { mutate } = useMutation({
     mutationFn: (user: User) => request.put('/user', user),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['user'] })
-      message.success('修改成功')
+      message.success(data.data.data.message)
     }
   })
 
