@@ -27,8 +27,8 @@ const BaseProfileRouteLazyImport = createFileRoute('/_base/profile')()
 const BaseMyfriendRouteLazyImport = createFileRoute('/_base/myfriend')()
 const BaseChatroomRouteLazyImport = createFileRoute('/_base/chatroom')()
 const BaseIndexRouteLazyImport = createFileRoute('/_base/')()
-const BaseBookshelfInkIdRouteLazyImport = createFileRoute(
-  '/_base/bookshelf/$inkId',
+const BaseBookshelfBookIdRouteLazyImport = createFileRoute(
+  '/_base/bookshelf/$bookId',
 )()
 
 // Create/Update Routes
@@ -95,12 +95,12 @@ const BaseIndexRouteLazyRoute = BaseIndexRouteLazyImport.update({
   import('./routes/_base/index/route.lazy').then((d) => d.Route),
 )
 
-const BaseBookshelfInkIdRouteLazyRoute =
-  BaseBookshelfInkIdRouteLazyImport.update({
-    path: '/bookshelf/$inkId',
+const BaseBookshelfBookIdRouteLazyRoute =
+  BaseBookshelfBookIdRouteLazyImport.update({
+    path: '/bookshelf/$bookId',
     getParentRoute: () => BaseRouteRoute,
   } as any).lazy(() =>
-    import('./routes/_base/bookshelf/$inkId/route.lazy').then((d) => d.Route),
+    import('./routes/_base/bookshelf/$bookId/route.lazy').then((d) => d.Route),
   )
 
 const PublicBookBookIdRouteRoute = PublicBookBookIdRouteImport.update({
@@ -191,11 +191,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicBookBookIdRouteImport
       parentRoute: typeof PublicRouteImport
     }
-    '/_base/bookshelf/$inkId': {
-      id: '/_base/bookshelf/$inkId'
-      path: '/bookshelf/$inkId'
-      fullPath: '/bookshelf/$inkId'
-      preLoaderRoute: typeof BaseBookshelfInkIdRouteLazyImport
+    '/_base/bookshelf/$bookId': {
+      id: '/_base/bookshelf/$bookId'
+      path: '/bookshelf/$bookId'
+      fullPath: '/bookshelf/$bookId'
+      preLoaderRoute: typeof BaseBookshelfBookIdRouteLazyImport
       parentRoute: typeof BaseRouteImport
     }
   }
@@ -210,7 +210,7 @@ export const routeTree = rootRoute.addChildren({
     BaseChatroomRouteLazyRoute,
     BaseMyfriendRouteLazyRoute,
     BaseProfileRouteLazyRoute,
-    BaseBookshelfInkIdRouteLazyRoute,
+    BaseBookshelfBookIdRouteLazyRoute,
   }),
   PublicRouteRoute: PublicRouteRoute.addChildren({
     PublicSigninRouteLazyRoute,
@@ -244,7 +244,7 @@ export const routeTree = rootRoute.addChildren({
         "/_base/chatroom",
         "/_base/myfriend",
         "/_base/profile",
-        "/_base/bookshelf/$inkId"
+        "/_base/bookshelf/$bookId"
       ]
     },
     "/_public": {
@@ -286,8 +286,8 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_public/book/$bookId/route.tsx",
       "parent": "/_public"
     },
-    "/_base/bookshelf/$inkId": {
-      "filePath": "_base/bookshelf/$inkId/route.lazy.tsx",
+    "/_base/bookshelf/$bookId": {
+      "filePath": "_base/bookshelf/$bookId/route.lazy.tsx",
       "parent": "/_base"
     }
   }

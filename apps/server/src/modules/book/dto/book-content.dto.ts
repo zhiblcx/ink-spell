@@ -1,11 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNumber } from 'class-validator';
 
-export class BookInfoVo {
-  @ApiProperty({ example: 1, description: 'ID' })
+export class BookContentDto {
+  @ApiProperty({
+    example: '1',
+    description: '书本ID',
+  })
   id: number;
 
-  @ApiProperty({ example: '平凡的世界', description: '书名' })
+  @ApiProperty({
+    example: '平凡的世界',
+    description: '书名',
+  })
   name?: string;
 
   @ApiProperty({
@@ -30,25 +36,10 @@ export class BookInfoVo {
   })
   description?: string;
 
-  @IsNotEmpty({ message: 'bookFile不能为空' })
   @ApiProperty({
-    example: '/static/book_file/123213t37123.txt',
-    description: 'txt文件',
+    example: '1',
+    description: '书架ID',
   })
-  bookFile: string;
-
-  @ApiProperty({ example: 1, description: '书架ID' })
+  @IsNumber()
   bookShelfId: number;
-
-  @IsNotEmpty({ message: 'MD5不能为空' })
-  @ApiProperty({ example: '', description: 'md5' })
-  md5: string;
-
-  @IsNotEmpty({ message: 'encoding不能为空' })
-  @ApiProperty({ example: 'UTF-8', description: '文件编码格式' })
-  encoding: string;
-
-  @IsNotEmpty({ message: 'isDelete不能为空' })
-  @ApiProperty({ example: true, description: '文件是否删除' })
-  isDelete: boolean;
 }

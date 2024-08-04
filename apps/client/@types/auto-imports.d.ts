@@ -17,6 +17,7 @@ declare global {
   const Input: typeof import('antd')['Input']
   const Modal: typeof import('antd')['Modal']
   const Result: typeof import('antd')['Result']
+  const Select: typeof import('antd')['Select']
   const Skeleton: typeof import('antd')['Skeleton']
   const Upload: typeof import('antd')['Upload']
   const createRef: typeof import('react')['createRef']

@@ -1,3 +1,4 @@
+import { appConfig } from '@/config/AppConfig';
 import {
   detectFileEncoding,
   readFileContent,
@@ -5,6 +6,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import * as path from 'node:path';
 import { PrismaService } from '../prisma/prisma.service';
+import { BookContentDto } from './dto/book-content.dto';
 
 @Injectable()
 export class BookService {
@@ -19,6 +21,7 @@ export class BookService {
       });
       await this.prisma.book.create({
         data: {
+          cover: appConfig.DEFAULT_COVER,
           encoding,
           name: decodeURIComponent(escape(name)),
           bookFile: filePath,
@@ -98,5 +101,19 @@ export class BookService {
     const fileName = currentBook.bookFile.replace(/static/, 'public');
     const content = await readFileContent(fileName, currentBook.encoding);
     return content;
+  }
+
+  async updateBookDescription(bookID, bookDescription: BookContentDto) {
+    return await this.prisma.book.update({
+      data: {
+        name: bookDescription.name,
+        author: bookDescription.author,
+        protagonist: bookDescription.protagonist,
+        cover: bookDescription.cover,
+        description: bookDescription.description,
+        bookShelfId: bookDescription.bookShelfId,
+      },
+      where: { id: Number(bookID) },
+    });
   }
 }

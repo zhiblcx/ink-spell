@@ -11,6 +11,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Query,
   Request,
   UploadedFile,
@@ -27,11 +28,12 @@ import {
 } from '@nestjs/swagger';
 import { MultipleStorage } from 'src/config/MultipleStorage';
 import { BookService } from './book.service';
+import { BookContentDto } from './dto/book-content.dto';
 import { BookFileDto } from './dto/book-file.dto';
-import { BookContentDto } from './dto/book.content.dto';
 import { CoverLoadDto } from './dto/cover-load.dto';
 import { Md5Dto } from './dto/md5.dto';
-import { BookContentVo } from './vo/book.content.vo';
+import { BookContentVo } from './vo/book-content.vo';
+import { BookInfoVo } from './vo/book.info.vo';
 import { CoverVo } from './vo/cover.vo';
 import { FileVo } from './vo/file.vo';
 import { Md5Vo } from './vo/md5.vo';
@@ -116,10 +118,10 @@ export class BookController {
   @ApiOperation({ summary: '删除书籍' })
   @HttpCode(HttpStatus.OK)
   @APIResponse(null, '删除成功')
-  async deleteBook(@Param() bookContentDto: BookContentDto) {
+  async deleteBook(@Param('bookID') bookID: number) {
     return new R({
       message: '删除成功',
-      data: await this.bookService.deleteBook(bookContentDto.bookID),
+      data: await this.bookService.deleteBook(bookID),
     });
   }
 
@@ -127,10 +129,27 @@ export class BookController {
   @ApiOperation({ summary: '查看书籍' })
   @HttpCode(HttpStatus.OK)
   @APIResponse(BookContentVo)
-  async showBookContent(@Param() bookContentDto: BookContentDto) {
+  async showBookContent(@Param('bookID') bookID: number) {
     return new R({
       message: '查询成功',
-      data: await this.bookService.showBookContent(bookContentDto.bookID),
+      data: await this.bookService.showBookContent(bookID),
+    });
+  }
+
+  @Put(':bookID')
+  @ApiOperation({ summary: '修改书籍' })
+  @HttpCode(HttpStatus.OK)
+  @APIResponse(BookInfoVo, '修改成功')
+  async updateBookDescription(
+    @Param('bookID') bookID: number,
+    @Body() bookContentDto: BookContentDto,
+  ) {
+    return new R({
+      data: await this.bookService.updateBookDescription(
+        bookID,
+        bookContentDto,
+      ),
+      message: '修改成功',
     });
   }
 }
