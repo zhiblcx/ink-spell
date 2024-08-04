@@ -20,6 +20,11 @@ interface operateBookShelfType {
   api: string
 }
 
+interface formProps {
+  bookShelfId: string
+  bookShelfName: string
+}
+
 function BookShelf({ books = [], setBooks }: BookShelfPropsType) {
   const {
     allSelectBookFlag,
@@ -65,10 +70,13 @@ function BookShelf({ books = [], setBooks }: BookShelfPropsType) {
       }
     },
     onSuccess: (data) => {
+      if (data.data.data === undefined) {
+        message.error(data.data.message)
+      }
       if (data.data.data.md5 === undefined) {
         handlerUpdateBookShelf(data.data.data.id)
+        message.success(data.data.message)
       }
-      message.success(data.data.message)
     }
   })
 
@@ -76,7 +84,7 @@ function BookShelf({ books = [], setBooks }: BookShelfPropsType) {
     setSelectBookShelfValue(value)
   }
 
-  const handlerFinish = (bookShelf) => {
+  const handlerFinish = (bookShelf: formProps) => {
     const obj = {
       api: '/bookshelf',
       operate: 'add',
@@ -214,6 +222,7 @@ function BookShelf({ books = [], setBooks }: BookShelfPropsType) {
         onOk={() => {
           form.submit()
           setAddBookShelfOpenFlag(false)
+          updateBookToBookShelfFlag(false)
         }}
         onCancel={() => {
           setAddBookShelfOpenFlag(false)
