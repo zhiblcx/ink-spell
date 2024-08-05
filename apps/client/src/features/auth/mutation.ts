@@ -13,6 +13,7 @@ export const signinMutation = () => {
     onSuccess: (result, variables: SigninValue) => {
       AuthUtils.setToken(result.data.data.access_token)
       router.navigate({ to: '/', replace: true })
+      message.success('登录成功')
       if (variables) {
         AuthUtils.setRememberAccountData(
           JSON.stringify({
@@ -31,9 +32,10 @@ export const signupMutation = () => {
   const router = useRouter()
   return useMutation({
     mutationFn: (signUpDao: SignUpDao) => request.post('/auth/register', signUpDao),
-    onSuccess: async (result) => {
+    onSuccess: (result) => {
       AuthUtils.setToken(result.data.data.access_token)
       router.navigate({ to: '/', replace: true })
+      message.success('登录成功')
     },
     onError: (result: AxiosError) => {
       const responseData = result.response?.data as { message?: string[] }

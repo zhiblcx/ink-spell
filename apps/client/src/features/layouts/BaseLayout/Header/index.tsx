@@ -2,6 +2,7 @@ import { gerProfileAPI, request } from '@/shared/API'
 import ThemeToggle from '@/shared/components/ThemeToggle'
 import { Menu } from '@/shared/enums'
 import { useActionBookStore, useMenuStore } from '@/shared/store'
+import { Book } from '@/shared/types/book'
 import { AuthUtils } from '@/shared/utils'
 import { Md5Utils } from '@/shared/utils/Md5Utils'
 import { useQuery } from '@tanstack/react-query'
@@ -11,12 +12,37 @@ import { message } from 'antd'
 import { AlignLeft, AlignRight } from 'lucide-react'
 
 function Header() {
-  const { Search } = Input
-  const { menu, setMenu } = useMenuStore()
-  const navigate = useNavigate()
   const router = useRouter()
+  const navigate = useNavigate()
   const showSearchReg = /^\/$|^\/bookshelf\/.*$/
-  const { uploadFileFlag, updateUploadFileFlag } = useActionBookStore()
+  const { menu, setMenu } = useMenuStore()
+  const { uploadFileFlag, updateUploadFileFlag, updateSearchBookName } = useActionBookStore()
+  const reg = /\d+/
+  const match = router.latestLocation.href.match(reg)
+  let bookId = match !== null ? match[0] : undefined
+  const { data: myBookShelf } = useQuery({
+    queryKey: ['bookshelf'],
+    queryFn: () => request.get('/bookshelf')
+  })
+  bookId = myBookShelf?.data.data[0].id
+
+  const [options, setOptions] = useState([])
+  const [optionTotal, setOptionTotal] = useState([])
+
+  const { data: queryBook, isSuccess } = useQuery({
+    queryKey: ['bookshelf_book', bookId],
+    queryFn: () => request.get(`/bookshelf/${bookId}`)
+  })
+  useEffect(() => {
+    if (isSuccess) {
+      setOptionTotal(
+        queryBook.data.data.map((item: Book) => ({
+          label: item.name,
+          value: item.name
+        }))
+      )
+    }
+  }, [isSuccess])
 
   const query = useQuery({
     queryKey: ['user'],
@@ -138,6 +164,23 @@ function Header() {
       </div>
     )
   }
+
+  // 点击搜索框的标志
+  const onSearch = (value: string) => {
+    updateSearchBookName(value)
+  }
+
+  // 点击下拉条目
+  const handleSearch = (value: string) => {
+    const filterOptions = optionTotal.filter((item) => fuzzySearch(value, item))
+    setOptions(filterOptions)
+  }
+
+  function fuzzySearch(keyword: string, item: { label: string }) {
+    const regex = new RegExp('.*' + keyword.split('').join('.*') + '.*', 'i')
+    return regex.test(item.label)
+  }
+
   return (
     <div className="flex items-center justify-between py-4">
       <div className="flex items-center">
@@ -147,10 +190,18 @@ function Header() {
           }}
         />
         {showSearchReg.test(router.latestLocation.pathname) ? (
-          <Search
-            className="mx-2 flex items-center justify-center min-[375px]:mx-0 min-[375px]:w-[145px] md:w-[200px]"
-            placeholder="请输入要搜索的书"
-          />
+          <AutoComplete
+            options={options}
+            onSelect={onSearch}
+            onSearch={handleSearch}
+          >
+            <Input.Search
+              className="mx-2 flex items-center justify-center min-[375px]:mx-0 min-[375px]:w-[145px] md:w-[200px]"
+              placeholder="请输入要搜索的书名"
+              onSearch={onSearch}
+              enterButton
+            />
+          </AutoComplete>
         ) : (
           ''
         )}

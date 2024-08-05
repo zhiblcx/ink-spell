@@ -1,6 +1,5 @@
 import { request } from '@/shared/API'
 import BookShelf from '@/shared/components/BookShelf'
-import EmptyPage from '@/shared/components/EmptyPage'
 import { AllSelectBookFlag } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
@@ -31,6 +30,7 @@ export function Page() {
     queryFn: () => request.get(`/bookshelf/${bookId}`)
   })
 
+  const queryClient = useQueryClient()
   const { mutate } = useMutation({
     mutationFn: () => request.delete(`/bookshelf/${bookId}`),
     onSuccess: (data) => {
@@ -39,7 +39,6 @@ export function Page() {
     }
   })
 
-  const queryClient = useQueryClient()
   useEffect(() => {
     if (isSuccess) {
       setBooks(queryBook.data?.data)
@@ -63,16 +62,10 @@ export function Page() {
   }, [deleteShelfFlag])
 
   return (
-    <>
-      {books.length === 0 ? (
-        <EmptyPage name="暂时没有书籍，请先导入书籍哦~" />
-      ) : (
-        <BookShelf
-          books={books}
-          setBooks={setBooks}
-        />
-      )}
-    </>
+    <BookShelf
+      books={books}
+      setBooks={setBooks}
+    />
   )
 }
 

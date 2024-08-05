@@ -34,6 +34,7 @@
     "Form": true,
     "Upload": true,
     "Image": true,
-    "Select": true
+    "Select": true,
+    "AutoComplete": true
   }
 }

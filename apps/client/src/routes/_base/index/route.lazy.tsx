@@ -1,6 +1,5 @@
 import { request } from '@/shared/API'
 import BookShelf from '@/shared/components/BookShelf'
-import EmptyPage from '@/shared/components/EmptyPage'
 import { AllSelectBookFlag } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
@@ -39,16 +38,10 @@ export function Page() {
   }, [queryBook?.data?.data, uploadFileFlag])
 
   return (
-    <>
-      {books.length === 0 ? (
-        <EmptyPage name="暂时没有书籍，请先导入书籍哦~" />
-      ) : (
-        <BookShelf
-          books={books}
-          setBooks={setBooks}
-        />
-      )}
-    </>
+    <BookShelf
+      books={books}
+      setBooks={setBooks}
+    />
   )
 }
 

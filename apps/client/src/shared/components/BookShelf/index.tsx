@@ -8,6 +8,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { message } from 'antd'
 import { motion } from 'framer-motion'
 import { Suspense } from 'react'
+import EmptyPage from '../EmptyPage'
 
 interface BookShelfPropsType {
   books: Ink[]
@@ -31,10 +32,12 @@ function BookShelf({ books = [], setBooks }: BookShelfPropsType) {
     cancelFlag,
     deleteBookFlag,
     bookToBookShelfFlag,
+    searchBookName,
     updateAllSelectFlag,
     updateCancelFlag,
     updateDeleteFlag,
-    updateBookToBookShelfFlag
+    updateBookToBookShelfFlag,
+    updateSearchBookName
   } = useActionBookStore()
   const [form] = Form.useForm()
   const [addBookShelfOpenFlag, setAddBookShelfOpenFlag] = useState(false)
@@ -45,7 +48,8 @@ function BookShelf({ books = [], setBooks }: BookShelfPropsType) {
     }
   ])
   let acquireBookShelfFlag = false
-  const [selectBookShelfValue, setSelectBookShelfValue] = useState('new')
+  const [selectBookShelfValue, setSelectBookShelfValue] = useState(selectOptions[0].value)
+  const [options, setOptions] = useState(books)
 
   const { data, isSuccess } = useQuery({
     queryKey: ['bookshelf'],
@@ -75,6 +79,7 @@ function BookShelf({ books = [], setBooks }: BookShelfPropsType) {
       }
       if (data.data.data.md5 === undefined) {
         handlerUpdateBookShelf(data.data.data.id)
+        queryClient.invalidateQueries({ queryKey: ['bookshelf'] })
         message.success(data.data.message)
       }
     }
@@ -93,7 +98,7 @@ function BookShelf({ books = [], setBooks }: BookShelfPropsType) {
         bookShelfId: -1
       }
     }
-    if (bookShelf.bookShelfId == 'new') {
+    if (bookShelf.bookShelfId === selectOptions[0].value) {
       operateBookShelfMutate(obj)
     } else {
       handlerUpdateBookShelf(Number(bookShelf.bookShelfId))
@@ -180,7 +185,20 @@ function BookShelf({ books = [], setBooks }: BookShelfPropsType) {
         acquireBookShelfFlag = true
       }
     }
+    return () => updateSearchBookName('')
   }, [data?.data.data])
+
+  useEffect(() => {
+    if (searchBookName !== '') {
+      const regex = new RegExp('.*' + searchBookName.split('').join('.*') + '.*', 'i')
+      const filterOptions = books.filter((item) => {
+        return regex.test(item.name ?? '')
+      })
+      setOptions(filterOptions)
+    } else {
+      setOptions(books)
+    }
+  }, [searchBookName])
 
   return (
     <Suspense fallback={<Skeleton />}>
@@ -189,31 +207,43 @@ function BookShelf({ books = [], setBooks }: BookShelfPropsType) {
         whileInView={{ opacity: 1 }}
         className="flex flex-wrap min-[375px]:justify-center md:justify-start"
       >
-        {books.map((item: Ink, index: number) => {
-          return (
-            <InkCard
-              onClickCheckbox={() => {
-                // 显示地下那一行菜单
-                if (!item.checked) {
-                  updateCancelFlag(false)
-                }
-                const currentBooks: Ink[] = Array.from(books)
-                currentBooks[index].checked = !item.checked
-                setBooks(currentBooks)
+        {books.length === 0 ? (
+          <EmptyPage name="暂时没有书籍，请先导入书籍哦~" />
+        ) : (
+          books
+            .filter((book) => {
+              const currentIndex = options.findIndex((option) => option.id === book.id)
+              if (currentIndex != -1) {
+                return true
+              }
+              return false
+            })
+            .map((item: Ink, index: number) => {
+              return (
+                <InkCard
+                  onClickCheckbox={() => {
+                    // 显示地下那一行菜单
+                    if (!item.checked) {
+                      updateCancelFlag(false)
+                    }
+                    const currentBooks: Ink[] = Array.from(books)
+                    currentBooks[index].checked = !item.checked
+                    setBooks(currentBooks)
 
-                // 判断用户是否是部分选择
-                const flag = currentBooks.some((item) => !item.checked)
-                !flag
-                  ? updateAllSelectFlag(AllSelectBookFlag.NOT_ALL_SELECT_FLAG)
-                  : updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
-              }}
-              ink={item}
-              customClassName="mr-4 mb-3 mt-3"
-              key={item.id}
-              cancelFlag={cancelFlag}
-            />
-          )
-        })}
+                    // 判断用户是否是部分选择
+                    const flag = currentBooks.some((item) => !item.checked)
+                    !flag
+                      ? updateAllSelectFlag(AllSelectBookFlag.NOT_ALL_SELECT_FLAG)
+                      : updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
+                  }}
+                  ink={item}
+                  customClassName="mr-4 mb-3 mt-3"
+                  key={item.id}
+                  cancelFlag={cancelFlag}
+                />
+              )
+            })
+        )}
       </motion.div>
 
       <Modal
@@ -251,7 +281,7 @@ function BookShelf({ books = [], setBooks }: BookShelfPropsType) {
               options={selectOptions}
             />
           </Form.Item>
-          {selectBookShelfValue === 'new' ? (
+          {selectBookShelfValue === selectOptions[0].value ? (
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
               label="书架名"

@@ -55,7 +55,7 @@ function Footer() {
           className={clsx(
             'absolute bottom-4 flex space-x-3',
             menu === Menu.EXTEND ? 'min-[375px]:flex' : 'min-[375px]:hidden',
-            cancelFlag ? 'md:hidden' : 'md:flex'
+            !showShelfFlag && cancelFlag ? 'md:hidden' : 'md:flex'
           )}
         >
           <li
@@ -64,7 +64,7 @@ function Footer() {
               updateCancelFlag(!cancelFlag)
             }}
           >
-            取消
+            {showShelfFlag ? '展示/隐藏' : '取消'}
           </li>
 
           <li
@@ -106,7 +106,7 @@ function Footer() {
           </li>
           {showShelfFlag ? (
             <li
-              className="cursor-pointer text-red-500 md:flex"
+              className="cursor-pointer text-red-500"
               onClick={handlerDeleteBookShelf}
             >
               删除该书架
@@ -118,6 +118,7 @@ function Footer() {
       ) : (
         ''
       )}
+
       {contextHolder}
     </>
   )
