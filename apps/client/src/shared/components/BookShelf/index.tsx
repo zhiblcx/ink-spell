@@ -49,7 +49,7 @@ function BookShelf({ books = [], setBooks }: BookShelfPropsType) {
   ])
   let acquireBookShelfFlag = false
   const [selectBookShelfValue, setSelectBookShelfValue] = useState(selectOptions[0].value)
-  const [options, setOptions] = useState(books)
+  const [options, setOptions] = useState([] as Ink[])
 
   const { data, isSuccess } = useQuery({
     queryKey: ['bookshelf'],
@@ -189,6 +189,10 @@ function BookShelf({ books = [], setBooks }: BookShelfPropsType) {
   }, [data?.data.data])
 
   useEffect(() => {
+    setOptions(books)
+  }, [books])
+
+  useEffect(() => {
     if (searchBookName !== '') {
       const regex = new RegExp('.*' + searchBookName.split('').join('.*') + '.*', 'i')
       const filterOptions = books.filter((item) => {
@@ -211,13 +215,7 @@ function BookShelf({ books = [], setBooks }: BookShelfPropsType) {
           <EmptyPage name="暂时没有书籍，请先导入书籍哦~" />
         ) : (
           books
-            .filter((book) => {
-              const currentIndex = options.findIndex((option) => option.id === book.id)
-              if (currentIndex != -1) {
-                return true
-              }
-              return false
-            })
+            .filter((book) => options.some((option) => option.id === book.id))
             .map((item: Ink, index: number) => {
               return (
                 <InkCard
