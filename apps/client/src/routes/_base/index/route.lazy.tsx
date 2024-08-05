@@ -7,7 +7,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
 
 export function Page() {
-  const [books, setBooks] = useState([] as Ink[])
+  const [books, setBooks] = useState<Ink[]>([])
   const { uploadFileFlag, updateAllSelectFlag, updateCancelFlag, updateShowShelfFlag, updateUploadFileFlag } =
     useActionBookStore()
 
