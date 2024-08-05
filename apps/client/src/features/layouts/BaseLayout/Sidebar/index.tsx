@@ -78,7 +78,7 @@ function Sidebar() {
               exit={{ opacity: 0 }}
             >
               <ul className="mb-6 mt-2 space-y-2 overflow-hidden whitespace-nowrap transition-all">
-                {query.data?.data.data.map((menu) =>
+                {query.data?.data.data.map((menu: { label: string; id: number; allFlag: boolean }) =>
                   !menu.allFlag ? (
                     <li key={menu.id}>
                       <Navigation
