@@ -5,7 +5,7 @@ import axios from 'axios'
 
 export const request = axios.create({
   // 请求 api 公共部分
-  baseURL: process.env.VITE_BASE_API_PREFIX,
+  baseURL: import.meta.env.VITE_SERVER_URL + import.meta.env.VITE_APP_PORT,
   // 超时
   timeout: 30000
 })
