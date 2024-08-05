@@ -1,15 +1,21 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "dist/main.js",
-      "use": "@vercel/node"
+  "framework": null,
+  "outputDirectory": ".",
+  "buildCommand": "pnpm run build",
+  "functions": {
+    "api/*.js": {
+      "memory": 1024,
+      "maxDuration": 10
     }
-  ],
-  "routes": [
+  },
+  "rewrites": [
     {
-      "src": "/(.*)",
-      "dest": "dist/main.js"
+      "source": "/api(.*)",
+      "destination": "/api/restful"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/public"
     }
   ]
 }
