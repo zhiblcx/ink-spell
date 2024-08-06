@@ -1,21 +1,16 @@
 {
-  "framework": null,
-  "outputDirectory": ".",
-  "buildCommand": "pnpm run build",
-  "functions": {
-    "api/*.js": {
-      "memory": 1024,
-      "maxDuration": 10
+  "version": 1,
+  "name": "ink-spell",
+  "builds": [
+    {
+      "src": "dist/src/main.js",
+      "use": "@vercel/node"
     }
-  },
-  "rewrites": [
+  ],
+  "routes": [
     {
-      "source": "/api(.*)",
-      "destination": "/api/restful"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/public"
+      "src": "/(.*)",
+      "dest": "dist/src/main.js"
     }
   ]
 }
