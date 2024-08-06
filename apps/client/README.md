@@ -11,4 +11,5 @@
 - [x] tankstack Router
 - [x] tankstack Query
 - [x] farmar-motion
+- [x] spark-md5
 - [] i18n

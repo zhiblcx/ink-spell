@@ -11,12 +11,11 @@
 
 ## function
 
-- [] Collect books
-- [] Grouped books
-- [] Search books
+- [x] Collect books
+- [x] Grouped books
+- [x] Search books
 - [] Read books
 - [] Share books
-- [] Forum books
 
 ## design sketch
 

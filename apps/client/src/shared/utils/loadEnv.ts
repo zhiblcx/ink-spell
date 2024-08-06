@@ -11,12 +11,10 @@ export function loadEnv(mode: string) {
   })
 
   Object.keys(process.env).forEach((envName) => {
-    console.log(process.env[envName])
     const realName = process.env[envName]?.replace(/\\n/g, '\n')
     ret[envName] = realName as string
     // 向 process.env 上扩展我们定义的 VITE 环境变量
     process.env[envName] = realName
-    console.log(realName)
   })
   return ret
 }
