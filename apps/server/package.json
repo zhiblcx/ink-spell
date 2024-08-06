@@ -21,7 +21,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma:migrate:dev": "pnpm set:env -- prisma migrate dev --skip-seed",
     "prisma:seed": "pnpm set:env -- ts-node ./prisma/seed/user.ts",
-    "prisma:generate": "pnpm set:env  -- prisma generate"
+    "prisma:generate": "pnpm set:env  -- prisma generate",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
