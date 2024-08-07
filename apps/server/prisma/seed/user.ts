@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
 import * as dayjs from 'dayjs';
+import { PrismaClient } from '../../prisma/schema/generated/client';
 import { appConfig } from '../../src/config/AppConfig';
 const prisma = new PrismaClient();
 async function seed() {
