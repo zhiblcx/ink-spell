@@ -43,7 +43,6 @@ function Sidebar() {
       className={clsx('mr-2 p-2 transition-all', menu === Menu.EXTEND ? 'min-[375px]:w-0 md:w-[60px]' : 'w-[220px]')}
     >
       <Icon />
-
       <div className="scroll h-full min-[375px]:overflow-y-auto md:overflow-y-hidden md:hover:overflow-y-auto">
         <ul className="mt-4 space-y-2 overflow-hidden whitespace-nowrap">
           {menuList.map((item, index) => (

@@ -5,7 +5,7 @@ export default function GoastSvg(props: SvgType) {
   const { color } = props
   return (
     <svg
-      height="400"
+      height="200"
       node-id="1"
       template-height="1024"
       template-width="1024"

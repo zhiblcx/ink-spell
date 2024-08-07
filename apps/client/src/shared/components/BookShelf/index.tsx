@@ -7,8 +7,8 @@ import { BookShelfType } from '@/shared/types/bookshelf'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { message } from 'antd'
 import { motion } from 'framer-motion'
-import { Suspense } from 'react'
 import EmptyPage from '../EmptyPage'
+import './index.scss'
 
 interface BookShelfPropsType {
   books: Ink[]
@@ -206,45 +206,47 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
 
   return (
     <>
-      <Suspense fallback={<Skeleton />}>
-        {books.length === 0 ? (
-          <EmptyPage name="暂时没有书籍，请先导入书籍哦~" />
-        ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className="flex flex-wrap min-[375px]:justify-center md:justify-start"
-          >
+      {books.length === 0 ? (
+        <EmptyPage name="暂时没有书籍，请先导入书籍哦~" />
+      ) : (
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          className="height scroll absolute h-full overflow-y-scroll"
+        >
+          <ul className="flex flex-wrap min-[375px]:justify-center md:justify-start">
             {books
               .filter((book) => options.some((option) => option.id === book.id))
               .map((item: Ink, index: number) => {
                 return (
-                  <InkCard
-                    onClickCheckbox={() => {
-                      // 显示地下那一行菜单
-                      if (!item.checked) {
-                        updateCancelFlag(false)
-                      }
-                      const currentBooks: Ink[] = Array.from(books)
-                      currentBooks[index].checked = !item.checked
-                      setBooks(currentBooks)
+                  <li>
+                    <InkCard
+                      onClickCheckbox={() => {
+                        // 显示地下那一行菜单
+                        if (!item.checked) {
+                          updateCancelFlag(false)
+                        }
+                        const currentBooks: Ink[] = Array.from(books)
+                        currentBooks[index].checked = !item.checked
+                        setBooks(currentBooks)
 
-                      // 判断用户是否是部分选择
-                      const flag = currentBooks.some((item) => !item.checked)
-                      !flag
-                        ? updateAllSelectFlag(AllSelectBookFlag.NOT_ALL_SELECT_FLAG)
-                        : updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
-                    }}
-                    ink={item}
-                    customClassName="mr-4 mb-3 mt-3"
-                    key={item.id}
-                    cancelFlag={cancelFlag}
-                  />
+                        // 判断用户是否是部分选择
+                        const flag = currentBooks.some((item) => !item.checked)
+                        !flag
+                          ? updateAllSelectFlag(AllSelectBookFlag.NOT_ALL_SELECT_FLAG)
+                          : updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
+                      }}
+                      ink={item}
+                      customClassName="mr-4 mb-3 mt-3"
+                      key={item.id}
+                      cancelFlag={cancelFlag}
+                    />
+                  </li>
                 )
               })}
-          </motion.div>
-        )}
-      </Suspense>
+          </ul>
+        </motion.div>
+      )}
 
       <Modal
         title="添加到书架"

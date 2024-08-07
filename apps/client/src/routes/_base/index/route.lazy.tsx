@@ -16,7 +16,11 @@ export function Page() {
     queryFn: () => request.get('/bookshelf')
   })
   const bookShelfId = data?.data.data[0].id
-  const { data: queryBook, isSuccess } = useQuery({
+  const {
+    data: queryBook,
+    isSuccess,
+    isPending
+  } = useQuery({
     queryKey: ['bookshelf_book', bookShelfId],
     queryFn: () => request.get(`/bookshelf/${bookShelfId}`)
   })
@@ -36,6 +40,18 @@ export function Page() {
       updateCancelFlag(true)
     }
   }, [queryBook?.data?.data, uploadFileFlag])
+
+  if (isPending) {
+    return (
+      <>
+        <div className="select-none text-white dark:text-[#1f1f1f]">
+          暂时没有书籍，请先导入书籍哦~暂时没有书籍，请先导入书籍哦~暂时没有书籍，请先导入书籍哦~
+          暂时没有书籍，请先导入书籍哦~ 暂时没有书籍，请先导入书籍哦~
+        </div>
+        <Skeleton active />
+      </>
+    )
+  }
 
   return (
     <BookShelf

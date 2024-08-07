@@ -4,7 +4,7 @@ import './index.scss'
 function Content() {
   return (
     // TODO: remove absolute
-    <main className="height absolute">
+    <main className="overflow-hidden">
       <Outlet />
     </main>
   )
