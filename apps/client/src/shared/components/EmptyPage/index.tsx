@@ -1,16 +1,25 @@
+import GoastSvg from '@/assets/SVG/GoastSvg'
+import { Theme } from '@/shared/enums'
 import { useThemeStore } from '@/shared/store'
 
 interface EmptyPageType {
   name: string
+  description?: string
 }
 
 function EmptyPage(props: EmptyPageType) {
-  const { name } = props
+  const { name, description = '' } = props
   const { theme } = useThemeStore()
   return (
-    <div className="flex justify-start overflow-hidden">
-      <div className="my-2 ml-2 text-xl">{name}</div>
-    </div>
+    <Result
+      title={name}
+      subTitle={description}
+      icon={
+        <div className="flex justify-center">
+          <GoastSvg color={theme === Theme.DARK ? '#1f1f1f' : '#fff'} />
+        </div>
+      }
+    />
   )
 }
 

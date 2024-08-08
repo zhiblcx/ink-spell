@@ -1,7 +1,6 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
-import { AppController } from './app.controller';
 import { PrismaExceptionFilter } from './core/prisma-client-exception/prisma-client-exception.filter';
 import { AuthModule } from './modules/auth/auth.module';
 import { BookModule } from './modules/book/book.module';
@@ -20,7 +19,7 @@ import { UserModule } from './modules/user/user.module';
     AuthModule,
     PrismaModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [
     { provide: APP_PIPE, useClass: ValidationPipe },
     { provide: APP_FILTER, useClass: PrismaExceptionFilter },

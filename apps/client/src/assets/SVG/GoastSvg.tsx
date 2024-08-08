@@ -7,11 +7,11 @@ export default function GoastSvg(props: SvgType) {
     <svg
       height="200"
       node-id="1"
-      template-height="1024"
-      template-width="1024"
+      template-height="200"
+      template-width="200"
       version="1.1"
       viewBox="0 0 1024 1024"
-      width="1024"
+      width="200"
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
     >
