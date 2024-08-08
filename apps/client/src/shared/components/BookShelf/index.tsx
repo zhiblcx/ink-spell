@@ -219,7 +219,7 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
               .filter((book) => options.some((option) => option.id === book.id))
               .map((item: Ink, index: number) => {
                 return (
-                  <li>
+                  <li key={item.id}>
                     <InkCard
                       onClickCheckbox={() => {
                         // 显示地下那一行菜单
@@ -238,7 +238,6 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
                       }}
                       ink={item}
                       customClassName="mr-4 mb-3 mt-3"
-                      key={item.id}
                       cancelFlag={cancelFlag}
                     />
                   </li>

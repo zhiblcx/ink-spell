@@ -5,6 +5,7 @@ import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
+import { Suspense } from 'react'
 
 export function Page() {
   const [books, setBooks] = useState<Ink[]>([])
@@ -41,23 +42,13 @@ export function Page() {
     }
   }, [queryBook?.data?.data, uploadFileFlag])
 
-  if (isPending) {
-    return (
-      <>
-        <div className="select-none text-white dark:text-[#1f1f1f]">
-          暂时没有书籍，请先导入书籍哦~暂时没有书籍，请先导入书籍哦~暂时没有书籍，请先导入书籍哦~
-          暂时没有书籍，请先导入书籍哦~ 暂时没有书籍，请先导入书籍哦~
-        </div>
-        <Skeleton active />
-      </>
-    )
-  }
-
   return (
-    <BookShelf
-      books={books}
-      setBooks={setBooks}
-    />
+    <Suspense fallback={<Skeleton />}>
+      <BookShelf
+        books={books}
+        setBooks={setBooks}
+      />
+    </Suspense>
   )
 }
 
