@@ -13,6 +13,7 @@ module.exports = {
       {
         allow: ['warn', 'error']
       }
-    ]
+    ],
+    argsIgnorePattern: '^_'
   }
 }

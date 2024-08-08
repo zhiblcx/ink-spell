@@ -5,10 +5,9 @@ import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { Suspense } from 'react'
 
 export function Page() {
-  const [books, setBooks] = useState<Ink[]>([])
+  const [_, setBooks] = useState<Ink[]>([])
   const { uploadFileFlag, updateAllSelectFlag, updateCancelFlag, updateShowShelfFlag, updateUploadFileFlag } =
     useActionBookStore()
 
@@ -17,24 +16,18 @@ export function Page() {
     queryFn: () => request.get('/bookshelf')
   })
   const bookShelfId = data?.data.data[0].id
-  const {
-    data: queryBook,
-    isSuccess,
-    isPending
-  } = useQuery({
+  const { data: queryBook, isPending } = useQuery({
     queryKey: ['bookshelf_book', bookShelfId],
     queryFn: () => request.get(`/bookshelf/${bookShelfId}`)
   })
 
   const queryClient = useQueryClient()
   useEffect(() => {
-    if (isSuccess) {
-      setBooks(queryBook.data?.data)
-      updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
-      if (uploadFileFlag) {
-        queryClient.invalidateQueries({ queryKey: ['bookshelf_book'] })
-        updateUploadFileFlag(false)
-      }
+    setBooks(queryBook?.data?.data ?? [])
+    updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
+    if (uploadFileFlag) {
+      queryClient.invalidateQueries({ queryKey: ['bookshelf_book'] })
+      updateUploadFileFlag(false)
     }
     return () => {
       updateShowShelfFlag(false)
@@ -42,13 +35,23 @@ export function Page() {
     }
   }, [queryBook?.data?.data, uploadFileFlag])
 
+  if (isPending) {
+    return (
+      <>
+        <Skeleton
+          active
+          className="h-full"
+          paragraph={{ rows: 10 }}
+        />
+      </>
+    )
+  }
+
   return (
-    <Suspense fallback={<Skeleton />}>
-      <BookShelf
-        books={books}
-        setBooks={setBooks}
-      />
-    </Suspense>
+    <BookShelf
+      books={queryBook?.data?.data}
+      setBooks={setBooks}
+    />
   )
 }
 
