@@ -20,7 +20,6 @@ import { Route as PublicBookBookIdRouteImport } from './routes/_public/book/$boo
 
 // Create Virtual Routes
 
-const R500RouteLazyImport = createFileRoute('/500')()
 const R404RouteLazyImport = createFileRoute('/404')()
 const PublicSignupRouteLazyImport = createFileRoute('/_public/signup')()
 const PublicSigninRouteLazyImport = createFileRoute('/_public/signin')()
@@ -33,11 +32,6 @@ const BaseBookshelfBookIdRouteLazyImport = createFileRoute(
 )()
 
 // Create/Update Routes
-
-const R500RouteLazyRoute = R500RouteLazyImport.update({
-  path: '/500',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/500/route.lazy').then((d) => d.Route))
 
 const R404RouteLazyRoute = R404RouteLazyImport.update({
   path: '/404',
@@ -148,13 +142,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof R404RouteLazyImport
       parentRoute: typeof rootRoute
     }
-    '/500': {
-      id: '/500'
-      path: '/500'
-      fullPath: '/500'
-      preLoaderRoute: typeof R500RouteLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/_base/': {
       id: '/_base/'
       path: '/'
@@ -231,7 +218,6 @@ export const routeTree = rootRoute.addChildren({
     PublicBookBookIdRouteRoute,
   }),
   R404RouteLazyRoute,
-  R500RouteLazyRoute,
 })
 
 /* prettier-ignore-end */
@@ -245,8 +231,7 @@ export const routeTree = rootRoute.addChildren({
         "/$",
         "/_base",
         "/_public",
-        "/404",
-        "/500"
+        "/404"
       ]
     },
     "/$": {
@@ -272,9 +257,6 @@ export const routeTree = rootRoute.addChildren({
     },
     "/404": {
       "filePath": "404/route.lazy.tsx"
-    },
-    "/500": {
-      "filePath": "500/route.lazy.tsx"
     },
     "/_base/": {
       "filePath": "_base/index/route.lazy.tsx",

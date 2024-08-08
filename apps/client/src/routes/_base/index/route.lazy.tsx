@@ -7,7 +7,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
 
 export function Page() {
-  const [_, setBooks] = useState<Ink[]>([])
+  const [_, setBooks] = useState<Ink[]>()
   const { uploadFileFlag, updateAllSelectFlag, updateCancelFlag, updateShowShelfFlag, updateUploadFileFlag } =
     useActionBookStore()
 
@@ -16,7 +16,7 @@ export function Page() {
     queryFn: () => request.get('/bookshelf')
   })
   const bookShelfId = data?.data.data[0].id
-  const { data: queryBook, isPending } = useQuery({
+  const { data: queryBook, isLoading } = useQuery({
     queryKey: ['bookshelf_book', bookShelfId],
     queryFn: () => request.get(`/bookshelf/${bookShelfId}`)
   })
@@ -35,23 +35,21 @@ export function Page() {
     }
   }, [queryBook?.data?.data, uploadFileFlag])
 
-  if (isPending) {
-    return (
-      <>
+  return (
+    <>
+      {isLoading ? (
         <Skeleton
+          className="p-5"
           active
-          className="h-full"
           paragraph={{ rows: 10 }}
         />
-      </>
-    )
-  }
-
-  return (
-    <BookShelf
-      books={queryBook?.data?.data}
-      setBooks={setBooks}
-    />
+      ) : (
+        <BookShelf
+          books={queryBook?.data?.data}
+          setBooks={setBooks}
+        />
+      )}
+    </>
   )
 }
 
