@@ -102,6 +102,9 @@ importers:
       eslint-plugin-react-refresh:
         specifier: ^0.4.7
         version: 0.4.8(eslint@8.57.0)
+      js-image-compressor:
+        specifier: ^2.0.0
+        version: 2.0.0
       postcss:
         specifier: ^8.4.39
         version: 8.4.39
@@ -1318,6 +1321,9 @@ packages:
   jiti@1.21.6:
     resolution: {integrity: sha512-2yTgeWTWzMWkHu6Jp9NKgePDaYHbntiwvYuuJLbbN9vl7DC9DvXKOB2BC3ZZ92D3cvV/aflH0osDfwpHepQ53w==}
     hasBin: true
+
+  js-image-compressor@2.0.0:
+    resolution: {integrity: sha512-HUhGwVxwLsxXjP7ztQ1CF2iE6X1YRW1lcalJZYfNymPvuO4kK1bbLVeumVDZs6OPDUK1c0BPwhVH/SsRso8Jbw==}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -3495,6 +3501,8 @@ snapshots:
       '@pkgjs/parseargs': 0.11.0
 
   jiti@1.21.6: {}
+
+  js-image-compressor@2.0.0: {}
 
   js-tokens@4.0.0: {}
 

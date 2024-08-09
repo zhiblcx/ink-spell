@@ -1,7 +1,7 @@
 import { AuthUtils } from '@/shared/utils'
+import { PhotoUtils } from '@/shared/utils/PhotoUtils'
 import { FormInstance, UploadProps, type UploadFile } from 'antd'
 import ImgCrop from 'antd-img-crop'
-
 interface UploadPhotoProps {
   fileName: UploadFile[]
   form: FormInstance<any>
@@ -30,6 +30,7 @@ export default function UploadPhoto({
     maxCount: 1,
     beforeUpload: async (file) => {
       const image = file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg'
+      console.log(await PhotoUtils.canvasDataURL(file))
       return image || Upload.LIST_IGNORE
     },
 
