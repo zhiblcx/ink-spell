@@ -1,12 +1,12 @@
 import { request } from '@/shared/API'
 import { type Ink } from '@/shared/types'
 import { Book } from '@/shared/types/book'
-import { AuthUtils, BookUtils } from '@/shared/utils'
+import { BookUtils } from '@/shared/utils'
 import { useMutation } from '@tanstack/react-query'
-import { type UploadFile, type UploadProps, Input, message } from 'antd'
-import ImgCrop from 'antd-img-crop'
+import { type UploadFile, Input, message } from 'antd'
 import clsx from 'clsx'
 import { Pencil } from 'lucide-react'
+import UploadPhoto from '../UploadPhoto'
 import './index.scss'
 interface InkCardProps {
   ink: Ink
@@ -36,30 +36,6 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
       message.success('修改成功')
     }
   })
-
-  const props: UploadProps = {
-    accept: 'image/png, image/jpeg, image/jpg',
-    action: '/api/book/upload/cover',
-    headers: {
-      authorization: `Bearer ${AuthUtils.getToken()}`
-    },
-    listType: 'picture-card',
-    method: 'post',
-    name: 'file',
-    fileList: bookCover,
-    maxCount: 1,
-    beforeUpload: async (file) => {
-      const image = file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg'
-      return image || Upload.LIST_IGNORE
-    },
-
-    onChange: (info) => {
-      setBookCover(info.fileList)
-      if (info.file.response?.data?.filePath !== undefined) {
-        form.setFieldValue('cover', info.file.response.data.filePath)
-      }
-    }
-  }
 
   useEffect(() => {
     const [role1, role2] = book.protagonist?.split('|') || ['', '']
@@ -171,9 +147,12 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
               label="封面"
               name="cover"
             >
-              <ImgCrop rotationSlider>
-                <Upload {...props}>{bookCover.length < 1 && '+ Upload'}</Upload>
-              </ImgCrop>
+              <UploadPhoto
+                fileName={bookCover}
+                setFileName={setBookCover}
+                name="cover"
+                form={form}
+              />
             </Form.Item>
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"

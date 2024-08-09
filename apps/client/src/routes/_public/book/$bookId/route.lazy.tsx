@@ -25,7 +25,7 @@ function Page() {
     <>
       {isLoading ? (
         <Skeleton
-          className="mt-10"
+          className="mt-10 p-5"
           active
           paragraph={{ rows: 10 }}
         />

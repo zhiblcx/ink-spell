@@ -1,9 +1,8 @@
 import { request } from '@/shared/API'
+import UploadPhoto from '@/shared/components/UploadPhoto'
 import { User } from '@/shared/types/user'
-import { AuthUtils } from '@/shared/utils'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { type UploadFile, Input, message, UploadProps } from 'antd'
-import ImgCrop from 'antd-img-crop'
+import { type UploadFile, Input, message } from 'antd'
 import styles from './styles.module.scss'
 
 export default function Profile() {
@@ -17,7 +16,7 @@ export default function Profile() {
     mutationFn: (user: User) => request.put('/user', user),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['user'] })
-      message.success(data.data.data.message)
+      message.success(data.data.message)
     }
   })
 
@@ -32,81 +31,51 @@ export default function Profile() {
     ])
   }, [query.data?.data.data.avatar])
 
-  const props: UploadProps = {
-    accept: 'image/png, image/jpeg, image/jpg',
-    action: '/api/book/upload/cover',
-    headers: {
-      authorization: `Bearer ${AuthUtils.getToken()}`
-    },
-    listType: 'picture-card',
-    method: 'post',
-    name: 'file',
-    fileList: avatar,
-    maxCount: 1,
-    beforeUpload: async (file) => {
-      const image = file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg'
-      return image || Upload.LIST_IGNORE
-    },
-
-    onChange: (info) => {
-      setAvatar(info.fileList)
-      if (info.file.response?.data?.filePath !== undefined) {
-        form.setFieldValue('avatar', info.file.response.data.filePath)
-      }
-    }
-  }
-
   return (
-    <div className="relative flex h-full items-center justify-center overflow-hidden">
-      <div className="select-none text-white dark:text-[#1f1f1f]">
-        暂时没有书籍，请先导入书籍哦~暂时没有书籍，请先导入书籍哦~暂时没有书籍，请先导入书籍哦~
-        暂时没有书籍，请先导入书籍哦~ 暂时没有书籍，请先导入书籍哦~
-      </div>
-      <div className="absolute">
-        <div className={styles.card}>
-          <div className={styles.imgBx}>
-            <img src={process.env.VITE_SERVER_URL + query.data?.data.data.avatar} />
-          </div>
-          <div className={styles.content}>
-            <div className={styles.details}>
-              <h2>
-                {query.data?.data.data.username}
+    <div className="flex h-[580px] items-center justify-center">
+      <div className={styles.card}>
+        <div className={styles.imgBx}>
+          <img src={import.meta.env.VITE_SERVER_URL + query.data?.data.data.avatar} />
+        </div>
+        <div className={styles.content}>
+          <div className={styles.details}>
+            <h2>
+              {query.data?.data.data.username}
+              <br />
+              <span>{query.data?.data.data.email ?? '暂无邮箱'}</span>
+            </h2>
+            <div className={styles.data}>
+              <h3>
+                342
                 <br />
-                <span>{query.data?.data.data.email}</span>
-              </h2>
-              <div className={styles.data}>
-                <h3>
-                  342
-                  <br />
-                  <span>books</span>
-                </h3>
-                <h3>
-                  321
-                  <br />
-                  <span>Followers</span>
-                </h3>
-                <h3>
-                  123
-                  <br />
-                  <span>Following</span>
-                </h3>
-              </div>
-              <div className={styles.actionBtn}>
-                <Button
-                  type="primary"
-                  className={styles.btn}
-                >
-                  Follow
-                </Button>
-                <Button
-                  className={styles.btn}
-                  onClick={() => {
-                    setOpenFlag(true)
-                  }}
-                >
-                  Message
-                </Button>
-              </div>
+                <span>books</span>
+              </h3>
+              <h3>
+                321
+                <br />
+                <span>Followers</span>
+              </h3>
+              <h3>
+                123
+                <br />
+                <span>Following</span>
+              </h3>
+            </div>
+            <div className={styles.actionBtn}>
+              <Button
+                type="primary"
+                className={styles.btn}
+              >
+                Follow
+              </Button>
+              <Button
+                className={styles.btn}
+                onClick={() => {
+                  setOpenFlag(true)
+                }}
+              >
+                Message
+              </Button>
             </div>
           </div>
         </div>
@@ -148,9 +117,12 @@ export default function Profile() {
               label="头像"
               name="avatar"
             >
-              <ImgCrop rotationSlider>
-                <Upload {...props}>{avatar.length < 1 && '+ Upload'}</Upload>
-              </ImgCrop>
+              <UploadPhoto
+                form={form}
+                name="avatar"
+                fileName={avatar}
+                setFileName={setAvatar}
+              />
             </Form.Item>
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
