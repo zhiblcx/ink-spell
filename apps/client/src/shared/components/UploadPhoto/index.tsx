@@ -2,12 +2,13 @@ import { AuthUtils } from '@/shared/utils'
 import { PhotoUtils } from '@/shared/utils/PhotoUtils'
 import { FormInstance, UploadProps, type UploadFile } from 'antd'
 import ImgCrop from 'antd-img-crop'
+import { RcFile } from 'antd/es/upload'
 interface UploadPhotoProps {
   fileName: UploadFile[]
+  setFileName: React.Dispatch<React.SetStateAction<UploadFile[]>>
   form: FormInstance<any>
   name: string
   api?: string
-  setFileName: React.Dispatch<React.SetStateAction<UploadFile[]>>
 }
 
 export default function UploadPhoto({
@@ -29,9 +30,15 @@ export default function UploadPhoto({
     fileList: fileName,
     maxCount: 1,
     beforeUpload: async (file) => {
-      const image = file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg'
-      console.log(await PhotoUtils.canvasDataURL(file))
-      return image || Upload.LIST_IGNORE
+      return new Promise(async (resolve, reject) => {
+        const image = file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg'
+        if (!image) {
+          reject()
+        }
+        if (file.type === 'image/png') {
+          resolve((await PhotoUtils.compressPNG(file)) as RcFile)
+        }
+      })
     },
 
     onChange: (info) => {

@@ -1,3 +1,4 @@
+import UPNG from 'upng-js'
 export class PhotoUtils {
   // 对 png 的压缩反而更大
   static canvasDataURL(file: File, quality = 0.2) {
@@ -22,6 +23,16 @@ export class PhotoUtils {
           )
         }
       }
+    })
+  }
+
+  static async compressPNG(file: File, quality = 0.2) {
+    return new Promise(async (resolve) => {
+      const arrayBuffer = await file.arrayBuffer()
+      const decoded = UPNG.decode(arrayBuffer)
+      const rgba8 = UPNG.toRGBA8(decoded)
+      const compressed = UPNG.encode(rgba8, decoded.width, decoded.height, 256 * quality)
+      resolve(new File([compressed], file.name, { type: 'image/png' }))
     })
   }
 }
