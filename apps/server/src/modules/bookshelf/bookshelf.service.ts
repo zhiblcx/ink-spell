@@ -21,6 +21,10 @@ export class BookshelfService {
         label: createBookshelfDto.bookShelfName,
         createTimer: new Date(),
         allFlag: false,
+        position:
+          (await this.prisma.bookShelf.count({
+            where: { userId: req.user.userId, isDelete: false },
+          })) + 1,
       },
     });
   }

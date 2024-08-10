@@ -217,6 +217,7 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
           <ul className="flex flex-wrap min-[375px]:justify-center md:justify-start">
             {books
               .filter((book) => options.some((option) => option.id === book.id))
+              .reverse()
               .map((item: Ink, index: number) => {
                 return (
                   <li key={item.id}>

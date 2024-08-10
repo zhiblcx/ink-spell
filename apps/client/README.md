@@ -12,4 +12,6 @@
 - [x] tankstack Query
 - [x] farmar-motion
 - [x] spark-md5
+- [x] upng-js
+- [x] dnd-kit
 - [] i18n

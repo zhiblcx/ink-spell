@@ -16,6 +16,7 @@ async function seed() {
           label: '全部图书',
           createTimer: dayjs().toDate(),
           allFlag: true,
+          position: 1,
         },
       },
     },

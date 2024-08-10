@@ -9,4 +9,5 @@ export type Ink = {
   author?: string
   md5?: string
   checked?: boolean
+  position: number
 }

@@ -7,4 +7,5 @@ model BookShelf {
   books       Book[]
   allFlag     Boolean  @map("all_flag")
   isDelete    Boolean  @default(false) @map("is_delete")
+  position    Int
 }

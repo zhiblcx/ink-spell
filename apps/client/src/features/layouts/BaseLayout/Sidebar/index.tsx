@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { AnimatePresence, motion } from 'framer-motion'
-import { BookHeart, ChevronDown, ChevronRight } from 'lucide-react'
+import { BookHeart, ChevronDown, ChevronRight, Move } from 'lucide-react'
 
 import iconDark from '@/assets/images/icon-dark.png'
 import iconLight from '@/assets/images/icon-light.png'
@@ -9,6 +9,7 @@ import logoLight from '@/assets/images/logo-light.png'
 import { menuList } from '@/mock'
 import { request } from '@/shared/API'
 import Navigation from '@/shared/components/Navigation'
+import Sortable, { SortableItem } from '@/shared/components/Sortable'
 import { Menu, Theme } from '@/shared/enums'
 import { useMenuStore, useThemeStore } from '@/shared/store'
 import { useQuery } from '@tanstack/react-query'
@@ -17,8 +18,12 @@ function Sidebar() {
   const { theme } = useThemeStore()
   const { menu } = useMenuStore()
   const [arrow, setArrow] = useState(true)
+  const [bookShelfMenu, setBookShelfMenu] = useState([])
 
-  const query = useQuery({ queryKey: ['bookshelf'], queryFn: () => request.get('bookshelf') })
+  const { data: query, isSuccess } = useQuery({ queryKey: ['bookshelf'], queryFn: () => request.get('bookshelf') })
+  if (isSuccess && bookShelfMenu.length === 0) {
+    setBookShelfMenu(query.data.data)
+  }
 
   function Icon() {
     return (
@@ -76,21 +81,27 @@ function Sidebar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <ul className="mb-6 mt-2 space-y-2 overflow-hidden whitespace-nowrap transition-all">
-                {query.data?.data.data.map((menu: { label: string; id: number; allFlag: boolean }) =>
-                  !menu.allFlag ? (
-                    <li key={menu.id}>
-                      <Navigation
-                        value={menu.label}
-                        label={`/bookshelf/${menu.id}`}
-                        Icon={BookHeart}
-                      />
-                    </li>
-                  ) : (
-                    ''
-                  )
-                )}
-              </ul>
+              <Sortable originItems={bookShelfMenu}>
+                <ul className="mb-6 mt-2 space-y-2 overflow-hidden whitespace-nowrap transition-all">
+                  {bookShelfMenu.map((menu: { id: number; label: string; allFlag: boolean; position: number }) =>
+                    !menu.allFlag ? (
+                      <SortableItem
+                        item={menu}
+                        id={menu.id}
+                        key={menu.id}
+                        MoveItem={
+                          <Navigation
+                            value={menu.label}
+                            label={`/bookshelf/${menu.id}`}
+                            Icon={BookHeart}
+                            Move={Move}
+                          />
+                        }
+                      ></SortableItem>
+                    ) : null
+                  )}
+                </ul>
+              </Sortable>
             </motion.div>
           )}
         </AnimatePresence>
