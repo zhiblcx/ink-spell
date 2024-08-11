@@ -16,6 +16,7 @@
 - [x] Search books
 - [] Read books
 - [] Share books
+- [x] move bookShelf
 
 ## design sketch
 

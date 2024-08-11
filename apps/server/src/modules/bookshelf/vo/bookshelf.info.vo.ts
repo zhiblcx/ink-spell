@@ -39,6 +39,7 @@ export class BookShelfInfoVo {
         bookShelfId: 3,
         md5: '097e2a121d0e261a8db2522b6d413f71',
         encoding: 'UTF-8',
+        position: 1,
       },
     ],
     description: '书籍',

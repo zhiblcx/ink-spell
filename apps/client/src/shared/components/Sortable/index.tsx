@@ -1,23 +1,31 @@
-import { closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { request } from '@/shared/API'
+import { BookShelfType } from '@/shared/types/bookshelf'
 import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy
-} from '@dnd-kit/sortable'
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors
+} from '@dnd-kit/core'
+import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers'
+import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { message } from 'antd'
+import lodash from 'lodash'
 
 interface SortableProps {
-  originItems: PositionProps[]
+  originItems: BookShelfType[]
+  setOriginItems: React.Dispatch<React.SetStateAction<BookShelfType[]>>
   children: JSX.Element
 }
 
 interface SortableItemProps {
   item: PositionProps
   id: number
-  MoveItem: React.ComponentType
+  MoveItem: React.ComponentType<any>
 }
 
 interface PositionProps {
@@ -40,28 +48,50 @@ export function SortableItem({ item, MoveItem }: SortableItemProps) {
       {...attributes}
       className="relative"
     >
-      <MoveItem />
+      <MoveItem move={listeners} />
     </li>
   )
 }
 
-function Sortable({ originItems, children }: SortableProps) {
-  const [items, setItems] = useState(originItems)
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates
+function Sortable({ originItems, setOriginItems, children }: SortableProps) {
+  let flag = false
+  let sensors = useSensors()
+  if (window.innerWidth >= 400) {
+    sensors = useSensors(useSensor(PointerSensor))
+  } else {
+    sensors = useSensors(useSensor(TouchSensor))
+  }
+
+  const { mutate } = useMutation({
+    mutationFn: (data: BookShelfType & { bookShelfName: string }) => request.put(`bookshelf/${data.id}`, data),
+    onSuccess: (data) => {
+      message.success(data.data.data.message)
+    }
+  })
+
+  const downloadFiledebounce = lodash.debounce((updatedItems) => {
+    console.log(updatedItems)
+    updatedItems.map((item: BookShelfType, index: number) => {
+      if (item.position === index + 1) {
+        return
+      } else {
+        item.position = index + 1
+        console.log(index)
+        console.log(item)
+        mutate({ ...item, bookShelfName: item.label })
+      }
     })
-  )
+  }, 3000)
 
   return (
     <DndContext
+      modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
     >
       <SortableContext
-        items={items}
+        items={originItems}
         strategy={verticalListSortingStrategy}
       >
         {children}
@@ -69,14 +99,17 @@ function Sortable({ originItems, children }: SortableProps) {
     </DndContext>
   )
 
-  function handleDragEnd(event) {
+  async function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
-    setItems(originItems)
-    if (active.id !== over.id) {
-      setItems((items) => {
-        const oldIndex = items.indexOf(active.id)
-        const newIndex = items.indexOf(over.id)
-        return arrayMove(items, oldIndex, newIndex)
+    if (active.id !== over?.id) {
+      setOriginItems((items) => {
+        const oldIndex = items.findIndex((item) => active.id === item.id)
+        const newIndex = items.findIndex((item) => over?.id === item.id)
+        const updatedItems = arrayMove(items, oldIndex, newIndex)
+
+        downloadFiledebounce(updatedItems)
+
+        return updatedItems
       })
     }
   }

@@ -14,4 +14,5 @@
 - [x] spark-md5
 - [x] upng-js
 - [x] dnd-kit
+- [x] lodash
 - [] i18n

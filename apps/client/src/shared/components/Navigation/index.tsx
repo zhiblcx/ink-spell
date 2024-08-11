@@ -1,3 +1,4 @@
+import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities'
 import { Link } from '@tanstack/react-router'
 import clsx from 'clsx'
 import { LucideProps } from 'lucide-react'
@@ -7,13 +8,17 @@ interface NavigationProps {
   label?: string
   Icon?: React.ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>>
   Move?: React.ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>>
+  move?: SyntheticListenerMap | undefined
 }
 
 function Navigation(props: NavigationProps) {
-  const { Icon, value, label, Move = false } = props
+  const { Icon, value, label, Move = false, move } = props
 
   return (
-    <Link to={label}>
+    <Link
+      disabled={true}
+      to={label}
+    >
       {({ isActive }) => {
         return (
           <div
@@ -24,7 +29,24 @@ function Navigation(props: NavigationProps) {
           >
             {Icon && <Icon className="absolute mx-[3px]" />}
             <div className="relative left-9">{value}</div>
-            {Move && <Move className="absolute left-[160px]" />}
+            {Move && (
+              <Move
+                onMouseUp={() => {
+                  console.log('鼠标松开')
+                }}
+                onMouseDown={() => {
+                  console.log('鼠标按下')
+                }}
+                onTouchStart={() => {
+                  console.log('触摸开始')
+                }}
+                onTouchEnd={() => {
+                  console.log('触摸结束')
+                }}
+                className="absolute left-[160px] cursor-move"
+                {...move}
+              />
+            )}
           </div>
         )
       }}

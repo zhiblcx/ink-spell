@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateBookshelfDto {
   @IsString({ message: '书架名称必须为字符串' })
@@ -9,4 +9,11 @@ export class CreateBookshelfDto {
     description: '书架名称',
   })
   bookShelfName: string;
+
+  @IsNumber()
+  @ApiProperty({
+    example: 1,
+    description: '书架位置',
+  })
+  position: number;
 }

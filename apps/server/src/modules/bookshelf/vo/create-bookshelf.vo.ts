@@ -36,6 +36,12 @@ export class CreateBookShelfVo {
   })
   allFlag: boolean;
 
+  @ApiProperty({
+    example: 1,
+    description: '位置',
+  })
+  position: number;
+
   constructor(createBookShelfVo: CreateBookShelfVo) {
     Object.assign(this, createBookShelfVo);
   }

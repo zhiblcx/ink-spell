@@ -48,6 +48,9 @@ export class BookshelfService {
   async acquireBookShelft(userId) {
     return await this.prisma.bookShelf.findMany({
       where: { userId, isDelete: false },
+      orderBy: {
+        position: 'asc',
+      },
     });
   }
 
@@ -59,7 +62,10 @@ export class BookshelfService {
 
   async updateBookShelf(bookShelfId, updateBookshelfDto) {
     await this.prisma.bookShelf.update({
-      data: { label: updateBookshelfDto.bookShelfName },
+      data: {
+        label: updateBookshelfDto.bookShelfName,
+        position: updateBookshelfDto.position,
+      },
       where: { id: parseInt(bookShelfId) },
     });
   }

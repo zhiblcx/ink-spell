@@ -12,13 +12,14 @@ import Navigation from '@/shared/components/Navigation'
 import Sortable, { SortableItem } from '@/shared/components/Sortable'
 import { Menu, Theme } from '@/shared/enums'
 import { useMenuStore, useThemeStore } from '@/shared/store'
+import { BookShelfType } from '@/shared/types/bookshelf'
 import { useQuery } from '@tanstack/react-query'
 
 function Sidebar() {
   const { theme } = useThemeStore()
   const { menu } = useMenuStore()
   const [arrow, setArrow] = useState(true)
-  const [bookShelfMenu, setBookShelfMenu] = useState([])
+  const [bookShelfMenu, setBookShelfMenu] = useState([] as BookShelfType[])
 
   const { data: query, isSuccess } = useQuery({ queryKey: ['bookshelf'], queryFn: () => request.get('bookshelf') })
   if (isSuccess && bookShelfMenu.length === 0) {
@@ -66,7 +67,7 @@ function Sidebar() {
         >
           <div className="text-lg font-bold">我的书架</div>
           <div
-            className="absolute right-4"
+            className="absolute right-6"
             onClick={() => {
               setArrow(!arrow)
             }}
@@ -81,7 +82,10 @@ function Sidebar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <Sortable originItems={bookShelfMenu}>
+              <Sortable
+                originItems={bookShelfMenu}
+                setOriginItems={setBookShelfMenu}
+              >
                 <ul className="mb-6 mt-2 space-y-2 overflow-hidden whitespace-nowrap transition-all">
                   {bookShelfMenu.map((menu: { id: number; label: string; allFlag: boolean; position: number }) =>
                     !menu.allFlag ? (
@@ -89,14 +93,15 @@ function Sidebar() {
                         item={menu}
                         id={menu.id}
                         key={menu.id}
-                        MoveItem={
+                        MoveItem={(props) => (
                           <Navigation
                             value={menu.label}
                             label={`/bookshelf/${menu.id}`}
                             Icon={BookHeart}
                             Move={Move}
+                            move={props.move}
                           />
-                        }
+                        )}
                       ></SortableItem>
                     ) : null
                   )}
