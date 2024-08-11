@@ -65,19 +65,20 @@ function Sortable({ originItems, setOriginItems, children }: SortableProps) {
   const { mutate } = useMutation({
     mutationFn: (data: BookShelfType & { bookShelfName: string }) => request.put(`bookshelf/${data.id}`, data),
     onSuccess: (data) => {
-      message.success(data.data.data.message)
+      showMessage(data)
     }
   })
 
+  const showMessage = lodash.throttle((data) => {
+    message.success(data.data.message)
+  }, 1000 * 10)
+
   const downloadFiledebounce = lodash.debounce((updatedItems) => {
-    console.log(updatedItems)
     updatedItems.map((item: BookShelfType, index: number) => {
       if (item.position === index + 1) {
         return
       } else {
         item.position = index + 1
-        console.log(index)
-        console.log(item)
         mutate({ ...item, bookShelfName: item.label })
       }
     })

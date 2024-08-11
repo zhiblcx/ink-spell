@@ -13,10 +13,11 @@ interface NavigationProps {
 
 function Navigation(props: NavigationProps) {
   const { Icon, value, label, Move = false, move } = props
+  const [moveFlag, setMoveFlag] = useState(false)
 
   return (
     <Link
-      disabled={true}
+      disabled={moveFlag}
       to={label}
     >
       {({ isActive }) => {
@@ -32,16 +33,16 @@ function Navigation(props: NavigationProps) {
             {Move && (
               <Move
                 onMouseUp={() => {
-                  console.log('鼠标松开')
+                  setMoveFlag(false)
                 }}
                 onMouseDown={() => {
-                  console.log('鼠标按下')
+                  setMoveFlag(true)
                 }}
                 onTouchStart={() => {
-                  console.log('触摸开始')
+                  setMoveFlag(true)
                 }}
                 onTouchEnd={() => {
-                  console.log('触摸结束')
+                  setMoveFlag(false)
                 }}
                 className="absolute left-[160px] cursor-move"
                 {...move}
