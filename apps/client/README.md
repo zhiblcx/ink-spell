@@ -15,4 +15,5 @@
 - [x] upng-js
 - [x] dnd-kit
 - [x] lodash
+- [x] socket.io-client
 - [] i18n

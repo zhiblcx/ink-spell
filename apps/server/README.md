@@ -9,3 +9,4 @@
 - [x] jwt
 - [x] jschardet
 - [x] iconv-lite
+- [x] socket.io
