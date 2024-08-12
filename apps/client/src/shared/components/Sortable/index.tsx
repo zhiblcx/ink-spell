@@ -54,7 +54,6 @@ export function SortableItem({ item, MoveItem }: SortableItemProps) {
 }
 
 function Sortable({ originItems, setOriginItems, children }: SortableProps) {
-  let flag = false
   let sensors = useSensors()
   if (window.innerWidth >= 400) {
     sensors = useSensors(useSensor(PointerSensor))
