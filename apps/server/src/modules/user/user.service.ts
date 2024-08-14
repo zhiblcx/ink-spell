@@ -12,6 +12,13 @@ export class UserService {
     return userInfo;
   }
 
+  async getUserInfo(userId) {
+    const { password: _, ...userInfo } = await this.prisma.user.findUnique({
+      where: { id: parseInt(userId), isDelete: false },
+    });
+    return userInfo;
+  }
+
   async deleteUser(userId) {
     await this.prisma.user.update({
       data: { isDelete: true },

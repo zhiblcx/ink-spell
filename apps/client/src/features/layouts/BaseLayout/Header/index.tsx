@@ -80,7 +80,7 @@ function Header() {
       }
 
       file.md5 = await Md5Utils.getFileMD5(file)
-      const result = await request.get(`/book/md5?md5=${file.md5}`)
+      const result = await request.get(`/book/md5?md5=${file.md5}&file_name=${file.name}`)
 
       if (result.data.data.md5) {
         if (result.data.data.path === '') {
@@ -213,7 +213,7 @@ function Header() {
           placement="bottomLeft"
         >
           <Avatar
-            src={process.env.VITE_SERVER_URL + query.data?.data.data.avatar}
+            src={import.meta.env.VITE_SERVER_URL + query.data?.data.data.avatar}
             size={34}
           />
         </Dropdown>

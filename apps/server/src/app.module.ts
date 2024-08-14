@@ -8,6 +8,7 @@ import { BookModule } from './modules/book/book.module';
 import { BookshelfModule } from './modules/bookshelf/bookshelf.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { UserModule } from './modules/user/user.module';
+import { UserService } from './modules/user/user.service';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { UserModule } from './modules/user/user.module';
     { provide: APP_PIPE, useClass: ValidationPipe },
     { provide: APP_FILTER, useClass: PrismaExceptionFilter },
     SocketGateway,
+    UserService,
   ],
 })
 export class AppModule {}

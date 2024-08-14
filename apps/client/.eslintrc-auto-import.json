@@ -35,6 +35,7 @@
     "Upload": true,
     "Image": true,
     "Select": true,
-    "AutoComplete": true
+    "AutoComplete": true,
+    "Menu": true
   }
 }

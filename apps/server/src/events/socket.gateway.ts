@@ -1,3 +1,5 @@
+import { PrismaService } from '@/modules/prisma/prisma.service';
+import { UserService } from '@/modules/user/user.service';
 import {
   ConnectedSocket,
   MessageBody,
@@ -10,19 +12,29 @@ import { Server, Socket } from 'socket.io';
 // 它充当WebSocket服务端的中间人，负责处理客户端发起的连接请求，并定义处理不同类型消息的逻辑
 @WebSocketGateway({ cors: { origin: '*' } })
 export class SocketGateway {
-  constructor() {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly userService: UserService,
+  ) {}
   @WebSocketServer()
   server: Server;
   roomId = '1';
 
   // 发送消息
   @SubscribeMessage('newMessage')
-  handleMessage(@MessageBody() body: any) {
+  async handleMessage(@MessageBody() body: any) {
     const msg: any = {};
-    const { name, message } = body || {};
+    const { userId, message } = body || {};
     msg.text = message;
-    msg.name = name;
-    this.server.to(this.roomId).emit('newMessage', msg);
+    msg.userId = userId;
+    msg.user = await this.userService.getUserInfo(userId);
+    await this.prisma.message.create({
+      data: {
+        userId: userId,
+        text: message,
+      },
+    });
+    await this.server.to(this.roomId).emit('newMessage', msg);
   }
 
   // 离开房间

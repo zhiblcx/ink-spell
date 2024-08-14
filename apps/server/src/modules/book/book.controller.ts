@@ -109,8 +109,9 @@ export class BookController {
   @HttpCode(HttpStatus.OK)
   @APIResponse(Md5Vo)
   async compareMd5(@Request() req, @Query() md5Dto: Md5Dto) {
+    const file_name = md5Dto.file_name.split('.')[0];
     return new R({
-      data: await this.bookService.compareMd5(req, md5Dto.md5),
+      data: await this.bookService.compareMd5(req, md5Dto.md5, file_name),
     });
   }
 

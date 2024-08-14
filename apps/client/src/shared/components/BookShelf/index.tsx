@@ -8,7 +8,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { message } from 'antd'
 import { motion } from 'framer-motion'
 import EmptyPage from '../EmptyPage'
-import './index.scss'
 
 interface BookShelfPropsType {
   books: Ink[]

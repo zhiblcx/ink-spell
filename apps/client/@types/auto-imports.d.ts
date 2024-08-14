@@ -16,6 +16,7 @@ declare global {
   const Form: typeof import('antd')['Form']
   const Image: typeof import('antd')['Image']
   const Input: typeof import('antd')['Input']
+  const Menu: typeof import('antd')['Menu']
   const Modal: typeof import('antd')['Modal']
   const Result: typeof import('antd')['Result']
   const Select: typeof import('antd')['Select']
