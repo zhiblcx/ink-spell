@@ -1,0 +1,12 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "inkspell",
+    "tailwindcss",
+    "clsx",
+    "websockets",
+    "tanstack",
+    "antd"
+  ]
+}

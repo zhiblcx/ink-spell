@@ -4,4 +4,5 @@ model Message {
   createTimer DateTime @default(now()) @map("create_timer")
   userId      Int      @map("user_id")
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String
 }
