@@ -8,4 +8,5 @@ model BookShelf {
   allFlag     Boolean  @map("all_flag")
   isDelete    Boolean  @default(false) @map("is_delete")
   position    Int
+  status      String   @default("public")
 }
