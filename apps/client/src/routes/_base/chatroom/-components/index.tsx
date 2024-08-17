@@ -59,7 +59,7 @@ export default function ChatRoom() {
         emitGetMessages()
       })
 
-      const emitGetMessages = lodash.throttle(() => {
+      const emitGetMessages = lodash.debounce(() => {
         socket.emit('getMessages')
       }, 2000)
 
@@ -76,7 +76,7 @@ export default function ChatRoom() {
         getMessages(data)
       })
 
-      const getMessages = lodash.debounce((data) => {
+      const getMessages = (data: MessageType[]) => {
         const result = data.map((item: MessageType) => {
           if (item.type === MessageEnum.MESSAGE) {
             item.type = item.userId === query?.data.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
@@ -87,19 +87,14 @@ export default function ChatRoom() {
         setTimeout(() => {
           inputRef.current!.focus({ cursor: 'end' })
           scrollTo(`#y-item-${result[result.length - 1].id}`)
-        })
-      }, 3000)
+        }, 200)
+      }
     }
 
     return () => {
       socket.off('newMessage', handleNewMessage)
     }
   }, [isSuccess])
-
-  socket.on('err', (e) => {
-    console.log('出错了')
-    console.log(e)
-  })
 
   // 退出浏览器，退出
   window.onbeforeunload = () => {
@@ -169,6 +164,7 @@ export default function ChatRoom() {
                       id={`y-item-${item.id}`}
                     >
                       <Avatar
+                        className="cursor-pointer"
                         src={import.meta.env.VITE_SERVER_URL + item.user?.avatar}
                         size={34}
                       />

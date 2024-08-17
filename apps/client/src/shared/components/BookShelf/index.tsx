@@ -6,6 +6,7 @@ import { Ink } from '@/shared/types'
 import { BookShelfType } from '@/shared/types/bookshelf'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { message } from 'antd'
+import { AxiosError } from 'axios'
 import { motion } from 'framer-motion'
 import EmptyPage from '../EmptyPage'
 
@@ -81,6 +82,10 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
         queryClient.invalidateQueries({ queryKey: ['bookshelf'] })
         message.success(data.data.message)
       }
+    },
+    onError: (result: AxiosError) => {
+      console.log(result)
+      message.error(result.response?.data as string)
     }
   })
 

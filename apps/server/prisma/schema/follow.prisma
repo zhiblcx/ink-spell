@@ -4,5 +4,5 @@ model Follow {
   followerId  Int
   following   User    @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
   followingId Int
-  isDelete    Boolean @map("is_delete")
+  isDelete    Boolean @default(false) @map("is_delete")
 }
