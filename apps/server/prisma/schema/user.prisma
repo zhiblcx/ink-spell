@@ -10,4 +10,6 @@ model User {
   books      Book[]
   isDelete   Boolean     @default(false) @map("is_delete")
   Message    Message[]
+  followers  Follow[]    @relation("UserFollowers")
+  following  Follow[]    @relation("UserFollowing")
 }
