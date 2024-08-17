@@ -46,7 +46,7 @@ export default function Profile() {
             </h2>
             <div className={styles.data}>
               <h3>
-                {query.data?.data.data.booksCount}
+                {query.data?.data.data.books}
                 <br />
                 <span>books</span>
               </h3>

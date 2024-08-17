@@ -148,14 +148,38 @@ export class SocketGateway {
         createTimer: 'asc',
       },
       include: {
-        user: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            avatar: true,
+            email: true,
+            books: {
+              where: { isDelete: false },
+              select: { id: true },
+            },
+            followers: {
+              where: { isDelete: false },
+              select: { id: true },
+            },
+            following: {
+              where: { isDelete: false },
+              select: { id: true },
+            },
+          },
+        },
       },
       take: 200,
     });
 
     const messageResult = messages.map((item) => ({
       ...item,
-      user: item.user, // 已经在查询时包含了用户信息，无需异步获取
+      user: {
+        ...item.user,
+        books: item.user.books.length,
+        followers: item.user.followers.length,
+        following: item.user.following.length,
+      },
     }));
 
     this.server.to(this.roomId).emit('getMessages', messageResult);

@@ -9,7 +9,7 @@ export class UserService {
     const { password: _, ...userInfo } = await this.prisma.user.findUnique({
       where: { id: user.userId },
     });
-    const booksCount = await this.prisma.book.count({
+    const books = await this.prisma.book.count({
       where: { userId: user.userId, isDelete: false },
     });
     const followers = await this.prisma.follow.count({
@@ -21,7 +21,7 @@ export class UserService {
 
     return {
       ...userInfo,
-      booksCount,
+      books,
       followers,
       following,
     };

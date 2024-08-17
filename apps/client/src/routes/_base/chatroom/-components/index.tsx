@@ -13,6 +13,7 @@ import React from 'react'
 import useSmoothScroll from 'react-smooth-scroll-hook'
 import { io } from 'socket.io-client'
 import '../index.scss'
+import styles from './styles.module.scss'
 
 interface MessageType {
   id: number
@@ -28,6 +29,8 @@ export default function ChatRoom() {
   const inputRef = useRef<InputRef>(null)
   const router = useRouter()
   const chatContent = useRef(null)
+  const [lookUser, setLookUser] = useState<User | null>(null)
+  const [openFlag, setOpenFlag] = useState(false)
   const [disableFlag, setDisableFlag] = useState(false)
   const [messageValue, setMessageValue] = useState('')
   const [peopleNumber, setPeopleNumber] = useState(0)
@@ -167,6 +170,11 @@ export default function ChatRoom() {
                         className="cursor-pointer"
                         src={import.meta.env.VITE_SERVER_URL + item.user?.avatar}
                         size={34}
+                        onClick={() => {
+                          console.log(item.user)
+                          setLookUser(item.user ?? null)
+                          setOpenFlag(true)
+                        }}
                       />
                       <div className="ml-2 flex max-w-[80%] flex-col items-start">
                         <span className="text-xs">{item.user?.username}</span>
@@ -234,6 +242,53 @@ export default function ChatRoom() {
               发送消息
             </Button>
           </div>
+
+          <Modal
+            maskClosable
+            onCancel={() => {
+              setOpenFlag(false)
+            }}
+            footer={null}
+            title="个人信息"
+            open={openFlag}
+          >
+            <div className="flex h-[580px] items-center justify-center">
+              <div className={styles.card}>
+                <div className={styles.imgBx}>
+                  <img src={import.meta.env.VITE_SERVER_URL + lookUser?.avatar} />
+                </div>
+                <div className={styles.content}>
+                  <div className={styles.details}>
+                    <h2>
+                      {lookUser?.username}
+                      <br />
+                      <span>{lookUser?.email ?? '暂无邮箱'}</span>
+                    </h2>
+                    <div className={styles.data}>
+                      <h3>
+                        {lookUser?.books}
+                        <br />
+                        <span>books</span>
+                      </h3>
+                      <h3>
+                        {lookUser?.followers}
+                        <br />
+                        <span>Followers</span>
+                      </h3>
+                      <h3>
+                        {lookUser?.following}
+                        <br />
+                        <span>Following</span>
+                      </h3>
+                    </div>
+                    <div>
+                      <Button className="p-5">Follow</Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Modal>
         </>
       )}
     </>
