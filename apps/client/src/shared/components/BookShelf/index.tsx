@@ -216,13 +216,14 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          className="height scroll absolute h-full overflow-y-scroll"
+          style={{ height: 'calc(100% - 115px)' }}
+          className="scroll absolute h-full overflow-y-scroll"
         >
           <ul className="flex flex-wrap min-[375px]:justify-center md:justify-start">
             {books
               .filter((book) => options.some((option) => option.id === book.id))
               .reverse()
-              .map((item: Ink, index: number) => {
+              .map((item: Ink) => {
                 return (
                   <li key={item.id}>
                     <InkCard
@@ -232,7 +233,7 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
                           updateCancelFlag(false)
                         }
                         const currentBooks: Ink[] = Array.from(books)
-                        currentBooks[index].checked = !item.checked
+                        currentBooks[currentBooks.findIndex((i) => i.id === item.id)].checked = !item.checked
                         setBooks(currentBooks)
 
                         // 判断用户是否是部分选择
