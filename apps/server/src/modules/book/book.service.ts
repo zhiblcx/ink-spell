@@ -21,7 +21,7 @@ export class BookService {
       });
       await this.prisma.book.create({
         data: {
-          cover: appConfig.DEFAULT_COVER,
+          cover: appConfig.DEFAULT_BOOK_COVER,
           encoding,
           name: decodeURIComponent(escape(name)),
           bookFile: filePath,
@@ -71,19 +71,19 @@ export class BookService {
         result.md5 = true;
         result.path = currentBook.bookFile;
         // 找到当前用户的默认书籍
-        const defaultBookShelft = await this.prisma.bookShelf.findFirst({
+        const defaultBookShelf = await this.prisma.bookShelf.findFirst({
           where: { allFlag: true, userId: req.user.userId },
         });
         // 把书籍移动到当前用户的默认书籍
         await this.prisma.book.create({
           data: {
             bookFile: currentBook.bookFile,
-            bookShelfId: defaultBookShelft.id,
+            bookShelfId: defaultBookShelf.id,
             md5,
             isDelete: false,
             encoding: currentBook.encoding,
             userId: req.user.userId,
-            cover: appConfig.DEFAULT_COVER,
+            cover: appConfig.DEFAULT_BOOK_COVER,
             name: file_name,
           },
         });

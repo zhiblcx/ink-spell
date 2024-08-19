@@ -104,6 +104,12 @@ export class BookController {
     }
   }
 
+  @Post(':bookID')
+  @ApiOperation({ summary: '收藏书籍' })
+  @HttpCode(HttpStatus.OK)
+  @APIResponse(null, '收藏成功')
+  async collectBook() {}
+
   @Get('md5')
   @ApiOperation({ summary: '查询是否有重复的书籍' })
   @HttpCode(HttpStatus.OK)

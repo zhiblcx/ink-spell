@@ -125,6 +125,18 @@ function Header() {
       label: (
         <div
           onClick={() => {
+            console.log('我的收藏')
+          }}
+        >
+          我的收藏
+        </div>
+      )
+    },
+    {
+      key: 3,
+      label: (
+        <div
+          onClick={() => {
             console.log('重置密码')
           }}
         >
@@ -133,7 +145,7 @@ function Header() {
       )
     },
     {
-      key: 3,
+      key: 4,
       label: (
         <div
           onClick={() => {

@@ -3,10 +3,17 @@
   "language": "en",
   "words": [
     "inkspell",
-    "tailwindcss",
     "clsx",
+    "tailwindcss",
     "websockets",
     "tanstack",
-    "antd"
+    "antd",
+    "zustand",
+    "farmar",
+    "upng",
+    "unplugin",
+    "lucide",
+    "nestjs",
+    "jschardet"
   ]
 }

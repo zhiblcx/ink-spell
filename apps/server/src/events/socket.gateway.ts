@@ -1,6 +1,7 @@
 import { PrismaService } from '@/modules/prisma/prisma.service';
 import { UserService } from '@/modules/user/user.service';
 import { MessageEnum } from '@/shared/constants/MessageEnum';
+import { ApiTags } from '@nestjs/swagger';
 import {
   ConnectedSocket,
   MessageBody,
@@ -12,6 +13,7 @@ import { Server, Socket } from 'socket.io';
 // @WebSocketGateway是一个装饰器，用于创建WebSocket网关类。WebSocket网关类是用于处理 WebSocket连接和消息的核心组件之一。
 // 它充当WebSocket服务端的中间人，负责处理客户端发起的连接请求，并定义处理不同类型消息的逻辑
 @WebSocketGateway({ cors: { origin: '*' } })
+@ApiTags('结合')
 export class SocketGateway {
   constructor(
     private readonly prisma: PrismaService,
@@ -40,9 +42,7 @@ export class SocketGateway {
       },
     });
     msg.type = MessageEnum.MESSAGE;
-    await this.server
-      .to(this.roomId)
-      .emit('newMessage', { ...msg, id: text.id });
+    this.server.to(this.roomId).emit('newMessage', { ...msg, id: text.id });
   }
 
   // 离开房间
