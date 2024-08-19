@@ -1,3 +1,4 @@
+import { appConfig } from '@/config/AppConfig';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -21,6 +22,7 @@ export class BookshelfService {
         label: createBookshelfDto.bookShelfName,
         createTimer: new Date(),
         allFlag: false,
+        cover: appConfig.DEFAULT_BOOK_SHELF_COVER,
         position:
           (await this.prisma.bookShelf.count({
             where: { userId: req.user.userId, isDelete: false },
