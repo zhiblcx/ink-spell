@@ -20,6 +20,7 @@ export class FollowService {
     });
   }
 
+  // 获取粉丝列表
   async getFollowing(userId, page, limit) {
     return await this.prisma.follow.findMany({
       where: {
@@ -34,12 +35,11 @@ export class FollowService {
     });
   }
 
-  async follower(req, createFollowDto) {
-    const { followId } = createFollowDto;
+  async follower(req, followID) {
     const follow = await this.prisma.follow.findFirst({
       where: {
         followerId: req.user.userId,
-        followingId: followId,
+        followingId: parseInt(followID),
       },
     });
     if (follow) {
@@ -51,18 +51,17 @@ export class FollowService {
       return await this.prisma.follow.create({
         data: {
           followerId: parseInt(req.user.userId),
-          followingId: parseInt(followId),
+          followingId: parseInt(followID),
         },
       });
     }
   }
 
-  async cancelFollower(req, createFollowDto) {
-    const { followId } = createFollowDto;
+  async cancelFollower(req, followID) {
     const follow = await this.prisma.follow.findFirst({
       where: {
         followerId: req.user.userId,
-        followingId: followId,
+        followingId: parseInt(followID),
       },
     });
     if (follow) {
