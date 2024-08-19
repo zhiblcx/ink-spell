@@ -17,6 +17,7 @@ async function seed() {
           createTimer: dayjs().toDate(),
           allFlag: true,
           position: 1,
+          cover: appConfig.DEFAULT_BOOK_SHELF_COVER,
         },
       },
     },
