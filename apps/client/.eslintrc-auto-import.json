@@ -35,10 +35,6 @@
     "Upload": true,
     "Image": true,
     "Select": true,
-    "AutoComplete": true,
-    "Menu": true,
-    "Divider": true,
-    "List": true,
-    "Tabs": true
+    "AutoComplete": true
   }
 }

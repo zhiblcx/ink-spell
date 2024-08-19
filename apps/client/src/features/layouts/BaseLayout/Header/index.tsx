@@ -80,7 +80,7 @@ function Header() {
       }
 
       file.md5 = await Md5Utils.getFileMD5(file)
-      const result = await request.get(`/book/md5?md5=${file.md5}&file_name=${file.name}`)
+      const result = await request.get(`/book/md5?md5=${file.md5}`)
 
       if (result.data.data.md5) {
         if (result.data.data.path === '') {
@@ -125,18 +125,6 @@ function Header() {
       label: (
         <div
           onClick={() => {
-            console.log('我的收藏')
-          }}
-        >
-          我的收藏
-        </div>
-      )
-    },
-    {
-      key: 3,
-      label: (
-        <div
-          onClick={() => {
             console.log('重置密码')
           }}
         >
@@ -145,7 +133,7 @@ function Header() {
       )
     },
     {
-      key: 4,
+      key: 3,
       label: (
         <div
           onClick={() => {
@@ -225,7 +213,7 @@ function Header() {
           placement="bottomLeft"
         >
           <Avatar
-            src={import.meta.env.VITE_SERVER_URL + query.data?.data.data.avatar}
+            src={process.env.VITE_SERVER_URL + query.data?.data.data.avatar}
             size={34}
           />
         </Dropdown>

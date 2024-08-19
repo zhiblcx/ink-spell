@@ -6,9 +6,9 @@ import { Ink } from '@/shared/types'
 import { BookShelfType } from '@/shared/types/bookshelf'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { message } from 'antd'
-import { AxiosError } from 'axios'
 import { motion } from 'framer-motion'
 import EmptyPage from '../EmptyPage'
+import './index.scss'
 
 interface BookShelfPropsType {
   books: Ink[]
@@ -82,10 +82,6 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
         queryClient.invalidateQueries({ queryKey: ['bookshelf'] })
         message.success(data.data.message)
       }
-    },
-    onError: (result: AxiosError) => {
-      console.log(result)
-      message.error(result.response?.data as string)
     }
   })
 
@@ -216,14 +212,13 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          style={{ height: 'calc(100% - 115px)' }}
-          className="scroll absolute h-full overflow-y-scroll"
+          className="height scroll absolute h-full overflow-y-scroll"
         >
           <ul className="flex flex-wrap min-[375px]:justify-center md:justify-start">
             {books
               .filter((book) => options.some((option) => option.id === book.id))
               .reverse()
-              .map((item: Ink) => {
+              .map((item: Ink, index: number) => {
                 return (
                   <li key={item.id}>
                     <InkCard
@@ -233,7 +228,7 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
                           updateCancelFlag(false)
                         }
                         const currentBooks: Ink[] = Array.from(books)
-                        currentBooks[currentBooks.findIndex((i) => i.id === item.id)].checked = !item.checked
+                        currentBooks[index].checked = !item.checked
                         setBooks(currentBooks)
 
                         // 判断用户是否是部分选择

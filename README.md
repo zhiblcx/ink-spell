@@ -14,13 +14,9 @@
 - [x] Collect books
 - [x] Grouped books
 - [x] Search books
-- [x] Read books
+- [] Read books
 - [] Share books
-- [] Share books
-- [x] Move bookShelf
-- [x] BookShelf management
-- [x] follow user
-- [x] ChatRoom
+- [x] move bookShelf
 
 ## design sketch
 

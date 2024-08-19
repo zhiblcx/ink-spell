@@ -104,20 +104,13 @@ export class BookController {
     }
   }
 
-  @Post(':bookID')
-  @ApiOperation({ summary: '收藏书籍' })
-  @HttpCode(HttpStatus.OK)
-  @APIResponse(null, '收藏成功')
-  async collectBook() {}
-
   @Get('md5')
   @ApiOperation({ summary: '查询是否有重复的书籍' })
   @HttpCode(HttpStatus.OK)
   @APIResponse(Md5Vo)
   async compareMd5(@Request() req, @Query() md5Dto: Md5Dto) {
-    const file_name = md5Dto.file_name.split('.')[0];
     return new R({
-      data: await this.bookService.compareMd5(req, md5Dto.md5, file_name),
+      data: await this.bookService.compareMd5(req, md5Dto.md5),
     });
   }
 

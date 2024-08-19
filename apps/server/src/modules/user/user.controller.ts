@@ -27,15 +27,6 @@ export class UserController {
     });
   }
 
-  @Get(':userId')
-  @ApiOperation({ summary: '获取指定用户信息' })
-  @APIResponse(UserInfoVo)
-  async getUserInfo(@Param('userId') userId: number) {
-    return new R({
-      data: await this.userService.getUserInfo(userId),
-    });
-  }
-
   @Delete(':userId')
   @ApiOperation({ summary: '删除用户' })
   @APIResponse(null, '删除成功')

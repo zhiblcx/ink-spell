@@ -45,7 +45,7 @@ export class CreateUserDto {
 
   @IsString({ message: '必须为字符串' })
   @ApiProperty({
-    example: '/static/cover/1723522466228.png',
+    example: '',
     description: '头像',
   })
   avatar: string;
