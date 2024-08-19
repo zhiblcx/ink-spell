@@ -8,4 +8,11 @@ export class Md5Dto {
     description: 'md5',
   })
   md5: string;
+
+  @IsNotEmpty({ message: '书名不能为空' })
+  @ApiProperty({
+    example: '平凡的世界',
+    description: '书名',
+  })
+  file_name: string;
 }

@@ -4,4 +4,7 @@ export type User = {
   account: string
   email: string
   avatar: string
+  books?: number
+  followers?: number
+  following?: number
 }

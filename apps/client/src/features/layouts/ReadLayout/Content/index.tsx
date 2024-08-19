@@ -41,10 +41,10 @@ function ChapterLink({ noContentText = '没有了', content, chapter, chapterFla
 }
 
 function Content({ currentContent = [], currentChapter, allChapterTotal }: ContentActiveType) {
-  const { showDirectoryFlag, updateShowDirectoryFlag } = useActionBookStore()
   const location = useLocation()
-  const { chapter } = location.search as SearchType
   const ref = useRef(null)
+  const { showDirectoryFlag, updateShowDirectoryFlag } = useActionBookStore()
+  const { chapter } = location.search as SearchType
   const { scrollTo } = useSmoothScroll({
     ref,
     speed: Infinity,

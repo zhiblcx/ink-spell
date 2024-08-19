@@ -25,10 +25,14 @@ export const APIResponse = <T extends Type<any>>(
             // getSchemaPath 获取一个模型的引用
             items: { $ref: getSchemaPath(type[0]) },
           },
-          itemCount: { type: 'number', default: 0 },
+          // itemCount: { type: 'number', default: 0 },
+          // 总的条目数
           totalItems: { type: 'number', default: 0 },
+          // 总的页数
           totalPages: { type: 'number', default: 0 },
+          // 当前页数
           currentPage: { type: 'number', default: 0 },
+          // 每页显示的条目
           itemsPerPage: { type: 'number', default: 0 },
         },
       };

@@ -46,30 +46,24 @@ export default function Profile() {
             </h2>
             <div className={styles.data}>
               <h3>
-                342
+                {query.data?.data.data.books}
                 <br />
                 <span>books</span>
               </h3>
               <h3>
-                321
+                {query.data?.data.data.followers}
                 <br />
                 <span>Followers</span>
               </h3>
               <h3>
-                123
+                {query.data?.data.data.following}
                 <br />
                 <span>Following</span>
               </h3>
             </div>
-            <div className={styles.actionBtn}>
+            <div>
               <Button
-                type="primary"
-                className={styles.btn}
-              >
-                Follow
-              </Button>
-              <Button
-                className={styles.btn}
+                className="p-5"
                 onClick={() => {
                   setOpenFlag(true)
                 }}

@@ -59,25 +59,23 @@ function Sidebar({ currentChapter, allChapter = [] }: SidebarActiveType) {
     <AnimatePresence initial={false}>
       {windowWidth > 400 ? (
         <>
-          {showDirectoryFlag ? (
+          {showDirectoryFlag && (
             <BookDirectory
               currentChapter={currentChapter}
               allChapter={allChapter}
             />
-          ) : (
-            ''
           )}
         </>
-      ) : showDirectoryFlag ? (
-        <div>
-          <BookDirectory
-            currentChapter={currentChapter}
-            allChapter={allChapter}
-            showDirectoryFlag={false}
-          />
-        </div>
       ) : (
-        ''
+        showDirectoryFlag && (
+          <div>
+            <BookDirectory
+              currentChapter={currentChapter}
+              allChapter={allChapter}
+              showDirectoryFlag={false}
+            />
+          </div>
+        )
       )}
     </AnimatePresence>
   )

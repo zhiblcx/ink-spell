@@ -9,6 +9,28 @@ export class UserService {
     const { password: _, ...userInfo } = await this.prisma.user.findUnique({
       where: { id: user.userId },
     });
+    const books = await this.prisma.book.count({
+      where: { userId: user.userId, isDelete: false },
+    });
+    const followers = await this.prisma.follow.count({
+      where: { followingId: user.userId, isDelete: false },
+    });
+    const following = await this.prisma.follow.count({
+      where: { followerId: user.userId, isDelete: false },
+    });
+
+    return {
+      ...userInfo,
+      books,
+      followers,
+      following,
+    };
+  }
+
+  async getUserInfo(userId) {
+    const { password: _, ...userInfo } = await this.prisma.user.findUnique({
+      where: { id: parseInt(userId), isDelete: false },
+    });
     return userInfo;
   }
 

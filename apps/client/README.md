@@ -15,4 +15,6 @@
 - [x] upng-js
 - [x] dnd-kit
 - [x] lodash
+- [x] socket.io-client
+- [] react-infinite-scroll-component
 - [] i18n
