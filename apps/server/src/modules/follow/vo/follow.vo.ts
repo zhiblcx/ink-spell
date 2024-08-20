@@ -31,4 +31,10 @@ export class FollowVo {
     description: '粉丝用户信息',
   })
   followingUser: UserInfoVo;
+
+  @ApiProperty({
+    example: true,
+    description: '是否互相关注',
+  })
+  isMutual: boolean;
 }

@@ -40,6 +40,7 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
     updateSearchBookName
   } = useActionBookStore()
   const [form] = Form.useForm()
+  const [value, setValue] = useState(1)
   const [addBookShelfOpenFlag, setAddBookShelfOpenFlag] = useState(false)
   const [selectOptions] = useState([
     {
@@ -84,7 +85,6 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
       }
     },
     onError: (result: AxiosError) => {
-      console.log(result)
       message.error(result.response?.data as string)
     }
   })
@@ -208,6 +208,11 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
     }
   }, [searchBookName])
 
+  const onChange = (e: RadioChangeEvent) => {
+    console.log('radio checked', e.target.value)
+    setValue(e.target.value)
+  }
+
   return (
     <>
       {books.length === 0 ? (
@@ -289,17 +294,31 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
             />
           </Form.Item>
           {selectBookShelfValue === selectOptions[0].value ? (
-            <Form.Item
-              className="min-[375px]:w-[200px] md:w-[250px]"
-              label="书架名"
-              name="bookShelfName"
-              rules={[{ required: true, message: '请填写完整' }]}
-            >
-              <Input placeholder="请输入书架名" />
-            </Form.Item>
-          ) : (
-            ''
-          )}
+            <>
+              <Form.Item
+                className="min-[375px]:w-[200px] md:w-[250px]"
+                label="书架名"
+                name="bookShelfName"
+                rules={[{ required: true, message: '请填写完整' }]}
+              >
+                <Input placeholder="请输入书架名" />
+              </Form.Item>
+              <Form.Item
+                className="min-[375px]:w-[200px] md:w-[250px]"
+                label="书架状态"
+                name="status"
+              >
+                <Radio.Group
+                  value={value}
+                  onChange={onChange}
+                  defaultValue={value}
+                >
+                  <Radio value={1}>私有</Radio>
+                  <Radio value={2}>公开</Radio>
+                </Radio.Group>
+              </Form.Item>
+            </>
+          ) : null}
         </Form>
       </Modal>
     </>
