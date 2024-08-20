@@ -107,7 +107,6 @@ export default function ChatRoom() {
   }
 
   const handleNewMessage = (data: MessageType) => {
-    console.log(data)
     data.type = data.userId === query?.data.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
     setMessages((prevMessages) => {
       setTimeout(() => {

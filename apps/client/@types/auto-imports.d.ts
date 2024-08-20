@@ -20,6 +20,7 @@ declare global {
   const List: typeof import('antd')['List']
   const Menu: typeof import('antd')['Menu']
   const Modal: typeof import('antd')['Modal']
+  const Radio: typeof import('antd')['Radio']
   const Result: typeof import('antd')['Result']
   const Select: typeof import('antd')['Select']
   const Skeleton: typeof import('antd')['Skeleton']

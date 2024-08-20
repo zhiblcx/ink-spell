@@ -39,6 +39,7 @@
     "Menu": true,
     "Divider": true,
     "List": true,
-    "Tabs": true
+    "Tabs": true,
+    "Radio": true
   }
 }
