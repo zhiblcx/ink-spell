@@ -84,7 +84,6 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
       }
     },
     onError: (result: AxiosError) => {
-      console.log(result)
       message.error(result.response?.data as string)
     }
   })

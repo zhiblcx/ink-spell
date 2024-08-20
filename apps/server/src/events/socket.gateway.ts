@@ -50,7 +50,6 @@ export class SocketGateway {
     @ConnectedSocket() client: Socket,
   ) {
     const { name, id } = body || {};
-    console.log(this.currentUsers);
     if (!this.currentUsers.includes(id)) {
       return;
     }

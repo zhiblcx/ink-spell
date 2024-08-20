@@ -7,29 +7,36 @@ export const Route = createLazyFileRoute('/_base/myfriend')({
 })
 
 function Page() {
-  const onChange = (key: string) => {
-    console.log(key)
-  }
-
   const items: TabsProps['items'] = [
     {
       key: '1',
       label: '关注',
-      children: <MyFriend />
+      children: (
+        <MyFriend
+          key="following"
+          type="following"
+          api="/follow/follower"
+        />
+      )
     },
     {
       key: '2',
       label: '粉丝',
-      children: <MyFriend />
+      children: (
+        <MyFriend
+          key="follower"
+          type="follower"
+          api="/follow/following"
+        />
+      )
     }
   ]
 
   return (
     <Tabs
       centered
-      defaultActiveKey="1"
+      defaultActiveKey={items[0].key}
       items={items}
-      onChange={onChange}
     />
   )
 }

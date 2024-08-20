@@ -171,7 +171,6 @@ export default function ChatRoom() {
                         src={import.meta.env.VITE_SERVER_URL + item.user?.avatar}
                         size={34}
                         onClick={() => {
-                          console.log(item.user)
                           setLookUser(item.user ?? null)
                           setOpenFlag(true)
                         }}
