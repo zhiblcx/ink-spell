@@ -22,11 +22,15 @@ export class BookshelfService {
         label: createBookshelfDto.bookShelfName,
         createTimer: new Date(),
         allFlag: false,
-        cover: appConfig.DEFAULT_BOOK_SHELF_COVER,
+        cover:
+          createBookshelfDto.bookShelfCover ??
+          appConfig.DEFAULT_BOOK_SHELF_COVER,
+        status: createBookshelfDto ? 'public' : 'private',
         position:
           (await this.prisma.bookShelf.count({
             where: { userId: req.user.userId, isDelete: false },
           })) + 1,
+        description: createBookshelfDto.bookShelfDescription ?? '暂无描述',
       },
     });
   }

@@ -36,6 +36,7 @@ export class BookshelfController {
       req,
       createBookshelfDto,
     );
+    console.log(createBookshelfDto);
     if (result == undefined) {
       return new R({
         message: '书架名称重复',
