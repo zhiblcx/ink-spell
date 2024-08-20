@@ -140,7 +140,6 @@ export default function ChatRoom() {
   const { mutate: followMutate } = useMutation({
     mutationFn: (followID: number) => request.post(`/follow/${followID}`),
     onSuccess: (data) => {
-      console.log(data)
       message.success('关注成功')
     },
     onError: () => {

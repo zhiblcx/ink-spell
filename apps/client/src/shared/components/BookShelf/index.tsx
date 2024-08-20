@@ -5,10 +5,11 @@ import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
 import { BookShelfType } from '@/shared/types/bookshelf'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { message } from 'antd'
+import { message, RadioChangeEvent, UploadFile } from 'antd'
 import { AxiosError } from 'axios'
 import { motion } from 'framer-motion'
 import EmptyPage from '../EmptyPage'
+import UploadPhoto from '../UploadPhoto'
 
 interface BookShelfPropsType {
   books: Ink[]
@@ -40,17 +41,14 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
     updateSearchBookName
   } = useActionBookStore()
   const [form] = Form.useForm()
-  const [value, setValue] = useState(1)
+  const [value, setValue] = useState(true)
   const [addBookShelfOpenFlag, setAddBookShelfOpenFlag] = useState(false)
-  const [selectOptions] = useState([
-    {
-      value: 'new',
-      label: '新建书架'
-    }
-  ])
-  let acquireBookShelfFlag = false
+  const [cover, setCover] = useState<UploadFile[]>([])
+  const [selectOptions] = useState([{ value: 'new', label: '新建书架' }])
   const [selectBookShelfValue, setSelectBookShelfValue] = useState(selectOptions[0].value)
   const [options, setOptions] = useState([] as Ink[])
+  const { TextArea } = Input
+  let acquireBookShelfFlag = false
 
   const { data, isSuccess } = useQuery({
     queryKey: ['bookshelf'],
@@ -98,7 +96,7 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
       api: '/bookshelf',
       operate: 'add',
       bookShelfInfo: {
-        bookShelfName: bookShelf.bookShelfName,
+        ...bookShelf,
         bookShelfId: -1
       }
     }
@@ -209,7 +207,6 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
   }, [searchBookName])
 
   const onChange = (e: RadioChangeEvent) => {
-    console.log('radio checked', e.target.value)
     setValue(e.target.value)
   }
 
@@ -280,7 +277,7 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
           className="flex flex-col justify-center p-5 px-8"
           form={form}
           onFinish={(bookShelf) => handlerFinish(bookShelf)}
-          initialValues={{ bookShelfId: selectOptions[0].value }}
+          initialValues={{ bookShelfId: selectOptions[0].value, status: false }}
         >
           <Form.Item
             className="min-[375px]:w-[200px] md:w-[250px]"
@@ -311,11 +308,32 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
                 <Radio.Group
                   value={value}
                   onChange={onChange}
-                  defaultValue={value}
                 >
-                  <Radio value={1}>私有</Radio>
-                  <Radio value={2}>公开</Radio>
+                  <Radio value={false}>私有</Radio>
+                  <Radio value={true}>公开</Radio>
                 </Radio.Group>
+              </Form.Item>
+              <Form.Item
+                className="min-[375px]:w-[200px] md:w-[250px]"
+                label="书架封面"
+                name="bookShelfCover"
+              >
+                <UploadPhoto
+                  form={form}
+                  name="bookShelfCover"
+                  fileName={cover}
+                  setFileName={setCover}
+                />
+              </Form.Item>
+              <Form.Item
+                className="min-[375px]:w-[200px] md:w-[250px]"
+                label="书架描述 "
+                name="bookShelfDescription"
+              >
+                <TextArea
+                  placeholder="请输入书架的描述"
+                  autoSize={{ minRows: 2, maxRows: 4 }}
+                />
               </Form.Item>
             </>
           ) : null}

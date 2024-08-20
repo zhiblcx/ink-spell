@@ -50,7 +50,6 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
   const { mutate: followMutate } = useMutation({
     mutationFn: (followID: number) => request.post(`/follow/${followID}`),
     onSuccess: (data) => {
-      console.log(data)
       message.success('关注成功')
       queryClient.invalidateQueries({ queryKey: [FollowEnum.FOLLOWING] })
       queryClient.invalidateQueries({ queryKey: [FollowEnum.FOLLOWER] })

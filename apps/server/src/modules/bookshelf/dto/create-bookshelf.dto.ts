@@ -10,8 +10,13 @@ export class CreateBookshelfDto {
   })
   bookShelfName: string;
 
+  @ApiProperty({
+    example: true,
+    description: '书架是否公开',
+  })
+  status: boolean;
+
   // 书架的封面
-  @IsString({ message: '书架封面必须为字符串' })
   @ApiProperty({
     example: 'https://example.com/cover.jpg',
     description: '书架封面',
@@ -19,7 +24,6 @@ export class CreateBookshelfDto {
   bookShelfCover?: string;
 
   // 书架的描述
-  @IsString({ message: '书架描述必须为字符串' })
   @ApiProperty({
     example: '这是一个末世的书架',
     description: '书架描述',
