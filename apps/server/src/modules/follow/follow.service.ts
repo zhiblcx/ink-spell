@@ -7,7 +7,7 @@ export class FollowService {
 
   // 获取关注列表
   async getFollower(userId, page, limit) {
-    return await this.prisma.follow.findMany({
+    const follower = await this.prisma.follow.findMany({
       where: {
         followerId: userId,
         isDelete: false,
@@ -15,14 +15,35 @@ export class FollowService {
       include: {
         following: true,
       },
+      orderBy: {
+        id: 'desc',
+      },
       skip: (page - 1) * limit,
       take: parseInt(limit),
     });
+
+    const following = await this.prisma.follow.findMany({
+      where: {
+        followingId: userId,
+        isDelete: false,
+      },
+      select: {
+        followerId: true,
+      },
+    });
+    const followingIds = following.map((item) => item.followerId);
+
+    const followerWithMutual = follower.map((item) => ({
+      ...item,
+      isMutual: followingIds.includes(item.followingId),
+    }));
+
+    return followerWithMutual;
   }
 
   // 获取粉丝列表
   async getFollowing(userId, page, limit) {
-    return await this.prisma.follow.findMany({
+    const following = await this.prisma.follow.findMany({
       where: {
         followingId: userId,
         isDelete: false,
@@ -30,9 +51,30 @@ export class FollowService {
       include: {
         follower: true,
       },
+      orderBy: {
+        id: 'desc',
+      },
       skip: (page - 1) * limit,
       take: parseInt(limit),
     });
+
+    const follower = await this.prisma.follow.findMany({
+      where: {
+        followerId: userId,
+        isDelete: false,
+      },
+      select: {
+        followingId: true,
+      },
+    });
+    const followerIds = follower.map((item) => item.followingId);
+
+    const followingWithMutual = following.map((item) => ({
+      ...item,
+      isMutual: followerIds.includes(item.followerId),
+    }));
+
+    return followingWithMutual;
   }
 
   async follower(req, followID) {

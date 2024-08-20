@@ -1,6 +1,7 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import type { TabsProps } from 'antd'
 import MyFriend from './-components'
+import { FollowEnum } from './-components/FollowEnum'
 
 export const Route = createLazyFileRoute('/_base/myfriend')({
   component: () => <Page />
@@ -13,8 +14,7 @@ function Page() {
       label: '关注',
       children: (
         <MyFriend
-          key="following"
-          type="following"
+          type={FollowEnum.FOLLOWING}
           api="/follow/follower"
         />
       )
@@ -24,8 +24,7 @@ function Page() {
       label: '粉丝',
       children: (
         <MyFriend
-          key="follower"
-          type="follower"
+          type={FollowEnum.FOLLOWER}
           api="/follow/following"
         />
       )

@@ -1,17 +1,21 @@
 import { request } from '@/shared/API'
 import { PaginationParams } from '@/shared/enums/PaginationParams'
 import { User } from '@/shared/types'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { message } from 'antd'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { FollowEnum } from './FollowEnum'
 
 interface FollowerType {
   id: number
   following: User
+  isMutual: boolean
 }
 
 interface FollowingType {
   id: number
   follower: User
+  isMutual: boolean
 }
 
 interface PageParam {
@@ -31,7 +35,7 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
     queryFn: fetchProjects,
     initialPageParam: { page: PaginationParams.PAGE, limit: PaginationParams.LIMIT },
     getNextPageParam: (lastPage) => {
-      return lastPage.items.length !== 0
+      return lastPage.items.length != PaginationParams.LIMIT
         ? undefined
         : { page: parseInt(lastPage.currentPage) + 1, limit: PaginationParams.LIMIT }
     },
@@ -40,6 +44,31 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
         return acc.concat(item.items)
       }, [])
     })
+  })
+
+  const queryClient = useQueryClient()
+  const { mutate: followMutate } = useMutation({
+    mutationFn: (followID: number) => request.post(`/follow/${followID}`),
+    onSuccess: (data) => {
+      console.log(data)
+      message.success('关注成功')
+      queryClient.invalidateQueries({ queryKey: [FollowEnum.FOLLOWING] })
+      queryClient.invalidateQueries({ queryKey: [FollowEnum.FOLLOWER] })
+    },
+    onError: () => {
+      message.error('关注失败，请稍后再试')
+    }
+  })
+
+  const { mutate: cancelMutate } = useMutation({
+    mutationFn: (followID: number) => request.delete(`/follow/${followID}`),
+    onSuccess: () => {
+      message.success('取关成功')
+      queryClient.invalidateQueries({ queryKey: [FollowEnum.FOLLOWING] })
+    },
+    onError: () => {
+      message.error('取关失败，请稍后再试')
+    }
   })
 
   return (
@@ -62,7 +91,7 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
         >
           <InfiniteScroll
             dataLength={data?.pages.length}
-            next={() => fetchNextPage()}
+            next={fetchNextPage}
             hasMore={hasNextPage || isFetchingNextPage}
             loader={
               <Skeleton
@@ -74,7 +103,7 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
             endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
             scrollableTarget={type}
           >
-            {type === 'following' ? (
+            {type === FollowEnum.FOLLOWING ? (
               <List
                 dataSource={data?.pages}
                 renderItem={(item: FollowerType) => (
@@ -86,20 +115,13 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
                     />
                     <div className="flex space-x-2">
                       <div
-                        onClick={() => {
-                          console.log('互相关注')
-                        }}
+                        className="cursor-pointer"
+                        onClick={() => cancelMutate(item.following.id)}
                       >
-                        互相关注
+                        {item.isMutual ? '互相关注' : '取关'}
                       </div>
                       <div
-                        onClick={() => {
-                          console.log('回关')
-                        }}
-                      >
-                        回关
-                      </div>
-                      <div
+                        className="cursor-pointer"
                         onClick={() => {
                           console.log('查看书架')
                         }}
@@ -122,20 +144,13 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
                     />
                     <div className="flex space-x-2">
                       <div
-                        onClick={() => {
-                          console.log('互相关注')
-                        }}
+                        className="cursor-pointer"
+                        onClick={() => followMutate(item.follower.id)}
                       >
-                        互相关注
+                        {item.isMutual ? '互相关注' : '回关'}
                       </div>
                       <div
-                        onClick={() => {
-                          console.log('回关')
-                        }}
-                      >
-                        回关
-                      </div>
-                      <div
+                        className="cursor-pointer"
                         onClick={() => {
                           console.log('查看书架')
                         }}

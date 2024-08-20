@@ -4,11 +4,10 @@ import { Menu } from '@/shared/enums'
 import { MessageEnum } from '@/shared/enums/MessageEnum'
 import { useMenuStore } from '@/shared/store'
 import { User } from '@/shared/types'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import { InputRef, message } from 'antd'
 import clsx from 'clsx'
-import lodash from 'lodash'
 import React from 'react'
 import useSmoothScroll from 'react-smooth-scroll-hook'
 import { io } from 'socket.io-client'
@@ -35,6 +34,7 @@ export default function ChatRoom() {
   const [messageValue, setMessageValue] = useState('')
   const [peopleNumber, setPeopleNumber] = useState(0)
   const [messages, setMessages] = useState([] as MessageType[])
+  let isLoading = false
   const { TextArea } = Input
   const { menu } = useMenuStore()
   const { data: query, isSuccess } = useQuery({ queryKey: ['user'], queryFn: () => request.get('/user/profile') })
@@ -59,12 +59,8 @@ export default function ChatRoom() {
 
       socket.on('join', () => {
         socket.emit('getRoomUsers')
-        emitGetMessages()
-      })
-
-      const emitGetMessages = lodash.debounce(() => {
         socket.emit('getMessages')
-      }, 2000)
+      })
 
       socket.on('getRoomUsers', (num) => {
         setPeopleNumber(num)
@@ -76,7 +72,10 @@ export default function ChatRoom() {
       })
 
       socket.on('getMessages', (data) => {
-        getMessages(data)
+        if (!isLoading) {
+          getMessages(data)
+        }
+        isLoading = true
       })
 
       const getMessages = (data: MessageType[]) => {
@@ -90,31 +89,30 @@ export default function ChatRoom() {
         setTimeout(() => {
           inputRef.current!.focus({ cursor: 'end' })
           scrollTo(`#y-item-${result[result.length - 1].id}`)
-        }, 200)
+        }, 300)
       }
     }
 
+    window.addEventListener('beforeunload', leaveRoom)
+
     return () => {
       socket.off('newMessage', handleNewMessage)
+      socket.off('getMessages', handleNewMessage)
+      window.removeEventListener('beforeunload', leaveRoom)
     }
   }, [isSuccess])
-
-  // 退出浏览器，退出
-  window.onbeforeunload = () => {
-    leaveRoom()
-  }
 
   const leaveRoom = () => {
     socket.emit('leave', { name: query?.data.data.username, id: query?.data.data.id })
   }
 
   const handleNewMessage = (data: MessageType) => {
-    console.log('接受到消息', data)
+    console.log(data)
     data.type = data.userId === query?.data.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
     setMessages((prevMessages) => {
       setTimeout(() => {
         scrollTo(`#y-item-${data.id}`)
-      }, 50)
+      }, 100)
       return [...prevMessages, data]
     })
   }
@@ -139,6 +137,17 @@ export default function ChatRoom() {
       setDisableFlag(false)
     }, 3000)
   }
+
+  const { mutate: followMutate } = useMutation({
+    mutationFn: (followID: number) => request.post(`/follow/${followID}`),
+    onSuccess: (data) => {
+      console.log(data)
+      message.success('关注成功')
+    },
+    onError: () => {
+      message.error('关注失败，请稍后再试')
+    }
+  })
 
   return (
     <>
@@ -281,7 +290,12 @@ export default function ChatRoom() {
                       </h3>
                     </div>
                     <div>
-                      <Button className="p-5">Follow</Button>
+                      <Button
+                        className="p-5"
+                        onClick={() => followMutate(lookUser?.id as number)}
+                      >
+                        Follow
+                      </Button>
                     </div>
                   </div>
                 </div>
