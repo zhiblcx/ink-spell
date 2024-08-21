@@ -15,6 +15,7 @@ export function Page() {
     queryKey: ['bookshelf'],
     queryFn: () => request.get('/bookshelf')
   })
+
   const bookShelfId = data?.data.data[0].id
   const { data: queryBook, isLoading } = useQuery({
     queryKey: ['bookshelf_book', bookShelfId],
@@ -22,7 +23,6 @@ export function Page() {
   })
 
   const queryClient = useQueryClient()
-
   useEffect(() => {
     setBooks(queryBook?.data?.data ?? [])
     updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
@@ -46,6 +46,7 @@ export function Page() {
         />
       ) : (
         <BookShelf
+          bookShelfId={bookShelfId}
           books={queryBook?.data?.data}
           setBooks={setBooks}
         />

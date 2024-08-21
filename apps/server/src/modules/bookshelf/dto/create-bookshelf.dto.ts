@@ -10,6 +10,13 @@ export class CreateBookshelfDto {
   })
   bookShelfName: string;
 
+  @IsNotEmpty({ message: '书架的位置不能为空' })
+  @ApiProperty({
+    example: 1,
+    description: '书架的位置',
+  })
+  position: number;
+
   @ApiProperty({
     example: true,
     description: '书架是否公开',
@@ -18,7 +25,7 @@ export class CreateBookshelfDto {
 
   // 书架的封面
   @ApiProperty({
-    example: 'https://example.com/cover.jpg',
+    example: '/static/cover/1724232268171.jpg',
     description: '书架封面',
   })
   bookShelfCover?: string;

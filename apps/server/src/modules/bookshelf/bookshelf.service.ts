@@ -25,7 +25,7 @@ export class BookshelfService {
         cover:
           createBookshelfDto.bookShelfCover ??
           appConfig.DEFAULT_BOOK_SHELF_COVER,
-        status: createBookshelfDto ? 'public' : 'private',
+        isPublic: createBookshelfDto.status,
         position:
           (await this.prisma.bookShelf.count({
             where: { userId: req.user.userId, isDelete: false },
@@ -71,6 +71,11 @@ export class BookshelfService {
       data: {
         label: updateBookshelfDto.bookShelfName,
         position: updateBookshelfDto.position,
+        cover:
+          updateBookshelfDto.bookShelfCover ??
+          appConfig.DEFAULT_BOOK_SHELF_COVER,
+        isPublic: updateBookshelfDto.status,
+        description: updateBookshelfDto.bookShelfDescription,
       },
       where: { id: parseInt(bookShelfId) },
     });

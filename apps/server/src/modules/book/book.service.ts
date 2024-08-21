@@ -27,6 +27,7 @@ export class BookService {
           bookFile: filePath,
           md5,
           bookShelfId: currentBookShelf.id,
+          userId: req.user.userId,
         },
       });
       return true;

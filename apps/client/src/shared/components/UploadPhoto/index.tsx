@@ -37,6 +37,8 @@ export default function UploadPhoto({
         }
         if (file.type === 'image/png') {
           resolve((await PhotoUtils.compressPNG(file)) as RcFile)
+        } else {
+          resolve()
         }
       })
     },

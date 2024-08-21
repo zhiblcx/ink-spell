@@ -64,6 +64,7 @@ export function Page() {
 
   return (
     <BookShelf
+      bookShelfId={bookId}
       books={books}
       setBooks={setBooks}
     />
