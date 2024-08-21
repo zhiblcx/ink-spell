@@ -22,6 +22,7 @@ export function Page() {
   })
 
   const queryClient = useQueryClient()
+
   useEffect(() => {
     setBooks(queryBook?.data?.data ?? [])
     updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)

@@ -24,6 +24,10 @@ export const signinMutation = () => {
       } else {
         AuthUtils.clearRememberAccountData()
       }
+    },
+    onError: (result: AxiosError) => {
+      const data = (result.response?.data as { message?: string })?.message ?? '服务器错误'
+      message.error(data)
     }
   })
 }

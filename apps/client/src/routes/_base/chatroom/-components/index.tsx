@@ -89,7 +89,7 @@ export default function ChatRoom() {
         setTimeout(() => {
           inputRef.current!.focus({ cursor: 'end' })
           scrollTo(`#y-item-${result[result.length - 1].id}`)
-        }, 300)
+        }, 0)
       }
     }
 

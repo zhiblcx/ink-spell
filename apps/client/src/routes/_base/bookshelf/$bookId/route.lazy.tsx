@@ -36,6 +36,7 @@ export function Page() {
     onSuccess: (data) => {
       message.success(data.data.message)
       navigate({ to: '/', replace: true })
+      queryClient.invalidateQueries({ queryKey: ['bookshelf'] })
     }
   })
 

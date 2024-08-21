@@ -21,10 +21,16 @@ function Sidebar() {
   const [arrow, setArrow] = useState(true)
   const [bookShelfMenu, setBookShelfMenu] = useState([] as BookShelfType[])
 
-  const { data: query, isSuccess } = useQuery({ queryKey: ['bookshelf'], queryFn: () => request.get('bookshelf') })
-  if (isSuccess && bookShelfMenu.length === 0) {
-    setBookShelfMenu(query.data.data)
-  }
+  const { data: query, isSuccess } = useQuery({
+    queryKey: ['bookshelf'],
+    queryFn: () => request.get('bookshelf')
+  })
+
+  useEffect(() => {
+    if (isSuccess) {
+      setBookShelfMenu(query?.data.data)
+    }
+  }, [query])
 
   function Icon() {
     return (

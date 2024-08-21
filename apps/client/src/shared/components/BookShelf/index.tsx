@@ -56,6 +56,7 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
   })
 
   const queryClient = useQueryClient()
+
   const { mutate } = useMutation({
     mutationFn: (item: Ink) => deleteBookByBookIdAPI(item.id),
     onSuccess: (data) => {
@@ -74,11 +75,14 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
     },
     onSuccess: (data) => {
       if (data.data.data === undefined) {
-        message.error(data.data.message)
+        return message.error(data.data.message)
       }
       if (data.data.data.md5 === undefined) {
         handlerUpdateBookShelf(data.data.data.id)
         queryClient.invalidateQueries({ queryKey: ['bookshelf'] })
+        message.success(data.data.message)
+      } else {
+        queryClient.invalidateQueries({ queryKey: ['bookshelf_book'] })
         message.success(data.data.message)
       }
     },
