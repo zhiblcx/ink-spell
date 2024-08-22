@@ -30,7 +30,10 @@ export class BookshelfService {
           (await this.prisma.bookShelf.count({
             where: { userId: req.user.userId, isDelete: false },
           })) + 1,
-        description: createBookshelfDto.bookShelfDescription ?? '暂无描述',
+        description:
+          createBookshelfDto.bookShelfDescription == ''
+            ? '暂无描述'
+            : createBookshelfDto.bookShelfDescription,
       },
     });
   }

@@ -41,7 +41,6 @@ export class UserController {
   @ApiOperation({ summary: '获取该用户的公开书架' })
   @APIResponse([CreateBookShelfVo])
   async getBookshelf(@Param('userId') userId: number) {
-    console.log(userId);
     return new R({
       message: '获取成功',
       data: await this.userService.getBookshelf(userId),

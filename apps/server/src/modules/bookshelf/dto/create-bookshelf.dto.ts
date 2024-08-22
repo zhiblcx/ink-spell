@@ -10,12 +10,11 @@ export class CreateBookshelfDto {
   })
   bookShelfName: string;
 
-  @IsNotEmpty({ message: '书架的位置不能为空' })
   @ApiProperty({
     example: 1,
     description: '书架的位置',
   })
-  position: number;
+  position?: number;
 
   @ApiProperty({
     example: true,
