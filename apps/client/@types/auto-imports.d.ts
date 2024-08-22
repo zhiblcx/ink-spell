@@ -8,6 +8,7 @@ declare global {
   const AutoComplete: typeof import('antd')['AutoComplete']
   const Avatar: typeof import('antd')['Avatar']
   const Button: typeof import('antd')['Button']
+  const Card: typeof import('antd')['Card']
   const Checkbox: typeof import('antd')['Checkbox']
   const ConfigProvider: typeof import('antd')['ConfigProvider']
   const Divider: typeof import('antd')['Divider']

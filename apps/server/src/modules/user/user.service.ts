@@ -34,6 +34,16 @@ export class UserService {
     return userInfo;
   }
 
+  async getBookshelf(userId) {
+    return await this.prisma.bookShelf.findMany({
+      where: {
+        userId: parseInt(userId),
+        isPublic: true,
+        isDelete: false,
+      },
+    });
+  }
+
   async deleteUser(userId) {
     await this.prisma.user.update({
       data: { isDelete: true },

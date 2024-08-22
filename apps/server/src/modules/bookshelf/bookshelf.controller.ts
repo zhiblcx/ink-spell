@@ -48,12 +48,6 @@ export class BookshelfController {
     }
   }
 
-  @Post(':bookShelfId')
-  @ApiOperation({ summary: '收藏书架' })
-  @HttpCode(HttpStatus.OK)
-  @APIResponse(null, '收藏成功')
-  async collectBookShelf() {}
-
   @Delete(':bookShelfId')
   @ApiOperation({ summary: '删除书架' })
   @HttpCode(HttpStatus.OK)

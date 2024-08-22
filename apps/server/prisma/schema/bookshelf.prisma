@@ -1,14 +1,15 @@
 model BookShelf {
-  id          Int      @id @default(autoincrement())
-  label       String
-  createTimer DateTime @map("create_timer")
-  userId      Int      @map("user_id")
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  books       Book[]
-  allFlag     Boolean  @map("all_flag")
-  isDelete    Boolean  @default(false) @map("is_delete")
-  position    Int
-  isPublic    Boolean  @default(false) @map("is_public") // 书架的状态
-  cover       String
-  description String   @default("暂无描述")
+  id               Int                @id @default(autoincrement())
+  label            String
+  createTimer      DateTime           @map("create_timer")
+  userId           Int                @map("user_id")
+  user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  books            Book[]
+  allFlag          Boolean            @map("all_flag")
+  isDelete         Boolean            @default(false) @map("is_delete")
+  position         Int
+  isPublic         Boolean            @default(false) @map("is_public") // 书架的状态
+  cover            String
+  description      String             @default("暂无描述")
+  CollectBookShelf CollectBookShelf[]
 }

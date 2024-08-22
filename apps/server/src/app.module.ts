@@ -6,6 +6,7 @@ import { SocketGateway } from './events/socket.gateway';
 import { AuthModule } from './modules/auth/auth.module';
 import { BookModule } from './modules/book/book.module';
 import { BookshelfModule } from './modules/bookshelf/bookshelf.module';
+import { CollectBookshelfModule } from './modules/collect-bookshelf/collect-bookshelf.module';
 import { FollowModule } from './modules/follow/follow.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { UserModule } from './modules/user/user.module';
@@ -20,6 +21,7 @@ import { UserService } from './modules/user/user.service';
     BookModule,
     BookshelfModule,
     FollowModule,
+    CollectBookshelfModule,
     AuthModule,
     PrismaModule,
   ],
