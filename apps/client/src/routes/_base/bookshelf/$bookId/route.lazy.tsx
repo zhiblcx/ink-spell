@@ -3,16 +3,18 @@ import BookShelf from '@/shared/components/BookShelf'
 import { AllSelectBookFlag } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
+import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createLazyFileRoute, useNavigate } from '@tanstack/react-router'
 import { message } from 'antd'
 import { useEffect, useState } from 'react'
 interface pageType {
-  bookId: number
+  bookId: string
 }
 
 export function Page() {
   const { bookId }: pageType = Route.useParams()
+
   const navigate = useNavigate()
   const [books, setBooks] = useState([] as Ink[])
   const {
@@ -27,12 +29,12 @@ export function Page() {
 
   const { data: queryBook, isSuccess } = useQuery({
     queryKey: ['bookshelf_book', bookId],
-    queryFn: () => request.get(`/bookshelf/${bookId}`)
+    queryFn: () => request.get(`/bookshelf/${UrlUtils.decodeUrlById(bookId)}`)
   })
 
   const queryClient = useQueryClient()
   const { mutate } = useMutation({
-    mutationFn: () => request.delete(`/bookshelf/${bookId}`),
+    mutationFn: () => request.delete(`/bookshelf/${UrlUtils.decodeUrlById(bookId)}`),
     onSuccess: (data) => {
       message.success(data.data.message)
       navigate({ to: '/', replace: true })
@@ -64,7 +66,7 @@ export function Page() {
 
   return (
     <BookShelf
-      bookShelfId={bookId}
+      bookShelfId={parseInt(UrlUtils.decodeUrlById(bookId))}
       books={books}
       setBooks={setBooks}
     />

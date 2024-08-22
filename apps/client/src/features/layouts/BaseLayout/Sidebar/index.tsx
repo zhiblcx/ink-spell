@@ -13,6 +13,7 @@ import Sortable, { SortableItem } from '@/shared/components/Sortable'
 import { Menu, Theme } from '@/shared/enums'
 import { useMenuStore, useThemeStore } from '@/shared/store'
 import { BookShelfType } from '@/shared/types/bookshelf'
+import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useQuery } from '@tanstack/react-query'
 
 function Sidebar() {
@@ -102,7 +103,7 @@ function Sidebar() {
                         MoveItem={(props) => (
                           <Navigation
                             value={menu.label}
-                            label={`/bookshelf/${menu.id}`}
+                            label={`/bookshelf/${UrlUtils.encodeUrlById(menu.id.toString())}`}
                             Icon={BookHeart}
                             Move={Move}
                             move={props.move}
