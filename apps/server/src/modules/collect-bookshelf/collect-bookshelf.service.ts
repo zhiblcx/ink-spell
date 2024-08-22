@@ -4,6 +4,15 @@ import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class CollectBookshelfService {
   constructor(private prisma: PrismaService) {}
+  async getCollectBookshelfList(userId) {
+    return await this.prisma.collectBookShelf.findMany({
+      where: {
+        userId: parseInt(userId),
+        isDelete: false,
+      },
+    });
+  }
+
   async collectBookShelf(userId, bookShelfId) {
     const result = await this.prisma.collectBookShelf.findUnique({
       where: {
@@ -14,11 +23,20 @@ export class CollectBookshelfService {
       },
     });
 
-    if (result) {
+    if (result.isDelete === false) {
       throw new UnprocessableEntityException('已经收藏过该书架');
+    } else if (result.isDelete === true) {
+      return await this.prisma.collectBookShelf.update({
+        where: {
+          id: result.id,
+        },
+        data: {
+          isDelete: false,
+        },
+      });
     }
 
-    return this.prisma.collectBookShelf.create({
+    return await this.prisma.collectBookShelf.create({
       data: {
         userId: parseInt(userId),
         bookShelfId: parseInt(bookShelfId),

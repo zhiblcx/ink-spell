@@ -3,13 +3,21 @@ import EmptyPage from '@/shared/components/EmptyPage'
 import { BookShelfType } from '@/shared/types/bookshelf'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
+import { message } from 'antd'
+import { AxiosError } from 'axios'
 import { motion } from 'framer-motion'
 
 export const Route = createLazyFileRoute('/_base/otherbookshelf/$userId')({
   component: () => <Page />
 })
+
+interface UserCollectType {
+  id: number
+  userId: number
+  bookShelfId: number
+}
 
 export function Page() {
   const { userId } = Route.useParams()
@@ -17,6 +25,43 @@ export function Page() {
   const query = useQuery({
     queryKey: ['user-bookshelf'],
     queryFn: () => request.get(`/user/bookshelf/${UrlUtils.decodeUrlById(userId)}`)
+  })
+
+  const { data: userCollectQuery } = useQuery({
+    queryKey: ['user-collect'],
+    queryFn: () => request.get('/collect/bookshelf')
+  })
+
+  const userCollectBookShelfIds = userCollectQuery?.data.data.reduce((acc: Array<number>, item: UserCollectType) => {
+    return acc.concat(item.bookShelfId)
+  }, [])
+
+  const queryClient = useQueryClient()
+
+  // 收藏书架
+  const { mutate: collectShelfMutate } = useMutation({
+    mutationFn: (bookShelfId: number) => request.post(`/collect/bookshelf/${bookShelfId}`),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['user-collect'] })
+      message.success(data.data.message)
+    },
+    onError: (result: AxiosError) => {
+      const data = (result.response?.data as { message?: string })?.message ?? '服务器错误'
+      message.error(data)
+    }
+  })
+
+  // 取消收藏书架
+  const { mutate: cancelCollectShelfMutate } = useMutation({
+    mutationFn: (bookShelfId: number) => request.delete(`/collect/bookshelf/${bookShelfId}`),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['user-collect'] })
+      message.success(data.data.message)
+    },
+    onError: (result: AxiosError) => {
+      const data = (result.response?.data as { message?: string })?.message ?? '服务器错误'
+      message.error(data)
+    }
   })
 
   const { Meta } = Card
@@ -40,19 +85,26 @@ export function Page() {
                 >
                   <Card
                     actions={[
-                      <StarOutlined
-                        key="no-collect"
-                        onClick={() => {
-                          console.log('收藏')
-                        }}
-                      />,
-                      <StarFilled
-                        style={{ color: 'rgb(253 224 71)' }}
-                        key="collect"
-                        onClick={() => {
-                          console.log('取消收藏')
-                        }}
-                      />,
+                      userCollectBookShelfIds.includes(item.id) ? (
+                        <StarFilled
+                          style={{ color: 'rgb(253 224 71)' }}
+                          key="collect"
+                          onClick={() => {
+                            const index = userCollectQuery?.data.data.findIndex(
+                              (collect: UserCollectType) => collect.bookShelfId === item.id
+                            )
+                            cancelCollectShelfMutate(userCollectQuery?.data.data[index].id)
+                          }}
+                        />
+                      ) : (
+                        <StarOutlined
+                          key="no-collect"
+                          className="hidden"
+                          onClick={() => {
+                            collectShelfMutate(item.id)
+                          }}
+                        />
+                      ),
                       <EllipsisOutlined
                         key="ellipsis"
                         onClick={() => {
