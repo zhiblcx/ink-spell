@@ -19,12 +19,15 @@ export class FileValidationPipe implements PipeTransform {
       sizeLimit = this.fileSize / oneKb;
       unit = 'KB';
     }
-
-    if (file.size > this.fileSize) {
-      fs.unlink(file.path, (err) => {
-        if (err) throw err;
-      });
-      throw new BadRequestException(`上传文件不能超过${sizeLimit}${unit}`);
+    try {
+      if (file.size > this.fileSize) {
+        fs.unlink(file.path, (err) => {
+          if (err) throw err;
+        });
+        throw new BadRequestException(`上传文件不能超过${sizeLimit}${unit}`);
+      }
+    } catch (err) {
+      throw new BadRequestException('服务器错误');
     }
     return file;
   }

@@ -7,4 +7,5 @@ export type BookShelfType = {
   cover: string
   isPublic: boolean
   description: string
+  userId: number
 }

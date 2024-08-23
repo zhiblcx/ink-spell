@@ -1,4 +1,5 @@
 import { request } from '@/shared/API'
+import { useActionBookStore } from '@/shared/store'
 import { type Ink } from '@/shared/types'
 import { Book } from '@/shared/types/book'
 import { BookUtils } from '@/shared/utils'
@@ -20,6 +21,7 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
   const [form] = Form.useForm()
   const [openFlag, setOpenFlag] = useState(false)
   const [book, setBook] = useState(ink)
+  const { isOtherBookShelfFlag } = useActionBookStore()
   const [bookCover, setBookCover] = useState<UploadFile[]>([
     {
       uid: book.id.toString(),
@@ -54,17 +56,20 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
           'card relative flex h-[250px] flex-col items-center overflow-hidden rounded-2xl bg-gray-200 shadow-lg dark:bg-gray-800 min-[375px]:w-[130px] md:w-[180px]'
         )}
       >
-        <Checkbox
-          className={clsx('absolute right-3 top-2', cancelFlag ? 'checkbox' : 'visible z-50')}
-          checked={ink.checked}
-          onClick={onClickCheckbox}
-        />
-
-        <Pencil
-          className={clsx('absolute left-3 top-3 cursor-pointer')}
-          size="16"
-          onClick={handlerEditBook}
-        />
+        {!isOtherBookShelfFlag ? (
+          <>
+            <Checkbox
+              className={clsx('absolute right-3 top-2', cancelFlag ? 'checkbox' : 'visible z-50')}
+              checked={ink.checked}
+              onClick={onClickCheckbox}
+            />
+            <Pencil
+              className={clsx('absolute left-3 top-3 cursor-pointer')}
+              size="16"
+              onClick={handlerEditBook}
+            />
+          </>
+        ) : null}
 
         <div
           className={clsx(book.name ? 'photo-visible' : '', 'photo h-[100%] w-[100%] overflow-hidden')}

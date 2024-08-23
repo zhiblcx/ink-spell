@@ -104,6 +104,7 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
                 avatar
                 paragraph={{ rows: 3 }}
                 active
+                className="p-3"
               />
             }
             endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}

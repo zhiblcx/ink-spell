@@ -13,6 +13,7 @@ function Footer() {
     cancelFlag,
     allSelectBookFlag,
     showShelfFlag,
+    isOtherBookShelfFlag,
     updateCancelFlag,
     updateAllSelectFlag,
     updateDeleteFlag,
@@ -49,9 +50,11 @@ function Footer() {
     })
   }
 
+  console.log(showFooterReg.test(router.latestLocation.pathname), '22')
+
   return (
     <>
-      {showFooterReg.test(router.latestLocation.pathname) ? (
+      {!isOtherBookShelfFlag && showFooterReg.test(router.latestLocation.pathname) ? (
         <ul
           className={clsx(
             'absolute bottom-4 flex space-x-3',

@@ -4,7 +4,7 @@ import { BookShelfType } from '@/shared/types/bookshelf'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { createLazyFileRoute } from '@tanstack/react-router'
+import { createLazyFileRoute, useRouter } from '@tanstack/react-router'
 import { message } from 'antd'
 import { AxiosError } from 'axios'
 import { motion } from 'framer-motion'
@@ -21,6 +21,7 @@ interface UserCollectType {
 
 export function Page() {
   const { userId } = Route.useParams()
+  const router = useRouter()
 
   const query = useQuery({
     queryKey: ['user-bookshelf'],
@@ -108,7 +109,8 @@ export function Page() {
                       <EllipsisOutlined
                         key="ellipsis"
                         onClick={() => {
-                          console.log('更多')
+                          const id = UrlUtils.encodeUrlById(`${item.id}?userId=${item.userId}`)
+                          router.navigate({ to: `/bookshelf/${id}` })
                         }}
                       />
                     ]}

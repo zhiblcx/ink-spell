@@ -10,4 +10,10 @@ export class BookFileDto {
     description: 'md5',
   })
   md5: string;
+
+  @ApiProperty({
+    example: 1,
+    description: '存储的书架ID',
+  })
+  bookShelfId: number;
 }

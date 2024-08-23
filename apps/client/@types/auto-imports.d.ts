@@ -12,7 +12,7 @@ declare global {
   const Checkbox: typeof import('antd')['Checkbox']
   const ConfigProvider: typeof import('antd')['ConfigProvider']
   const Divider: typeof import('antd')['Divider']
-  const Drawer: (typeof import('antd'))['Drawer']
+  const Drawer: typeof import('antd')['Drawer']
   const Dropdown: typeof import('antd')['Dropdown']
   const Flex: typeof import('antd')['Flex']
   const Form: typeof import('antd')['Form']

@@ -36,6 +36,7 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
     bookToBookShelfFlag,
     searchBookName,
     modifyBookShelfFlag,
+    isOtherBookShelfFlag,
     updateAllSelectFlag,
     updateCancelFlag,
     updateDeleteFlag,
@@ -286,7 +287,11 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
   return (
     <>
       {books.length === 0 ? (
-        <EmptyPage name="暂时没有书籍，请先导入书籍哦~" />
+        !isOtherBookShelfFlag ? (
+          <EmptyPage name="暂时没有书籍，请先导入书籍哦~" />
+        ) : (
+          <EmptyPage name="该用户还没有上传书籍哦！快邀请TA分享吧！" />
+        )
       ) : (
         <motion.div
           initial={{ opacity: 0 }}

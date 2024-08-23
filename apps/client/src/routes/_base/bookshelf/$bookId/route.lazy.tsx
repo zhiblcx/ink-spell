@@ -14,27 +14,39 @@ interface pageType {
 
 export function Page() {
   const { bookId }: pageType = Route.useParams()
+  const url = UrlUtils.decodeUrlById(bookId)
+  const params = url.split('?')
 
   const navigate = useNavigate()
   const [books, setBooks] = useState([] as Ink[])
   const {
     uploadFileFlag,
     deleteShelfFlag,
+    isOtherBookShelfFlag,
     updateAllSelectFlag,
     updateCancelFlag,
     updateShowShelfFlag,
     updateUploadFileFlag,
-    updateDeleteShelfFlag
+    updateDeleteShelfFlag,
+    updateIsOtherBookShelfFlag
   } = useActionBookStore()
 
+  useEffect(() => {
+    if (params.length === 2) {
+      updateIsOtherBookShelfFlag(true)
+    } else {
+      updateIsOtherBookShelfFlag(false)
+    }
+  }, [bookId])
+
   const { data: queryBook, isSuccess } = useQuery({
-    queryKey: ['bookshelf_book', bookId],
-    queryFn: () => request.get(`/bookshelf/${UrlUtils.decodeUrlById(bookId)}`)
+    queryKey: ['bookshelf_book', params[0]],
+    queryFn: () => request.get(`/bookshelf/${params[0]}`)
   })
 
   const queryClient = useQueryClient()
   const { mutate } = useMutation({
-    mutationFn: () => request.delete(`/bookshelf/${UrlUtils.decodeUrlById(bookId)}`),
+    mutationFn: () => request.delete(`/bookshelf/${params[0]}`),
     onSuccess: (data) => {
       message.success(data.data.message)
       navigate({ to: '/', replace: true })
@@ -66,7 +78,7 @@ export function Page() {
 
   return (
     <BookShelf
-      bookShelfId={parseInt(UrlUtils.decodeUrlById(bookId))}
+      bookShelfId={parseInt(params[0])}
       books={books}
       setBooks={setBooks}
     />

@@ -7,7 +7,9 @@ import { User } from '@/shared/types'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import { InputRef, message } from 'antd'
+import { AxiosError } from 'axios'
 import clsx from 'clsx'
+import lodash from 'lodash'
 import React from 'react'
 import useSmoothScroll from 'react-smooth-scroll-hook'
 import { io } from 'socket.io-client'
@@ -34,7 +36,6 @@ export default function ChatRoom() {
   const [messageValue, setMessageValue] = useState('')
   const [peopleNumber, setPeopleNumber] = useState(0)
   const [messages, setMessages] = useState([] as MessageType[])
-  let isLoading = false
   const { TextArea } = Input
   const { menu } = useMenuStore()
   const { data: query, isSuccess } = useQuery({ queryKey: ['user'], queryFn: () => request.get('/user/profile') })
@@ -43,6 +44,7 @@ export default function ChatRoom() {
     speed: Infinity,
     direction: 'y'
   })
+  let isLoading = false
 
   useEffect(() => {
     if (router.latestLocation.pathname !== menuList[2].label) {
@@ -73,10 +75,16 @@ export default function ChatRoom() {
 
       socket.on('getMessages', (data) => {
         if (!isLoading) {
-          getMessages(data)
+          getMessageLodash(data)
         }
         isLoading = true
       })
+
+      const getMessageLodash = lodash.throttle((data) => {
+        setTimeout(() => {
+          getMessages(data)
+        }, 2000)
+      }, 3000)
 
       const getMessages = (data: MessageType[]) => {
         const result = data.map((item: MessageType) => {
@@ -140,10 +148,11 @@ export default function ChatRoom() {
   const { mutate: followMutate } = useMutation({
     mutationFn: (followID: number) => request.post(`/follow/${followID}`),
     onSuccess: (data) => {
-      message.success('关注成功')
+      message.success(data.data.message)
     },
-    onError: () => {
-      message.error('关注失败，请稍后再试')
+    onError: (result: AxiosError) => {
+      const data = (result.response?.data as { message?: string })?.message ?? '服务器错误'
+      message.error(data)
     }
   })
 

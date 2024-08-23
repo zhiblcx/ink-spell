@@ -11,14 +11,11 @@ import { BookContentDto } from './dto/book-content.dto';
 @Injectable()
 export class BookService {
   constructor(private prisma: PrismaService) {}
-  async uploadFile(req, file, md5) {
+  async uploadFile(req, file, md5, bookShelfId) {
     const encoding = detectFileEncoding(file.path);
     const filePath = file.path.replace(/\\/g, '/').replace('public', '/static');
     const name = path.parse(file.originalname).name;
     try {
-      const currentBookShelf = await this.prisma.bookShelf.findFirst({
-        where: { allFlag: true, userId: req.userId },
-      });
       await this.prisma.book.create({
         data: {
           cover: appConfig.DEFAULT_BOOK_COVER,
@@ -26,7 +23,7 @@ export class BookService {
           name: decodeURIComponent(escape(name)),
           bookFile: filePath,
           md5,
-          bookShelfId: currentBookShelf.id,
+          bookShelfId: parseInt(bookShelfId),
           userId: req.user.userId,
         },
       });

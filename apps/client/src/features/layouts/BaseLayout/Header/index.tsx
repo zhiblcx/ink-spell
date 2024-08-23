@@ -5,6 +5,7 @@ import { useActionBookStore, useMenuStore } from '@/shared/store'
 import { Book } from '@/shared/types/book'
 import { AuthUtils } from '@/shared/utils'
 import { Md5Utils } from '@/shared/utils/Md5Utils'
+import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useQuery } from '@tanstack/react-query'
 import { ReactNode, useNavigate, useRouter } from '@tanstack/react-router'
 import type { MenuProps, UploadFile, UploadProps } from 'antd'
@@ -18,13 +19,19 @@ function Header() {
   const { menu, setMenu } = useMenuStore()
   const { uploadFileFlag, updateUploadFileFlag, updateSearchBookName } = useActionBookStore()
   const reg = /\d+/
-  const match = router.latestLocation.href.match(reg)
+
+  const urlSplit = router.latestLocation.href.split('/')
+  const url = `/${urlSplit[1]}/${urlSplit.length === 3 ? UrlUtils.decodeUrlById(urlSplit[2]) : undefined}`
+  const match = url.match(reg)
   let bookId = match !== null ? match[0] : undefined
   const { data: myBookShelf } = useQuery({
     queryKey: ['bookshelf'],
     queryFn: () => request.get('/bookshelf')
   })
-  bookId = myBookShelf?.data.data[0].id
+
+  if (bookId === undefined) {
+    bookId = myBookShelf?.data.data[0].id
+  }
 
   const [options, setOptions] = useState([])
   const [optionTotal, setOptionTotal] = useState([])
@@ -58,7 +65,8 @@ function Header() {
 
   const getExtraData: UploadProps['data'] = (file: UploadFileMD5) => {
     return {
-      md5: file.md5
+      md5: file.md5,
+      bookShelfId: bookId
     }
   }
 
