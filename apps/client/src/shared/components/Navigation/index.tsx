@@ -29,7 +29,11 @@ function Navigation(props: NavigationProps) {
             )}
           >
             {Icon && <Icon className="absolute mx-[3px]" />}
-            <div className="relative left-9">{value}</div>
+            <div className="relative left-9 w-[62%] overflow-hidden truncate">
+              <Tooltip title={value}>
+                <span> {value}</span>
+              </Tooltip>
+            </div>
             {Move && (
               <Move
                 onMouseUp={() => {

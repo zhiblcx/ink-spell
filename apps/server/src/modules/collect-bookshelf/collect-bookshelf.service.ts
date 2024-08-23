@@ -10,6 +10,9 @@ export class CollectBookshelfService {
         userId: parseInt(userId),
         isDelete: false,
       },
+      include: {
+        bookShelf: true,
+      },
     });
   }
 

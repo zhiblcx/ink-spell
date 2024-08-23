@@ -3,6 +3,7 @@ import { useActionBookStore } from '@/shared/store'
 import { type Ink } from '@/shared/types'
 import { Book } from '@/shared/types/book'
 import { BookUtils } from '@/shared/utils'
+import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useMutation } from '@tanstack/react-query'
 import { type UploadFile, Input, message } from 'antd'
 import clsx from 'clsx'
@@ -84,7 +85,10 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
                 chapter = ink[1]
               }
             }
-            window.open(`/book/${ink.id}?chapter=${chapter != -1 ? chapter : 1}`, '_blank')
+            window.open(
+              `/book/${UrlUtils.encodeUrlById(ink.id.toString())}?chapter=${chapter != -1 ? UrlUtils.encodeUrlById(chapter.toString()) : UrlUtils.encodeUrlById('1')}`,
+              '_blank'
+            )
           }}
         >
           <img
@@ -94,7 +98,9 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
           )
         </div>
         <p className="ink-name roboto absolute bottom-4 w-[90%] truncate text-center text-xl text-white">
-          {book.name ? `${book.name}` : ''}
+          <Tooltip title={book.name ? `${book.name}` : ''}>
+            <span> {book.name ? `${book.name}` : ''}</span>
+          </Tooltip>
         </p>
         <p className="roboto mt-[130px] text-sm">{book.author ? book.author : '无作者'}</p>
         <p className="roboto text-sm">
