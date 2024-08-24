@@ -29,7 +29,7 @@ function ChapterLink({ noContentText = '没有了', content, chapter, chapterFla
         <div>{noContentText}</div>
       ) : (
         <Link
-          search={{ chapter: chapter }}
+          search={{ chapter: UrlUtils.encodeUrlById(chapter.toString()) }}
           onClick={() => {
             scrollToHeight()
           }}
@@ -46,7 +46,7 @@ function Content({ currentContent = [], currentChapter, allChapterTotal }: Conte
   const ref = useRef(null)
   const { showDirectoryFlag, updateShowDirectoryFlag } = useActionBookStore()
   const { chapter } = location.search as SearchType
-  const encodeChapter = parseInt(UrlUtils.encodeUrlById(chapter.toString()))
+  const encodeChapter = parseInt(UrlUtils.decodeUrlById(chapter.toString()))
   const { scrollTo } = useSmoothScroll({
     ref,
     speed: Infinity,
