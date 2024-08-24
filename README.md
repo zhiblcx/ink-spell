@@ -15,16 +15,22 @@
 - [x] Grouped books
 - [x] Search books
 - [x] Read books
-- [] Share books
-- [] Share books
+- [x] Share books
 - [x] Move bookShelf
 - [x] BookShelf management
 - [x] follow user
 - [x] ChatRoom
+- [x] myFriend
 
 ## design sketch
 
 ![](./assets/images/login-design.png)
+
+![](./assets/images/home-design.png)
+
+![](./assets/images/otherBookShelf-design.png)
+
+![](./assets/images/readBook-design.png)
 
 ## License
 

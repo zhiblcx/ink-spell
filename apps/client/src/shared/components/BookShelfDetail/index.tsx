@@ -10,7 +10,7 @@ interface BookShelfDetailType {
   userCollectBookShelfIds?: Array<Number>
   isIdsFlag?: boolean
   collectButton?: (item: BookShelfType) => void
-  cancelCollectButton: (item: BookShelfType & { collectId: number }) => void
+  cancelCollectButton: (item: BookShelfType & { collectId?: number }) => void
 }
 
 export default function BookShelfDetail({
