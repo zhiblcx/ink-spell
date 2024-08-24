@@ -9,6 +9,7 @@ export class LoginDao {
     description: '账号',
   })
   account: string;
+
   @IsNotEmpty({ message: '密码不能为空' })
   @NotContains(' ', { message: '密码不能有空格' })
   @Length(6, 16, { message: '密码长度为 6-16 位' })

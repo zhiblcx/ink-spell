@@ -10,6 +10,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CreateBookShelfVo } from '../bookshelf/vo/create-bookshelf.vo';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 import { UserInfoVo } from './vo/user.info.vo';
@@ -33,6 +34,16 @@ export class UserController {
   async getUserInfo(@Param('userId') userId: number) {
     return new R({
       data: await this.userService.getUserInfo(userId),
+    });
+  }
+
+  @Get('/bookshelf/:userId')
+  @ApiOperation({ summary: '获取该用户的公开书架' })
+  @APIResponse([CreateBookShelfVo])
+  async getBookshelf(@Param('userId') userId: number) {
+    return new R({
+      message: '获取成功',
+      data: await this.userService.getBookshelf(userId),
     });
   }
 

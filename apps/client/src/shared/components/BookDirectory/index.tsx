@@ -1,4 +1,5 @@
 import { useActionBookStore } from '@/shared/store'
+import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { Link, useRouter } from '@tanstack/react-router'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
@@ -38,9 +39,10 @@ export default function BookDirectory({
     if (ref !== null) {
       const chapter = router.latestLocation.search as { chapter: number }
       setTimeout(() => {
-        scrollTo(`#y-item-${chapter.chapter}`, -300)
+        scrollTo(`#y-item-${UrlUtils.decodeUrlById(chapter.chapter.toString())}`, -300)
       }, 100)
     }
+    6
   }, [router.latestLocation.search, showLeftDirectoryFlag])
 
   const directoryContent = (
@@ -62,20 +64,18 @@ export default function BookDirectory({
         >
           目录
         </div>
-      ) : (
-        ''
-      )}
+      ) : null}
       <ul className="ml-2 flex flex-col space-y-1">
         {allChapter.map((item, index) => (
           <li
             className={clsx(
-              currentChapter == index ? 'bg-[#474c50] text-white dark:bg-[#4b4b4b]' : '',
+              currentChapter == index ? 'bg-[#474c50] text-white dark:bg-[#4b4b4b]' : null,
               'truncate rounded-md px-4 py-1 hover:bg-[#4b4b4b] hover:text-white dark:hover:bg-[#474c50]'
             )}
             key={index}
             id={`y-item-${index + 1}`}
           >
-            <Link search={{ chapter: index + 1 }}> {item} </Link>
+            <Link search={{ chapter: UrlUtils.encodeUrlById((index + 1).toString()) }}> {item} </Link>
           </li>
         ))}
       </ul>

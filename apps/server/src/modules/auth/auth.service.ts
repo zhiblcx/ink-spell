@@ -1,5 +1,6 @@
 import { R } from '@/shared/res/r';
 import {
+  BadRequestException,
   Injectable,
   UnauthorizedException,
   UnprocessableEntityException,
@@ -18,12 +19,16 @@ export class AuthService {
   ) {}
 
   async signIn(account: string, password: string) {
-    const user = await this.validateLogin(account, password);
-    const payload = { userId: user.id, account: user.account };
-    return new R({
-      data: { access_token: await this.jwtService.signAsync(payload) },
-      message: '登录成功',
-    });
+    try {
+      const user = await this.validateLogin(account, password);
+      const payload = { userId: user.id, account: user.account };
+      return new R({
+        data: { access_token: await this.jwtService.signAsync(payload) },
+        message: '登录成功',
+      });
+    } catch (err) {
+      throw new BadRequestException('账号或密码错误');
+    }
   }
 
   async signUp(registerDao: RegisterDto) {

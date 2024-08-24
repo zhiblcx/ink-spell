@@ -1,3 +1,4 @@
+import { BookInfoVo } from '@/modules/book/vo/book.info.vo';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UserInfoVo {
@@ -31,4 +32,24 @@ export class UserInfoVo {
 
   @ApiProperty({ example: 199, description: '粉丝的人数' })
   following: number;
+
+  @ApiProperty({
+    example: [
+      {
+        id: 72,
+        name: 'book',
+        cover: null,
+        protagonist: null,
+        description: null,
+        author: null,
+        bookFile: '/static/book_file/1722266450547.txt',
+        bookShelfId: 3,
+        md5: '097e2a121d0e261a8db2522b6d413f71',
+        encoding: 'UTF-8',
+        position: 1,
+      },
+    ],
+    description: '上传的书籍列表，数组类型',
+  })
+  booksInfo: BookInfoVo[];
 }

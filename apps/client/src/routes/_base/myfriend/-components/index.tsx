@@ -1,8 +1,11 @@
 import { request } from '@/shared/API'
 import { PaginationParams } from '@/shared/enums/PaginationParams'
 import { User } from '@/shared/types'
+import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useRouter } from '@tanstack/react-router'
 import { message } from 'antd'
+import { AxiosError } from 'axios'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { FollowEnum } from './FollowEnum'
 
@@ -24,6 +27,8 @@ interface PageParam {
 }
 
 export default function MyFriend({ api, type }: { api: string; type: string }) {
+  const router = useRouter()
+
   // TODO mobile 实现左滑删除
   const fetchProjects = async ({ pageParam }: { pageParam: PageParam }) => {
     const res = await request.get(`${api}?page=${pageParam.page}&limit=${pageParam.limit}`)
@@ -50,24 +55,25 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
   const { mutate: followMutate } = useMutation({
     mutationFn: (followID: number) => request.post(`/follow/${followID}`),
     onSuccess: (data) => {
-      console.log(data)
-      message.success('关注成功')
+      message.success(data.data.message)
       queryClient.invalidateQueries({ queryKey: [FollowEnum.FOLLOWING] })
       queryClient.invalidateQueries({ queryKey: [FollowEnum.FOLLOWER] })
     },
-    onError: () => {
-      message.error('关注失败，请稍后再试')
+    onError: (result: AxiosError) => {
+      const data = (result.response?.data as { message?: string })?.message ?? '服务器错误'
+      message.error(data)
     }
   })
 
   const { mutate: cancelMutate } = useMutation({
     mutationFn: (followID: number) => request.delete(`/follow/${followID}`),
-    onSuccess: () => {
-      message.success('取关成功')
+    onSuccess: (data) => {
+      message.success(data.data.message)
       queryClient.invalidateQueries({ queryKey: [FollowEnum.FOLLOWING] })
     },
-    onError: () => {
-      message.error('取关失败，请稍后再试')
+    onError: (result: AxiosError) => {
+      const data = (result.response?.data as { message?: string })?.message ?? '服务器错误'
+      message.error(data)
     }
   })
 
@@ -98,6 +104,7 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
                 avatar
                 paragraph={{ rows: 3 }}
                 active
+                className="p-3"
               />
             }
             endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
@@ -123,7 +130,8 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
                       <div
                         className="cursor-pointer"
                         onClick={() => {
-                          console.log('查看书架')
+                          const id = UrlUtils.encodeUrlById(item.following.id.toString())
+                          router.navigate({ to: `/otherbookshelf/${id}` })
                         }}
                       >
                         查看书架
@@ -152,7 +160,8 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
                       <div
                         className="cursor-pointer"
                         onClick={() => {
-                          console.log('查看书架')
+                          const id = UrlUtils.encodeUrlById(item.follower.id.toString())
+                          router.navigate({ to: `/otherbookshelf/${id}` })
                         }}
                       >
                         查看书架

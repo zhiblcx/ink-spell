@@ -1,7 +1,9 @@
 import { request } from '@/shared/API'
+import { useActionBookStore } from '@/shared/store'
 import { type Ink } from '@/shared/types'
 import { Book } from '@/shared/types/book'
 import { BookUtils } from '@/shared/utils'
+import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useMutation } from '@tanstack/react-query'
 import { type UploadFile, Input, message } from 'antd'
 import clsx from 'clsx'
@@ -20,6 +22,7 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
   const [form] = Form.useForm()
   const [openFlag, setOpenFlag] = useState(false)
   const [book, setBook] = useState(ink)
+  const { isOtherBookShelfFlag } = useActionBookStore()
   const [bookCover, setBookCover] = useState<UploadFile[]>([
     {
       uid: book.id.toString(),
@@ -54,17 +57,20 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
           'card relative flex h-[250px] flex-col items-center overflow-hidden rounded-2xl bg-gray-200 shadow-lg dark:bg-gray-800 min-[375px]:w-[130px] md:w-[180px]'
         )}
       >
-        <Checkbox
-          className={clsx('absolute right-3 top-2', cancelFlag ? 'checkbox' : 'visible z-50')}
-          checked={ink.checked}
-          onClick={onClickCheckbox}
-        />
-
-        <Pencil
-          className={clsx('absolute left-3 top-3 cursor-pointer')}
-          size="16"
-          onClick={handlerEditBook}
-        />
+        {!isOtherBookShelfFlag ? (
+          <>
+            <Checkbox
+              className={clsx('absolute right-3 top-2', cancelFlag ? 'checkbox' : 'visible z-50')}
+              checked={ink.checked}
+              onClick={onClickCheckbox}
+            />
+            <Pencil
+              className={clsx('absolute left-3 top-3 cursor-pointer')}
+              size="16"
+              onClick={handlerEditBook}
+            />
+          </>
+        ) : null}
 
         <div
           className={clsx(book.name ? 'photo-visible' : '', 'photo h-[100%] w-[100%] overflow-hidden')}
@@ -79,7 +85,10 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
                 chapter = ink[1]
               }
             }
-            window.open(`/book/${ink.id}?chapter=${chapter != -1 ? chapter : 1}`, '_blank')
+            window.open(
+              `/book/${UrlUtils.encodeUrlById(ink.id.toString())}?chapter=${chapter != -1 ? UrlUtils.encodeUrlById(chapter.toString()) : UrlUtils.encodeUrlById('1')}`,
+              '_blank'
+            )
           }}
         >
           <img
@@ -89,7 +98,9 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
           )
         </div>
         <p className="ink-name roboto absolute bottom-4 w-[90%] truncate text-center text-xl text-white">
-          {book.name ? `${book.name}` : ''}
+          <Tooltip title={book.name ? `${book.name}` : ''}>
+            <span> {book.name ? `${book.name}` : ''}</span>
+          </Tooltip>
         </p>
         <p className="roboto mt-[130px] text-sm">{book.author ? book.author : '无作者'}</p>
         <p className="roboto text-sm">
@@ -99,8 +110,8 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
             : '无主角'}
         </p>
         <p className="w-[80%] border-2 border-b-zinc-300"></p>
-        <p className="roboto mt-2 line-clamp-3 w-[80%] overflow-hidden text-sm">
-          {book.description === undefined ? '' : book.description}
+        <p className="roboto mt-2 line-clamp-3 w-[80%] overflow-hidden break-all text-sm">
+          {book.description === '' || book.description === null ? '暂无描述' : book.description}
         </p>
       </div>
 

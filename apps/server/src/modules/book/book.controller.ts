@@ -92,9 +92,11 @@ export class BookController {
     @Request() req,
     @UploadedFile()
     file: Express.Multer.File,
-    @Body('md5') md5: string,
+    @Body() data: { md5: string; bookShelfId: number },
   ) {
-    if (await this.bookService.uploadFile(req, file, md5)) {
+    if (
+      await this.bookService.uploadFile(req, file, data.md5, data.bookShelfId)
+    ) {
       return new R({
         message: '上传成功',
         data: {
@@ -108,7 +110,12 @@ export class BookController {
   @ApiOperation({ summary: '收藏书籍' })
   @HttpCode(HttpStatus.OK)
   @APIResponse(null, '收藏成功')
-  async collectBook() {}
+  async collectBook(@Request() req, @Param('bookID') bookID: number) {
+    return new R({
+      message: '收藏成功',
+      data: await this.bookService.collectBook(req.user.userId, bookID),
+    });
+  }
 
   @Get('md5')
   @ApiOperation({ summary: '查询是否有重复的书籍' })

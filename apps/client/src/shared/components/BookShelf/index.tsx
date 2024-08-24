@@ -3,14 +3,19 @@ import InkCard from '@/shared/components/InkCard'
 import { AllSelectBookFlag } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
+import { Book } from '@/shared/types/book'
 import { BookShelfType } from '@/shared/types/bookshelf'
+import { UrlUtils } from '@/shared/utils/UrlUtils'
+import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { message } from 'antd'
+import { message, RadioChangeEvent, UploadFile } from 'antd'
 import { AxiosError } from 'axios'
 import { motion } from 'framer-motion'
 import EmptyPage from '../EmptyPage'
+import UploadPhoto from '../UploadPhoto'
 
 interface BookShelfPropsType {
+  bookShelfId: number
   books: Ink[]
   setBooks: React.Dispatch<React.SetStateAction<Ink[]>>
 }
@@ -26,37 +31,43 @@ interface formProps {
   bookShelfName: string
 }
 
-function BookShelf({ books, setBooks }: BookShelfPropsType) {
+function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
   const {
     allSelectBookFlag,
     cancelFlag,
     deleteBookFlag,
     bookToBookShelfFlag,
     searchBookName,
+    modifyBookShelfFlag,
+    isOtherBookShelfFlag,
     updateAllSelectFlag,
     updateCancelFlag,
     updateDeleteFlag,
     updateBookToBookShelfFlag,
-    updateSearchBookName
+    updateSearchBookName,
+    updateModifyBookShelfFlag
   } = useActionBookStore()
   const [form] = Form.useForm()
-  const [value, setValue] = useState(1)
+  const [value, setValue] = useState(true)
   const [addBookShelfOpenFlag, setAddBookShelfOpenFlag] = useState(false)
-  const [selectOptions] = useState([
-    {
-      value: 'new',
-      label: '新建书架'
-    }
-  ])
-  let acquireBookShelfFlag = false
+  const [cover, setCover] = useState<UploadFile[]>([])
+  const [selectOptions] = useState([{ value: 'new', label: '新建书架' }])
   const [selectBookShelfValue, setSelectBookShelfValue] = useState(selectOptions[0].value)
   const [options, setOptions] = useState([] as Ink[])
+  const { TextArea } = Input
+  const { data: query } = useQuery({ queryKey: ['user'], queryFn: () => request.get('/user/profile') })
+  let acquireBookShelfFlag = false
+
+  const collectBookMd5 = query?.data.data.booksInfo.reduce((acc: Array<string>, item: Book) => {
+    return acc.concat(item.md5)
+  }, [])
 
   const { data, isSuccess } = useQuery({
     queryKey: ['bookshelf'],
     queryFn: () => request.get('/bookshelf')
   })
 
+  const currentBookShelf: BookShelfType = data?.data.data.filter((item: BookShelfType) => item.id == bookShelfId)[0]
   const queryClient = useQueryClient()
   const { mutate } = useMutation({
     mutationFn: (item: Ink) => deleteBookByBookIdAPI(item.id),
@@ -76,16 +87,72 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
     },
     onSuccess: (data) => {
       if (data.data.data === undefined) {
-        message.error(data.data.message)
+        return message.error(data.data.message)
       }
       if (data.data.data.md5 === undefined) {
         handlerUpdateBookShelf(data.data.data.id)
         queryClient.invalidateQueries({ queryKey: ['bookshelf'] })
         message.success(data.data.message)
+      } else {
+        queryClient.invalidateQueries({ queryKey: ['bookshelf_book'] })
+        message.success(data.data.message)
       }
     },
     onError: (result: AxiosError) => {
-      message.error(result.response?.data as string)
+      const responseData = result.response?.data as { message?: string | string[] }
+      if (responseData.message) {
+        if (Array.isArray(responseData.message)) {
+          responseData.message.forEach((item) => {
+            message.error(item)
+          })
+        } else {
+          message.error(responseData.message as string)
+        }
+      }
+    }
+  })
+
+  const { mutate: updateBookShelfMutate } = useMutation({
+    mutationFn: (bookShelfData: BookShelfType) => request.put(`/bookshelf/${bookShelfData.id}`, bookShelfData),
+    onSuccess: (data) => {
+      message.success(data.data.message)
+      queryClient.invalidateQueries({ queryKey: ['bookshelf'] })
+    },
+    onError: (result: AxiosError) => {
+      const responseData = result.response?.data as { message?: string | string[] }
+      if (responseData.message) {
+        if (Array.isArray(responseData.message)) {
+          responseData.message.forEach((item) => {
+            message.error(item)
+          })
+        } else {
+          message.error(responseData.message as string)
+        }
+      }
+    }
+  })
+
+  const { mutate: collectBookMutate } = useMutation({
+    mutationFn: (bookId: number) => request.post(`/book/${bookId}`),
+    onSuccess: (data) => {
+      message.success(data.data.message)
+      queryClient.invalidateQueries({ queryKey: ['user'] })
+    },
+    onError: (result: AxiosError) => {
+      const data = (result.response?.data as { message?: string })?.message ?? '服务器错误'
+      message.error(data)
+    }
+  })
+
+  const { mutate: cancelCollectBookMutate } = useMutation({
+    mutationFn: (bookId: number) => request.delete(`/book/${bookId}`),
+    onSuccess: (data) => {
+      message.success(data.data.message)
+      queryClient.invalidateQueries({ queryKey: ['user'] })
+    },
+    onError: (result: AxiosError) => {
+      const data = (result.response?.data as { message?: string })?.message ?? '服务器错误'
+      message.error(data)
     }
   })
 
@@ -93,19 +160,30 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
     setSelectBookShelfValue(value)
   }
 
-  const handlerFinish = (bookShelf: formProps) => {
-    const obj = {
-      api: '/bookshelf',
-      operate: 'add',
-      bookShelfInfo: {
-        bookShelfName: bookShelf.bookShelfName,
-        bookShelfId: -1
+  // 0：修改，1：新增
+  const handlerFinish = (bookShelf: formProps, operate: number) => {
+    if (operate === 1) {
+      const obj = {
+        api: '/bookshelf',
+        operate: 'add',
+        bookShelfInfo: {
+          ...bookShelf,
+          bookShelfId: -1
+        }
       }
-    }
-    if (bookShelf.bookShelfId === selectOptions[0].value) {
-      operateBookShelfMutate(obj)
+      if (bookShelf.bookShelfId === selectOptions[0].value) {
+        operateBookShelfMutate(obj)
+      } else {
+        handlerUpdateBookShelf(Number(bookShelf.bookShelfId))
+      }
     } else {
-      handlerUpdateBookShelf(Number(bookShelf.bookShelfId))
+      const bookShelfData: unknown = {
+        ...bookShelf,
+        id: currentBookShelf.id,
+        position: currentBookShelf.position
+      }
+
+      updateBookShelfMutate(bookShelfData as BookShelfType)
     }
   }
 
@@ -141,10 +219,36 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
   }, [cancelFlag])
 
   useEffect(() => {
-    if (bookToBookShelfFlag) {
+    if (bookToBookShelfFlag || modifyBookShelfFlag) {
+      // 修改
+      if (modifyBookShelfFlag) {
+        setCover([
+          {
+            uid: currentBookShelf.id.toString(),
+            name: currentBookShelf.label,
+            status: 'done',
+            url: import.meta.env.VITE_SERVER_URL + currentBookShelf.cover
+          }
+        ])
+        form.setFieldsValue({
+          id: currentBookShelf.id,
+          bookShelfName: currentBookShelf.label,
+          status: currentBookShelf.isPublic,
+          bookShelfDescription: currentBookShelf.description ?? '暂无描述'
+        })
+      } else {
+        // 新增
+        form.setFieldsValue({
+          bookShelfId: selectOptions[0].value,
+          status: false,
+          bookShelfName: '',
+          bookShelfDescription: ''
+        })
+        setCover([])
+      }
       setAddBookShelfOpenFlag(true)
     }
-  }, [bookToBookShelfFlag])
+  }, [bookToBookShelfFlag, modifyBookShelfFlag])
 
   useEffect(() => {
     if (allSelectBookFlag == AllSelectBookFlag.PARTIAL_SELECT_FLAG) {
@@ -209,14 +313,94 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
   }, [searchBookName])
 
   const onChange = (e: RadioChangeEvent) => {
-    console.log('radio checked', e.target.value)
     setValue(e.target.value)
   }
 
   return (
     <>
       {books.length === 0 ? (
-        <EmptyPage name="暂时没有书籍，请先导入书籍哦~" />
+        !isOtherBookShelfFlag ? (
+          <EmptyPage name="暂时没有书籍，请先导入书籍哦~" />
+        ) : (
+          <EmptyPage name="该用户还没有上传书籍哦！快邀请TA分享吧！" />
+        )
+      ) : isOtherBookShelfFlag ? (
+        <div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            style={{ height: 'calc(100% - 115px)' }}
+            className="scroll absolute h-full overflow-y-scroll"
+          >
+            <ul className="flex flex-wrap space-x-3 min-[375px]:justify-center md:justify-start">
+              {books
+                .filter((book) => options.some((option) => option.id === book.id))
+                .reverse()
+                .map((item: Ink) => {
+                  return (
+                    <li
+                      className="pb-5"
+                      key={item.id}
+                    >
+                      <Card
+                        actions={[
+                          collectBookMd5.includes(item.md5) ? (
+                            <StarFilled
+                              style={{ color: 'rgb(253 224 71)' }}
+                              key="collect"
+                              onClick={() => {
+                                const index = query?.data.data.booksInfo.findIndex((ink: Book) => ink.md5 === item.md5)
+                                cancelCollectBookMutate(query?.data.data.booksInfo[index].id)
+                              }}
+                            />
+                          ) : (
+                            <StarOutlined
+                              key="no-collect"
+                              className="hidden"
+                              onClick={() => collectBookMutate(item.id)}
+                            />
+                          ),
+                          <EllipsisOutlined
+                            key="ellipsis"
+                            onClick={() => {
+                              window.open(
+                                `/book/${UrlUtils.encodeUrlById(item.id.toString())}?chapter=${UrlUtils.encodeUrlById('1')}`,
+                                '_blank'
+                              )
+                            }}
+                          />
+                        ]}
+                        className="cursor-default overflow-hidden"
+                        hoverable
+                        style={{ width: 240 }}
+                        cover={
+                          <img
+                            alt="example"
+                            className="h-[200px] object-cover"
+                            src={import.meta.env.VITE_SERVER_URL + item.cover}
+                          />
+                        }
+                      >
+                        <p className="roboto text-xl font-bold">
+                          <span> {item.name ? `${item.name}` : '暂无书名'}</span>
+                        </p>
+                        <p className="roboto">{item.author ? item.author : '无作者'}</p>
+                        <p className="roboto">
+                          {item.protagonist
+                            ? `
+      ${item.protagonist.split('|')[0]}|${item.protagonist.split('|')[1]}`
+                            : '无主角'}
+                        </p>
+                        <p className="roboto line-clamp-3 w-[90%] break-all">
+                          {item.description === null || item.description === '' ? '暂无描述' : item.description}
+                        </p>
+                      </Card>
+                    </li>
+                  )
+                })}
+            </ul>
+          </motion.div>
+        </div>
       ) : (
         <motion.div
           initial={{ opacity: 0 }}
@@ -259,18 +443,20 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
       )}
 
       <Modal
-        title="添加到书架"
+        title={bookToBookShelfFlag ? '添加到书架' : '编辑书架信息'}
         open={addBookShelfOpenFlag}
         onOk={() => {
           form.submit()
           setAddBookShelfOpenFlag(false)
           updateBookToBookShelfFlag(false)
+          updateModifyBookShelfFlag(false)
         }}
         onCancel={() => {
           setAddBookShelfOpenFlag(false)
         }}
         afterClose={() => {
           updateBookToBookShelfFlag(false)
+          updateModifyBookShelfFlag(false)
         }}
         okText="保存"
         cancelText="取消"
@@ -279,20 +465,22 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
         <Form
           className="flex flex-col justify-center p-5 px-8"
           form={form}
-          onFinish={(bookShelf) => handlerFinish(bookShelf)}
-          initialValues={{ bookShelfId: selectOptions[0].value }}
+          onFinish={(bookShelf) => handlerFinish(bookShelf, bookToBookShelfFlag ? 1 : 0)}
         >
-          <Form.Item
-            className="min-[375px]:w-[200px] md:w-[250px]"
-            label="选择书架"
-            name="bookShelfId"
-          >
-            <Select
-              onChange={handleChange}
-              style={{ width: 180 }}
-              options={selectOptions}
-            />
-          </Form.Item>
+          {bookToBookShelfFlag ? (
+            <Form.Item
+              className="min-[375px]:w-[200px] md:w-[250px]"
+              label="选择书架"
+              name="bookShelfId"
+            >
+              <Select
+                onChange={handleChange}
+                style={{ width: 180 }}
+                options={selectOptions}
+              />
+            </Form.Item>
+          ) : null}
+
           {selectBookShelfValue === selectOptions[0].value ? (
             <>
               <Form.Item
@@ -303,6 +491,7 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
               >
                 <Input placeholder="请输入书架名" />
               </Form.Item>
+
               <Form.Item
                 className="min-[375px]:w-[200px] md:w-[250px]"
                 label="书架状态"
@@ -311,11 +500,32 @@ function BookShelf({ books, setBooks }: BookShelfPropsType) {
                 <Radio.Group
                   value={value}
                   onChange={onChange}
-                  defaultValue={value}
                 >
-                  <Radio value={1}>私有</Radio>
-                  <Radio value={2}>公开</Radio>
+                  <Radio value={false}>私有</Radio>
+                  <Radio value={true}>公开</Radio>
                 </Radio.Group>
+              </Form.Item>
+              <Form.Item
+                className="min-[375px]:w-[200px] md:w-[250px]"
+                label="书架封面"
+                name="bookShelfCover"
+              >
+                <UploadPhoto
+                  form={form}
+                  name="bookShelfCover"
+                  fileName={cover}
+                  setFileName={setCover}
+                />
+              </Form.Item>
+              <Form.Item
+                className="min-[375px]:w-[200px] md:w-[250px]"
+                label="书架描述 "
+                name="bookShelfDescription"
+              >
+                <TextArea
+                  placeholder="请输入书架的描述"
+                  autoSize={{ minRows: 2, maxRows: 4 }}
+                />
               </Form.Item>
             </>
           ) : null}

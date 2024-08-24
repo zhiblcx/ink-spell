@@ -1,4 +1,5 @@
 import { useActionBookStore } from '@/shared/store'
+import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { Link, useLocation } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import useSmoothScroll from 'react-smooth-scroll-hook'
@@ -45,6 +46,7 @@ function Content({ currentContent = [], currentChapter, allChapterTotal }: Conte
   const ref = useRef(null)
   const { showDirectoryFlag, updateShowDirectoryFlag } = useActionBookStore()
   const { chapter } = location.search as SearchType
+  const encodeChapter = parseInt(UrlUtils.encodeUrlById(chapter.toString()))
   const { scrollTo } = useSmoothScroll({
     ref,
     speed: Infinity,
@@ -73,8 +75,8 @@ function Content({ currentContent = [], currentChapter, allChapterTotal }: Conte
         <li>
           <ChapterLink
             content="上一章"
-            chapter={chapter - 1}
-            chapterFlag={chapter == 1}
+            chapter={encodeChapter - 1}
+            chapterFlag={encodeChapter == 1}
             scrollToHeight={() => {
               scrollTo(-Infinity)
             }}
@@ -91,8 +93,8 @@ function Content({ currentContent = [], currentChapter, allChapterTotal }: Conte
         <li>
           <ChapterLink
             content="下一章"
-            chapter={chapter + 1}
-            chapterFlag={chapter == allChapterTotal}
+            chapter={encodeChapter + 1}
+            chapterFlag={encodeChapter == allChapterTotal}
             scrollToHeight={() => {
               scrollTo(-Infinity)
             }}

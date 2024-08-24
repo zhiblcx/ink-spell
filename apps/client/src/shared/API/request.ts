@@ -33,6 +33,8 @@ request.interceptors.response.use(
     if (error.response && error.response.status == 401) {
       window.location.href = '/signin'
       AuthUtils.clearToken()
+    } else {
+      throw error
     }
   }
 )

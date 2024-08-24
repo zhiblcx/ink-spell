@@ -25,7 +25,7 @@ export class CreateBookShelfVo {
   createTimer: Date;
 
   @ApiProperty({
-    example: '1',
+    example: 1,
     description: '所属用户ID',
   })
   userId: number;
@@ -41,6 +41,26 @@ export class CreateBookShelfVo {
     description: '位置',
   })
   position: number;
+
+  @ApiProperty({
+    example: true,
+    description: '书架是否公开',
+  })
+  isPublic: boolean;
+
+  // 书架的封面
+  @ApiProperty({
+    example: '/static/cover/1724232268171.jpg',
+    description: '书架封面',
+  })
+  bookShelfCover?: string;
+
+  // 书架的描述
+  @ApiProperty({
+    example: '这是一个末世的书架',
+    description: '书架描述',
+  })
+  bookShelfDescription?: string;
 
   constructor(createBookShelfVo: CreateBookShelfVo) {
     Object.assign(this, createBookShelfVo);

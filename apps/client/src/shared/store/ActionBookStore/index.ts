@@ -12,6 +12,8 @@ type ActionBookStore = {
   showDirectoryFlag: boolean
   uploadFileFlag: boolean
   searchBookName: string
+  modifyBookShelfFlag: boolean
+  isOtherBookShelfFlag: boolean
 
   updateDeleteFlag: (flag: boolean) => void
   updateAllSelectFlag: (flag: AllSelectBookFlag) => void
@@ -23,6 +25,8 @@ type ActionBookStore = {
   updateUploadFileFlag: (flag: boolean) => void
   updateBookToBookShelfFlag: (flag: boolean) => void
   updateSearchBookName: (name: string) => void
+  updateModifyBookShelfFlag: (flag: boolean) => void
+  updateIsOtherBookShelfFlag: (flag: boolean) => void
 }
 
 export const useActionBookStore = create<ActionBookStore>()((set) => ({
@@ -36,6 +40,8 @@ export const useActionBookStore = create<ActionBookStore>()((set) => ({
   uploadFileFlag: false,
   bookToBookShelfFlag: false,
   searchBookName: '',
+  modifyBookShelfFlag: false,
+  isOtherBookShelfFlag: false,
 
   updateDeleteFlag: (flag: boolean) => {
     set({ deleteBookFlag: flag })
@@ -75,5 +81,12 @@ export const useActionBookStore = create<ActionBookStore>()((set) => ({
 
   updateSearchBookName: (name: string) => {
     set({ searchBookName: name })
+  },
+
+  updateModifyBookShelfFlag: (flag: boolean) => {
+    set({ modifyBookShelfFlag: flag })
+  },
+  updateIsOtherBookShelfFlag: (flag: boolean) => {
+    set({ isOtherBookShelfFlag: flag })
   }
 }))

@@ -1,0 +1,10 @@
+model CollectBookShelf {
+  id          Int       @id @default(autoincrement())
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int       @map("user_id")
+  bookShelf   BookShelf @relation(fields: [bookShelfId], references: [id], onDelete: Cascade)
+  bookShelfId Int       @map("book_shelf_id")
+  isDelete    Boolean   @default(false) @map("is_delete")
+
+  @@unique([userId, bookShelfId])
+}

@@ -8,7 +8,15 @@ export class UserService {
   async getProfile(user) {
     const { password: _, ...userInfo } = await this.prisma.user.findUnique({
       where: { id: user.userId },
+      include: {
+        books: {
+          where: {
+            isDelete: false,
+          },
+        },
+      },
     });
+
     const books = await this.prisma.book.count({
       where: { userId: user.userId, isDelete: false },
     });
@@ -21,6 +29,7 @@ export class UserService {
 
     return {
       ...userInfo,
+      booksInfo: userInfo.books,
       books,
       followers,
       following,
@@ -32,6 +41,16 @@ export class UserService {
       where: { id: parseInt(userId), isDelete: false },
     });
     return userInfo;
+  }
+
+  async getBookshelf(userId) {
+    return await this.prisma.bookShelf.findMany({
+      where: {
+        userId: parseInt(userId),
+        isPublic: true,
+        isDelete: false,
+      },
+    });
   }
 
   async deleteUser(userId) {

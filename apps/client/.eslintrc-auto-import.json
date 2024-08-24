@@ -40,6 +40,8 @@
     "Divider": true,
     "List": true,
     "Tabs": true,
-    "Radio": true
+    "Radio": true,
+    "Card": true,
+    "Tooltip": true
   }
 }

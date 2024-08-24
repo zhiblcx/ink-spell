@@ -11,14 +11,11 @@ import { BookContentDto } from './dto/book-content.dto';
 @Injectable()
 export class BookService {
   constructor(private prisma: PrismaService) {}
-  async uploadFile(req, file, md5) {
+  async uploadFile(req, file, md5, bookShelfId) {
     const encoding = detectFileEncoding(file.path);
     const filePath = file.path.replace(/\\/g, '/').replace('public', '/static');
     const name = path.parse(file.originalname).name;
     try {
-      const currentBookShelf = await this.prisma.bookShelf.findFirst({
-        where: { allFlag: true, userId: req.userId },
-      });
       await this.prisma.book.create({
         data: {
           cover: appConfig.DEFAULT_BOOK_COVER,
@@ -26,13 +23,59 @@ export class BookService {
           name: decodeURIComponent(escape(name)),
           bookFile: filePath,
           md5,
-          bookShelfId: currentBookShelf.id,
+          bookShelfId: parseInt(bookShelfId),
+          userId: req.user.userId,
         },
       });
       return true;
     } catch (_) {
       return false;
     }
+  }
+
+  async collectBook(userId, bookId) {
+    // 找到该书籍
+    const { id: _, ...book } = await this.prisma.book.findUnique({
+      where: {
+        id: parseInt(bookId),
+      },
+    });
+
+    const userBook = await this.prisma.book.findUnique({
+      where: {
+        md5_userId: {
+          md5: book.md5,
+          userId,
+        },
+      },
+    });
+
+    if (userBook) {
+      return await this.prisma.book.update({
+        where: {
+          id: userBook.id,
+        },
+        data: {
+          isDelete: false,
+        },
+      });
+    }
+
+    // 找到该用户默认的书架
+    const bookShelf = await this.prisma.bookShelf.findFirst({
+      where: {
+        userId,
+        allFlag: true,
+      },
+    });
+
+    return await this.prisma.book.create({
+      data: {
+        ...book,
+        userId,
+        bookShelfId: bookShelf.id,
+      },
+    });
   }
 
   async compareMd5(req, md5, file_name) {

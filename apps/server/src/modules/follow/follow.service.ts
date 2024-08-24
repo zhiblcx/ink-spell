@@ -30,6 +30,9 @@ export class FollowService {
       select: {
         followerId: true,
       },
+      orderBy: {
+        id: 'desc',
+      },
     });
     const followingIds = following.map((item) => item.followerId);
 

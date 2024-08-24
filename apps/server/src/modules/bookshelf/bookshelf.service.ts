@@ -22,11 +22,18 @@ export class BookshelfService {
         label: createBookshelfDto.bookShelfName,
         createTimer: new Date(),
         allFlag: false,
-        cover: appConfig.DEFAULT_BOOK_SHELF_COVER,
+        cover:
+          createBookshelfDto.bookShelfCover ??
+          appConfig.DEFAULT_BOOK_SHELF_COVER,
+        isPublic: createBookshelfDto.status,
         position:
           (await this.prisma.bookShelf.count({
             where: { userId: req.user.userId, isDelete: false },
           })) + 1,
+        description:
+          createBookshelfDto.bookShelfDescription == ''
+            ? '暂无描述'
+            : createBookshelfDto.bookShelfDescription,
       },
     });
   }
@@ -67,6 +74,11 @@ export class BookshelfService {
       data: {
         label: updateBookshelfDto.bookShelfName,
         position: updateBookshelfDto.position,
+        cover:
+          updateBookshelfDto.bookShelfCover ??
+          appConfig.DEFAULT_BOOK_SHELF_COVER,
+        isPublic: updateBookshelfDto.status,
+        description: updateBookshelfDto.bookShelfDescription,
       },
       where: { id: parseInt(bookShelfId) },
     });
