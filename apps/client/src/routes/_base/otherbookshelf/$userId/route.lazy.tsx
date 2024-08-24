@@ -1,13 +1,11 @@
 import { request } from '@/shared/API'
+import BookShelfDetail from '@/shared/components/BookShelfDetail'
 import EmptyPage from '@/shared/components/EmptyPage'
-import { BookShelfType } from '@/shared/types/bookshelf'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { createLazyFileRoute, useRouter } from '@tanstack/react-router'
+import { createLazyFileRoute } from '@tanstack/react-router'
 import { message } from 'antd'
 import { AxiosError } from 'axios'
-import { motion } from 'framer-motion'
 
 export const Route = createLazyFileRoute('/_base/otherbookshelf/$userId')({
   component: () => <Page />
@@ -21,7 +19,6 @@ interface UserCollectType {
 
 export function Page() {
   const { userId } = Route.useParams()
-  const router = useRouter()
 
   const query = useQuery({
     queryKey: ['user-bookshelf'],
@@ -65,76 +62,22 @@ export function Page() {
     }
   })
 
-  const { Meta } = Card
   return (
     <>
       {query.data?.data.data.length === 0 ? (
         <EmptyPage name="该用户还没有公开书架哦！快邀请TA分享吧！" />
       ) : (
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          style={{ height: 'calc(100% - 115px)' }}
-          className="scroll absolute h-full overflow-y-scroll"
-        >
-          <ul className="flex flex-wrap space-x-3 min-[375px]:justify-center md:justify-start">
-            {query.data?.data.data.map((item: BookShelfType) => {
-              return (
-                <li
-                  className="pb-5"
-                  key={item.id}
-                >
-                  <Card
-                    actions={[
-                      userCollectBookShelfIds.includes(item.id) ? (
-                        <StarFilled
-                          style={{ color: 'rgb(253 224 71)' }}
-                          key="collect"
-                          onClick={() => {
-                            const index = userCollectQuery?.data.data.findIndex(
-                              (collect: UserCollectType) => collect.bookShelfId === item.id
-                            )
-                            cancelCollectShelfMutate(userCollectQuery?.data.data[index].id)
-                          }}
-                        />
-                      ) : (
-                        <StarOutlined
-                          key="no-collect"
-                          className="hidden"
-                          onClick={() => {
-                            collectShelfMutate(item.id)
-                          }}
-                        />
-                      ),
-                      <EllipsisOutlined
-                        key="ellipsis"
-                        onClick={() => {
-                          const id = UrlUtils.encodeUrlById(`${item.id}?userId=${item.userId}`)
-                          router.navigate({ to: `/bookshelf/${id}` })
-                        }}
-                      />
-                    ]}
-                    className="cursor-default"
-                    hoverable
-                    style={{ width: 240 }}
-                    cover={
-                      <img
-                        alt="example"
-                        className="h-[200px] object-cover"
-                        src={import.meta.env.VITE_SERVER_URL + item.cover}
-                      />
-                    }
-                  >
-                    <Meta
-                      title={item.label}
-                      description={item.description}
-                    />
-                  </Card>
-                </li>
-              )
-            })}
-          </ul>
-        </motion.div>
+        <BookShelfDetail
+          bookshelf_detail={query.data?.data.data ?? []}
+          userCollectBookShelfIds={userCollectBookShelfIds}
+          collectButton={(item) => collectShelfMutate(item.id)}
+          cancelCollectButton={(item) => {
+            const index = userCollectQuery?.data.data.findIndex(
+              (collect: UserCollectType) => collect.bookShelfId === item.id
+            )
+            cancelCollectShelfMutate(userCollectQuery?.data.data[index].id)
+          }}
+        />
       )}
     </>
   )

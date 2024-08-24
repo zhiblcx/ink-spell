@@ -118,39 +118,15 @@ function Header() {
   const items: MenuProps['items'] = [
     {
       key: 1,
-      label: (
-        <div
-          onClick={() => {
-            navigate({ to: '/profile' })
-          }}
-        >
-          个人资料
-        </div>
-      )
+      label: <div onClick={() => navigate({ to: '/profile' })}>个人资料</div>
     },
     {
       key: 2,
-      label: (
-        <div
-          onClick={() => {
-            console.log('我的收藏')
-          }}
-        >
-          我的收藏
-        </div>
-      )
+      label: <div onClick={() => navigate({ to: '/collectbookshelf' })}>我的收藏</div>
     },
     {
       key: 3,
-      label: (
-        <div
-          onClick={() => {
-            console.log('重置密码')
-          }}
-        >
-          重置密码
-        </div>
-      )
+      label: <div onClick={() => console.log('重置密码')}>重置密码</div>
     },
     {
       key: 4,
@@ -222,9 +198,7 @@ function Header() {
               enterButton
             />
           </AutoComplete>
-        ) : (
-          ''
-        )}
+        ) : null}
       </div>
       <div className="flex items-center justify-center min-[375px]:ml-2 min-[375px]:space-x-2 md:mr-10 md:space-x-4">
         <ThemeToggle />

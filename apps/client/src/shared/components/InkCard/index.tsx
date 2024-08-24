@@ -110,8 +110,8 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
             : '无主角'}
         </p>
         <p className="w-[80%] border-2 border-b-zinc-300"></p>
-        <p className="roboto mt-2 line-clamp-3 w-[80%] overflow-hidden text-sm">
-          {book.description === undefined ? '' : book.description}
+        <p className="roboto mt-2 line-clamp-3 w-[80%] overflow-hidden break-all text-sm">
+          {book.description === '' || book.description === null ? '暂无描述' : book.description}
         </p>
       </div>
 

@@ -22,7 +22,6 @@ export function Page() {
   const {
     uploadFileFlag,
     deleteShelfFlag,
-    isOtherBookShelfFlag,
     updateAllSelectFlag,
     updateCancelFlag,
     updateShowShelfFlag,

@@ -110,7 +110,12 @@ export class BookController {
   @ApiOperation({ summary: '收藏书籍' })
   @HttpCode(HttpStatus.OK)
   @APIResponse(null, '收藏成功')
-  async collectBook() {}
+  async collectBook(@Request() req, @Param('bookID') bookID: number) {
+    return new R({
+      message: '收藏成功',
+      data: await this.bookService.collectBook(req.user.userId, bookID),
+    });
+  }
 
   @Get('md5')
   @ApiOperation({ summary: '查询是否有重复的书籍' })

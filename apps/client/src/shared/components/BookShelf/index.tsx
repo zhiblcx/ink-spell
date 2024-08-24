@@ -3,7 +3,10 @@ import InkCard from '@/shared/components/InkCard'
 import { AllSelectBookFlag } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
+import { Book } from '@/shared/types/book'
 import { BookShelfType } from '@/shared/types/bookshelf'
+import { UrlUtils } from '@/shared/utils/UrlUtils'
+import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { message, RadioChangeEvent, UploadFile } from 'antd'
 import { AxiosError } from 'axios'
@@ -52,7 +55,12 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
   const [selectBookShelfValue, setSelectBookShelfValue] = useState(selectOptions[0].value)
   const [options, setOptions] = useState([] as Ink[])
   const { TextArea } = Input
+  const { data: query } = useQuery({ queryKey: ['user'], queryFn: () => request.get('/user/profile') })
   let acquireBookShelfFlag = false
+
+  const collectBookMd5 = query?.data.data.booksInfo.reduce((acc: Array<string>, item: Book) => {
+    return acc.concat(item.md5)
+  }, [])
 
   const { data, isSuccess } = useQuery({
     queryKey: ['bookshelf'],
@@ -121,6 +129,30 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
           message.error(responseData.message as string)
         }
       }
+    }
+  })
+
+  const { mutate: collectBookMutate } = useMutation({
+    mutationFn: (bookId: number) => request.post(`/book/${bookId}`),
+    onSuccess: (data) => {
+      message.success(data.data.message)
+      queryClient.invalidateQueries({ queryKey: ['user'] })
+    },
+    onError: (result: AxiosError) => {
+      const data = (result.response?.data as { message?: string })?.message ?? '服务器错误'
+      message.error(data)
+    }
+  })
+
+  const { mutate: cancelCollectBookMutate } = useMutation({
+    mutationFn: (bookId: number) => request.delete(`/book/${bookId}`),
+    onSuccess: (data) => {
+      message.success(data.data.message)
+      queryClient.invalidateQueries({ queryKey: ['user'] })
+    },
+    onError: (result: AxiosError) => {
+      const data = (result.response?.data as { message?: string })?.message ?? '服务器错误'
+      message.error(data)
     }
   })
 
@@ -292,6 +324,83 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
         ) : (
           <EmptyPage name="该用户还没有上传书籍哦！快邀请TA分享吧！" />
         )
+      ) : isOtherBookShelfFlag ? (
+        <div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            style={{ height: 'calc(100% - 115px)' }}
+            className="scroll absolute h-full overflow-y-scroll"
+          >
+            <ul className="flex flex-wrap space-x-3 min-[375px]:justify-center md:justify-start">
+              {books
+                .filter((book) => options.some((option) => option.id === book.id))
+                .reverse()
+                .map((item: Ink) => {
+                  return (
+                    <li
+                      className="pb-5"
+                      key={item.id}
+                    >
+                      <Card
+                        actions={[
+                          collectBookMd5.includes(item.md5) ? (
+                            <StarFilled
+                              style={{ color: 'rgb(253 224 71)' }}
+                              key="collect"
+                              onClick={() => {
+                                const index = query?.data.data.booksInfo.findIndex((ink: Book) => ink.md5 === item.md5)
+                                cancelCollectBookMutate(query?.data.data.booksInfo[index].id)
+                              }}
+                            />
+                          ) : (
+                            <StarOutlined
+                              key="no-collect"
+                              className="hidden"
+                              onClick={() => collectBookMutate(item.id)}
+                            />
+                          ),
+                          <EllipsisOutlined
+                            key="ellipsis"
+                            onClick={() => {
+                              window.open(
+                                `/book/${UrlUtils.encodeUrlById(item.id.toString())}?chapter=${UrlUtils.encodeUrlById('1')}`,
+                                '_blank'
+                              )
+                            }}
+                          />
+                        ]}
+                        className="cursor-default overflow-hidden"
+                        hoverable
+                        style={{ width: 240 }}
+                        cover={
+                          <img
+                            alt="example"
+                            className="h-[200px] object-cover"
+                            src={import.meta.env.VITE_SERVER_URL + item.cover}
+                          />
+                        }
+                      >
+                        <p className="roboto text-xl font-bold">
+                          <span> {item.name ? `${item.name}` : '暂无书名'}</span>
+                        </p>
+                        <p className="roboto">{item.author ? item.author : '无作者'}</p>
+                        <p className="roboto">
+                          {item.protagonist
+                            ? `
+      ${item.protagonist.split('|')[0]}|${item.protagonist.split('|')[1]}`
+                            : '无主角'}
+                        </p>
+                        <p className="roboto line-clamp-3 w-[90%] break-all">
+                          {item.description === null || item.description === '' ? '暂无描述' : item.description}
+                        </p>
+                      </Card>
+                    </li>
+                  )
+                })}
+            </ul>
+          </motion.div>
+        </div>
       ) : (
         <motion.div
           initial={{ opacity: 0 }}
