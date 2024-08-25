@@ -1,8 +1,7 @@
+import { selectBookByBookIdQuery } from '@/features/book'
 import Content from '@/features/layouts/ReadLayout/Content'
 import Sidebar from '@/features/layouts/ReadLayout/Sidebar'
-import { getBookByBookIdAPI } from '@/shared/API/book'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { useQuery } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
 
 interface BookChapterType {
@@ -18,10 +17,7 @@ function Page() {
   const bookID = UrlUtils.decodeUrlById(Route.useParams().bookId)
   const currentChapter = parseInt(UrlUtils.decodeUrlById(chapter.toString()))
 
-  const { data: query, isLoading } = useQuery({
-    queryKey: ['book', bookID],
-    queryFn: () => getBookByBookIdAPI(bookID)
-  })
+  const { data: query, isLoading } = selectBookByBookIdQuery(bookID)
 
   return (
     <>
