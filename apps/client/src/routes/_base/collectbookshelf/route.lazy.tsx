@@ -1,9 +1,9 @@
 import { cancelCollectBookShelfMutation } from '@/features/bookshelf'
-import { request } from '@/shared/API'
+import { selectUserCollectBookShelfQuery } from '@/features/bookshelf/query'
 import BookShelfDetail from '@/shared/components/BookShelfDetail'
 import EmptyPage from '@/shared/components/EmptyPage'
 import { BookShelfType } from '@/shared/types/bookshelf'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
 
 export const Route = createLazyFileRoute('/_base/collectbookshelf')({
@@ -16,10 +16,7 @@ interface CollectBookShelfType {
 }
 
 function Page() {
-  const { data: userCollectQuery } = useQuery({
-    queryKey: ['user-collect'],
-    queryFn: () => request.get('/collect/bookshelf')
-  })
+  const { data: userCollectQuery } = selectUserCollectBookShelfQuery()
 
   const queryClient = useQueryClient()
   const { mutate: cancelCollectShelfMutate } = cancelCollectBookShelfMutation(() =>

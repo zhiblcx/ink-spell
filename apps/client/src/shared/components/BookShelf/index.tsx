@@ -1,4 +1,5 @@
 import { operateBookShelfMutation, updateBookShelfDetailMutation } from '@/features/bookshelf'
+import { selectMyBookShelfQuery } from '@/features/bookshelf/query'
 import { deleteBookByBookIdAPI, request } from '@/shared/API'
 import InkCard from '@/shared/components/InkCard'
 import { AllSelectBookFlag } from '@/shared/enums'
@@ -57,10 +58,7 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
     return acc.concat(item.md5)
   }, [])
 
-  const { data, isSuccess } = useQuery({
-    queryKey: ['bookshelf'],
-    queryFn: () => request.get('/bookshelf')
-  })
+  const { data, isSuccess } = selectMyBookShelfQuery()
 
   const currentBookShelf: BookShelfType = data?.data.data.filter((item: BookShelfType) => item.id == bookShelfId)[0]
 

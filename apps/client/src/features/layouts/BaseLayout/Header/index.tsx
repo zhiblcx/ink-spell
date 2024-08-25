@@ -1,3 +1,4 @@
+import { selectBookByBookShelfIdQuery, selectMyBookShelfQuery } from '@/features/bookshelf/query'
 import { gerProfileAPI, request } from '@/shared/API'
 import ThemeToggle from '@/shared/components/ThemeToggle'
 import { Menu } from '@/shared/enums'
@@ -18,28 +19,20 @@ function Header() {
   const showSearchReg = /^\/$|^\/bookshelf\/.*$/
   const { menu, setMenu } = useMenuStore()
   const { uploadFileFlag, updateUploadFileFlag, updateSearchBookName } = useActionBookStore()
-  const reg = /\d+/
-
-  const urlSplit = router.latestLocation.href.split('/')
-  const url = `/${urlSplit[1]}/${urlSplit.length === 3 ? UrlUtils.decodeUrlById(urlSplit[2]) : undefined}`
-  const match = url.match(reg)
-  let bookId = match !== null ? match[0] : undefined
-  const { data: myBookShelf } = useQuery({
-    queryKey: ['bookshelf'],
-    queryFn: () => request.get('/bookshelf')
-  })
-
-  if (bookId === undefined) {
-    bookId = myBookShelf?.data.data[0].id
-  }
-
   const [options, setOptions] = useState([])
   const [optionTotal, setOptionTotal] = useState([])
 
-  const { data: queryBook, isSuccess } = useQuery({
-    queryKey: ['bookshelf_book', bookId],
-    queryFn: () => request.get(`/bookshelf/${bookId}`)
-  })
+  const reg = /\d+/
+  const urlSplit = router.latestLocation.href.split('/')
+  const url = `/${urlSplit[1]}/${urlSplit.length === 3 ? UrlUtils.decodeUrlById(urlSplit[2]) : undefined}`
+  const match = url.match(reg)
+
+  const { data: myBookShelf } = selectMyBookShelfQuery()
+  let bookShelfId = match !== null ? match[0] : myBookShelf?.data.data[0].id
+
+  // TODO: remove undefined
+  const { data: queryBook, isSuccess } = selectBookByBookShelfIdQuery(bookShelfId as string)
+
   useEffect(() => {
     if (isSuccess) {
       setOptionTotal(
@@ -66,7 +59,7 @@ function Header() {
   const getExtraData: UploadProps['data'] = (file: UploadFileMD5) => {
     return {
       md5: file.md5,
-      bookShelfId: bookId
+      bookShelfId
     }
   }
 

@@ -1,9 +1,9 @@
 import { cancelCollectBookShelfMutation, collectBookShelfMutation } from '@/features/bookshelf'
-import { request } from '@/shared/API'
+import { selectUserCollectBookShelfByUserIdQuery, selectUserCollectBookShelfQuery } from '@/features/bookshelf/query'
 import BookShelfDetail from '@/shared/components/BookShelfDetail'
 import EmptyPage from '@/shared/components/EmptyPage'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
 
 export const Route = createLazyFileRoute('/_base/otherbookshelf/$userId')({
@@ -18,17 +18,8 @@ interface UserCollectType {
 
 export function Page() {
   const { userId } = Route.useParams()
-
-  const query = useQuery({
-    queryKey: ['user-bookshelf'],
-    queryFn: () => request.get(`/user/bookshelf/${UrlUtils.decodeUrlById(userId)}`)
-  })
-
-  const { data: userCollectQuery } = useQuery({
-    queryKey: ['user-collect'],
-    queryFn: () => request.get('/collect/bookshelf')
-  })
-
+  const query = selectUserCollectBookShelfByUserIdQuery(UrlUtils.decodeUrlById(userId))
+  const { data: userCollectQuery } = selectUserCollectBookShelfQuery()
   const userCollectBookShelfIds = userCollectQuery?.data.data.reduce((acc: Array<number>, item: UserCollectType) => {
     return acc.concat(item.bookShelfId)
   }, [])

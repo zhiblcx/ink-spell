@@ -1,11 +1,11 @@
 import { deleteBookShelfMutation } from '@/features/bookshelf'
-import { request } from '@/shared/API'
+import { selectBookByBookShelfIdQuery } from '@/features/bookshelf/query'
 import BookShelf from '@/shared/components/BookShelf'
 import { AllSelectBookFlag } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { createLazyFileRoute, useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 interface pageType {
@@ -38,10 +38,7 @@ export function Page() {
     }
   }, [bookId])
 
-  const { data: queryBook, isSuccess } = useQuery({
-    queryKey: ['bookshelf_book', params[0]],
-    queryFn: () => request.get(`/bookshelf/${params[0]}`)
-  })
+  const { data: queryBook, isSuccess } = selectBookByBookShelfIdQuery(params[0])
 
   const queryClient = useQueryClient()
   const { mutate } = deleteBookShelfMutation(params[0], () =>

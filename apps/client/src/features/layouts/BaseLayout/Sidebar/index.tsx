@@ -6,26 +6,21 @@ import iconDark from '@/assets/images/icon-dark.png'
 import iconLight from '@/assets/images/icon-light.png'
 import logoDark from '@/assets/images/logo-dark.png'
 import logoLight from '@/assets/images/logo-light.png'
+import { selectMyBookShelfQuery } from '@/features/bookshelf/query'
 import { menuList } from '@/mock'
-import { request } from '@/shared/API'
 import Navigation from '@/shared/components/Navigation'
 import Sortable, { SortableItem } from '@/shared/components/Sortable'
 import { Menu, Theme } from '@/shared/enums'
 import { useMenuStore, useThemeStore } from '@/shared/store'
 import { BookShelfType } from '@/shared/types/bookshelf'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { useQuery } from '@tanstack/react-query'
 
 function Sidebar() {
   const { theme } = useThemeStore()
   const { menu } = useMenuStore()
   const [arrow, setArrow] = useState(true)
   const [bookShelfMenu, setBookShelfMenu] = useState([] as BookShelfType[])
-
-  const { data: query, isSuccess } = useQuery({
-    queryKey: ['bookshelf'],
-    queryFn: () => request.get('bookshelf')
-  })
+  const { data: query, isSuccess } = selectMyBookShelfQuery()
 
   useEffect(() => {
     if (isSuccess) {

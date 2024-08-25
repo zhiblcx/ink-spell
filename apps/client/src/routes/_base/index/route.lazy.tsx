@@ -1,9 +1,9 @@
-import { request } from '@/shared/API'
+import { selectBookByBookShelfIdQuery, selectMyBookShelfQuery } from '@/features/bookshelf/query'
 import BookShelf from '@/shared/components/BookShelf'
 import { AllSelectBookFlag } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
 
 export function Page() {
@@ -17,16 +17,9 @@ export function Page() {
     updateIsOtherBookShelfFlag
   } = useActionBookStore()
 
-  const { data } = useQuery({
-    queryKey: ['bookshelf'],
-    queryFn: () => request.get('/bookshelf')
-  })
-
+  const { data } = selectMyBookShelfQuery()
   const bookShelfId = data?.data.data[0].id
-  const { data: queryBook, isLoading } = useQuery({
-    queryKey: ['bookshelf_book', bookShelfId],
-    queryFn: () => request.get(`/bookshelf/${bookShelfId}`)
-  })
+  const { data: queryBook, isLoading } = selectBookByBookShelfIdQuery(bookShelfId)
 
   const queryClient = useQueryClient()
   useEffect(() => {
