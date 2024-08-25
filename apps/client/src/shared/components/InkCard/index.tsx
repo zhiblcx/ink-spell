@@ -1,11 +1,9 @@
-import { request } from '@/shared/API'
+import { updateBookByBookIdMutation } from '@/features/book'
 import { useActionBookStore } from '@/shared/store'
 import { type Ink } from '@/shared/types'
-import { Book } from '@/shared/types/book'
 import { BookUtils } from '@/shared/utils'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { useMutation } from '@tanstack/react-query'
-import { type UploadFile, Input, message } from 'antd'
+import { type UploadFile, Input } from 'antd'
 import clsx from 'clsx'
 import { Pencil } from 'lucide-react'
 import UploadPhoto from '../UploadPhoto'
@@ -32,13 +30,7 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
     }
   ])
 
-  const { mutate } = useMutation({
-    mutationFn: (book: Book) => request.put(`/book/${book.id}`, book),
-    onSuccess: (result) => {
-      setBook({ ...result.data.data })
-      message.success('修改成功')
-    }
-  })
+  const { mutate } = updateBookByBookIdMutation(setBook)
 
   useEffect(() => {
     const [role1, role2] = book.protagonist?.split('|') || ['', '']

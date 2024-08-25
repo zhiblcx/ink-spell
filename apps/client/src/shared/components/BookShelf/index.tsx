@@ -1,6 +1,6 @@
+import { collectBookByBookIdMutation, deleteBookByBookIdMutation } from '@/features/book'
 import { operateBookShelfMutation, selectMyBookShelfQuery, updateBookShelfDetailMutation } from '@/features/bookshelf'
 import { selectOneselfInfoQuery } from '@/features/user'
-import { deleteBookByBookIdAPI, request } from '@/shared/API'
 import InkCard from '@/shared/components/InkCard'
 import { AllSelectBookFlag } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
@@ -9,9 +9,8 @@ import { Book } from '@/shared/types/book'
 import { BookShelfType } from '@/shared/types/bookshelf'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { message, RadioChangeEvent, UploadFile } from 'antd'
-import { AxiosError } from 'axios'
+import { useQueryClient } from '@tanstack/react-query'
+import { RadioChangeEvent, UploadFile } from 'antd'
 import { motion } from 'framer-motion'
 import EmptyPage from '../EmptyPage'
 import UploadPhoto from '../UploadPhoto'
@@ -83,13 +82,8 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
   }
 
   const queryClient = useQueryClient()
-  const { mutate } = useMutation({
-    mutationFn: (item: Ink) => deleteBookByBookIdAPI(item.id),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['bookshelf_book'] })
-      message.success(data.data.data.message)
-    }
-  })
+
+  const { mutate } = deleteBookByBookIdMutation(() => queryClient.invalidateQueries({ queryKey: ['bookshelf_book'] }))
 
   const { mutate: operateBookShelfMutate } = operateBookShelfMutation(
     handlerUpdateBookShelf,
@@ -101,29 +95,13 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
     queryClient.invalidateQueries({ queryKey: ['bookshelf'] })
   )
 
-  const { mutate: collectBookMutate } = useMutation({
-    mutationFn: (bookId: number) => request.post(`/book/${bookId}`),
-    onSuccess: (data) => {
-      message.success(data.data.message)
-      queryClient.invalidateQueries({ queryKey: ['user'] })
-    },
-    onError: (result: AxiosError) => {
-      const data = (result.response?.data as { message?: string })?.message ?? '服务器错误'
-      message.error(data)
-    }
-  })
+  const { mutate: collectBookMutate } = collectBookByBookIdMutation(() =>
+    queryClient.invalidateQueries({ queryKey: ['user'] })
+  )
 
-  const { mutate: cancelCollectBookMutate } = useMutation({
-    mutationFn: (bookId: number) => request.delete(`/book/${bookId}`),
-    onSuccess: (data) => {
-      message.success(data.data.message)
-      queryClient.invalidateQueries({ queryKey: ['user'] })
-    },
-    onError: (result: AxiosError) => {
-      const data = (result.response?.data as { message?: string })?.message ?? '服务器错误'
-      message.error(data)
-    }
-  })
+  const { mutate: cancelCollectBookMutate } = deleteBookByBookIdMutation(() =>
+    queryClient.invalidateQueries({ queryKey: ['user'] })
+  )
 
   const handleChange = (value: string) => {
     setSelectBookShelfValue(value)
@@ -220,7 +198,7 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
       // 删除书本
       const remainBook = books.filter((item) => {
         if (item.checked) {
-          mutate(item)
+          mutate(item.id)
           return false
         }
         return true
