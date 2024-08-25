@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -65,5 +65,22 @@ export class UserService {
       data: { ...updateUserDto },
       where: { id: parseInt(userId) },
     });
+  }
+
+  async updatePassword(userId, updateUserDto) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: parseInt(userId) },
+    });
+
+    if (user.password !== updateUserDto.password) {
+      throw new BadRequestException({
+        message: '原密码错误',
+      });
+    } else {
+      return await this.prisma.user.update({
+        where: { id: parseInt(userId) },
+        data: { password: updateUserDto.newPassword },
+      });
+    }
   }
 }

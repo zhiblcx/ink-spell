@@ -72,4 +72,14 @@ export class UserController {
       ),
     });
   }
+
+  @Put('/password')
+  @ApiOperation({ summary: '修改密码' })
+  @APIResponse(null, '修改成功')
+  async updatePassword(@Request() req, @Body() updateUserDto: UpdateUserDto) {
+    await this.userService.updatePassword(req.user.userId, updateUserDto);
+    return new R({
+      message: '修改成功',
+    });
+  }
 }
