@@ -1,4 +1,5 @@
 import { operateBookShelfMutation, selectMyBookShelfQuery, updateBookShelfDetailMutation } from '@/features/bookshelf'
+import { selectOneselfInfoQuery } from '@/features/user'
 import { deleteBookByBookIdAPI, request } from '@/shared/API'
 import InkCard from '@/shared/components/InkCard'
 import { AllSelectBookFlag } from '@/shared/enums'
@@ -8,7 +9,7 @@ import { Book } from '@/shared/types/book'
 import { BookShelfType } from '@/shared/types/bookshelf'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { message, RadioChangeEvent, UploadFile } from 'antd'
 import { AxiosError } from 'axios'
 import { motion } from 'framer-motion'
@@ -50,7 +51,7 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
   const [selectBookShelfValue, setSelectBookShelfValue] = useState(selectOptions[0].value)
   const [options, setOptions] = useState([] as Ink[])
   const { TextArea } = Input
-  const { data: query } = useQuery({ queryKey: ['user'], queryFn: () => request.get('/user/profile') })
+  const { data: query } = selectOneselfInfoQuery()
   let acquireBookShelfFlag = false
 
   const collectBookMd5 = query?.data.data.booksInfo.reduce((acc: Array<string>, item: Book) => {

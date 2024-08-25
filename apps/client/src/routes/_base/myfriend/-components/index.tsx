@@ -28,7 +28,7 @@ interface PageParam {
 export default function MyFriend({ api, type }: { api: string; type: string }) {
   const router = useRouter()
 
-  // TODO mobile 实现左滑删除
+  // TODO: mobile 实现左滑删除
   const fetchProjects = async ({ pageParam }: { pageParam: PageParam }) => {
     const res = await request.get(`${api}?page=${pageParam.page}&limit=${pageParam.limit}`)
     return res.data.data

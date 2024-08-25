@@ -1,11 +1,9 @@
-import { followUserByUserIdMutation } from '@/features/user'
+import { followUserByUserIdMutation, selectOneselfInfoQuery } from '@/features/user'
 import { menuList } from '@/mock'
-import { request } from '@/shared/API'
 import { Menu } from '@/shared/enums'
 import { MessageEnum } from '@/shared/enums/MessageEnum'
 import { useMenuStore } from '@/shared/store'
 import { User } from '@/shared/types'
-import { useQuery } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import { InputRef, message } from 'antd'
 import clsx from 'clsx'
@@ -38,7 +36,7 @@ export default function ChatRoom() {
   const [messages, setMessages] = useState([] as MessageType[])
   const { TextArea } = Input
   const { menu } = useMenuStore()
-  const { data: query, isSuccess } = useQuery({ queryKey: ['user'], queryFn: () => request.get('/user/profile') })
+  const { data: query, isSuccess } = selectOneselfInfoQuery()
   const { scrollTo } = useSmoothScroll({
     ref: chatContent,
     speed: Infinity,

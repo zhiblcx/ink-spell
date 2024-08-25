@@ -1,5 +1,6 @@
 import { selectBookByBookShelfIdQuery, selectMyBookShelfQuery } from '@/features/bookshelf'
-import { gerProfileAPI, request } from '@/shared/API'
+import { selectOneselfInfoQuery } from '@/features/user'
+import { request } from '@/shared/API'
 import ThemeToggle from '@/shared/components/ThemeToggle'
 import { Menu } from '@/shared/enums'
 import { useActionBookStore, useMenuStore } from '@/shared/store'
@@ -7,7 +8,6 @@ import { Book } from '@/shared/types/book'
 import { AuthUtils } from '@/shared/utils'
 import { Md5Utils } from '@/shared/utils/Md5Utils'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { useQuery } from '@tanstack/react-query'
 import { ReactNode, useNavigate, useRouter } from '@tanstack/react-router'
 import type { MenuProps, UploadFile, UploadProps } from 'antd'
 import { message } from 'antd'
@@ -44,10 +44,7 @@ function Header() {
     }
   }, [isSuccess])
 
-  const query = useQuery({
-    queryKey: ['user'],
-    queryFn: () => gerProfileAPI()
-  })
+  const query = selectOneselfInfoQuery()
 
   interface FileWithMD5 extends File {
     md5?: string
