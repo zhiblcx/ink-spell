@@ -1,5 +1,4 @@
-import { operateBookShelfMutation, updateBookShelfDetailMutation } from '@/features/bookshelf'
-import { selectMyBookShelfQuery } from '@/features/bookshelf/query'
+import { operateBookShelfMutation, selectMyBookShelfQuery, updateBookShelfDetailMutation } from '@/features/bookshelf'
 import { deleteBookByBookIdAPI, request } from '@/shared/API'
 import InkCard from '@/shared/components/InkCard'
 import { AllSelectBookFlag } from '@/shared/enums'

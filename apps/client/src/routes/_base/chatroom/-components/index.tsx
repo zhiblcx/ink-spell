@@ -1,13 +1,13 @@
+import { followUserByUserIdMutation } from '@/features/user'
 import { menuList } from '@/mock'
 import { request } from '@/shared/API'
 import { Menu } from '@/shared/enums'
 import { MessageEnum } from '@/shared/enums/MessageEnum'
 import { useMenuStore } from '@/shared/store'
 import { User } from '@/shared/types'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import { InputRef, message } from 'antd'
-import { AxiosError } from 'axios'
 import clsx from 'clsx'
 import lodash from 'lodash'
 import React from 'react'
@@ -145,16 +145,7 @@ export default function ChatRoom() {
     }, 3000)
   }
 
-  const { mutate: followMutate } = useMutation({
-    mutationFn: (followID: number) => request.post(`/follow/${followID}`),
-    onSuccess: (data) => {
-      message.success(data.data.message)
-    },
-    onError: (result: AxiosError) => {
-      const data = (result.response?.data as { message?: string })?.message ?? '服务器错误'
-      message.error(data)
-    }
-  })
+  const { mutate: followMutate } = followUserByUserIdMutation()
 
   return (
     <>

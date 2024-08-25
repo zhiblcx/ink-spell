@@ -1,4 +1,4 @@
-import { selectBookByBookShelfIdQuery, selectMyBookShelfQuery } from '@/features/bookshelf/query'
+import { selectBookByBookShelfIdQuery, selectMyBookShelfQuery } from '@/features/bookshelf'
 import BookShelf from '@/shared/components/BookShelf'
 import { AllSelectBookFlag } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'

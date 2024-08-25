@@ -98,14 +98,14 @@ export class FollowController {
     });
   }
 
-  @Post(':followID')
+  @Post(':userId')
   @ApiOperation({ summary: '关注用户' })
   @HttpCode(HttpStatus.OK)
   @APIResponse(FollowVo, '关注成功')
-  async follower(@Request() req, @Param('followID') followID: number) {
+  async follower(@Request() req, @Param('userId') userId: number) {
     return new R({
       message: '关注成功',
-      data: await this.followService.follower(req, followID),
+      data: await this.followService.follower(req, userId),
     });
   }
 

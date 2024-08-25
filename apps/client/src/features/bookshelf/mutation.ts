@@ -3,21 +3,9 @@ import { BookShelfType } from '@/shared/types/bookshelf'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import { message } from 'antd'
-import { AxiosError, AxiosResponse } from 'axios'
+import { AxiosResponse } from 'axios'
+import { handleAxiosError } from '../utils'
 import { BookShelfDao, operateBookShelfType } from './types'
-
-const handleAxiosError = (result: AxiosError) => {
-  const responseData = result.response?.data as { message?: string | string[] }
-  if (responseData.message) {
-    if (Array.isArray(responseData.message)) {
-      responseData.message.forEach((item) => {
-        message.error(item)
-      })
-    } else {
-      message.error(responseData.message ?? '服务器错误')
-    }
-  }
-}
 
 export const deleteBookShelfMutation = (deleteId: string, queryClient: () => Promise<void>) => {
   const router = useRouter()

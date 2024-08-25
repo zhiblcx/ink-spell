@@ -1,11 +1,10 @@
+import { followUserByUserIdMutation, unfollowUserByFollowMutation } from '@/features/user'
 import { request } from '@/shared/API'
 import { PaginationParams } from '@/shared/enums/PaginationParams'
 import { User } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
-import { message } from 'antd'
-import { AxiosError } from 'axios'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { FollowEnum } from './FollowEnum'
 
@@ -52,30 +51,14 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
   })
 
   const queryClient = useQueryClient()
-  const { mutate: followMutate } = useMutation({
-    mutationFn: (followID: number) => request.post(`/follow/${followID}`),
-    onSuccess: (data) => {
-      message.success(data.data.message)
-      queryClient.invalidateQueries({ queryKey: [FollowEnum.FOLLOWING] })
-      queryClient.invalidateQueries({ queryKey: [FollowEnum.FOLLOWER] })
-    },
-    onError: (result: AxiosError) => {
-      const data = (result.response?.data as { message?: string })?.message ?? '服务器错误'
-      message.error(data)
-    }
-  })
+  const { mutate: followMutate } = followUserByUserIdMutation(
+    () => queryClient.invalidateQueries({ queryKey: [FollowEnum.FOLLOWING] }),
+    () => queryClient.invalidateQueries({ queryKey: [FollowEnum.FOLLOWER] })
+  )
 
-  const { mutate: cancelMutate } = useMutation({
-    mutationFn: (followID: number) => request.delete(`/follow/${followID}`),
-    onSuccess: (data) => {
-      message.success(data.data.message)
-      queryClient.invalidateQueries({ queryKey: [FollowEnum.FOLLOWING] })
-    },
-    onError: (result: AxiosError) => {
-      const data = (result.response?.data as { message?: string })?.message ?? '服务器错误'
-      message.error(data)
-    }
-  })
+  const { mutate: cancelMutate } = unfollowUserByFollowMutation(() =>
+    queryClient.invalidateQueries({ queryKey: [FollowEnum.FOLLOWING] })
+  )
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { selectBookByBookShelfIdQuery, selectMyBookShelfQuery } from '@/features/bookshelf/query'
+import { selectBookByBookShelfIdQuery, selectMyBookShelfQuery } from '@/features/bookshelf'
 import { gerProfileAPI, request } from '@/shared/API'
 import ThemeToggle from '@/shared/components/ThemeToggle'
 import { Menu } from '@/shared/enums'

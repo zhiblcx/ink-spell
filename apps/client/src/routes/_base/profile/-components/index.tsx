@@ -1,8 +1,8 @@
+import { updateUserInfoMutation } from '@/features/user'
 import { request } from '@/shared/API'
 import UploadPhoto from '@/shared/components/UploadPhoto'
-import { User } from '@/shared/types/user'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { type UploadFile, Input, message } from 'antd'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { type UploadFile, Input } from 'antd'
 import styles from './styles.module.scss'
 
 export default function Profile() {
@@ -12,13 +12,7 @@ export default function Profile() {
 
   const queryClient = useQueryClient()
   const query = useQuery({ queryKey: ['user'], queryFn: () => request.get('/user/profile') })
-  const { mutate } = useMutation({
-    mutationFn: (user: User) => request.put('/user', user),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['user'] })
-      message.success(data.data.message)
-    }
-  })
+  const { mutate } = updateUserInfoMutation(() => queryClient.invalidateQueries({ queryKey: ['user'] }))
 
   useEffect(() => {
     setAvatar([
