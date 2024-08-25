@@ -102,7 +102,6 @@ export default function ChatRoom() {
     window.addEventListener('beforeunload', leaveRoom)
 
     return () => {
-      socket.off('newMessage', handleNewMessage)
       socket.off('getMessages', handleNewMessage)
       window.removeEventListener('beforeunload', leaveRoom)
     }
