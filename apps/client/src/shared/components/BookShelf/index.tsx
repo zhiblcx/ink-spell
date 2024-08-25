@@ -1,3 +1,4 @@
+import { operateBookShelfMutation, updateBookShelfDetailMutation } from '@/features/bookshelf'
 import { deleteBookByBookIdAPI, request } from '@/shared/API'
 import InkCard from '@/shared/components/InkCard'
 import { AllSelectBookFlag } from '@/shared/enums'
@@ -18,12 +19,6 @@ interface BookShelfPropsType {
   bookShelfId: number
   books: Ink[]
   setBooks: React.Dispatch<React.SetStateAction<Ink[]>>
-}
-
-interface operateBookShelfType {
-  operate: string
-  bookShelfInfo: object
-  api: string
 }
 
 interface formProps {
@@ -68,6 +63,27 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
   })
 
   const currentBookShelf: BookShelfType = data?.data.data.filter((item: BookShelfType) => item.id == bookShelfId)[0]
+
+  const handlerUpdateBookShelf = (bookShelfId: number) => {
+    setBooks(
+      books.filter((item) => {
+        if (item.checked) {
+          const obj = {
+            api: `/book/${item.id}`,
+            operate: 'update',
+            bookShelfInfo: {
+              ...item,
+              bookShelfId: bookShelfId
+            }
+          }
+          operateBookShelfMutate(obj)
+          return false
+        }
+        return true
+      }) ?? []
+    )
+  }
+
   const queryClient = useQueryClient()
   const { mutate } = useMutation({
     mutationFn: (item: Ink) => deleteBookByBookIdAPI(item.id),
@@ -77,60 +93,15 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
     }
   })
 
-  const { mutate: operateBookShelfMutate } = useMutation({
-    mutationFn: (result: operateBookShelfType) => {
-      if (result.operate === 'add') {
-        return request.post(result.api, result.bookShelfInfo)
-      } else {
-        return request.put(result.api, result.bookShelfInfo)
-      }
-    },
-    onSuccess: (data) => {
-      if (data.data.data === undefined) {
-        return message.error(data.data.message)
-      }
-      if (data.data.data.md5 === undefined) {
-        handlerUpdateBookShelf(data.data.data.id)
-        queryClient.invalidateQueries({ queryKey: ['bookshelf'] })
-        message.success(data.data.message)
-      } else {
-        queryClient.invalidateQueries({ queryKey: ['bookshelf_book'] })
-        message.success(data.data.message)
-      }
-    },
-    onError: (result: AxiosError) => {
-      const responseData = result.response?.data as { message?: string | string[] }
-      if (responseData.message) {
-        if (Array.isArray(responseData.message)) {
-          responseData.message.forEach((item) => {
-            message.error(item)
-          })
-        } else {
-          message.error(responseData.message as string)
-        }
-      }
-    }
-  })
+  const { mutate: operateBookShelfMutate } = operateBookShelfMutation(
+    handlerUpdateBookShelf,
+    () => queryClient.invalidateQueries({ queryKey: ['bookshelf'] }),
+    () => queryClient.invalidateQueries({ queryKey: ['bookshelf_book'] })
+  )
 
-  const { mutate: updateBookShelfMutate } = useMutation({
-    mutationFn: (bookShelfData: BookShelfType) => request.put(`/bookshelf/${bookShelfData.id}`, bookShelfData),
-    onSuccess: (data) => {
-      message.success(data.data.message)
-      queryClient.invalidateQueries({ queryKey: ['bookshelf'] })
-    },
-    onError: (result: AxiosError) => {
-      const responseData = result.response?.data as { message?: string | string[] }
-      if (responseData.message) {
-        if (Array.isArray(responseData.message)) {
-          responseData.message.forEach((item) => {
-            message.error(item)
-          })
-        } else {
-          message.error(responseData.message as string)
-        }
-      }
-    }
-  })
+  const { mutate: updateBookShelfMutate } = updateBookShelfDetailMutation(() =>
+    queryClient.invalidateQueries({ queryKey: ['bookshelf'] })
+  )
 
   const { mutate: collectBookMutate } = useMutation({
     mutationFn: (bookId: number) => request.post(`/book/${bookId}`),
@@ -187,26 +158,6 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
     }
   }
 
-  const handlerUpdateBookShelf = (bookShelfId: number) => {
-    setBooks(
-      books.filter((item) => {
-        if (item.checked) {
-          const obj = {
-            api: `/book/${item.id}`,
-            operate: 'update',
-            bookShelfInfo: {
-              ...item,
-              bookShelfId: bookShelfId
-            }
-          }
-          operateBookShelfMutate(obj)
-          return false
-        }
-        return true
-      }) ?? []
-    )
-  }
-
   useEffect(() => {
     if (books.length !== 0) {
       if (cancelFlag) {
@@ -238,6 +189,7 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
         })
       } else {
         // 新增
+        setSelectBookShelfValue(selectOptions[0].value)
         form.setFieldsValue({
           bookShelfId: selectOptions[0].value,
           status: false,

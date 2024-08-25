@@ -1,4 +1,4 @@
-import { request } from '@/shared/API'
+import { updateBookShelfPositionMutation } from '@/features/bookshelf'
 import { BookShelfType } from '@/shared/types/bookshelf'
 import {
   closestCenter,
@@ -12,7 +12,6 @@ import {
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers'
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useMutation } from '@tanstack/react-query'
 import { message } from 'antd'
 import lodash from 'lodash'
 
@@ -61,16 +60,11 @@ function Sortable({ originItems, setOriginItems, children }: SortableProps) {
     sensors = useSensors(useSensor(TouchSensor))
   }
 
-  const { mutate } = useMutation({
-    mutationFn: (data: BookShelfType & { bookShelfName: string }) => request.put(`bookshelf/${data.id}`, data),
-    onSuccess: (data) => {
-      showMessage(data)
-    }
-  })
-
   const showMessage = lodash.throttle((data) => {
     message.success(data.data.message)
   }, 1000 * 10)
+
+  const { mutate } = updateBookShelfPositionMutation(showMessage)
 
   const downloadFiledebounce = lodash.debounce((updatedItems) => {
     updatedItems.map((item: BookShelfType, index: number) => {

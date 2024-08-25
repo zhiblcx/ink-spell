@@ -50,8 +50,6 @@ function Footer() {
     })
   }
 
-  console.log(showFooterReg.test(router.latestLocation.pathname), '22')
-
   return (
     <>
       {!isOtherBookShelfFlag && showFooterReg.test(router.latestLocation.pathname) ? (

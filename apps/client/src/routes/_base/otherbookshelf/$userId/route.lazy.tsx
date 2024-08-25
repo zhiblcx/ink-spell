@@ -1,11 +1,10 @@
+import { cancelCollectBookShelfMutation, collectBookShelfMutation } from '@/features/bookshelf'
 import { request } from '@/shared/API'
 import BookShelfDetail from '@/shared/components/BookShelfDetail'
 import EmptyPage from '@/shared/components/EmptyPage'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { message } from 'antd'
-import { AxiosError } from 'axios'
 
 export const Route = createLazyFileRoute('/_base/otherbookshelf/$userId')({
   component: () => <Page />
@@ -37,30 +36,14 @@ export function Page() {
   const queryClient = useQueryClient()
 
   // 收藏书架
-  const { mutate: collectShelfMutate } = useMutation({
-    mutationFn: (bookShelfId: number) => request.post(`/collect/bookshelf/${bookShelfId}`),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['user-collect'] })
-      message.success(data.data.message)
-    },
-    onError: (result: AxiosError) => {
-      const data = (result.response?.data as { message?: string })?.message ?? '服务器错误'
-      message.error(data)
-    }
-  })
+  const { mutate: collectShelfMutate } = collectBookShelfMutation(() =>
+    queryClient.invalidateQueries({ queryKey: ['user-collect'] })
+  )
 
   // 取消收藏书架
-  const { mutate: cancelCollectShelfMutate } = useMutation({
-    mutationFn: (bookShelfId: number) => request.delete(`/collect/bookshelf/${bookShelfId}`),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['user-collect'] })
-      message.success(data.data.message)
-    },
-    onError: (result: AxiosError) => {
-      const data = (result.response?.data as { message?: string })?.message ?? '服务器错误'
-      message.error(data)
-    }
-  })
+  const { mutate: cancelCollectShelfMutate } = cancelCollectBookShelfMutation(() =>
+    queryClient.invalidateQueries({ queryKey: ['user-collect'] })
+  )
 
   return (
     <>

@@ -1,11 +1,10 @@
+import { cancelCollectBookShelfMutation } from '@/features/bookshelf'
 import { request } from '@/shared/API'
 import BookShelfDetail from '@/shared/components/BookShelfDetail'
 import EmptyPage from '@/shared/components/EmptyPage'
 import { BookShelfType } from '@/shared/types/bookshelf'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { message } from 'antd'
-import { AxiosError } from 'axios'
 
 export const Route = createLazyFileRoute('/_base/collectbookshelf')({
   component: () => <Page />
@@ -23,17 +22,9 @@ function Page() {
   })
 
   const queryClient = useQueryClient()
-  const { mutate: cancelCollectShelfMutate } = useMutation({
-    mutationFn: (bookShelfId: number) => request.delete(`/collect/bookshelf/${bookShelfId}`),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['user-collect'] })
-      message.success(data.data.message)
-    },
-    onError: (result: AxiosError) => {
-      const data = (result.response?.data as { message?: string })?.message ?? '服务器错误'
-      message.error(data)
-    }
-  })
+  const { mutate: cancelCollectShelfMutate } = cancelCollectBookShelfMutation(() =>
+    queryClient.invalidateQueries({ queryKey: ['user-collect'] })
+  )
 
   const bookShelfDetail = userCollectQuery?.data.data.reduce(
     (acc: Array<BookShelfType & { collectId: number }>, item: CollectBookShelfType) => {
@@ -44,12 +35,12 @@ function Page() {
 
   return (
     <>
-      {bookShelfDetail.length === 0 ? (
+      {bookShelfDetail === undefined || userCollectQuery?.data.data.length === 0 ? (
         <EmptyPage name="您还没有收藏任何书架呢！快来收藏您喜欢的书架吧！" />
       ) : (
         <BookShelfDetail
           bookshelf_detail={bookShelfDetail ?? []}
-          cancelCollectButton={(item) => cancelCollectShelfMutate(item.collectId)}
+          cancelCollectButton={(item) => cancelCollectShelfMutate(item.collectId as number)}
           isIdsFlag={false}
         />
       )}

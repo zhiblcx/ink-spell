@@ -21,7 +21,6 @@ export default function BookShelfDetail({
   isIdsFlag = true
 }: BookShelfDetailType) {
   const navigate = useNavigate()
-  console.log(bookshelf_detail)
   return (
     <motion.div
       initial={{ opacity: 0 }}

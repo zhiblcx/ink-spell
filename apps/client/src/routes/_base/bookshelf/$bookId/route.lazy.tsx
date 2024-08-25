@@ -1,12 +1,12 @@
+import { deleteBookShelfMutation } from '@/features/bookshelf'
 import { request } from '@/shared/API'
 import BookShelf from '@/shared/components/BookShelf'
 import { AllSelectBookFlag } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createLazyFileRoute, useNavigate } from '@tanstack/react-router'
-import { message } from 'antd'
 import { useEffect, useState } from 'react'
 interface pageType {
   bookId: string
@@ -44,14 +44,9 @@ export function Page() {
   })
 
   const queryClient = useQueryClient()
-  const { mutate } = useMutation({
-    mutationFn: () => request.delete(`/bookshelf/${params[0]}`),
-    onSuccess: (data) => {
-      message.success(data.data.message)
-      navigate({ to: '/', replace: true })
-      queryClient.invalidateQueries({ queryKey: ['bookshelf'] })
-    }
-  })
+  const { mutate } = deleteBookShelfMutation(params[0], () =>
+    queryClient.invalidateQueries({ queryKey: ['bookshelf'] })
+  )
 
   useEffect(() => {
     if (isSuccess) {
