@@ -13,6 +13,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateBookShelfVo } from '../bookshelf/vo/create-bookshelf.vo';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
+import { MessageVo } from './vo/message.vo';
 import { UserInfoVo } from './vo/user.info.vo';
 @Controller('user')
 @ApiTags('用户管理')
@@ -25,6 +26,16 @@ export class UserController {
   async getProfile(@Request() req) {
     return new R({
       data: await this.userService.getProfile(req['user']),
+    });
+  }
+
+  @Get('/all/message')
+  @ApiOperation({ summary: '获取聊天记录' })
+  @APIResponse([MessageVo], '获取成功')
+  async handleGetMessages() {
+    return new R({
+      message: '获取成功',
+      data: await this.userService.handleGetMessages(),
     });
   }
 

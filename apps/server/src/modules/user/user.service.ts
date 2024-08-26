@@ -7,7 +7,7 @@ export class UserService {
 
   async getProfile(user) {
     const { password: _, ...userInfo } = await this.prisma.user.findUnique({
-      where: { id: user.userId },
+      where: { id: parseInt(user.userId) },
       include: {
         books: {
           where: {
@@ -38,9 +38,36 @@ export class UserService {
 
   async getUserInfo(userId) {
     const { password: _, ...userInfo } = await this.prisma.user.findUnique({
-      where: { id: parseInt(userId), isDelete: false },
+      where: {
+        id: parseInt(userId),
+        isDelete: false,
+      },
+      include: {
+        books: {
+          where: {
+            isDelete: false,
+          },
+        },
+      },
     });
-    return userInfo;
+
+    const books = await this.prisma.book.count({
+      where: { userId: parseInt(userId), isDelete: false },
+    });
+    const followers = await this.prisma.follow.count({
+      where: { followingId: parseInt(userId), isDelete: false },
+    });
+    const following = await this.prisma.follow.count({
+      where: { followerId: parseInt(userId), isDelete: false },
+    });
+
+    return {
+      ...userInfo,
+      booksInfo: userInfo.books,
+      books,
+      followers,
+      following,
+    };
   }
 
   async getBookshelf(userId) {
@@ -82,5 +109,48 @@ export class UserService {
         data: { password: updateUserDto.newPassword },
       });
     }
+  }
+
+  async handleGetMessages() {
+    const messages = await this.prisma.message.findMany({
+      orderBy: {
+        createTimer: 'asc',
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+            avatar: true,
+            email: true,
+            books: {
+              where: { isDelete: false },
+              select: { id: true },
+            },
+            followers: {
+              where: { isDelete: false },
+              select: { id: true },
+            },
+            following: {
+              where: { isDelete: false },
+              select: { id: true },
+            },
+          },
+        },
+      },
+      take: 200,
+    });
+
+    const messageResult = messages.map((item) => ({
+      ...item,
+      user: {
+        ...item.user,
+        books: item.user.books.length,
+        followers: item.user.followers.length,
+        following: item.user.following.length,
+      },
+    }));
+
+    return messageResult;
   }
 }

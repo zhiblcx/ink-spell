@@ -1,19 +1,19 @@
-import { followUserByUserIdMutation, selectOneselfInfoQuery } from '@/features/user'
+import { selectAllMessages, selectOneselfInfoQuery } from '@/features/user'
 import { menuList } from '@/mock'
+import EmptyPage from '@/shared/components/EmptyPage'
+import PersonCard from '@/shared/components/PersonCard'
 import { Menu } from '@/shared/enums'
 import { MessageEnum } from '@/shared/enums/MessageEnum'
 import { useMenuStore } from '@/shared/store'
 import { User } from '@/shared/types'
+import { useQuery } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import { InputRef, message } from 'antd'
 import clsx from 'clsx'
-import lodash from 'lodash'
 import React from 'react'
 import useSmoothScroll from 'react-smooth-scroll-hook'
-import { io } from 'socket.io-client'
 import '../index.scss'
-import styles from './styles.module.scss'
-
+import { socket } from './socket.io'
 interface MessageType {
   id: number
   userId: number
@@ -23,11 +23,10 @@ interface MessageType {
 }
 
 export default function ChatRoom() {
-  const URL = import.meta.env.VITE_SERVER_URL
-  const socket = io(URL)
   const inputRef = useRef<InputRef>(null)
   const router = useRouter()
   const chatContent = useRef(null)
+  const [connect, setConnect] = useState(false)
   const [lookUser, setLookUser] = useState<User | null>(null)
   const [openFlag, setOpenFlag] = useState(false)
   const [disableFlag, setDisableFlag] = useState(false)
@@ -36,13 +35,13 @@ export default function ChatRoom() {
   const [messages, setMessages] = useState([] as MessageType[])
   const { TextArea } = Input
   const { menu } = useMenuStore()
-  const { data: query, isSuccess } = selectOneselfInfoQuery()
+  const { data: query, isSuccess } = useQuery(selectOneselfInfoQuery)
+  const { data: messageQuery, isSuccess: isMessageSuccess } = useQuery(selectAllMessages())
   const { scrollTo } = useSmoothScroll({
     ref: chatContent,
     speed: Infinity,
     direction: 'y'
   })
-  let isLoading = false
 
   useEffect(() => {
     if (router.latestLocation.pathname !== menuList[2].label) {
@@ -51,39 +50,7 @@ export default function ChatRoom() {
   }, [router.latestLocation.pathname])
 
   useEffect(() => {
-    if (isSuccess) {
-      socket.on('connect', () => {
-        console.log(socket.connected, '连接') // true
-        socket.emit('join', { name: query?.data.data.username, id: query?.data.data.id })
-      })
-
-      socket.on('join', () => {
-        socket.emit('getRoomUsers')
-        socket.emit('getMessages')
-      })
-
-      socket.on('getRoomUsers', (num) => {
-        setPeopleNumber(num)
-      })
-
-      socket.on('leave', (data) => {
-        socket.emit('getRoomUsers')
-        setMessages((prevMessages) => [...prevMessages, data])
-      })
-
-      socket.on('getMessages', (data) => {
-        if (!isLoading) {
-          getMessageLodash(data)
-        }
-        isLoading = true
-      })
-
-      const getMessageLodash = lodash.throttle((data) => {
-        setTimeout(() => {
-          getMessages(data)
-        }, 2000)
-      }, 3000)
-
+    if (isMessageSuccess) {
       const getMessages = (data: MessageType[]) => {
         const result = data.map((item: MessageType) => {
           if (item.type === MessageEnum.MESSAGE) {
@@ -91,24 +58,52 @@ export default function ChatRoom() {
           }
           return item
         })
-        setMessages((prevMessages) => [...prevMessages, ...result])
+        setMessages(() => [...(result as MessageType[])])
         setTimeout(() => {
-          inputRef.current!.focus({ cursor: 'end' })
           scrollTo(`#y-item-${result[result.length - 1].id}`)
-        }, 0)
+        }, 200)
       }
+
+      getMessages(messageQuery.data.data)
     }
+  }, [isMessageSuccess])
 
-    window.addEventListener('beforeunload', leaveRoom)
+  let reconnect = false
+  useEffect(() => {
+    if (isSuccess && isMessageSuccess && !reconnect) {
+      reconnect = true
+      socket.open()
+      socket.emit('join', { name: query?.data.data.username, id: query?.data.data.id })
 
-    return () => {
-      socket.off('getMessages', handleNewMessage)
-      window.removeEventListener('beforeunload', leaveRoom)
+      socket.on('join', (data) => {
+        setConnect(true)
+        setMessages((prevMessages) => [...prevMessages, data])
+        setTimeout(() => {
+          scrollTo(`#y-item-${data.id}`)
+        }, 200)
+
+        socket.emit('getRoomUsers')
+      })
+
+      socket.on('getRoomUsers', (num) => {
+        setPeopleNumber(num)
+      })
+
+      socket.on('newMessage', handleNewMessage)
+
+      socket.on('leave', (data) => {
+        socket.emit('getRoomUsers')
+        setMessages((prevMessages) => [...prevMessages, data])
+      })
+
+      window.addEventListener('beforeunload', leaveRoom)
     }
   }, [isSuccess])
 
   const leaveRoom = () => {
+    console.log('离开了')
     socket.emit('leave', { name: query?.data.data.username, id: query?.data.data.id })
+    socket.close()
   }
 
   const handleNewMessage = (data: MessageType) => {
@@ -120,8 +115,6 @@ export default function ChatRoom() {
       return [...prevMessages, data]
     })
   }
-
-  socket.on('newMessage', handleNewMessage)
 
   const sendMessage = () => {
     if (messageValue.trim() === '') {
@@ -139,10 +132,8 @@ export default function ChatRoom() {
     setDisableFlag(true)
     setTimeout(() => {
       setDisableFlag(false)
-    }, 3000)
+    }, 2000)
   }
-
-  const { mutate: followMutate } = followUserByUserIdMutation()
 
   return (
     <>
@@ -154,149 +145,109 @@ export default function ChatRoom() {
         />
       ) : (
         <>
-          <div>房间里有{peopleNumber}人</div>
-          <ul
-            ref={chatContent}
-            className={clsx(
-              'height scroll absolute mt-2 space-y-4 overflow-y-scroll',
-              menu === Menu.EXTEND ? 'w-[93%]' : 'min-[375px]:min-w-[20%] md:min-w-[70%]'
-            )}
-          >
-            {messages.map((item: MessageType) => {
-              return (
-                <React.Fragment key={item.id}>
-                  {item.type === MessageEnum.MESSAGE_OTHER && (
-                    <li
-                      className="ml-2 flex"
-                      id={`y-item-${item.id}`}
-                    >
-                      <Avatar
-                        className="cursor-pointer"
-                        src={import.meta.env.VITE_SERVER_URL + item.user?.avatar}
-                        size={34}
-                        onClick={() => {
-                          setLookUser(item.user ?? null)
-                          setOpenFlag(true)
-                        }}
-                      />
-                      <div className="ml-2 flex max-w-[80%] flex-col items-start">
-                        <span className="text-xs">{item.user?.username}</span>
-                        <div className="break-all rounded-md bg-[#f5f5f5] p-2 dark:bg-[#262729]">{item.text}</div>
-                      </div>
-                    </li>
-                  )}
-
-                  {item.type === MessageEnum.MESSAGE_SELF && (
-                    <li
-                      className="mr-2 flex justify-end"
-                      id={`y-item-${item.id}`}
-                    >
-                      <div className="mr-2 flex max-w-[80%] flex-col items-end overflow-hidden">
-                        <span className="text-xs">{item.user?.username}</span>
-                        <div className="break-all rounded-md bg-[#89d961] p-2 dark:bg-[#262729]">{item.text}</div>
-                      </div>
-                      <Avatar
-                        src={import.meta.env.VITE_SERVER_URL + item.user?.avatar}
-                        size={34}
-                      />
-                    </li>
-                  )}
-
-                  {(item.type === MessageEnum.JOIN || item.type === MessageEnum.LEAVE) && (
-                    <li
-                      className="flex justify-center"
-                      id={`y-item-${item.id}`}
-                    >
-                      {item.type === MessageEnum.LEAVE && (
-                        <span className="rounded-md p-2 text-red-400">{item.text}</span>
+          <div>{!connect ? '加入房间失败' : `房间里有${peopleNumber}人`}</div>
+          {!connect ? (
+            <EmptyPage name="连接失败，请尝试重新连接" />
+          ) : (
+            <>
+              <ul
+                ref={chatContent}
+                className={clsx(
+                  'height scroll absolute mt-2 space-y-4 overflow-y-scroll',
+                  menu === Menu.EXTEND ? 'w-[93%]' : 'min-[375px]:min-w-[20%] md:min-w-[70%]'
+                )}
+              >
+                {messages.map((item: MessageType) => {
+                  return (
+                    <React.Fragment key={item.id}>
+                      {item.type === MessageEnum.MESSAGE_OTHER && (
+                        <li
+                          className="ml-2 flex"
+                          id={`y-item-${item.id}`}
+                        >
+                          <Avatar
+                            className="cursor-pointer"
+                            src={import.meta.env.VITE_SERVER_URL + item.user?.avatar}
+                            size={34}
+                            onClick={() => {
+                              setLookUser(item.user ?? null)
+                              setOpenFlag(true)
+                            }}
+                          />
+                          <div className="ml-2 flex max-w-[80%] flex-col items-start">
+                            <span className="text-xs">{item.user?.username}</span>
+                            <div className="break-all rounded-md bg-[#f5f5f5] p-2 dark:bg-[#262729]">{item.text}</div>
+                          </div>
+                        </li>
                       )}
-                      {item.type === MessageEnum.JOIN && (
-                        <span className="rounded-md p-2 text-[#89d961]">{item.text}</span>
-                      )}
-                    </li>
-                  )}
-                </React.Fragment>
-              )
-            })}
-          </ul>
-          <div
-            className={clsx(
-              menu === Menu.EXTEND ? '' : 'min-[375px]:hidden md:flex',
-              'absolute bottom-8 flex items-center space-x-3 min-[375px]:min-w-[90%] md:min-w-[70%]'
-            )}
-          >
-            <TextArea
-              value={messageValue}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                setMessageValue(e.target.value)
-              }}
-              ref={inputRef}
-              placeholder="请输入想说的话..."
-              showCount
-              onPressEnter={sendMessage}
-              maxLength={200}
-              style={{ resize: 'none' }}
-            />
-            <Button
-              onClick={sendMessage}
-              disabled={disableFlag}
-              className="mx-2"
-            >
-              发送消息
-            </Button>
-          </div>
 
-          <Modal
-            maskClosable
-            onCancel={() => {
-              setOpenFlag(false)
-            }}
-            footer={null}
-            title="个人信息"
-            open={openFlag}
-          >
-            <div className="flex h-[580px] items-center justify-center">
-              <div className={styles.card}>
-                <div className={styles.imgBx}>
-                  <img src={import.meta.env.VITE_SERVER_URL + lookUser?.avatar} />
-                </div>
-                <div className={styles.content}>
-                  <div className={styles.details}>
-                    <h2>
-                      {lookUser?.username}
-                      <br />
-                      <span>{lookUser?.email ?? '暂无邮箱'}</span>
-                    </h2>
-                    <div className={styles.data}>
-                      <h3>
-                        {lookUser?.books}
-                        <br />
-                        <span>books</span>
-                      </h3>
-                      <h3>
-                        {lookUser?.followers}
-                        <br />
-                        <span>Followers</span>
-                      </h3>
-                      <h3>
-                        {lookUser?.following}
-                        <br />
-                        <span>Following</span>
-                      </h3>
-                    </div>
-                    <div>
-                      <Button
-                        className="p-5"
-                        onClick={() => followMutate(lookUser?.id as number)}
-                      >
-                        Follow
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+                      {item.type === MessageEnum.MESSAGE_SELF && (
+                        <li
+                          className="mr-2 flex justify-end"
+                          id={`y-item-${item.id}`}
+                        >
+                          <div className="mr-2 flex max-w-[80%] flex-col items-end overflow-hidden">
+                            <span className="text-xs">{item.user?.username}</span>
+                            <div className="break-all rounded-md bg-[#89d961] p-2 dark:bg-[#262729]">{item.text}</div>
+                          </div>
+                          <Avatar
+                            src={import.meta.env.VITE_SERVER_URL + item.user?.avatar}
+                            size={34}
+                          />
+                        </li>
+                      )}
+
+                      {(item.type === MessageEnum.JOIN || item.type === MessageEnum.LEAVE) && (
+                        <li
+                          className="flex justify-center"
+                          id={`y-item-${item.id}`}
+                        >
+                          {item.type === MessageEnum.LEAVE && (
+                            <span className="rounded-md p-2 text-red-400">{item.text}</span>
+                          )}
+                          {item.type === MessageEnum.JOIN && (
+                            <span className="rounded-md p-2 text-[#89d961]">{item.text}</span>
+                          )}
+                        </li>
+                      )}
+                    </React.Fragment>
+                  )
+                })}
+              </ul>
+              <div
+                className={clsx(
+                  menu === Menu.EXTEND ? '' : 'min-[375px]:hidden md:flex',
+                  'absolute bottom-8 flex items-center space-x-3 min-[375px]:min-w-[90%] md:min-w-[70%]'
+                )}
+              >
+                <TextArea
+                  value={messageValue}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                    setMessageValue(e.target.value)
+                  }}
+                  ref={inputRef}
+                  placeholder="请输入想说的话..."
+                  showCount
+                  onPressEnter={sendMessage}
+                  maxLength={200}
+                  style={{ resize: 'none' }}
+                />
+                <Button
+                  onClick={sendMessage}
+                  disabled={disableFlag}
+                  className="mx-2"
+                >
+                  发送消息
+                </Button>
               </div>
-            </div>
-          </Modal>
+            </>
+          )}
+
+          <PersonCard
+            openFlag={openFlag}
+            setOpenFlag={setOpenFlag}
+            lookUser={lookUser as User}
+          />
         </>
       )}
     </>
