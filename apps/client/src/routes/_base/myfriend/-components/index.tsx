@@ -1,5 +1,6 @@
 import { followUserByUserIdMutation, unfollowUserByFollowMutation } from '@/features/user'
 import { request } from '@/shared/API'
+import PersonCard from '@/shared/components/PersonCard'
 import { PaginationParams } from '@/shared/enums/PaginationParams'
 import { User } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
@@ -27,8 +28,10 @@ interface PageParam {
 
 export default function MyFriend({ api, type }: { api: string; type: string }) {
   const router = useRouter()
+  const [openFlag, setOpenFlag] = useState(false)
+  const [lookUser, setLookUser] = useState<User | null>(null)
 
-  // TODO: mobile 实现左滑删除
+  // TODO: mobile 实现左滑关注
   const fetchProjects = async ({ pageParam }: { pageParam: PageParam }) => {
     const res = await request.get(`${api}?page=${pageParam.page}&limit=${pageParam.limit}`)
     return res.data.data
@@ -60,6 +63,20 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
     queryClient.invalidateQueries({ queryKey: [FollowEnum.FOLLOWING] })
   )
 
+  const followClick = async (item: FollowerType) => {
+    setOpenFlag(true)
+    // TODO: 优化
+    const query = await request.get(`/user/${item.following.id}`)
+    setLookUser(query.data.data as User)
+  }
+
+  const followingClick = async (item: FollowingType) => {
+    setOpenFlag(true)
+    // TODO: 优化
+    const query = await request.get(`/user/${item.follower.id}`)
+    setLookUser(query.data.data as User)
+  }
+
   return (
     <>
       {isPending ? (
@@ -90,7 +107,8 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
                 className="p-3"
               />
             }
-            endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
+            // It is all, nothing more 🤐
+            endMessage={<Divider plain>以上是全部了，没有更多了🤐</Divider>}
             scrollableTarget={type}
           >
             {type === FollowEnum.FOLLOWING ? (
@@ -100,7 +118,7 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
                   <List.Item key={item.id}>
                     <List.Item.Meta
                       avatar={<Avatar src={import.meta.env.VITE_SERVER_URL + item.following.avatar} />}
-                      title={item.following.username}
+                      title={<span onClick={() => followClick(item)}>{item.following.username}</span>}
                       description={item.following.email ?? '暂无邮箱'}
                     />
                     <div className="flex space-x-2">
@@ -130,7 +148,7 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
                   <List.Item key={item.id}>
                     <List.Item.Meta
                       avatar={<Avatar src={import.meta.env.VITE_SERVER_URL + item.follower.avatar} />}
-                      title={item.follower.username}
+                      title={<span onClick={() => followingClick(item)}>{item.follower.username}</span>}
                       description={item.follower.email ?? '暂无邮箱'}
                     />
                     <div className="flex space-x-2">
@@ -157,6 +175,12 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
           </InfiniteScroll>
         </div>
       )}
+
+      <PersonCard
+        openFlag={openFlag}
+        setOpenFlag={setOpenFlag}
+        lookUser={lookUser as User}
+      />
     </>
   )
 }
