@@ -1,19 +1,22 @@
 import { selectBookByBookShelfIdQuery, selectMyBookShelfQuery } from '@/features/bookshelf'
-import { selectOneselfInfoQuery } from '@/features/user'
+import { selectOneselfInfoQuery, updateUserPasswordMutation } from '@/features/user'
 import { request } from '@/shared/API'
 import ThemeToggle from '@/shared/components/ThemeToggle'
 import { Menu } from '@/shared/enums'
 import { useActionBookStore, useMenuStore } from '@/shared/store'
 import { Book } from '@/shared/types/book'
 import { AuthUtils } from '@/shared/utils'
+import { newConfirmPasswordRule } from '@/shared/utils/confirmPasswordRule'
 import { Md5Utils } from '@/shared/utils/Md5Utils'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
+import { LockOutlined } from '@ant-design/icons'
+import { useQuery } from '@tanstack/react-query'
 import { ReactNode, useNavigate, useRouter } from '@tanstack/react-router'
 import type { MenuProps, UploadFile, UploadProps } from 'antd'
 import { message } from 'antd'
 import { AlignLeft, AlignRight } from 'lucide-react'
 
-function Header() {
+export default function Header() {
   const router = useRouter()
   const navigate = useNavigate()
   const showSearchReg = /^\/$|^\/bookshelf\/.*$/
@@ -21,6 +24,8 @@ function Header() {
   const { uploadFileFlag, updateUploadFileFlag, updateSearchBookName } = useActionBookStore()
   const [options, setOptions] = useState([])
   const [optionTotal, setOptionTotal] = useState([])
+  const [openFlag, setOpenFlag] = useState(false)
+  const [form] = Form.useForm()
 
   const reg = /\d+/
   const urlSplit = router.latestLocation.href.split('/')
@@ -44,7 +49,8 @@ function Header() {
     }
   }, [isSuccess])
 
-  const query = selectOneselfInfoQuery()
+  const query = useQuery(selectOneselfInfoQuery)
+  const { mutate } = updateUserPasswordMutation()
 
   interface FileWithMD5 extends File {
     md5?: string
@@ -116,7 +122,7 @@ function Header() {
     },
     {
       key: 3,
-      label: <div onClick={() => console.log('重置密码')}>重置密码</div>
+      label: <div onClick={() => setOpenFlag(true)}>重置密码</div>
     },
     {
       key: 4,
@@ -208,8 +214,65 @@ function Header() {
           <Button type="primary">导入图书</Button>
         </Upload>
       </div>
+
+      <Modal
+        maskClosable
+        onCancel={() => {
+          setOpenFlag(false)
+        }}
+        onOk={() => {
+          console.log('asdhjklfasdho')
+          form.submit()
+          setOpenFlag(false)
+        }}
+        title="重置密码"
+        open={openFlag}
+        okText="保存"
+        cancelText="取消"
+      >
+        <Form
+          className="flex flex-col justify-center p-5 px-8"
+          layout="vertical"
+          form={form}
+          onFinish={mutate}
+        >
+          <Form.Item
+            className="min-[375px]:w-[200px] md:w-[250px]"
+            label="旧密码"
+            name="password"
+            rules={[{ required: true, message: '密码未填写' }]}
+          >
+            <Input.Password placeholder="请输入你的密码" />
+          </Form.Item>
+
+          <Form.Item
+            className="min-[375px]:w-[200px] md:w-[250px]"
+            label="新密码"
+            name="newPassword"
+            hasFeedback
+            rules={[{ required: true, message: '密码未填写' }]}
+          >
+            <Input.Password
+              prefix={<LockOutlined />}
+              placeholder="请输入你的确认密码"
+            />
+          </Form.Item>
+
+          <Form.Item
+            className="min-[375px]:w-[200px] md:w-[250px]"
+            label="确认密码"
+            name="confirmPassword"
+            dependencies={['password']}
+            hasFeedback
+            rules={[{ required: true, message: '密码未填写' }, newConfirmPasswordRule]}
+          >
+            <Input.Password
+              prefix={<LockOutlined />}
+              placeholder="请再输入一次密码"
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   )
 }
-
-export default Header
