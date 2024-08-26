@@ -1,4 +1,5 @@
 import { APIResponse } from '@/core/decorator/APIResponse';
+import { E } from '@/shared/res/e';
 import { R } from '@/shared/res/r';
 import {
   Body,
@@ -7,14 +8,21 @@ import {
   Get,
   Param,
   Put,
+  Query,
   Request,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateBookShelfVo } from '../bookshelf/vo/create-bookshelf.vo';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 import { MessageVo } from './vo/message.vo';
 import { UserInfoVo } from './vo/user.info.vo';
+import { UserVo } from './vo/user.vo';
 @Controller('user')
 @ApiTags('用户管理')
 @ApiBearerAuth()
@@ -36,6 +44,40 @@ export class UserController {
     return new R({
       message: '获取成功',
       data: await this.userService.handleGetMessages(),
+    });
+  }
+
+  @Get('/username/:username')
+  @ApiOperation({ summary: '通过用户名获取用户列表' })
+  @ApiQuery({
+    name: 'page',
+    type: Number,
+    example: 1,
+    description: '页码',
+  })
+  @ApiQuery({
+    name: 'limit',
+    type: Number,
+    example: 10,
+    description: '查询的条目',
+  })
+  @APIResponse([UserVo], '查询成功', true)
+  async getUserInfoByUsername(
+    @Param('username') username: string,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return new R({
+      message: '获取成功',
+      data: new E({
+        items: await this.userService.getUserInfoByUsername(
+          username,
+          page,
+          limit,
+        ),
+        currentPage: page,
+        itemsPerPage: limit,
+      }),
     });
   }
 

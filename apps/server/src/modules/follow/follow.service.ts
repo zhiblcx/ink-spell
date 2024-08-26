@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -87,11 +87,16 @@ export class FollowService {
         followingId: parseInt(followID),
       },
     });
+
     if (follow) {
-      return await this.prisma.follow.update({
-        where: { id: follow.id },
-        data: { isDelete: false },
-      });
+      if (follow.isDelete) {
+        return await this.prisma.follow.update({
+          where: { id: follow.id },
+          data: { isDelete: false },
+        });
+      } else {
+        throw new ConflictException('咦，看起来已经关注了呢。');
+      }
     } else {
       return await this.prisma.follow.create({
         data: {

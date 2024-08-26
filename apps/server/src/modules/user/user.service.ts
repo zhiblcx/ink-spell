@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -152,5 +156,45 @@ export class UserService {
     }));
 
     return messageResult;
+  }
+
+  async getUserInfoByUsername(username, page, limit) {
+    // 模糊匹配用户名
+    const users = await this.prisma.user.findMany({
+      where: {
+        username: {
+          contains: username,
+        },
+        isDelete: false,
+      },
+      include: {
+        books: {
+          where: {
+            isDelete: false,
+          },
+        },
+        followers: {
+          where: { isDelete: false },
+          select: { id: true },
+        },
+        following: {
+          where: { isDelete: false },
+          select: { id: true },
+        },
+      },
+      skip: (page - 1) * limit,
+      take: parseInt(limit),
+    });
+    if (users.length === 0) {
+      throw new NotFoundException('哎呀，未找到匹配的用户！');
+    } else {
+      const result = users.map((user) => ({
+        ...user,
+        books: user.books.length,
+        followers: user.followers.length,
+        following: user.following.length,
+      }));
+      return result;
+    }
   }
 }
