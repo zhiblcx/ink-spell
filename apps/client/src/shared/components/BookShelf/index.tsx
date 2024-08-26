@@ -9,7 +9,7 @@ import { Book } from '@/shared/types/book'
 import { BookShelfType } from '@/shared/types/bookshelf'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { RadioChangeEvent, UploadFile } from 'antd'
 import { motion } from 'framer-motion'
 import EmptyPage from '../EmptyPage'
@@ -50,7 +50,8 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
   const [selectBookShelfValue, setSelectBookShelfValue] = useState(selectOptions[0].value)
   const [options, setOptions] = useState([] as Ink[])
   const { TextArea } = Input
-  const { data: query } = selectOneselfInfoQuery()
+  const { data: query } = useQuery(selectOneselfInfoQuery)
+
   let acquireBookShelfFlag = false
 
   const collectBookMd5 = query?.data.data.booksInfo.reduce((acc: Array<string>, item: Book) => {

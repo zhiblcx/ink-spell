@@ -1,6 +1,6 @@
 import { selectOneselfInfoQuery, updateUserInfoMutation } from '@/features/user'
 import UploadPhoto from '@/shared/components/UploadPhoto'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { type UploadFile, Input } from 'antd'
 import styles from './styles.module.scss'
 
@@ -10,7 +10,8 @@ export default function Profile() {
   const [avatar, setAvatar] = useState<UploadFile[]>([])
 
   const queryClient = useQueryClient()
-  const query = selectOneselfInfoQuery()
+  const query = useQuery(selectOneselfInfoQuery)
+
   const { mutate } = updateUserInfoMutation(() => queryClient.invalidateQueries({ queryKey: ['user'] }))
 
   useEffect(() => {
