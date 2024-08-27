@@ -55,7 +55,7 @@ export default function PersonCard({ openFlag, lookUser, setOpenFlag }: PersonCa
                   className="p-5"
                   onClick={() => followMutate(lookUser?.id as number)}
                 >
-                  Follow
+                  关注
                 </Button>
               </div>
             </div>

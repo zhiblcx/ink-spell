@@ -26,14 +26,19 @@ interface PageParam {
   limit: number
 }
 
-export default function MyFriend({ api, type }: { api: string; type: string }) {
+export default function MyFriend({ api, type, username }: { api: string; type: string; username?: string }) {
   const router = useRouter()
   const [openFlag, setOpenFlag] = useState(false)
   const [lookUser, setLookUser] = useState<User | null>(null)
 
   // TODO: mobile 实现左滑关注
   const fetchProjects = async ({ pageParam }: { pageParam: PageParam }) => {
-    const res = await request.get(`${api}?page=${pageParam.page}&limit=${pageParam.limit}`)
+    let res
+    if (username === undefined) {
+      res = await request.get(`${api}?page=${pageParam.page}&limit=${pageParam.limit}`)
+    } else {
+      res = await request.get(`${api}${username}?page=${pageParam.page}&limit=${pageParam.limit}&username=${username}`)
+    }
     return res.data.data
   }
 
@@ -54,6 +59,11 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
   })
 
   const queryClient = useQueryClient()
+
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: [type] })
+  }, [username])
+
   const { mutate: followMutate } = followUserByUserIdMutation(
     () => queryClient.invalidateQueries({ queryKey: [FollowEnum.FOLLOWING] }),
     () => queryClient.invalidateQueries({ queryKey: [FollowEnum.FOLLOWER] })
@@ -118,7 +128,14 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
                   <List.Item key={item.id}>
                     <List.Item.Meta
                       avatar={<Avatar src={import.meta.env.VITE_SERVER_URL + item.following.avatar} />}
-                      title={<span onClick={() => followClick(item)}>{item.following.username}</span>}
+                      title={
+                        <span
+                          className="cursor-pointer"
+                          onClick={() => followClick(item)}
+                        >
+                          {item.following.username}
+                        </span>
+                      }
                       description={item.following.email ?? '暂无邮箱'}
                     />
                     <div className="flex space-x-2">
@@ -141,7 +158,7 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
                   </List.Item>
                 )}
               />
-            ) : (
+            ) : type === FollowEnum.FOLLOWER ? (
               <List
                 dataSource={data?.pages}
                 renderItem={(item: FollowingType) => (
@@ -162,6 +179,36 @@ export default function MyFriend({ api, type }: { api: string; type: string }) {
                         className="cursor-pointer"
                         onClick={() => {
                           const id = UrlUtils.encodeUrlById(item.follower.id.toString())
+                          router.navigate({ to: `/otherbookshelf/${id}` })
+                        }}
+                      >
+                        查看书架
+                      </div>
+                    </div>
+                  </List.Item>
+                )}
+              />
+            ) : (
+              <List
+                dataSource={data?.pages}
+                renderItem={(item: User) => (
+                  <List.Item key={item.id}>
+                    <List.Item.Meta
+                      avatar={<Avatar src={import.meta.env.VITE_SERVER_URL + item.avatar} />}
+                      title={<span>{item.username}</span>}
+                      description={item.email ?? '暂无邮箱'}
+                    />
+                    <div className="flex space-x-2">
+                      <div
+                        className="cursor-pointer"
+                        onClick={() => followMutate(item.id)}
+                      >
+                        关注
+                      </div>
+                      <div
+                        className="cursor-pointer"
+                        onClick={() => {
+                          const id = UrlUtils.encodeUrlById(item.id.toString())
                           router.navigate({ to: `/otherbookshelf/${id}` })
                         }}
                       >
