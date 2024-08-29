@@ -18,6 +18,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateBookShelfVo } from '../bookshelf/vo/create-bookshelf.vo';
+import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 import { MessageVo } from './vo/message.vo';
@@ -129,7 +130,10 @@ export class UserController {
   @Put('/password')
   @ApiOperation({ summary: '修改密码' })
   @APIResponse(null, '修改成功')
-  async updatePassword(@Request() req, @Body() updateUserDto: UpdateUserDto) {
+  async updatePassword(
+    @Request() req,
+    @Body() updateUserDto: UpdateUserPasswordDto,
+  ) {
     await this.userService.updatePassword(req.user.userId, updateUserDto);
     return new R({
       message: '修改成功',
