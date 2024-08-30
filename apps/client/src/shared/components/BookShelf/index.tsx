@@ -7,7 +7,7 @@ import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
 import { Book } from '@/shared/types/book'
 import { BookShelfType } from '@/shared/types/bookshelf'
-import { UrlUtils } from '@/shared/utils/UrlUtils'
+import { BookUtils } from '@/shared/utils'
 import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { RadioChangeEvent, UploadFile } from 'antd'
@@ -291,12 +291,7 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
                           ),
                           <EllipsisOutlined
                             key="ellipsis"
-                            onClick={() => {
-                              window.open(
-                                `/book/${UrlUtils.encodeUrlById(item.id.toString())}?chapter=${UrlUtils.encodeUrlById('1')}`,
-                                '_blank'
-                              )
-                            }}
+                            onClick={() => BookUtils.redirectToBookPage(item)}
                           />
                         ]}
                         className="cursor-default overflow-hidden"

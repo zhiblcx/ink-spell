@@ -2,7 +2,6 @@ import { updateBookByBookIdMutation } from '@/features/book'
 import { useActionBookStore } from '@/shared/store'
 import { type Ink } from '@/shared/types'
 import { BookUtils } from '@/shared/utils'
-import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { type UploadFile, Input } from 'antd'
 import clsx from 'clsx'
 import { Pencil } from 'lucide-react'
@@ -66,22 +65,7 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
 
         <div
           className={clsx(book.name ? 'photo-visible' : '', 'photo h-[100%] w-[100%] overflow-hidden')}
-          onClick={() => {
-            const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
-            let chapter = -1
-            if (localBooks.length !== 0) {
-              const ink = localBooks.find((item: Array<string>) => {
-                return parseInt(item[0]) === book.id
-              })
-              if (ink !== undefined) {
-                chapter = ink[1]
-              }
-            }
-            window.open(
-              `/book/${UrlUtils.encodeUrlById(ink.id.toString())}?chapter=${chapter != -1 ? UrlUtils.encodeUrlById(chapter.toString()) : UrlUtils.encodeUrlById('1')}`,
-              '_blank'
-            )
-          }}
+          onClick={() => BookUtils.redirectToBookPage(book)}
         >
           <img
             src={import.meta.env.VITE_SERVER_URL + book.cover}

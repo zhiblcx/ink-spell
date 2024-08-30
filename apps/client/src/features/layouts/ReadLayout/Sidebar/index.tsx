@@ -1,6 +1,7 @@
 import BookDirectory from '@/shared/components/BookDirectory'
 import { useActionBookStore } from '@/shared/store'
 import { BookUtils } from '@/shared/utils'
+import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useRouter } from '@tanstack/react-router'
 import { AnimatePresence } from 'framer-motion'
 
@@ -15,8 +16,20 @@ function Sidebar({ currentChapter, allChapter = [] }: SidebarActiveType) {
   const { showDirectoryFlag } = useActionBookStore()
 
   useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth)
+    }
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
+  useEffect(() => {
     const reg = /\d+/
-    const match = router.latestLocation.href.match(reg)
+    const url = UrlUtils.decodeUrlById(router.latestLocation.href.split('/')[2].split('?')[0])
+    const match = url.match(reg)
     if (match) {
       const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
       // 如果一本书都没存
@@ -43,17 +56,6 @@ function Sidebar({ currentChapter, allChapter = [] }: SidebarActiveType) {
       }
     }
   }, [currentChapter])
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth)
-    }
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
 
   return (
     <AnimatePresence initial={false}>
