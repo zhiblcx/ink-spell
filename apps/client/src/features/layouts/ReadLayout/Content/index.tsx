@@ -66,7 +66,10 @@ function Content({ currentContent = [], currentChapter, allChapterTotal }: Conte
       className="scroll grow overflow-y-auto px-3"
     >
       <div className="my-3 text-center text-3xl font-bold">{currentChapter}</div>
-      <ul className="text-xl leading-10">
+      <ul
+        className="text-xl leading-10"
+        onClick={() => updateShowDirectoryFlag(!showDirectoryFlag)}
+      >
         {currentContent.map((item, index) => (
           <li key={index}>{item}</li>
         ))}

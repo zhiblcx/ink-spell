@@ -4,6 +4,7 @@ import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
 import { useNavigate } from '@tanstack/react-router'
 import Meta from 'antd/es/card/Meta'
 import { motion } from 'framer-motion'
+import { CircleX } from 'lucide-react'
 
 interface BookShelfDetailType {
   bookshelf_detail: []
@@ -21,6 +22,22 @@ export default function BookShelfDetail({
   isIdsFlag = true
 }: BookShelfDetailType) {
   const navigate = useNavigate()
+  const [modal, contextHolder] = Modal.useModal()
+
+  const handleCancelCollect = (item: BookShelfType) => {
+    modal.confirm({
+      title: '取消收藏',
+      icon: <CircleX className="mr-2 text-red-500" />,
+      content: '确定要取消收藏这个书架吗？这个书架看起来不再是您的首选了吗？',
+      okText: '确定',
+      cancelText: '取消',
+      maskClosable: true,
+      onOk: () => {
+        cancelCollectButton(item)
+      }
+    })
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -42,7 +59,7 @@ export default function BookShelfDetail({
                       <StarFilled
                         style={{ color: 'rgb(253 224 71)' }}
                         key="collect"
-                        onClick={() => cancelCollectButton(item)}
+                        onClick={() => handleCancelCollect(item)}
                       />
                     ) : (
                       <StarOutlined
@@ -55,7 +72,7 @@ export default function BookShelfDetail({
                     <StarFilled
                       style={{ color: 'rgb(253 224 71)' }}
                       key="collect"
-                      onClick={() => cancelCollectButton(item)}
+                      onClick={() => handleCancelCollect(item)}
                     />
                   ),
                   <EllipsisOutlined
@@ -86,6 +103,7 @@ export default function BookShelfDetail({
           )
         })}
       </ul>
+      {contextHolder}
     </motion.div>
   )
 }
