@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -10,34 +11,37 @@ export class UserService {
   constructor(private prisma: PrismaService) {}
 
   async getProfile(user) {
-    const { password: _, ...userInfo } = await this.prisma.user.findUnique({
-      where: { id: parseInt(user.userId) },
-      include: {
-        books: {
-          where: {
-            isDelete: false,
+    try {
+      const { password: _, ...userInfo } = await this.prisma.user.findUnique({
+        where: { id: parseInt(user.userId) },
+        include: {
+          books: {
+            where: {
+              isDelete: false,
+            },
           },
         },
-      },
-    });
+      });
+      const books = await this.prisma.book.count({
+        where: { userId: user.userId, isDelete: false },
+      });
+      const followers = await this.prisma.follow.count({
+        where: { followingId: user.userId, isDelete: false },
+      });
+      const following = await this.prisma.follow.count({
+        where: { followerId: user.userId, isDelete: false },
+      });
 
-    const books = await this.prisma.book.count({
-      where: { userId: user.userId, isDelete: false },
-    });
-    const followers = await this.prisma.follow.count({
-      where: { followingId: user.userId, isDelete: false },
-    });
-    const following = await this.prisma.follow.count({
-      where: { followerId: user.userId, isDelete: false },
-    });
-
-    return {
-      ...userInfo,
-      booksInfo: userInfo.books,
-      books,
-      followers,
-      following,
-    };
+      return {
+        ...userInfo,
+        booksInfo: userInfo.books,
+        books,
+        followers,
+        following,
+      };
+    } catch (err) {
+      throw new UnauthorizedException();
+    }
   }
 
   async getUserInfo(userId) {
