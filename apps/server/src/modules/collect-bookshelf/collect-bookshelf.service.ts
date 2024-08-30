@@ -26,6 +26,15 @@ export class CollectBookshelfService {
       },
     });
 
+    if (!result) {
+      return await this.prisma.collectBookShelf.create({
+        data: {
+          userId: parseInt(userId),
+          bookShelfId: parseInt(bookShelfId),
+        },
+      });
+    }
+
     if (result.isDelete === false) {
       throw new UnprocessableEntityException('已经收藏过该书架');
     } else if (result.isDelete === true) {
@@ -38,13 +47,6 @@ export class CollectBookshelfService {
         },
       });
     }
-
-    return await this.prisma.collectBookShelf.create({
-      data: {
-        userId: parseInt(userId),
-        bookShelfId: parseInt(bookShelfId),
-      },
-    });
   }
 
   async unCollectBookShelf(collectBookShelfId) {
