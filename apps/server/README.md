@@ -4,7 +4,7 @@
 - [x] TypeScript
 - [x] swagger
 - [x] prisma
-- [x] Mysql
+- [x] postgres
 - [x] class-validator
 - [x] jwt
 - [x] jschardet
