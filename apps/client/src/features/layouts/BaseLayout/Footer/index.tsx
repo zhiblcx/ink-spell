@@ -6,7 +6,7 @@ import { CircleX } from 'lucide-react'
 
 function Footer() {
   const router = useRouter()
-  const showFooterReg = /^\/$|^\/bookshelf\/.*$/
+  const showFooterReg = /^\/$|^\/bookshelf\/(?!show\/).*$/
   const [modal, contextHolder] = Modal.useModal()
   const { menu } = useMenuStore()
   const {
@@ -118,12 +118,22 @@ function Footer() {
             删除
           </li>
           {showShelfFlag ? (
-            <li
-              className="cursor-pointer text-red-500"
-              onClick={handlerDeleteBookShelf}
-            >
-              删除该书架
-            </li>
+            <>
+              <li
+                className="cursor-pointer text-red-500"
+                onClick={handlerDeleteBookShelf}
+              >
+                删除该书架
+              </li>
+              <li
+                className="cursor-pointer"
+                onClick={() => {
+                  window.open(`/bookshelf/show`, '_blank')
+                }}
+              >
+                查看笔记
+              </li>
+            </>
           ) : null}
         </ul>
       ) : null}

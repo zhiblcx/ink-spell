@@ -12,6 +12,7 @@ interface SidebarActiveType {
 
 function Sidebar({ currentChapter, allChapter = [] }: SidebarActiveType) {
   const router = useRouter()
+
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const { showDirectoryFlag } = useActionBookStore()
 
