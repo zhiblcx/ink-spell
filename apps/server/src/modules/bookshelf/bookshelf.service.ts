@@ -54,7 +54,7 @@ export class BookshelfService {
     });
   }
 
-  async acquireBookShelft(userId) {
+  async acquireBookShelf(userId) {
     return await this.prisma.bookShelf.findMany({
       where: { userId, isDelete: false },
       orderBy: {
@@ -63,7 +63,7 @@ export class BookshelfService {
     });
   }
 
-  async acquireBookShelftByBookShelfId(bookShelfId) {
+  async acquireBookShelfByBookShelfId(bookShelfId) {
     return await this.prisma.book.findMany({
       where: { bookShelfId: parseInt(bookShelfId), isDelete: false },
     });

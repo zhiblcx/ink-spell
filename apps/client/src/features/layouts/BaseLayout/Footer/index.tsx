@@ -6,6 +6,7 @@ import { CircleX } from 'lucide-react'
 
 function Footer() {
   const router = useRouter()
+  const bookShelfId = router.latestLocation.href.split('/')[2]
   const showFooterReg = /^\/$|^\/bookshelf\/(?!show\/).*$/
   const [modal, contextHolder] = Modal.useModal()
   const { menu } = useMenuStore()
@@ -128,7 +129,7 @@ function Footer() {
               <li
                 className="cursor-pointer"
                 onClick={() => {
-                  window.open(`/bookshelf/show`, '_blank')
+                  window.open(`/bookshelf/show/${bookShelfId}`, '_blank')
                 }}
               >
                 查看笔记

@@ -3,6 +3,7 @@ import EmptyPage from '@/shared/components/EmptyPage'
 import { Book } from '@/shared/types/book'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { createLazyFileRoute } from '@tanstack/react-router'
+import { FloatButton } from 'antd'
 import { motion } from 'framer-motion'
 
 export const Route = createLazyFileRoute('/_base/bookshelf/show/$bookShelfId')({
@@ -51,14 +52,15 @@ function Page() {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
+          style={{ height: 'calc(100% - 80px)' }}
           className="scroll absolute h-full overflow-y-scroll"
         >
           <List
-            grid={{ gutter: 16, column: windowWidth >= 400 ? 3 : 1 }}
+            grid={{ gutter: windowWidth >= 400 ? 16 : 4, column: windowWidth >= 400 ? 3 : 1 }}
             className="p-3"
             dataSource={data}
             renderItem={(item: Book) => (
-              <List.Item className="w-[450px]">
+              <List.Item className="min-[375px]:w-[320px] md:w-[450px]">
                 <Card title={item.name}>
                   <div>
                     <div>作者名：{item.author || '暂无'}</div>
@@ -68,6 +70,10 @@ function Page() {
                 </Card>
               </List.Item>
             )}
+          />
+          <FloatButton
+            type="primary"
+            onClick={() => console.log('onClick')}
           />
         </motion.div>
       )}

@@ -1,6 +1,7 @@
 import { APIResponse } from '@/core/decorator/APIResponse';
 import { R } from '@/shared/res/r';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -11,8 +12,10 @@ import {
   Post,
   Put,
   Request,
+  Response,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import * as fs from 'node:fs';
 import { BookshelfService } from './bookshelf.service';
 import { CreateBookshelfDto } from './dto/create-bookshelf.dto';
 import { BookShelfInfoVo } from './vo/bookshelf.info.vo';
@@ -63,10 +66,40 @@ export class BookshelfController {
   @ApiOperation({ summary: '查询书架' })
   @HttpCode(HttpStatus.OK)
   @APIResponse([CreateBookShelfVo], '查询成功')
-  async acquireBookShelft(@Request() req) {
+  async acquireBookShelf(@Request() req) {
     return new R({
       message: '查询成功',
-      data: await this.bookshelfService.acquireBookShelft(req.user.userId),
+      data: await this.bookshelfService.acquireBookShelf(req.user.userId),
+    });
+  }
+
+  @Get('/download/:bookShelfId')
+  @ApiOperation({ summary: '下载书架书籍笔记' })
+  @HttpCode(HttpStatus.OK)
+  async downloadBookShelf(
+    @Param('bookShelfId') bookShelfId: number,
+    @Response() res,
+  ) {
+    const data =
+      await this.bookshelfService.acquireBookShelfByBookShelfId(bookShelfId);
+    const filePath = `public/notes/`;
+    const fileName = `${bookShelfId}.txt`;
+
+    let content = '';
+
+    for (let i = 0; i < data.length; i++) {
+      content += `${data[i].name || '暂无书名'}\n`;
+      content += `作者：${data[i].author || '暂无作者'}\n`;
+      content += `主角：${data[i].protagonist || '暂无主角'}\n`;
+      content += `描述：${data[i].description || '暂无描述'}\n\n`;
+    }
+
+    fs.writeFile(filePath + fileName, content, (err) => {
+      if (err) {
+        throw new BadRequestException('笔记下载失败，请稍后再试哦~');
+      } else {
+        res.download(filePath + fileName, new Date().valueOf() + '.txt');
+      }
     });
   }
 
@@ -74,12 +107,12 @@ export class BookshelfController {
   @ApiOperation({ summary: '查询书架书本' })
   @HttpCode(HttpStatus.OK)
   @APIResponse(BookShelfInfoVo, '查询成功')
-  async acquireBookShelftByBookShelfId(
+  async acquireBookShelfByBookShelfId(
     @Param('bookShelfId') bookShelfId: number,
   ) {
     return new R({
       message: '查询成功',
-      data: await this.bookshelfService.acquireBookShelftByBookShelfId(
+      data: await this.bookshelfService.acquireBookShelfByBookShelfId(
         bookShelfId,
       ),
     });
