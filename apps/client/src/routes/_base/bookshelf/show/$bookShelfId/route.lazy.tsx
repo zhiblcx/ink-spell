@@ -1,3 +1,4 @@
+import { downloadBookShelfNotesMutation } from '@/features/bookshelf'
 import { selectBookByBookShelfIdQuery } from '@/features/bookshelf/query'
 import EmptyPage from '@/shared/components/EmptyPage'
 import { Book } from '@/shared/types/book'
@@ -20,6 +21,7 @@ function Page() {
   const { data: query, isSuccess, isLoading } = selectBookByBookShelfIdQuery(id)
   const [data, setData] = useState([])
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  const { mutate } = downloadBookShelfNotesMutation()
 
   useEffect(() => {
     const handleResize = () => {
@@ -73,7 +75,7 @@ function Page() {
           />
           <FloatButton
             type="primary"
-            onClick={() => console.log('onClick')}
+            onClick={() => mutate(parseInt(id))}
           />
         </motion.div>
       )}

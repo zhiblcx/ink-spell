@@ -95,3 +95,19 @@ export const collectBookShelfMutation = (queryClient: () => Promise<void>) => {
     onError: handleAxiosError
   })
 }
+
+export const downloadBookShelfNotesMutation = () => {
+  return useMutation({
+    mutationFn: (bookShelfId: number) => request.get(`/bookshelf/download/${bookShelfId}`),
+    onSuccess: (data) => {
+      const fileName = data.headers['content-disposition'].split('"')[1]
+      const url = window.URL.createObjectURL(new Blob([data.data]))
+      const a = document.createElement('a')
+      a.href = url
+      a.download = fileName
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+    }
+  })
+}
