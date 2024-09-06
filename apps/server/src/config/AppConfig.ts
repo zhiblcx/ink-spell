@@ -35,6 +35,11 @@ interface AppConfig {
    */
   BOOK_COVER_URL: string;
   /**
+   * the default notes url
+   * @default 'public/notes'
+   */
+  DEFAULT_NOTES_URL: string;
+  /**
    * the default book file url
    * @default 'public/book_file'
    */
@@ -68,6 +73,7 @@ const appConfig = Object.freeze<Readonly<AppConfig>>({
   DEFAULT_AVATAR: '/static/images/avatar.jpg',
   DEFAULT_BOOK_SHELF_COVER: '/static/images/cover.png',
   DEFAULT_BOOK_COVER: '/static/images/cover.png',
+  DEFAULT_NOTES_URL: 'public/notes/',
   BOOK_COVER_URL: 'public/cover',
   BOOK_FILE_URL: 'public/book_file',
   COVER_MAX_FILE_SIZE: 500 * 1024,

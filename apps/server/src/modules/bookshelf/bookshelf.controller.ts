@@ -1,3 +1,4 @@
+import { appConfig } from '@/config/AppConfig';
 import { APIResponse } from '@/core/decorator/APIResponse';
 import { R } from '@/shared/res/r';
 import {
@@ -12,7 +13,7 @@ import {
   Post,
   Put,
   Request,
-  Response,
+  Res,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import * as fs from 'node:fs';
@@ -78,11 +79,11 @@ export class BookshelfController {
   @HttpCode(HttpStatus.OK)
   async downloadBookShelf(
     @Param('bookShelfId') bookShelfId: number,
-    @Response() res,
+    @Res() res,
   ) {
     const data =
       await this.bookshelfService.acquireBookShelfByBookShelfId(bookShelfId);
-    const filePath = `public/notes/`;
+    const filePath = appConfig.DEFAULT_NOTES_URL;
     const fileName = `${bookShelfId}.txt`;
 
     let content = '';
