@@ -6,7 +6,9 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { compare, hash } from 'bcrypt';
 import * as dayjs from 'dayjs';
+import { env } from 'process';
 import { appConfig } from '../../config/AppConfig';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register-auth.dto';
@@ -20,6 +22,7 @@ export class AuthService {
 
   async signIn(account: string, password: string) {
     try {
+      console.log(password);
       const user = await this.validateLogin(account, password);
       const payload = { userId: user.id, account: user.account };
       return new R({
@@ -44,10 +47,11 @@ export class AuthService {
         throw new UnprocessableEntityException('用户名已存在');
       }
     } else {
+      const pass = await hash(password, Number(env.HASH_SALT_OR_ROUNDS));
       const currentUser = await this.prisma.user.create({
         data: {
           account,
-          password,
+          password: pass,
           username,
           email,
           avatar: appConfig.DEFAULT_AVATAR,
@@ -74,7 +78,8 @@ export class AuthService {
     const user = await this.prisma.user.findUnique({
       where: { account, isDelete: false },
     });
-    if (user && user.password === pass) {
+
+    if (user && (await compare(pass, user.password))) {
       const { password: _, ...result } = user;
       return result;
     }

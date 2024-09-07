@@ -85,9 +85,7 @@ export class BookshelfController {
       await this.bookshelfService.acquireBookShelfByBookShelfId(bookShelfId);
     const filePath = appConfig.DEFAULT_NOTES_URL;
     const fileName = `${bookShelfId}.txt`;
-
     let content = '';
-
     for (let i = 0; i < data.length; i++) {
       content += `${data[i].name || '暂无书名'}\n`;
       content += `作者：${data[i].author || '暂无作者'}\n`;

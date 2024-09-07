@@ -9,7 +9,7 @@ import { SignInDao, SigninValue, SignUpDao } from './types'
 export const signinMutation = () => {
   const router = useRouter()
   return useMutation({
-    mutationFn: (signInDao: SignInDao) => request.post('/auth/login', signInDao),
+    mutationFn: async (signInDao: SignInDao) => request.post('/auth/login', signInDao),
     onSuccess: (result, variables: SigninValue) => {
       AuthUtils.setToken(result.data.data.access_token)
       router.navigate({ to: '/', replace: true })
@@ -35,7 +35,7 @@ export const signinMutation = () => {
 export const signupMutation = () => {
   const router = useRouter()
   return useMutation({
-    mutationFn: (signUpDao: SignUpDao) => request.post('/auth/register', signUpDao),
+    mutationFn: async (signUpDao: SignUpDao) => request.post('/auth/register', signUpDao),
     onSuccess: (result) => {
       AuthUtils.setToken(result.data.data.access_token)
       router.navigate({ to: '/', replace: true })

@@ -12,7 +12,7 @@ export class LoginDao {
 
   @IsNotEmpty({ message: '密码不能为空' })
   @NotContains(' ', { message: '密码不能有空格' })
-  @Length(6, 16, { message: '密码长度为 6-16 位' })
+  // @Length(6, 16, { message: '密码长度为 6-16 位' })
   @IsString({ message: '密码必须为字符串' })
   @ApiProperty({
     example: '123456',

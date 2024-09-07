@@ -62,9 +62,9 @@ function Page() {
             className="p-3"
             dataSource={data}
             renderItem={(item: Book) => (
-              <List.Item className="min-[375px]:w-[320px] md:w-[450px]">
+              <List.Item className="min-w-72 min-[375px]:w-[320px]">
                 <Card title={item.name}>
-                  <div>
+                  <div className="space-y-1">
                     <div>作者名：{item.author || '暂无'}</div>
                     <div>主角：{item.protagonist || '暂无'}</div>
                     <div>描述：{item.description || '暂无'}</div>
