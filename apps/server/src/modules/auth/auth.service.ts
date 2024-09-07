@@ -22,7 +22,6 @@ export class AuthService {
 
   async signIn(account: string, password: string) {
     try {
-      console.log(password);
       const user = await this.validateLogin(account, password);
       const payload = { userId: user.id, account: user.account };
       return new R({
