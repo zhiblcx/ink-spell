@@ -1,18 +1,18 @@
 import { request } from '@/shared/API'
 import { AuthUtils } from '@/shared/utils'
 import { useMutation } from '@tanstack/react-query'
-import { useRouter } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { message } from 'antd'
 import { AxiosError } from 'axios'
 import { SignInDao, SigninValue, SignUpDao } from './types'
 
 export const signinMutation = () => {
-  const router = useRouter()
+  const navigate = useNavigate()
   return useMutation({
     mutationFn: async (signInDao: SignInDao) => request.post('/auth/login', signInDao),
     onSuccess: (result, variables: SigninValue) => {
       AuthUtils.setToken(result.data.data.access_token)
-      router.navigate({ to: '/', replace: true })
+      navigate({ to: '/', replace: true })
       message.success('登录成功')
       if (variables) {
         AuthUtils.setRememberAccountData(
@@ -33,12 +33,12 @@ export const signinMutation = () => {
 }
 
 export const signupMutation = () => {
-  const router = useRouter()
+  const navigate = useNavigate()
   return useMutation({
     mutationFn: async (signUpDao: SignUpDao) => request.post('/auth/register', signUpDao),
     onSuccess: (result) => {
       AuthUtils.setToken(result.data.data.access_token)
-      router.navigate({ to: '/', replace: true })
+      navigate({ to: '/', replace: true })
       message.success('登录成功')
     },
     onError: (result: AxiosError) => {

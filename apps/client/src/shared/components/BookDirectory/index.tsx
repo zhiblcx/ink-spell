@@ -1,6 +1,6 @@
 import { useActionBookStore } from '@/shared/store'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { Link, useRouter } from '@tanstack/react-router'
+import { useRouter } from '@tanstack/react-router'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import useSmoothScroll from 'react-smooth-scroll-hook'
@@ -75,7 +75,18 @@ export default function BookDirectory({
             key={index}
             id={`y-item-${index + 1}`}
           >
-            <Link search={{ chapter: UrlUtils.encodeUrlById((index + 1).toString()) }}> {item} </Link>
+            <a
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                router.navigate({
+                  to: router.latestLocation.pathname,
+                  search: { chapter: UrlUtils.encodeUrlById((index + 1).toString()) },
+                  replace: true
+                })
+              }}
+            >
+              {item}
+            </a>
           </li>
         ))}
       </ul>

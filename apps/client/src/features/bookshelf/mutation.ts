@@ -1,19 +1,19 @@
 import { request } from '@/shared/API'
 import { BookShelfType } from '@/shared/types/bookshelf'
 import { useMutation } from '@tanstack/react-query'
-import { useRouter } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { message } from 'antd'
 import { AxiosResponse } from 'axios'
 import { handleAxiosError } from '../utils'
 import { BookShelfDao, operateBookShelfType } from './types'
 
 export const deleteBookShelfMutation = (deleteId: string, queryClient: () => Promise<void>) => {
-  const router = useRouter()
+  const navigate = useNavigate()
   return useMutation({
     mutationFn: () => request.delete(`/bookshelf/${deleteId}`),
     onSuccess: async (data) => {
       message.success(data.data.message)
-      router.navigate({ to: '/', replace: true })
+      navigate({ to: '/', replace: true })
       await queryClient()
     },
     onError: handleAxiosError

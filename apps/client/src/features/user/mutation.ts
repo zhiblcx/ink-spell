@@ -2,7 +2,7 @@ import { request } from '@/shared/API'
 import { User } from '@/shared/types'
 import { AuthUtils } from '@/shared/utils'
 import { useMutation } from '@tanstack/react-query'
-import { useRouter } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { message } from 'antd'
 import { handleAxiosError } from '../utils'
 import { updatePasswordDao } from './types'
@@ -42,13 +42,13 @@ export const unfollowUserByFollowMutation = (queryClient: () => Promise<void>) =
 }
 
 export const updateUserPasswordMutation = () => {
-  const router = useRouter()
+  const navigate = useNavigate()
   return useMutation({
     mutationFn: (user: updatePasswordDao) => request.put('/user/password', user),
     onSuccess: async (data) => {
       message.success(data.data.message)
       AuthUtils.clearToken()
-      router.navigate({ to: '/', replace: true })
+      navigate({ to: '/', replace: true })
     },
     onError: handleAxiosError
   })

@@ -1,6 +1,6 @@
 import { useActionBookStore } from '@/shared/store'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { Link, useLocation } from '@tanstack/react-router'
+import { useLocation, useRouter } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import useSmoothScroll from 'react-smooth-scroll-hook'
 
@@ -23,19 +23,25 @@ interface ChapterLinkProps {
 }
 
 function ChapterLink({ noContentText = '没有了', content, chapter, chapterFlag, scrollToHeight }: ChapterLinkProps) {
+  const router = useRouter()
   return (
     <>
       {chapterFlag ? (
         <div>{noContentText}</div>
       ) : (
-        <Link
-          search={{ chapter: UrlUtils.encodeUrlById(chapter.toString()) }}
+        <a
+          style={{ cursor: 'pointer' }}
           onClick={() => {
+            router.navigate({
+              to: router.latestLocation.pathname,
+              search: { chapter: UrlUtils.encodeUrlById(chapter.toString()) },
+              replace: true
+            })
             scrollToHeight()
           }}
         >
           {content}
-        </Link>
+        </a>
       )}
     </>
   )
