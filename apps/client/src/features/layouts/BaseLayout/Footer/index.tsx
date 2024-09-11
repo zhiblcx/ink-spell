@@ -17,7 +17,7 @@ function Footer() {
     isOtherBookShelfFlag,
     updateCancelFlag,
     updateAllSelectFlag,
-    updateDeleteFlag,
+    updateDeleteBookFlag,
     updateDeleteShelfFlag,
     updateBookToBookShelfFlag,
     updateModifyBookShelfFlag
@@ -32,7 +32,7 @@ function Footer() {
       cancelText: '取消',
       maskClosable: true,
       onOk: () => {
-        updateDeleteFlag(true)
+        updateDeleteBookFlag(true)
       }
     })
   }

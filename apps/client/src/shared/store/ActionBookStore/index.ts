@@ -15,7 +15,7 @@ type ActionBookStore = {
   modifyBookShelfFlag: boolean
   isOtherBookShelfFlag: boolean
 
-  updateDeleteFlag: (flag: boolean) => void
+  updateDeleteBookFlag: (flag: boolean) => void
   updateAllSelectFlag: (flag: AllSelectBookFlag) => void
   updateAddShelfFlag: (flag: boolean) => void
   updateCancelFlag: (flag: boolean) => void
@@ -43,7 +43,7 @@ export const useActionBookStore = create<ActionBookStore>()((set) => ({
   modifyBookShelfFlag: false,
   isOtherBookShelfFlag: false,
 
-  updateDeleteFlag: (flag: boolean) => {
+  updateDeleteBookFlag: (flag: boolean) => {
     set({ deleteBookFlag: flag })
   },
 

@@ -9,7 +9,7 @@ export const deleteBookByBookIdMutation = (queryClient: () => Promise<void>) => 
   return useMutation({
     mutationFn: (bookId: number) => request.delete(`/book/${bookId}`),
     onSuccess: async (data) => {
-      message.success(data.data.data.message)
+      message.success(data.data.message)
       await queryClient()
     },
     onError: handleAxiosError

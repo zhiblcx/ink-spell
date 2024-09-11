@@ -37,7 +37,7 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
     isOtherBookShelfFlag,
     updateAllSelectFlag,
     updateCancelFlag,
-    updateDeleteFlag,
+    updateDeleteBookFlag,
     updateBookToBookShelfFlag,
     updateSearchBookName,
     updateModifyBookShelfFlag
@@ -205,7 +205,7 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
         return true
       })
       setBooks(remainBook)
-      updateDeleteFlag(false)
+      updateDeleteBookFlag(false)
       updateCancelFlag(true)
     }
   }, [deleteBookFlag])
