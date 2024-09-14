@@ -47,7 +47,7 @@ export function readFileContent(path, detectedEncoding) {
       }
 
       function createNewChapter() {
-        const chapterTitle = `第${chapter.length}章(自定义章节)`;
+        const chapterTitle = `第${chapter.length}章(*)`;
         chapter.push(chapterTitle);
         content.push([]);
         currentChapterIndex++;
