@@ -1,8 +1,10 @@
 import { selectBookByBookIdQuery } from '@/features/book'
 import Content from '@/features/layouts/ReadLayout/Content'
 import Sidebar from '@/features/layouts/ReadLayout/Sidebar'
+import { useSetUpStore } from '@/shared/store/SetupStore'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { createLazyFileRoute } from '@tanstack/react-router'
+import clsx from 'clsx'
 
 interface BookChapterType {
   chapter: number
@@ -16,7 +18,7 @@ function Page() {
   const { chapter } = Route.useSearch<BookChapterType>()
   const bookID = UrlUtils.decodeUrlById(Route.useParams().bookId)
   const currentChapter = parseInt(UrlUtils.decodeUrlById(chapter.toString()))
-
+  const { setup } = useSetUpStore()
   const { data: query, isLoading } = selectBookByBookIdQuery(bookID)
 
   return (
@@ -28,7 +30,13 @@ function Page() {
           paragraph={{ rows: 10 }}
         />
       ) : (
-        <div className="flex h-screen w-screen overflow-hidden dark:bg-[#1f1f1f] dark:text-[#929493]">
+        <div
+          style={{ fontSize: `${setup.fontSize}px`, lineHeight: `${setup.fontSize * 1.7}px` }}
+          className={clsx(
+            `opacity-${setup.brightness}`,
+            'flex h-screen w-screen overflow-hidden dark:bg-[#1f1f1f] dark:text-[#929493]'
+          )}
+        >
           <Sidebar
             allChapter={query?.data.data.chapter}
             currentChapter={currentChapter - 1}

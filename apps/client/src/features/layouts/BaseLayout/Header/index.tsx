@@ -221,7 +221,6 @@ export default function Header() {
           setOpenFlag(false)
         }}
         onOk={() => {
-          console.log('asdhjklfasdho')
           form.submit()
           setOpenFlag(false)
         }}

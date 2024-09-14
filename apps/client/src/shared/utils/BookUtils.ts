@@ -3,6 +3,7 @@ import { UrlUtils } from './UrlUtils'
 
 export class BookUtils {
   static readonly #INK_SPELL_BOOKS = 'ink_spell_books'
+  static readonly #INK_SPELL_SETUP = 'ink_spell_setup'
 
   /**
    *
@@ -16,6 +17,19 @@ export class BookUtils {
   }
 
   /**
+   * @example
+   * ```ts
+   * JSON.parse(BookUtils.getBooks() ?? '[]')
+   * ```
+   */
+  static getSetup(): string {
+    if (localStorage.getItem(this.#INK_SPELL_SETUP) === null) {
+      return JSON.stringify({ fontSize: 16, brightness: 100 })
+    }
+    return localStorage.getItem(this.#INK_SPELL_SETUP) as string
+  }
+
+  /**
    *
    * @example
    * ```ts
@@ -26,10 +40,44 @@ export class BookUtils {
     return localStorage.setItem(this.#INK_SPELL_BOOKS, books)
   }
 
+  /**
+   * @example
+   * ```ts
+   * BookUtils.setSetup(JSON.stringify(Array.from(map)))
+   * ```
+   */
+  static setSetup(setup: string) {
+    return localStorage.setItem(this.#INK_SPELL_SETUP, setup)
+  }
+
+  /**
+   * @example
+   * ```ts
+   * BookUtils.clearBooks()
+   * ```
+   */
   static clearBooks() {
     localStorage.removeItem(this.#INK_SPELL_BOOKS)
   }
 
+  /**
+   * @example
+   * ```ts
+   * BookUtils.clearSetup()
+   * ```
+   */
+  static clearSetup() {
+    localStorage.removeItem(this.#INK_SPELL_SETUP)
+  }
+
+  /**
+   *
+   * @param book
+   * @example
+   * ```ts
+   * BookUtils.redirectToBookPage(book)
+   * ```
+   */
   static redirectToBookPage(book: Ink) {
     const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
     let chapter = -1

@@ -1,3 +1,4 @@
+import BookContentSetUp from '@/shared/components/BookContentSetUp'
 import { useActionBookStore } from '@/shared/store'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useLocation, useRouter } from '@tanstack/react-router'
@@ -50,9 +51,10 @@ function ChapterLink({ noContentText = '没有了', content, chapter, chapterFla
 function Content({ currentContent = [], currentChapter, allChapterTotal }: ContentActiveType) {
   const location = useLocation()
   const ref = useRef(null)
-  const { showDirectoryFlag, updateShowDirectoryFlag } = useActionBookStore()
+  const { showDirectoryFlag, updateShowDirectoryFlag, updateShowSetUpFlag, showSetUpFlag } = useActionBookStore()
   const { chapter } = location.search as SearchType
   const encodeChapter = parseInt(UrlUtils.decodeUrlById(chapter.toString()))
+  const title = '目录'
   const { scrollTo } = useSmoothScroll({
     ref,
     speed: Infinity,
@@ -69,13 +71,10 @@ function Content({ currentContent = [], currentChapter, allChapterTotal }: Conte
     <motion.div
       layout
       ref={ref}
-      className="scroll grow overflow-y-auto px-3"
+      className="scroll grow overflow-y-auto px-5 pr-2"
     >
       <div className="my-3 text-center text-3xl font-bold">{currentChapter}</div>
-      <ul
-        className="text-xl leading-10"
-        onClick={() => updateShowDirectoryFlag(!showDirectoryFlag)}
-      >
+      <ul onClick={() => updateShowSetUpFlag(!showSetUpFlag)}>
         {currentContent.map((item, index) => (
           <li key={index}>{item}</li>
         ))}
@@ -97,7 +96,7 @@ function Content({ currentContent = [], currentChapter, allChapterTotal }: Conte
             updateShowDirectoryFlag(!showDirectoryFlag)
           }}
         >
-          目录
+          {title}
         </li>
         <li>
           <ChapterLink
@@ -110,6 +109,11 @@ function Content({ currentContent = [], currentChapter, allChapterTotal }: Conte
           />
         </li>
       </ul>
+      <BookContentSetUp
+        encodeChapter={encodeChapter}
+        currentChapter={currentChapter}
+        allChapterTotal={allChapterTotal}
+      />
     </motion.div>
   )
 }

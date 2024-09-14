@@ -20,6 +20,7 @@ export default function BookDirectory({
   const router = useRouter()
   const ref = useRef(null)
   const [open, setOpen] = useState(false)
+  const title = '目录'
 
   const { scrollTo } = useSmoothScroll({
     ref,
@@ -42,7 +43,6 @@ export default function BookDirectory({
         scrollTo(`#y-item-${UrlUtils.decodeUrlById(chapter.chapter.toString())}`, -300)
       }, 100)
     }
-    6
   }, [router.latestLocation.search, showLeftDirectoryFlag])
 
   const directoryContent = (
@@ -62,7 +62,7 @@ export default function BookDirectory({
             updateShowDirectoryFlag(!showDirectoryFlag)
           }}
         >
-          目录
+          {title}
         </div>
       ) : null}
       <ul className="ml-2 flex flex-col space-y-1">
@@ -100,7 +100,7 @@ export default function BookDirectory({
     <Drawer
       loading={allChapter.length === 0}
       className="dark:text-[#929493]"
-      title={<div className="text-center text-xl">目录</div>}
+      title={<div className="text-center text-xl">{title}</div>}
       onClose={onClose}
       open={open}
       closeIcon={false}

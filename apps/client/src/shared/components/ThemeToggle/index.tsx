@@ -1,8 +1,8 @@
 import { Theme } from '@/shared/enums/Theme'
 import { useThemeStore } from '@/shared/store'
-import { Sun, MoonStar } from 'lucide-react'
+import { MoonStar, Sun } from 'lucide-react'
 
-function ThemeToggle() {
+function ThemeToggle({ size = 24 }) {
   const { theme, setTheme } = useThemeStore()
 
   function toggleTheme() {
@@ -10,7 +10,7 @@ function ThemeToggle() {
     setTheme(currentTheme)
   }
 
-  return <div onClick={toggleTheme}>{theme === Theme.DARK ? <Sun /> : <MoonStar />}</div>
+  return <div onClick={toggleTheme}>{theme === Theme.DARK ? <Sun size={size} /> : <MoonStar size={size} />}</div>
 }
 
 export default ThemeToggle

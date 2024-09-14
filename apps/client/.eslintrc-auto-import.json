@@ -42,6 +42,7 @@
     "Tabs": true,
     "Radio": true,
     "Card": true,
-    "Tooltip": true
+    "Tooltip": true,
+    "Slider": true
   }
 }

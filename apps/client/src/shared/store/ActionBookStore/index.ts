@@ -14,6 +14,7 @@ type ActionBookStore = {
   searchBookName: string
   modifyBookShelfFlag: boolean
   isOtherBookShelfFlag: boolean
+  showSetUpFlag: boolean
 
   updateDeleteBookFlag: (flag: boolean) => void
   updateAllSelectFlag: (flag: AllSelectBookFlag) => void
@@ -27,6 +28,7 @@ type ActionBookStore = {
   updateSearchBookName: (name: string) => void
   updateModifyBookShelfFlag: (flag: boolean) => void
   updateIsOtherBookShelfFlag: (flag: boolean) => void
+  updateShowSetUpFlag: (flag: boolean) => void
 }
 
 export const useActionBookStore = create<ActionBookStore>()((set) => ({
@@ -36,12 +38,13 @@ export const useActionBookStore = create<ActionBookStore>()((set) => ({
   cancelFlag: true,
   showShelfFlag: false,
   deleteShelfFlag: false,
-  showDirectoryFlag: true,
+  showDirectoryFlag: false,
   uploadFileFlag: false,
   bookToBookShelfFlag: false,
   searchBookName: '',
   modifyBookShelfFlag: false,
   isOtherBookShelfFlag: false,
+  showSetUpFlag: false,
 
   updateDeleteBookFlag: (flag: boolean) => {
     set({ deleteBookFlag: flag })
@@ -86,7 +89,12 @@ export const useActionBookStore = create<ActionBookStore>()((set) => ({
   updateModifyBookShelfFlag: (flag: boolean) => {
     set({ modifyBookShelfFlag: flag })
   },
+
   updateIsOtherBookShelfFlag: (flag: boolean) => {
     set({ isOtherBookShelfFlag: flag })
+  },
+
+  updateShowSetUpFlag: (flag: boolean) => {
+    set({ showSetUpFlag: flag })
   }
 }))
