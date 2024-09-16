@@ -4,7 +4,6 @@ import Sidebar from '@/features/layouts/ReadLayout/Sidebar'
 import { useSetUpStore } from '@/shared/store/SetupStore'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { createLazyFileRoute } from '@tanstack/react-router'
-import clsx from 'clsx'
 
 interface BookChapterType {
   chapter: number
@@ -31,11 +30,12 @@ function Page() {
         />
       ) : (
         <div
-          style={{ fontSize: `${setup.fontSize}px`, lineHeight: `${setup.fontSize * 1.7}px` }}
-          className={clsx(
-            `opacity-${setup.brightness}`,
-            'flex h-screen w-screen overflow-hidden dark:bg-[#1f1f1f] dark:text-[#929493]'
-          )}
+          style={{
+            fontSize: `${setup.fontSize}px`,
+            lineHeight: `${setup.fontSize * 1.7}px`,
+            filter: `brightness(${setup.brightness})`
+          }}
+          className="flex h-screen w-screen overflow-hidden bg-white dark:bg-[#1f1f1f] dark:text-[#929493]"
         >
           <Sidebar
             allChapter={query?.data.data.chapter}

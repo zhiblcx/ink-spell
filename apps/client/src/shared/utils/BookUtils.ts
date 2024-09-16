@@ -24,7 +24,7 @@ export class BookUtils {
    */
   static getSetup(): string {
     if (localStorage.getItem(this.#INK_SPELL_SETUP) === null) {
-      return JSON.stringify({ fontSize: 16, brightness: 100 })
+      return JSON.stringify({ fontSize: 16, brightness: 1 })
     }
     return localStorage.getItem(this.#INK_SPELL_SETUP) as string
   }

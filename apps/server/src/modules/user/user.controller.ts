@@ -139,4 +139,26 @@ export class UserController {
       message: '修改成功',
     });
   }
+
+  @Get('/user/all')
+  @ApiOperation({ summary: '获取所有用户' })
+  @APIResponse([UserVo], '获取成功', true)
+  async getAllUser() {
+    return new R({
+      message: '获取成功',
+      data: await this.userService.getAllUser(),
+    });
+  }
+
+  // 管理员重置用户密码
+  @Put('/reset/password/:userId')
+  @ApiOperation({ summary: '重置用户密码' })
+  @APIResponse(null, '重置成功')
+  async resetPassword(@Param('userId') userId: number) {
+    await this.userService.resetPassword(userId, '123456');
+    return new R({
+      message: '重置成功',
+      data: { password: '123456' },
+    });
+  }
 }

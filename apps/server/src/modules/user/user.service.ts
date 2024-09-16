@@ -4,6 +4,8 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { hash } from 'bcrypt';
+import { env } from 'process';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -200,5 +202,27 @@ export class UserService {
       }));
       return result;
     }
+  }
+
+  async getAllUser() {
+    return await this.prisma.user.findMany({
+      where: { isDelete: false },
+      select: {
+        id: true,
+        username: true,
+        account: true,
+        sex: true,
+        email: true,
+        avatar: true,
+      },
+    });
+  }
+
+  async resetPassword(userId, password) {
+    const pass = await hash(password, Number(env.HASH_SALT_OR_ROUNDS));
+    return await this.prisma.user.update({
+      where: { id: parseInt(userId) },
+      data: { password: pass },
+    });
   }
 }

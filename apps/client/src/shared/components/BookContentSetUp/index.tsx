@@ -64,14 +64,15 @@ export default function BookContentSetUp({ encodeChapter, currentChapter, allCha
       <div className="flex h-[100%] flex-col justify-between">
         <div className="grow">
           {clickSetUp ? (
+            // 设置
             <div className="flex w-[100%] text-base">
               <ul className="grow space-y-2">
                 <li className="flex grow items-center">
                   <p className="mr-4 flex items-center">{setupTitle.lightness}:</p>
                   <Slider
-                    max={100}
-                    min={20}
-                    step={10}
+                    max={1}
+                    min={0.4}
+                    step={0.1}
                     defaultValue={setup.brightness}
                     className="w-[70%]"
                     onChange={(value) => setSetUp({ ...setup, brightness: value })}
@@ -105,9 +106,10 @@ export default function BookContentSetUp({ encodeChapter, currentChapter, allCha
               </ul>
             </div>
           ) : (
+            // 阅读进度
             <div className="flex h-[100%] flex-col items-center justify-center">
               <div>{currentChapter}</div>
-              <div className="flex w-[100%] items-center">
+              <div className="flex w-[100%] items-center justify-center">
                 <ChevronLeft
                   size={28}
                   onClick={() => (sliderDirectory === 1 ? '' : setSliderDirectory(sliderDirectory - 1))}
