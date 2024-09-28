@@ -8,7 +8,7 @@ function ThemeToggle({ size = 24 }) {
   // 如果当前页面是暗色，则切换为亮色；如果当前页面是亮色，则切换为暗色
   const willDark = theme === Theme.LIGHT
 
-  function toggleTheme(event: MouseEvent) {
+  function toggleTheme(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     const currentTheme = theme === Theme.DARK ? Theme.LIGHT : Theme.DARK
     if (!document.startViewTransition) {
       setTheme(currentTheme)
