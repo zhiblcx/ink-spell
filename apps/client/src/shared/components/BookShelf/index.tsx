@@ -58,7 +58,7 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
     return acc.concat(item.md5)
   }, [])
 
-  const { data, isSuccess } = selectMyBookShelfQuery()
+  const { data, isSuccess, isPending } = selectMyBookShelfQuery()
 
   const currentBookShelf: BookShelfType = data?.data.data.filter((item: BookShelfType) => item.id == bookShelfId)[0]
 
@@ -247,7 +247,13 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
 
   return (
     <>
-      {books.length === 0 ? (
+      {isPending ? (
+        <Skeleton
+          className="p-5"
+          active
+          paragraph={{ rows: 10 }}
+        />
+      ) : books.length === 0 ? (
         !isOtherBookShelfFlag ? (
           <EmptyPage name="暂时没有书籍，请先导入书籍哦~" />
         ) : (
