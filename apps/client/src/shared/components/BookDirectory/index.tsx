@@ -6,12 +6,14 @@ import { motion } from 'framer-motion'
 import useSmoothScroll from 'react-smooth-scroll-hook'
 
 interface SidebarActiveType {
+  bookName: string
   currentChapter: number
   allChapter: Array<string>
   showDirectoryFlag?: boolean
 }
 
 export default function BookDirectory({
+  bookName,
   currentChapter,
   allChapter = [],
   showDirectoryFlag = true
@@ -20,8 +22,7 @@ export default function BookDirectory({
   const router = useRouter()
   const ref = useRef(null)
   const [open, setOpen] = useState(false)
-  const title = '目录'
-
+  console.log(bookName)
   const { scrollTo } = useSmoothScroll({
     ref,
     speed: 200,
@@ -62,7 +63,7 @@ export default function BookDirectory({
             updateShowDirectoryFlag(!showDirectoryFlag)
           }}
         >
-          {title}
+          {bookName}
         </div>
       ) : null}
       <ul className="ml-2 flex flex-col space-y-1">

@@ -19,7 +19,6 @@ function Page() {
   const currentChapter = parseInt(UrlUtils.decodeUrlById(chapter.toString()))
   const { setup } = useSetUpStore()
   const { data: query, isLoading } = selectBookByBookIdQuery(bookID)
-
   return (
     <>
       {isLoading ? (
@@ -38,6 +37,7 @@ function Page() {
           className="flex h-screen w-screen overflow-hidden bg-white dark:bg-[#1f1f1f] dark:text-[#929493]"
         >
           <Sidebar
+            bookName={query?.data.data.bookName}
             allChapter={query?.data.data.chapter}
             currentChapter={currentChapter - 1}
           />

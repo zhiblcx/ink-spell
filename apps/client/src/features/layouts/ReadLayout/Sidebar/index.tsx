@@ -6,11 +6,12 @@ import { useRouter } from '@tanstack/react-router'
 import { AnimatePresence } from 'framer-motion'
 
 interface SidebarActiveType {
+  bookName: string
   currentChapter: number
   allChapter: Array<string>
 }
 
-function Sidebar({ currentChapter, allChapter = [] }: SidebarActiveType) {
+function Sidebar({ bookName, currentChapter, allChapter = [] }: SidebarActiveType) {
   const router = useRouter()
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
@@ -64,6 +65,7 @@ function Sidebar({ currentChapter, allChapter = [] }: SidebarActiveType) {
         <>
           {showDirectoryFlag && (
             <BookDirectory
+              bookName={bookName}
               currentChapter={currentChapter}
               allChapter={allChapter}
             />
@@ -73,6 +75,7 @@ function Sidebar({ currentChapter, allChapter = [] }: SidebarActiveType) {
         showDirectoryFlag && (
           <div>
             <BookDirectory
+              bookName={bookName}
               currentChapter={currentChapter}
               allChapter={allChapter}
               showDirectoryFlag={false}
