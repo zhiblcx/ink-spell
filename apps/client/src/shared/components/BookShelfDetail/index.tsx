@@ -1,8 +1,10 @@
 import { BookShelfType } from '@/shared/types/bookshelf'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
+import { cardLocation } from '@/shared/utils/waterfallLayout'
 import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
 import { useNavigate } from '@tanstack/react-router'
 import Meta from 'antd/es/card/Meta'
+import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import { CircleX } from 'lucide-react'
 
@@ -23,6 +25,29 @@ export default function BookShelfDetail({
 }: BookShelfDetailType) {
   const navigate = useNavigate()
   const [modal, contextHolder] = Modal.useModal()
+  const noteGrantParent = useRef(null)
+  const noteParent = useRef(null)
+  const [fallLayout, setFallLayout] = useState(false)
+
+  const handleResize = useCallback(() => {
+    if (noteParent.current && noteGrantParent.current) {
+      setFallLayout(cardLocation(noteParent, noteGrantParent))
+    } else {
+      console.log('noteParent or noteGrantParent is not ready')
+    }
+  }, [noteParent, noteGrantParent, setFallLayout])
+
+  useEffect(() => {
+    setTimeout(() => {
+      handleResize()
+    }, 500)
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [window.innerWidth])
 
   const handleCancelCollect = (item: BookShelfType) => {
     modal.confirm({
@@ -39,18 +64,27 @@ export default function BookShelfDetail({
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      style={{ height: 'calc(100% - 115px)' }}
-      className="scroll absolute h-full overflow-y-scroll"
-    >
-      <ul className="flex flex-wrap space-x-3 min-[375px]:justify-center md:justify-start">
-        {bookshelf_detail.map((item: BookShelfType) => {
-          return (
-            <li
-              className="pb-5"
+    <>
+      <Skeleton
+        className={clsx(!fallLayout ? null : 'hidden', 'p-5')}
+        active
+        paragraph={{ rows: 10 }}
+      />
+      <motion.div
+        ref={noteGrantParent}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        style={{ height: 'calc(100% - 80px)' }}
+        className={clsx(fallLayout ? 'block' : 'hidden', 'scroll absolute h-full overflow-hidden overflow-y-scroll')}
+      >
+        <div
+          className="relative"
+          ref={noteParent}
+        >
+          {bookshelf_detail.map((item: BookShelfType) => (
+            <div
               key={item.id}
+              className="p-2"
             >
               <Card
                 actions={[
@@ -83,7 +117,7 @@ export default function BookShelfDetail({
                     }}
                   />
                 ]}
-                className="cursor-default"
+                className="w-[325px] cursor-default"
                 hoverable
                 style={{ width: 240 }}
                 cover={
@@ -97,13 +131,14 @@ export default function BookShelfDetail({
                 <Meta
                   title={item.label}
                   description={item.description}
+                  className="break-all"
                 />
               </Card>
-            </li>
-          )
-        })}
-      </ul>
-      {contextHolder}
-    </motion.div>
+            </div>
+          ))}
+        </div>
+        {contextHolder}
+      </motion.div>
+    </>
   )
 }

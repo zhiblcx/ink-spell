@@ -3,6 +3,7 @@ import { selectBookByBookShelfIdQuery } from '@/features/bookshelf/query'
 import EmptyPage from '@/shared/components/EmptyPage'
 import { Book } from '@/shared/types/book'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
+import { cardLocation } from '@/shared/utils/waterfallLayout'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { FloatButton } from 'antd'
 import { motion } from 'framer-motion'
@@ -36,40 +37,6 @@ function Page() {
       window.removeEventListener('resize', handleResize)
     }
   }, [window.innerWidth, noteParent.current, noteGrantParent.current])
-
-  // 瀑布式布局
-  function cardLocation(parent: React.MutableRefObject<null>, grantParent: React.MutableRefObject<null>) {
-    if (parent.current && grantParent.current) {
-      const child = (parent.current as HTMLElement).children
-      const num = Math.floor((window.innerWidth - 300) / (child[0] as HTMLElement).offsetWidth)
-      const currentGrantParent = grantParent.current as HTMLElement
-      currentGrantParent.style.width = num * (child[0] as HTMLElement).offsetWidth + 'px'
-      const boxHeightArr: number[] = []
-      for (let i = 0; i < child.length; i++) {
-        const currentChild = child[i] as HTMLElement
-        if (i < num) {
-          // 第一行
-          currentChild.style.position = 'absolute'
-          currentChild.style.top = 0 + 'px'
-          currentChild.style.left = i * (child[0] as HTMLElement).offsetWidth + 'px'
-          boxHeightArr.push((child[i] as HTMLElement).offsetHeight)
-        } else {
-          // 其他行
-          // 找到最短的那一行
-          const minHeight = Math.min(...boxHeightArr)
-          const minIndex = boxHeightArr.indexOf(minHeight)
-
-          // 摆放卡片
-          currentChild.style.position = 'absolute'
-          currentChild.style.top = minHeight + 'px'
-          currentChild.style.left = (child[minIndex] as HTMLElement).offsetLeft + 'px'
-          boxHeightArr[minIndex] = minHeight + currentChild.offsetHeight
-        }
-      }
-      return true
-    }
-    return false
-  }
 
   useEffect(() => {
     if (isSuccess) {
