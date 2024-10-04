@@ -1,4 +1,6 @@
 import { AllSelectBookFlag } from '@/shared/enums'
+import { SetUp } from '@/shared/types/setup'
+import { BookUtils } from '@/shared/utils'
 import { create } from 'zustand'
 
 type ActionBookStore = {
@@ -38,7 +40,7 @@ export const useActionBookStore = create<ActionBookStore>()((set) => ({
   cancelFlag: true,
   showShelfFlag: false,
   deleteShelfFlag: false,
-  showDirectoryFlag: false,
+  showDirectoryFlag: (JSON.parse(BookUtils.getSetup() ?? '[]') as SetUp).openDirectory || false,
   uploadFileFlag: false,
   bookToBookShelfFlag: false,
   searchBookName: '',

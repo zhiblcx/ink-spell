@@ -1,4 +1,5 @@
 import { useActionBookStore } from '@/shared/store'
+import { useSetUpStore } from '@/shared/store/SetupStore'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useRouter } from '@tanstack/react-router'
 import clsx from 'clsx'
@@ -21,8 +22,8 @@ export default function BookDirectory({
   const { updateShowDirectoryFlag, showDirectoryFlag: showLeftDirectoryFlag } = useActionBookStore()
   const router = useRouter()
   const ref = useRef(null)
+  const { setup, setSetUp } = useSetUpStore()
   const [open, setOpen] = useState(false)
-  console.log(bookName)
   const { scrollTo } = useSmoothScroll({
     ref,
     speed: 200,
@@ -45,6 +46,10 @@ export default function BookDirectory({
       }, 100)
     }
   }, [router.latestLocation.search, showLeftDirectoryFlag])
+
+  useEffect(() => {
+    setSetUp({ ...setup, openDirectory: open })
+  }, [open])
 
   const directoryContent = (
     <motion.div
@@ -101,7 +106,7 @@ export default function BookDirectory({
     <Drawer
       loading={allChapter.length === 0}
       className="dark:text-[#929493]"
-      title={<div className="text-center text-xl">{title}</div>}
+      title={<div className="text-center text-xl">{bookName}</div>}
       onClose={onClose}
       open={open}
       closeIcon={false}
