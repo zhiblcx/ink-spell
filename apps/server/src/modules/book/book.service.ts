@@ -147,7 +147,9 @@ export class BookService {
       where: { id: Number(bookID), isDelete: false },
     });
     const fileName = currentBook.bookFile.replace(/static/, 'public');
-    const content = await readFileContent(fileName, currentBook.encoding);
+    const content =
+      (await readFileContent(fileName, currentBook.encoding)) || {};
+    content['bookName'] = currentBook.name;
     return content;
   }
 
