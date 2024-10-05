@@ -2,17 +2,22 @@ import loginDarkImg from '@/assets/images/login-dark.png'
 import loginLightImg from '@/assets/images/login-light.png'
 import logoLight from '@/assets/images/logo-light.png'
 import { signupMutation, SignupValue } from '@/features/auth'
+import { sendEmailMutation } from '@/features/user'
 import { Theme } from '@/shared/enums'
 import { useThemeStore } from '@/shared/store'
 import { confirmPasswordRule } from '@/shared/utils/confirmPasswordRule'
-import { EditOutlined, LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
+import { EditOutlined, LockOutlined, MailOutlined, UserOutlined, VerifiedOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
+import { message } from 'antd'
 import { motion } from 'framer-motion'
 import './index.scss'
 
 export default function Signup() {
   const { theme } = useThemeStore()
   const { mutate } = signupMutation()
+  const { mutate: emailMutate } = sendEmailMutation()
+  const [form] = Form.useForm<SignupValue>()
+  const [sendVerificationCode, setSendVerificationCode] = useState('发送')
   return (
     <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden">
       <img
@@ -38,6 +43,7 @@ export default function Signup() {
           <Form
             className="signin translation relative flex flex-col items-center justify-center rounded-2xl px-14 py-5 shadow-lg backdrop-blur"
             layout="vertical"
+            form={form}
             onFinish={mutate}
           >
             <img
@@ -107,7 +113,43 @@ export default function Signup() {
               <Input
                 type="email"
                 prefix={<MailOutlined />}
+                suffix={
+                  <Button
+                    disabled={sendVerificationCode != '发送'}
+                    onClick={() => {
+                      let countdown = 10
+                      if (form.getFieldValue('email') != undefined) {
+                        setSendVerificationCode('60秒后重试') // 初始状态
+                        emailMutate(form.getFieldValue('email'))
+                        const timer = setInterval(() => {
+                          countdown--
+                          if (countdown >= 0) {
+                            setSendVerificationCode(countdown + '秒后重试')
+                          } else {
+                            clearInterval(timer)
+                            setSendVerificationCode('发送')
+                          }
+                        }, 1000)
+                      } else {
+                        message.error('亲，你还没有输入邮箱')
+                      }
+                    }}
+                  >
+                    {sendVerificationCode}
+                  </Button>
+                }
                 placeholder="请输入你的邮箱"
+              />
+            </Form.Item>
+
+            <Form.Item<SignupValue>
+              className="min-[375px]:w-[200px] md:w-[250px]"
+              label="验证码"
+              name="code"
+            >
+              <Input
+                prefix={<VerifiedOutlined />}
+                placeholder="请输入验证码"
               />
             </Form.Item>
 

@@ -6,6 +6,7 @@ export interface SignInDao {
 export interface SignUpDao extends SignInDao {
   username: string
   email?: string
+  code?: string
 }
 
 export interface SigninValue extends SignInDao {

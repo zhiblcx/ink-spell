@@ -53,3 +53,13 @@ export const updateUserPasswordMutation = () => {
     onError: handleAxiosError
   })
 }
+
+export const sendEmailMutation = () => {
+  return useMutation({
+    mutationFn: (email: string) => request.get(`/user/register/email?email=${email}`),
+    onSuccess: async (data) => {
+      message.success(data.data.message)
+    },
+    onError: handleAxiosError
+  })
+}

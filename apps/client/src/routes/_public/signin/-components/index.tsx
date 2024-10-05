@@ -60,9 +60,7 @@ export default function Signin() {
               className="mb-2 w-[200px]"
             ></img>
             <div className="mb-2">欢迎来到 ink-spell 🎉</div>
-
             <div className="mb-2 text-xl">登录</div>
-
             <Form.Item<SigninType>
               className="min-[375px]:w-[200px] md:w-[250px]"
               label="账号"
@@ -74,7 +72,6 @@ export default function Signin() {
                 placeholder="请输入你的账号"
               />
             </Form.Item>
-
             <Form.Item<SigninType>
               className="min-[375px]:w-[200px] md:w-[250px]"
               label="密码"
@@ -86,7 +83,6 @@ export default function Signin() {
                 placeholder="请输入你的密码"
               />
             </Form.Item>
-
             <Form.Item>
               <Flex
                 justify="space-between"
@@ -112,7 +108,6 @@ export default function Signin() {
                 </Form.Item>
               </Flex>
             </Form.Item>
-
             <Form.Item>
               <Button
                 htmlType="submit"
@@ -120,6 +115,14 @@ export default function Signin() {
               >
                 登录
               </Button>
+            </Form.Item>
+            <Form.Item>
+              <Link
+                to="/signup"
+                className="hover:text-blue-200"
+              >
+                忘记密码
+              </Link>
             </Form.Item>
           </Form>
         </motion.div>
