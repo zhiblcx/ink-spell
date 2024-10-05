@@ -66,38 +66,32 @@ export class AuthService {
           throw new UnprocessableEntityException('验证码错误');
         }
       }
-      console.log(registerDao);
-      try {
-        const currentUser = await this.prisma.user.create({
-          data: {
-            account,
-            password: pass,
-            username,
-            email,
-            avatar: appConfig.DEFAULT_AVATAR,
-            boofShlefs: {
-              create: {
-                label: '全部图书',
-                createTimer: dayjs().toDate(),
-                allFlag: true,
-                position: 1,
-                cover: appConfig.DEFAULT_BOOK_SHELF_COVER,
-              },
+      const currentUser = await this.prisma.user.create({
+        data: {
+          account,
+          password: pass,
+          username,
+          email,
+          avatar: appConfig.DEFAULT_AVATAR,
+          boofShlefs: {
+            create: {
+              label: '全部图书',
+              createTimer: dayjs().toDate(),
+              allFlag: true,
+              position: 1,
+              cover: appConfig.DEFAULT_BOOK_SHELF_COVER,
             },
           },
-        });
-        console.log(currentUser);
-        // const payload = {
-        //   userId: currentUser.id,
-        //   account: currentUser.account,
-        // };
-        // return new R({
-        //   data: { access_token: await this.jwtService.signAsync(payload) },
-        //   message: '登录成功',
-        // });
-      } catch (err) {
-        console.log(err);
-      }
+        },
+      });
+      const payload = {
+        userId: currentUser.id,
+        account: currentUser.account,
+      };
+      return new R({
+        data: { access_token: await this.jwtService.signAsync(payload) },
+        message: '登录成功',
+      });
     }
   }
 
