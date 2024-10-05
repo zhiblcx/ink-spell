@@ -18,17 +18,21 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateBookShelfVo } from '../bookshelf/vo/create-bookshelf.vo';
+import { EmailPasswordDto } from './dto/email-user.dto';
+import { ForgetPasswordDto } from './dto/forget-password.dto';
 import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 import { MessageVo } from './vo/message.vo';
 import { UserInfoVo } from './vo/user.info.vo';
 import { UserVo } from './vo/user.vo';
+
 @Controller('user')
 @ApiTags('用户管理')
 @ApiBearerAuth()
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
   @Get('profile')
   @ApiOperation({ summary: '获取个人信息' })
   @APIResponse(UserInfoVo)
@@ -147,6 +151,45 @@ export class UserController {
     return new R({
       message: '获取成功',
       data: await this.userService.getAllUser(),
+    });
+  }
+
+  @Get('/register/email')
+  @ApiOperation({ summary: '注册，发送邮件' })
+  @APIResponse(null, '发送成功')
+  async sendEmail(@Query('email') email: EmailPasswordDto) {
+    await this.userService.sendEmail(1, '[ink-spell]  注册邮箱请求 -- ', email);
+    return new R({
+      message: '发送成功',
+    });
+  }
+
+  @Get('/forget/password')
+  @ApiOperation({ summary: '忘记密码，发送邮件' })
+  @APIResponse(null, '发送成功')
+  async forgetPassword(@Request() req) {
+    await this.userService.sendEmail(
+      0,
+      '[ink-spell]  忘记密码请求 -- ',
+      req['user'].userId,
+    );
+    return new R({
+      message: '发送成功',
+    });
+  }
+
+  @Put('/forget/password')
+  @ApiOperation({ summary: '忘记密码，修改密码' })
+  @APIResponse(null, '修改成功')
+  async updateForgetPassword(
+    @Request() req,
+    @Body() forgetPassword: ForgetPasswordDto,
+  ) {
+    const { code, password } = { ...forgetPassword };
+    const userId = req['user'].userId;
+    await this.userService.updateForgetPassword(userId, code, password);
+    return new R({
+      message: '修改成功',
     });
   }
 

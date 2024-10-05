@@ -1,3 +1,4 @@
+import { Email } from '@/shared/utils/EmailTool';
 import {
   BadRequestException,
   Injectable,
@@ -8,9 +9,28 @@ import { hash } from 'bcrypt';
 import { env } from 'process';
 import { PrismaService } from '../prisma/prisma.service';
 
+interface userEmailType {
+  code: string;
+  password: string;
+  email: string;
+  userId: number;
+}
+
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
+  private updatePasswordByEmail = new Array({} as userEmailType);
+  private registerEmail = new Array({} as userEmailType);
+
+  // Getter for updatePasswordByEmail
+  getUpdatePasswordByEmail(): userEmailType[] {
+    return this.updatePasswordByEmail;
+  }
+
+  // Getter for registerEmail
+  getRegisterEmail(): userEmailType[] {
+    return this.registerEmail;
+  }
 
   async getProfile(user) {
     try {
@@ -216,6 +236,50 @@ export class UserService {
         avatar: true,
       },
     });
+  }
+
+  async sendEmail(status, html, parameter) {
+    // 0 忘记密码，1 注册邮箱
+    const operate =
+      status === 0 ? this.getUpdatePasswordByEmail : this.registerEmail;
+    try {
+      if (status) {
+        const user = await this.prisma.user.findUnique({
+          where: { id: parseInt(parameter) },
+          select: { email: true },
+        });
+
+        await new Email().send({
+          email: user.email,
+          html,
+          emailObj: operate,
+          userId: parameter,
+        });
+      } else {
+        await new Email().send({
+          email: parameter,
+          html,
+          emailObj: operate,
+        });
+      }
+    } catch (err) {
+      throw new BadRequestException('邮件发送失败');
+    }
+  }
+
+  async updateForgetPassword(userId: number, code: string, password: string) {
+    const index = this.updatePasswordByEmail.findIndex(
+      (userEmail) => userEmail.userId == userId,
+    );
+    if (index != -1 && this.updatePasswordByEmail[index].code == code) {
+      return await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          password: await hash(password, Number(env.HASH_SALT_OR_ROUNDS)),
+        },
+      });
+    }
+    throw new NotFoundException('验证码错误');
   }
 
   async resetPassword(userId, password) {

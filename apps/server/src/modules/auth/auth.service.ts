@@ -11,11 +11,13 @@ import * as dayjs from 'dayjs';
 import { env } from 'process';
 import { appConfig } from '../../config/AppConfig';
 import { PrismaService } from '../prisma/prisma.service';
+import { UserService } from '../user/user.service';
 import { RegisterDto } from './dto/register-auth.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private userService: UserService,
     private jwtService: JwtService,
     private prisma: PrismaService,
   ) {}
@@ -33,7 +35,7 @@ export class AuthService {
     }
   }
 
-  async signUp(registerDao: RegisterDto) {
+  async signUp(registerDao: RegisterDto, code?: string) {
     const { account, password, username, email = null } = registerDao;
     const user = await this.prisma.user.findFirst({
       where: { OR: [{ account }, { username }] },
@@ -47,29 +49,55 @@ export class AuthService {
       }
     } else {
       const pass = await hash(password, Number(env.HASH_SALT_OR_ROUNDS));
-      const currentUser = await this.prisma.user.create({
-        data: {
-          account,
-          password: pass,
-          username,
-          email,
-          avatar: appConfig.DEFAULT_AVATAR,
-          boofShlefs: {
-            create: {
-              label: '全部图书',
-              createTimer: dayjs().toDate(),
-              allFlag: true,
-              position: 1,
-              cover: appConfig.DEFAULT_BOOK_SHELF_COVER,
+      if (email != null) {
+        const index = this.userService
+          .getRegisterEmail()
+          .findIndex((item) => item.email === email);
+        if (
+          index != -1 &&
+          this.userService.getRegisterEmail()[index].code === code
+        ) {
+          await this.userService.sendEmail(
+            1,
+            '[ink-spell]  注册邮箱请求 -- ',
+            email,
+          );
+        } else {
+          throw new UnprocessableEntityException('验证码错误');
+        }
+      }
+      console.log(registerDao);
+      try {
+        const currentUser = await this.prisma.user.create({
+          data: {
+            account,
+            password: pass,
+            username,
+            email,
+            avatar: appConfig.DEFAULT_AVATAR,
+            boofShlefs: {
+              create: {
+                label: '全部图书',
+                createTimer: dayjs().toDate(),
+                allFlag: true,
+                position: 1,
+                cover: appConfig.DEFAULT_BOOK_SHELF_COVER,
+              },
             },
           },
-        },
-      });
-      const payload = { userId: currentUser.id, account: currentUser.account };
-      return new R({
-        data: { access_token: await this.jwtService.signAsync(payload) },
-        message: '登录成功',
-      });
+        });
+        console.log(currentUser);
+        // const payload = {
+        //   userId: currentUser.id,
+        //   account: currentUser.account,
+        // };
+        // return new R({
+        //   data: { access_token: await this.jwtService.signAsync(payload) },
+        //   message: '登录成功',
+        // });
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
 
