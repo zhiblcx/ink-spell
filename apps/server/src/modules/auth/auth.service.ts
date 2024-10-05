@@ -1,4 +1,5 @@
 import { R } from '@/shared/res/r';
+import Email from '@/shared/utils/EmailTool';
 import {
   BadRequestException,
   Injectable,
@@ -11,18 +12,18 @@ import * as dayjs from 'dayjs';
 import { env } from 'process';
 import { appConfig } from '../../config/AppConfig';
 import { PrismaService } from '../prisma/prisma.service';
-import { UserService } from '../user/user.service';
+import { LoginDao } from './dto/login-auth.dto';
 import { RegisterDto } from './dto/register-auth.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UserService,
     private jwtService: JwtService,
     private prisma: PrismaService,
   ) {}
 
-  async signIn(account: string, password: string) {
+  async signIn(loginDao: LoginDao) {
+    const { account, password } = loginDao;
     try {
       const user = await this.validateLogin(account, password);
       const payload = { userId: user.id, account: user.account };
@@ -35,8 +36,14 @@ export class AuthService {
     }
   }
 
-  async signUp(registerDao: RegisterDto, code?: string) {
-    const { account, password, username, email = null } = registerDao;
+  async signUp(registerDao: RegisterDto) {
+    const {
+      account,
+      password,
+      username,
+      email = null,
+      code = null,
+    } = registerDao;
     const user = await this.prisma.user.findFirst({
       where: { OR: [{ account }, { username }] },
     });
@@ -50,19 +57,10 @@ export class AuthService {
     } else {
       const pass = await hash(password, Number(env.HASH_SALT_OR_ROUNDS));
       if (email != null) {
-        const index = this.userService
-          .getRegisterEmail()
-          .findIndex((item) => item.email === email);
-        if (
-          index != -1 &&
-          this.userService.getRegisterEmail()[index].code === code
-        ) {
-          await this.userService.sendEmail(
-            1,
-            '[ink-spell]  注册邮箱请求 -- ',
-            email,
-          );
-        } else {
+        const index = Email.getRegisterEmail().findIndex(
+          (item) => item.email === email,
+        );
+        if (index === -1 || Email.getRegisterEmail()[index].code !== code) {
           throw new UnprocessableEntityException('验证码错误');
         }
       }

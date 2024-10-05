@@ -1,4 +1,4 @@
-import { Email } from '@/shared/utils/EmailTool';
+import Email from '@/shared/utils/EmailTool';
 import {
   BadRequestException,
   Injectable,
@@ -9,28 +9,9 @@ import { hash } from 'bcrypt';
 import { env } from 'process';
 import { PrismaService } from '../prisma/prisma.service';
 
-interface userEmailType {
-  code: string;
-  password: string;
-  email: string;
-  userId: number;
-}
-
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
-  private updatePasswordByEmail = new Array({} as userEmailType);
-  private registerEmail = new Array({} as userEmailType);
-
-  // Getter for updatePasswordByEmail
-  getUpdatePasswordByEmail(): userEmailType[] {
-    return this.updatePasswordByEmail;
-  }
-
-  // Getter for registerEmail
-  getRegisterEmail(): userEmailType[] {
-    return this.registerEmail;
-  }
 
   async getProfile(user) {
     try {
@@ -240,26 +221,23 @@ export class UserService {
 
   async sendEmail(status, html, parameter) {
     // 0 忘记密码，1 注册邮箱
-    const operate =
-      status === 0 ? this.getUpdatePasswordByEmail : this.registerEmail;
     try {
-      if (status) {
+      if (!status) {
         const user = await this.prisma.user.findUnique({
           where: { id: parseInt(parameter) },
           select: { email: true },
         });
 
-        await new Email().send({
+        await Email.send({
           email: user.email,
           html,
-          emailObj: operate,
           userId: parameter,
         });
       } else {
-        await new Email().send({
+        // 注册邮箱
+        await Email.send({
           email: parameter,
           html,
-          emailObj: operate,
         });
       }
     } catch (err) {
@@ -268,10 +246,10 @@ export class UserService {
   }
 
   async updateForgetPassword(userId: number, code: string, password: string) {
-    const index = this.updatePasswordByEmail.findIndex(
+    const index = Email.getUpdatePasswordByEmail().findIndex(
       (userEmail) => userEmail.userId == userId,
     );
-    if (index != -1 && this.updatePasswordByEmail[index].code == code) {
+    if (index != -1 && Email.getUpdatePasswordByEmail()[index].code == code) {
       return await this.prisma.user.update({
         where: { id: userId },
         data: {

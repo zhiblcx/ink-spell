@@ -3,7 +3,6 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { PrismaModule } from '../prisma/prisma.module';
-import { UserService } from '../user/user.service';
 import { AuthController } from './auth.controller';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
@@ -24,7 +23,6 @@ import { JwtStrategy } from './strategy/jwt.strategy';
   providers: [
     AuthService,
     JwtStrategy,
-    UserService,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,

@@ -1,6 +1,7 @@
 import { APIResponse } from '@/core/decorator/APIResponse';
 import { E } from '@/shared/res/e';
 import { R } from '@/shared/res/r';
+import { Public } from '@/shared/utils/setMetadata';
 import {
   Body,
   Controller,
@@ -18,7 +19,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateBookShelfVo } from '../bookshelf/vo/create-bookshelf.vo';
-import { EmailPasswordDto } from './dto/email-user.dto';
+import { EmailUserDto } from './dto/email-user.dto';
 import { ForgetPasswordDto } from './dto/forget-password.dto';
 import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -154,16 +155,22 @@ export class UserController {
     });
   }
 
+  @Public()
   @Get('/register/email')
   @ApiOperation({ summary: '注册，发送邮件' })
   @APIResponse(null, '发送成功')
-  async sendEmail(@Query('email') email: EmailPasswordDto) {
-    await this.userService.sendEmail(1, '[ink-spell]  注册邮箱请求 -- ', email);
+  async sendEmail(@Query() emailUserDto: EmailUserDto) {
+    await this.userService.sendEmail(
+      1,
+      '[ink-spell]  注册邮箱请求 -- ',
+      emailUserDto.email,
+    );
     return new R({
       message: '发送成功',
     });
   }
 
+  @Public()
   @Get('/forget/password')
   @ApiOperation({ summary: '忘记密码，发送邮件' })
   @APIResponse(null, '发送成功')

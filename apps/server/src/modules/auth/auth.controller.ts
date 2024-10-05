@@ -18,7 +18,7 @@ export class AuthController {
   @ApiOperation({ summary: '登录' })
   @APIResponse(LoginVo, '登录成功')
   signIn(@Body() loginDao: LoginDao) {
-    return this.authService.signIn(loginDao.account, loginDao.password);
+    return this.authService.signIn(loginDao);
   }
 
   @Public()
