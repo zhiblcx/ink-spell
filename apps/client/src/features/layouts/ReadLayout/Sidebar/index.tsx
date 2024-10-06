@@ -35,26 +35,28 @@ function Sidebar({ bookName, currentChapter, allChapter = [] }: SidebarActiveTyp
     if (match) {
       const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
       // 如果一本书都没存
-      if (localBooks.length === 0) {
-        const localBook = new Map()
-        localBook.set(match[0], currentChapter + 1)
-        BookUtils.setBooks(JSON.stringify(Array.from(localBook)))
-      } else {
-        // 存了书
-        const lastChapterIndex = localBooks.findIndex((item: Array<string>) => {
-          return item[0] === match[0]
-        })
-        if (lastChapterIndex >= 0) {
-          // 存了当前阅读的书
-          localBooks[lastChapterIndex][1] = currentChapter + 1
-          BookUtils.setBooks(JSON.stringify(localBooks))
-        } else {
-          // 没存当前阅读的书
+      try {
+        if (localBooks.length === 0) {
           const localBook = new Map()
-          localBook.set(match[0], currentChapter + 1)
-          localBooks.push(...Array.from(localBook))
-          BookUtils.setBooks(JSON.stringify(localBooks))
+          localBook.set(match[0], { currentChapter: currentChapter + 1, allChapter: allChapter.length })
+          BookUtils.setBooks(JSON.stringify(Array.from(localBook)))
+        } else {
+          // 存了书
+          const lastChapterIndex = localBooks.findIndex((item: Array<string>) => item[0] === match[0])
+          if (lastChapterIndex >= 0) {
+            // 存了当前阅读的书
+            localBooks[lastChapterIndex][1].currentChapter = currentChapter + 1
+            BookUtils.setBooks(JSON.stringify(localBooks))
+          } else {
+            // 没存当前阅读的书
+            const localBook = new Map()
+            localBook.set(match[0], { currentChapter: currentChapter + 1, allChapter: allChapter.length })
+            localBooks.push(...Array.from(localBook))
+            BookUtils.setBooks(JSON.stringify(localBooks))
+          }
         }
+      } catch (_) {
+        BookUtils.clearBooks()
       }
     }
   }, [currentChapter])

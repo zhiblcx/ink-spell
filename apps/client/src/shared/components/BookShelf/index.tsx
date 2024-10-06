@@ -260,77 +260,75 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
           <EmptyPage name="该用户还没有上传书籍哦！快邀请TA分享吧！" />
         )
       ) : isOtherBookShelfFlag ? (
-        <div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            style={{ height: 'calc(100% - 115px)' }}
-            className="scroll absolute h-full overflow-y-scroll"
-          >
-            <ul className="flex flex-wrap space-x-3 min-[375px]:justify-center md:justify-start">
-              {books
-                .filter((book) => options.some((option) => option.id === book.id))
-                .reverse()
-                .map((item: Ink) => {
-                  return (
-                    <li
-                      className="pb-5"
-                      key={item.id}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          style={{ height: 'calc(100% - 115px)' }}
+          className="scroll absolute h-full overflow-y-scroll"
+        >
+          <ul className="flex flex-wrap space-x-3 min-[375px]:justify-center md:justify-start">
+            {books
+              .filter((book) => options.some((option) => option.id === book.id))
+              .reverse()
+              .map((item: Ink) => {
+                return (
+                  <li
+                    className="flex bg-red-100 pb-5"
+                    key={item.id}
+                  >
+                    <Card
+                      actions={[
+                        collectBookMd5.includes(item.md5) ? (
+                          <StarFilled
+                            style={{ color: 'rgb(253 224 71)' }}
+                            key="collect"
+                            onClick={() => {
+                              const index = query?.data.data.booksInfo.findIndex((ink: Book) => ink.md5 === item.md5)
+                              cancelCollectBookMutate(query?.data.data.booksInfo[index].id)
+                            }}
+                          />
+                        ) : (
+                          <StarOutlined
+                            key="no-collect"
+                            className="hidden"
+                            onClick={() => collectBookMutate(item.id)}
+                          />
+                        ),
+                        <EllipsisOutlined
+                          key="ellipsis"
+                          onClick={() => BookUtils.redirectToBookPage(item)}
+                        />
+                      ]}
+                      className="cursor-default overflow-hidden"
+                      hoverable
+                      style={{ width: 240 }}
+                      cover={
+                        <img
+                          alt="example"
+                          className="h-[200px] object-cover"
+                          src={import.meta.env.VITE_SERVER_URL + item.cover}
+                        />
+                      }
                     >
-                      <Card
-                        actions={[
-                          collectBookMd5.includes(item.md5) ? (
-                            <StarFilled
-                              style={{ color: 'rgb(253 224 71)' }}
-                              key="collect"
-                              onClick={() => {
-                                const index = query?.data.data.booksInfo.findIndex((ink: Book) => ink.md5 === item.md5)
-                                cancelCollectBookMutate(query?.data.data.booksInfo[index].id)
-                              }}
-                            />
-                          ) : (
-                            <StarOutlined
-                              key="no-collect"
-                              className="hidden"
-                              onClick={() => collectBookMutate(item.id)}
-                            />
-                          ),
-                          <EllipsisOutlined
-                            key="ellipsis"
-                            onClick={() => BookUtils.redirectToBookPage(item)}
-                          />
-                        ]}
-                        className="cursor-default overflow-hidden"
-                        hoverable
-                        style={{ width: 240 }}
-                        cover={
-                          <img
-                            alt="example"
-                            className="h-[200px] object-cover"
-                            src={import.meta.env.VITE_SERVER_URL + item.cover}
-                          />
-                        }
-                      >
-                        <p className="roboto text-xl font-bold">
-                          <span> {item.name ? `${item.name}` : '暂无书名'}</span>
-                        </p>
-                        <p className="roboto">{item.author ? item.author : '无作者'}</p>
-                        <p className="roboto">
-                          {item.protagonist
-                            ? `
+                      <p className="roboto text-xl font-bold">
+                        <span> {item.name ? `${item.name}` : '暂无书名'}</span>
+                      </p>
+                      <p className="roboto">{item.author ? item.author : '无作者'}</p>
+                      <p className="roboto">
+                        {item.protagonist
+                          ? `
       ${item.protagonist.split('|')[0]}|${item.protagonist.split('|')[1]}`
-                            : '无主角'}
-                        </p>
-                        <p className="roboto line-clamp-3 w-[90%] break-all">
-                          {item.description === null || item.description === '' ? '暂无描述' : item.description}
-                        </p>
-                      </Card>
-                    </li>
-                  )
-                })}
-            </ul>
-          </motion.div>
-        </div>
+                          : '无主角'}
+                      </p>
+                      <p className="roboto line-clamp-3 w-[90%] break-all">
+                        {item.description === null || item.description === '' ? '暂无描述' : item.description}
+                      </p>
+                    </Card>
+                  </li>
+                )
+              })}
+          </ul>
+        </motion.div>
       ) : (
         <motion.div
           initial={{ opacity: 0 }}
@@ -343,6 +341,12 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
               .filter((book) => options.some((option) => option.id === book.id))
               .reverse()
               .map((item: Ink) => {
+                const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
+                const index = localBooks.find((i: Array<string>) => i[0] == item.id.toString())
+                const schedule = index
+                  ? ((index[1].currentChapter / index[1].allChapter) * 100).toFixed(1) + '%'
+                  : '0.0%'
+
                 return (
                   <li key={item.id}>
                     <InkCard
@@ -362,6 +366,7 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
                           : updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
                       }}
                       ink={item}
+                      schedule={schedule}
                       customClassName="mr-4 mb-3 mt-3"
                       cancelFlag={cancelFlag}
                     />

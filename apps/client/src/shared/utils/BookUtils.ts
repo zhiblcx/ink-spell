@@ -82,11 +82,9 @@ export class BookUtils {
     const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
     let chapter = -1
     if (localBooks.length !== 0) {
-      const ink = localBooks.find((item: Array<string>) => {
-        return parseInt(item[0]) === book.id
-      })
+      const ink = localBooks.find((item: Array<string>) => parseInt(item[0]) === book.id)
       if (ink !== undefined) {
-        chapter = ink[1]
+        chapter = ink[1].currentChapter
       }
     }
     window.open(
