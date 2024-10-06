@@ -13,4 +13,5 @@ model User {
   followers        Follow[]           @relation("UserFollowers")
   following        Follow[]           @relation("UserFollowing")
   CollectBookShelf CollectBookShelf[]
+  BookMark         BookMark[]
 }

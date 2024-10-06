@@ -1,0 +1,8 @@
+model BookMark {
+  id      Int   @id @default(autoincrement())
+  bookId  Int   @map("book_id")
+  book    Book  @relation(fields: [bookId], references: [id])
+  userId  Int   @map("user_id")
+  user    User  @relation(fields: [userId], references: [id])
+  catalog Int[]
+}
