@@ -19,11 +19,13 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateBookShelfVo } from '../bookshelf/vo/create-bookshelf.vo';
-import { EmailUserDto } from './dto/email-user.dto';
+import { ForgetPasswordEmailDto } from './dto/forget-password-email.dto';
 import { ForgetPasswordDto } from './dto/forget-password.dto';
+import { RegisterEmailUserDto } from './dto/register-email-user.dto';
 import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
+import { EmailVo } from './vo/email.vo';
 import { MessageVo } from './vo/message.vo';
 import { UserInfoVo } from './vo/user.info.vo';
 import { UserVo } from './vo/user.vo';
@@ -159,11 +161,11 @@ export class UserController {
   @Get('/register/email')
   @ApiOperation({ summary: '注册，发送邮件' })
   @APIResponse(null, '发送成功')
-  async sendEmail(@Query() emailUserDto: EmailUserDto) {
+  async sendEmail(@Query() registerEmailUserDto: RegisterEmailUserDto) {
     await this.userService.sendEmail(
       1,
       '[ink-spell]  注册邮箱请求 -- ',
-      emailUserDto.email,
+      registerEmailUserDto.email,
     );
     return new R({
       message: '发送成功',
@@ -173,28 +175,28 @@ export class UserController {
   @Public()
   @Get('/forget/password')
   @ApiOperation({ summary: '忘记密码，发送邮件' })
-  @APIResponse(null, '发送成功')
-  async forgetPassword(@Request() req) {
-    await this.userService.sendEmail(
+  @APIResponse(EmailVo, '发送成功')
+  async forgetPassword(
+    @Query() forgetPasswordEmailDto: ForgetPasswordEmailDto,
+  ) {
+    const email = await this.userService.sendEmail(
       0,
       '[ink-spell]  忘记密码请求 -- ',
-      req['user'].userId,
+      forgetPasswordEmailDto.account,
     );
     return new R({
       message: '发送成功',
+      data: { email },
     });
   }
 
+  @Public()
   @Put('/forget/password')
   @ApiOperation({ summary: '忘记密码，修改密码' })
   @APIResponse(null, '修改成功')
-  async updateForgetPassword(
-    @Request() req,
-    @Body() forgetPassword: ForgetPasswordDto,
-  ) {
-    const { code, password } = { ...forgetPassword };
-    const userId = req['user'].userId;
-    await this.userService.updateForgetPassword(userId, code, password);
+  async updateForgetPassword(@Body() forgetPassword: ForgetPasswordDto) {
+    const { email, code, password } = { ...forgetPassword };
+    await this.userService.updateForgetPassword(email, code, password);
     return new R({
       message: '修改成功',
     });

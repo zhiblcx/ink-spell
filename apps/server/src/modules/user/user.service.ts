@@ -5,7 +5,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { hash } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 import { env } from 'process';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -109,15 +109,19 @@ export class UserService {
     const user = await this.prisma.user.findUnique({
       where: { id: parseInt(userId) },
     });
-
-    if (user.password !== updateUserDto.password) {
+    if (!(await compare(updateUserDto.password, user.password))) {
       throw new BadRequestException({
         message: '原密码错误',
       });
     } else {
       return await this.prisma.user.update({
         where: { id: parseInt(userId) },
-        data: { password: updateUserDto.newPassword },
+        data: {
+          password: await hash(
+            updateUserDto.newPassword,
+            Number(env.HASH_SALT_OR_ROUNDS),
+          ),
+        },
       });
     }
   }
@@ -219,20 +223,28 @@ export class UserService {
     });
   }
 
+  // 状态，内容，参数
   async sendEmail(status, html, parameter) {
     // 0 忘记密码，1 注册邮箱
     try {
       if (!status) {
         const user = await this.prisma.user.findUnique({
-          where: { id: parseInt(parameter) },
-          select: { email: true },
+          where: { account: parameter },
+          select: { email: true, account: true },
         });
+
+        if (user === null) {
+          throw new NotFoundException(
+            '抱歉，找不到相应的账号。请检查您输入的账号是否有误。',
+          );
+        }
 
         await Email.send({
           email: user.email,
           html,
-          userId: parameter,
+          account: user.account,
         });
+        return user.email;
       } else {
         // 注册邮箱
         await Email.send({
@@ -241,17 +253,20 @@ export class UserService {
         });
       }
     } catch (err) {
+      if (err.status == 404) {
+        throw new NotFoundException(err.message);
+      }
       throw new BadRequestException('邮件发送失败');
     }
   }
 
-  async updateForgetPassword(userId: number, code: string, password: string) {
+  async updateForgetPassword(email: string, code: string, password: string) {
     const index = Email.getUpdatePasswordByEmail().findIndex(
-      (userEmail) => userEmail.userId == userId,
+      (userEmail) => userEmail.email == email && userEmail.code == code,
     );
-    if (index != -1 && Email.getUpdatePasswordByEmail()[index].code == code) {
+    if (index != -1) {
       return await this.prisma.user.update({
-        where: { id: userId },
+        where: { email: email },
         data: {
           password: await hash(password, Number(env.HASH_SALT_OR_ROUNDS)),
         },

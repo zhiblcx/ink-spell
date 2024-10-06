@@ -1,5 +1,5 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
-import { IsString, Length, NotContains } from 'class-validator';
+import { IsEmail, IsString, Length, NotContains } from 'class-validator';
 import { UpdateUserPasswordDto } from './update-user-password.dto';
 
 export class ForgetPasswordDto extends OmitType(UpdateUserPasswordDto, [
@@ -13,4 +13,12 @@ export class ForgetPasswordDto extends OmitType(UpdateUserPasswordDto, [
     description: '验证码',
   })
   code: string;
+
+  @IsEmail(undefined, { message: '邮箱格式不正确' })
+  @ApiProperty({
+    example: 'nicolezhi@qq.com',
+    description: '邮箱',
+    required: false,
+  })
+  email: string;
 }
