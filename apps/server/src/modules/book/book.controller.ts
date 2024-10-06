@@ -30,9 +30,12 @@ import { MultipleStorage } from 'src/config/MultipleStorage';
 import { BookService } from './book.service';
 import { BookContentDto } from './dto/book-content.dto';
 import { BookFileDto } from './dto/book-file.dto';
+import { BookMarkDto } from './dto/book-mark.dto';
 import { CoverLoadDto } from './dto/cover-load.dto';
 import { Md5Dto } from './dto/md5.dto';
+import { OperateBookMarkDto } from './dto/operate-book-mark.dto';
 import { BookContentVo } from './vo/book-content.vo';
+import { BookMarkVo } from './vo/book-mark.vo';
 import { BookInfoVo } from './vo/book.info.vo';
 import { CoverVo } from './vo/cover.vo';
 import { FileVo } from './vo/file.vo';
@@ -164,6 +167,58 @@ export class BookController {
         bookContentDto,
       ),
       message: '修改成功',
+    });
+  }
+
+  @Get('/bookmark/:bookID')
+  @ApiOperation({ summary: '查看书签' })
+  @HttpCode(HttpStatus.OK)
+  @APIResponse(BookMarkVo, '查询成功')
+  async showBookMark(@Request() req, @Param() bookMarkDto: BookMarkDto) {
+    return new R({
+      message: '查询成功',
+      data: await this.bookService.showBookMark(
+        parseInt(req.user.userId),
+        bookMarkDto.id,
+      ),
+    });
+  }
+
+  @Put('/bookmark')
+  @ApiOperation({ summary: '添加书签' })
+  @HttpCode(HttpStatus.OK)
+  @APIResponse(null, '添加成功')
+  async insertBookMark(
+    @Request() req,
+    @Body() operateBookMarkDto: OperateBookMarkDto,
+  ) {
+    const { id, chapter } = { ...operateBookMarkDto };
+    await this.bookService.insertBookMark(
+      id,
+      parseInt(req.user.userId),
+      chapter,
+    );
+    return new R({
+      message: '修改成功',
+    });
+  }
+
+  @Delete('/bookmark')
+  @ApiOperation({ summary: '删除书签' })
+  @HttpCode(HttpStatus.OK)
+  @APIResponse(null, '删除成功')
+  async deleteBookMark(
+    @Request() req,
+    @Body() operateBookMarkDto: OperateBookMarkDto,
+  ) {
+    const { id, chapter } = { ...operateBookMarkDto };
+    await this.bookService.deleteBookMark(
+      id,
+      parseInt(req.user.userId),
+      chapter,
+    );
+    return new R({
+      message: '删除成功',
     });
   }
 }
