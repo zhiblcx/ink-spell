@@ -239,6 +239,10 @@ export class UserService {
           );
         }
 
+        if (user.email === null) {
+          throw new NotFoundException('抱歉，该账号未绑定邮箱。');
+        }
+
         await Email.send({
           email: user.email,
           html,

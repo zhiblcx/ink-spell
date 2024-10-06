@@ -43,8 +43,7 @@ class Email {
       if (error) {
         console.log('邮件发送失败');
       } else {
-        console.log('邮件发送成功');
-        console.log(code);
+        // console.log('邮件发送成功');
         if (!account) {
           this.registerEmail.push({
             email,
