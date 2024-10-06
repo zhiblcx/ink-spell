@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { message } from 'antd'
 import { handleAxiosError } from '../utils'
-import { updatePasswordDao } from './types'
+import { forgetPasswordByEmailDao, updatePasswordDao } from './types'
 
 export const updateUserInfoMutation = (queryClient: () => Promise<void>) => {
   return useMutation({
@@ -54,12 +54,31 @@ export const updateUserPasswordMutation = () => {
   })
 }
 
-export const sendEmailMutation = () => {
-  return useMutation({
+export const sendRegisterEmailMutation = () =>
+  useMutation({
     mutationFn: (email: string) => request.get(`/user/register/email?email=${email}`),
     onSuccess: async (data) => {
       message.success(data.data.message)
     },
     onError: handleAxiosError
   })
-}
+
+export const sendResetPasswordEmailMutation = (callback: (email: string) => void) =>
+  useMutation({
+    mutationFn: (account: string) => request.get(`/user/forget/password?account=${account}`),
+    onSuccess: async (data) => {
+      message.success(data.data.message)
+      callback(data.data.data.email)
+    },
+    onError: handleAxiosError
+  })
+
+export const forgetPasswordByEmailMutation = (callback: () => void) =>
+  useMutation({
+    mutationFn: (data: forgetPasswordByEmailDao) => request.put('/user/forget/password', data),
+    onSuccess: async (data) => {
+      message.success(data.data.message)
+      callback()
+    },
+    onError: handleAxiosError
+  })

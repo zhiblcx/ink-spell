@@ -2,7 +2,7 @@ import loginDarkImg from '@/assets/images/login-dark.png'
 import loginLightImg from '@/assets/images/login-light.png'
 import logoLight from '@/assets/images/logo-light.png'
 import { signupMutation, SignupValue } from '@/features/auth'
-import { sendEmailMutation } from '@/features/user'
+import { sendRegisterEmailMutation } from '@/features/user'
 import { Theme } from '@/shared/enums'
 import { useThemeStore } from '@/shared/store'
 import { confirmPasswordRule } from '@/shared/utils/confirmPasswordRule'
@@ -15,7 +15,7 @@ import './index.scss'
 export default function Signup() {
   const { theme } = useThemeStore()
   const { mutate } = signupMutation()
-  const { mutate: emailMutate } = sendEmailMutation()
+  const { mutate: emailMutate } = sendRegisterEmailMutation()
   const [form] = Form.useForm<SignupValue>()
   const [sendVerificationCode, setSendVerificationCode] = useState('发送')
   return (
