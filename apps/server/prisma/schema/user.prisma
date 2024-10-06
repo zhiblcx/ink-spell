@@ -4,7 +4,7 @@ model User {
   account          String             @unique
   password         String
   sex              String             @default("女")
-  email            String?
+  email            String?            @unique
   avatar           String
   boofShlefs       BookShelf[]
   books            Book[]
