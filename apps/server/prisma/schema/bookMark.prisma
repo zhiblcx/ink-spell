@@ -5,4 +5,6 @@ model BookMark {
   userId  Int   @map("user_id")
   user    User  @relation(fields: [userId], references: [id])
   catalog Int[]
+
+  @@unique([bookId, userId])
 }
