@@ -55,7 +55,6 @@ function Content({ currentContent = [], currentChapter, allChapterTotal }: Conte
   const { chapter } = location.search as SearchType
   const encodeChapter = parseInt(UrlUtils.decodeUrlById(chapter.toString()))
   const title = '目录'
-  const schedule = ((encodeChapter / allChapterTotal) * 100).toFixed(1) + '%'
 
   const { scrollTo } = useSmoothScroll({
     ref,
@@ -116,13 +115,6 @@ function Content({ currentContent = [], currentChapter, allChapterTotal }: Conte
         currentChapter={currentChapter}
         allChapterTotal={allChapterTotal}
       />
-      {
-        <FloatButton
-          type="primary"
-          className="mr-2"
-          description={schedule}
-        />
-      }
     </motion.div>
   )
 }

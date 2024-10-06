@@ -75,14 +75,12 @@ function Sidebar({ bookName, currentChapter, allChapter = [] }: SidebarActiveTyp
         </>
       ) : (
         showDirectoryFlag && (
-          <div>
-            <BookDirectory
-              bookName={bookName}
-              currentChapter={currentChapter}
-              allChapter={allChapter}
-              showDirectoryFlag={false}
-            />
-          </div>
+          <BookDirectory
+            bookName={bookName}
+            currentChapter={currentChapter}
+            allChapter={allChapter}
+            showDirectoryFlag={false}
+          />
         )
       )}
     </AnimatePresence>

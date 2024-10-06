@@ -31,7 +31,7 @@ function Page() {
         <div
           style={{
             fontSize: `${setup.fontSize}px`,
-            lineHeight: `${setup.fontSize * 1.7}px`,
+            lineHeight: `${setup.fontSize * setup.lineHeight}px`,
             filter: `brightness(${setup.brightness})`
           }}
           className="flex h-screen w-screen overflow-hidden bg-white dark:bg-[#1f1f1f] dark:text-[#929493]"

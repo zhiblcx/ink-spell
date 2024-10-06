@@ -3,7 +3,17 @@ import { useActionBookStore, useThemeStore } from '@/shared/store'
 import { useSetUpStore } from '@/shared/store/SetupStore'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useRouter } from '@tanstack/react-router'
-import { AArrowDown, AArrowUp, ChevronLeft, ChevronRight, List, LucideProps, Settings } from 'lucide-react'
+import {
+  AArrowDown,
+  AArrowUp,
+  AlignJustify,
+  ChevronLeft,
+  ChevronRight,
+  Equal,
+  List,
+  LucideProps,
+  Settings
+} from 'lucide-react'
 import ThemeToggle from '../ThemeToggle'
 
 interface IconProps {
@@ -32,6 +42,7 @@ export default function BookContentSetUp({ encodeChapter, currentChapter, allCha
   const setupTitle = {
     lightness: '亮度',
     fontSize: '字号',
+    lineHeight: '行距',
     setupTheme: '主题',
     directory: '目录',
     darkMode: '暗夜模式',
@@ -59,7 +70,7 @@ export default function BookContentSetUp({ encodeChapter, currentChapter, allCha
       closable={false}
       onClose={() => setOpen(false)}
       open={open}
-      height={clickSetUp ? 230 : 200}
+      height={clickSetUp ? 260 : 200}
     >
       <div className="flex h-[100%] flex-col justify-between">
         <div className="grow">
@@ -100,6 +111,28 @@ export default function BookContentSetUp({ encodeChapter, currentChapter, allCha
                     />
                   </div>
                 </li>
+                <li className="flex grow items-center">
+                  <p className="mr-4">{setupTitle.lineHeight}：</p>
+                  <div className="flex grow items-center justify-around">
+                    <Equal
+                      size={34}
+                      onClick={() => {
+                        if (setup.lineHeight > 1.5) {
+                          setSetUp({ ...setup, lineHeight: Number(((setup.lineHeight * 10 - 3) / 10).toFixed(1)) })
+                        }
+                      }}
+                    />
+                    <p>{setup.lineHeight}</p>
+                    <AlignJustify
+                      size={34}
+                      onClick={() => {
+                        if (setup.lineHeight < 6) {
+                          setSetUp({ ...setup, lineHeight: Number(((setup.lineHeight * 10 + 3) / 10).toFixed(1)) })
+                        }
+                      }}
+                    />
+                  </div>
+                </li>
                 <li>
                   <p className="mr-4">{setupTitle.setupTheme}：正在开发中，请尽情期待~</p>
                 </li>
@@ -108,7 +141,10 @@ export default function BookContentSetUp({ encodeChapter, currentChapter, allCha
           ) : (
             // 阅读进度
             <div className="flex h-[100%] flex-col items-center justify-center">
-              <div>{currentChapter}</div>
+              <div>
+                <span>{currentChapter}</span>
+                <span className="ml-5">{'11.1%'}</span>
+              </div>
               <div className="flex w-[100%] items-center justify-center">
                 <ChevronLeft
                   size={28}
