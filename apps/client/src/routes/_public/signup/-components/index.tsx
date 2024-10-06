@@ -6,6 +6,7 @@ import { sendRegisterEmailMutation } from '@/features/user'
 import { Theme } from '@/shared/enums'
 import { useThemeStore } from '@/shared/store'
 import { confirmPasswordRule } from '@/shared/utils/confirmPasswordRule'
+import startCountdown from '@/shared/utils/startCountdown'
 import { EditOutlined, LockOutlined, MailOutlined, UserOutlined, VerifiedOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import { message } from 'antd'
@@ -117,19 +118,11 @@ export default function Signup() {
                   <Button
                     disabled={sendVerificationCode != '发送'}
                     onClick={() => {
-                      let countdown = 10
+                      let countdown = 60
                       if (form.getFieldValue('email') != undefined) {
-                        setSendVerificationCode('60秒后重试') // 初始状态
+                        setSendVerificationCode(countdown + '秒后重试') // 初始状态
                         emailMutate(form.getFieldValue('email'))
-                        const timer = setInterval(() => {
-                          countdown--
-                          if (countdown >= 0) {
-                            setSendVerificationCode(countdown + '秒后重试')
-                          } else {
-                            clearInterval(timer)
-                            setSendVerificationCode('发送')
-                          }
-                        }, 1000)
+                        startCountdown(countdown, setSendVerificationCode)
                       } else {
                         message.error('亲，你还没有输入邮箱')
                       }

@@ -11,6 +11,7 @@ import { LockOutlined, MailOutlined, UserOutlined, VerifiedOutlined } from '@ant
 import { Link } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 
+import startCountdown from '@/shared/utils/startCountdown'
 import './index.scss'
 
 type SigninType = {
@@ -30,16 +31,8 @@ export default function Signin() {
   const { mutate: forgetPasswordMutation } = forgetPasswordByEmailMutation(() => setIsModalOpen(false))
   const { mutate: sendResetPasswordEmailMutate } = sendResetPasswordEmailMutation((email) => {
     let countdown = 60
-    setSendVerificationCode('60秒后重试') // 初始状态
-    const timer = setInterval(() => {
-      countdown--
-      if (countdown >= 0) {
-        setSendVerificationCode(countdown + '秒后重试')
-      } else {
-        clearInterval(timer)
-        setSendVerificationCode('发送')
-      }
-    }, 1000)
+    setSendVerificationCode(countdown + '秒后重试') // 初始状态
+    startCountdown(countdown, setSendVerificationCode)
     forgetPasswordForm.setFieldValue('email', email)
     setState(false)
   })
@@ -220,7 +213,7 @@ export default function Signin() {
                       <Button
                         ref={sendEmail}
                         disabled={sendVerificationCode != '发送'}
-                        onClick={() => sendResetPasswordEmailMutate(form.getFieldValue('email'))}
+                        onClick={() => sendResetPasswordEmailMutate(account)}
                       >
                         {sendVerificationCode}
                       </Button>
