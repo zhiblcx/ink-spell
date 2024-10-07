@@ -12,7 +12,7 @@ import Navigation from '@/shared/components/Navigation'
 import Sortable, { SortableItem } from '@/shared/components/Sortable'
 import { Menu, Theme } from '@/shared/enums'
 import { useMenuStore, useThemeStore } from '@/shared/store'
-import { BookShelfType } from '@/shared/types/bookshelf'
+import { BookShelfType } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 
 function Sidebar() {

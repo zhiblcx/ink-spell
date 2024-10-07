@@ -1,8 +1,8 @@
+import { DirectoryMode } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { useSetUpStore } from '@/shared/store/SetupStore'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useRouter } from '@tanstack/react-router'
-import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import { BookMarked, BookText } from 'lucide-react'
 import useSmoothScroll from 'react-smooth-scroll-hook'
@@ -30,6 +30,10 @@ export default function BookDirectory({
     speed: 200,
     direction: 'y'
   })
+
+  if (setup.directoryMode === null) {
+    setSetUp({ ...setup, directoryMode: DirectoryMode.CATALOG })
+  }
 
   const onClose = () => {
     updateShowDirectoryFlag(false)
@@ -80,7 +84,7 @@ export default function BookDirectory({
         style={{ overflowY: 'scroll', overflowX: 'hidden', maxHeight: '100%' }}
         className="scroll min-w-[220px] max-w-[220px]"
       >
-        <ul className="ml-2 flex flex-col space-y-1">
+        {/* <ul className="ml-2 flex flex-col space-y-1">
           {allChapter.map((item, index) => (
             <li
               className={clsx(
@@ -104,8 +108,9 @@ export default function BookDirectory({
               </a>
             </li>
           ))}
-        </ul>
-        <div className="h-[10px]" />
+        </ul> */}
+        <ul></ul>
+        <div className="h-[140px]" />
       </motion.div>
     </div>
   )

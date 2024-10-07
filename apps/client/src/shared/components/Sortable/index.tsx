@@ -1,5 +1,5 @@
 import { updateBookShelfPositionMutation } from '@/features/bookshelf'
-import { BookShelfType } from '@/shared/types/bookshelf'
+import { BookShelfType } from '@/shared/types'
 import {
   closestCenter,
   DndContext,

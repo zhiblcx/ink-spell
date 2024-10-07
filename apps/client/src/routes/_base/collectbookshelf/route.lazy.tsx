@@ -2,7 +2,7 @@ import { cancelCollectBookShelfMutation } from '@/features/bookshelf'
 import { selectUserCollectBookShelfQuery } from '@/features/bookshelf/query'
 import BookShelfDetail from '@/shared/components/BookShelfDetail'
 import EmptyPage from '@/shared/components/EmptyPage'
-import { BookShelfType } from '@/shared/types/bookshelf'
+import { BookShelfType } from '@/shared/types'
 import { useQueryClient } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
 

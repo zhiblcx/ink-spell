@@ -1,5 +1,5 @@
 import { AllSelectBookFlag } from '@/shared/enums'
-import { SetUp } from '@/shared/types/setup'
+import { SetUp } from '@/shared/types'
 import { BookUtils } from '@/shared/utils'
 import { create } from 'zustand'
 

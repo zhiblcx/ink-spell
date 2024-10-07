@@ -1,7 +1,7 @@
 import { downloadBookShelfNotesMutation } from '@/features/bookshelf'
 import { selectBookByBookShelfIdQuery } from '@/features/bookshelf/query'
 import EmptyPage from '@/shared/components/EmptyPage'
-import { Book } from '@/shared/types/book'
+import { Book } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { cardLocation } from '@/shared/utils/waterfallLayout'
 import { createLazyFileRoute } from '@tanstack/react-router'

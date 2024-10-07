@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 
-import { SetUp } from '@/shared/types/setup'
+import { SetUp } from '@/shared/types'
 import { BookUtils } from '@/shared/utils'
 
 type MenuStore = {

@@ -1,4 +1,4 @@
-import { BookShelfType } from '@/shared/types/bookshelf'
+import { BookShelfType } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { cardLocation } from '@/shared/utils/waterfallLayout'
 import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
