@@ -170,7 +170,7 @@ export class BookController {
     });
   }
 
-  @Get('/bookmark/:bookID')
+  @Get('/bookmark/:bookId')
   @ApiOperation({ summary: '查看书签' })
   @HttpCode(HttpStatus.OK)
   @APIResponse(BookMarkVo, '查询成功')
@@ -179,12 +179,12 @@ export class BookController {
       message: '查询成功',
       data: await this.bookService.showBookMark(
         parseInt(req.user.userId),
-        bookMarkDto.id,
+        bookMarkDto.bookId,
       ),
     });
   }
 
-  @Put('/bookmark')
+  @Post('/bookmark')
   @ApiOperation({ summary: '添加书签' })
   @HttpCode(HttpStatus.OK)
   @APIResponse(null, '添加成功')
@@ -192,9 +192,9 @@ export class BookController {
     @Request() req,
     @Body() operateBookMarkDto: OperateBookMarkDto,
   ) {
-    const { id, chapter } = { ...operateBookMarkDto };
+    const { bookId, chapter } = { ...operateBookMarkDto };
     await this.bookService.insertBookMark(
-      id,
+      bookId,
       parseInt(req.user.userId),
       chapter,
     );
@@ -203,7 +203,7 @@ export class BookController {
     });
   }
 
-  @Delete('/bookmark')
+  @Put('/bookmark')
   @ApiOperation({ summary: '删除书签' })
   @HttpCode(HttpStatus.OK)
   @APIResponse(null, '删除成功')
@@ -211,9 +211,9 @@ export class BookController {
     @Request() req,
     @Body() operateBookMarkDto: OperateBookMarkDto,
   ) {
-    const { id, chapter } = { ...operateBookMarkDto };
+    const { bookId, chapter } = { ...operateBookMarkDto };
     await this.bookService.deleteBookMark(
-      id,
+      bookId,
       parseInt(req.user.userId),
       chapter,
     );

@@ -5,5 +5,5 @@ export class BookMarkDto {
     example: '1',
     description: '书本ID',
   })
-  id: number;
+  bookId: number;
 }
