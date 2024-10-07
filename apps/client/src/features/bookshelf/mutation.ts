@@ -1,5 +1,5 @@
 import { request } from '@/shared/API'
-import { BookShelfType } from '@/shared/types/bookshelf'
+import { BookShelfType } from '@/shared/types'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { message } from 'antd'
