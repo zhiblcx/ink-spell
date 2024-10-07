@@ -1,6 +1,5 @@
 import { request } from '@/shared/API'
-import { Ink } from '@/shared/types'
-import { Book } from '@/shared/types/book'
+import { Book, BookMark, Ink } from '@/shared/types'
 import { useMutation } from '@tanstack/react-query'
 import { message } from 'antd'
 import { handleAxiosError } from '../utils'
@@ -33,6 +32,25 @@ export const updateBookByBookIdMutation = (setBook: (value: React.SetStateAction
     onSuccess: (result) => {
       setBook({ ...result.data.data })
       message.success('修改成功')
-    }
+    },
+    onError: handleAxiosError
   })
 }
+
+export const insertBookMarkMutation = () =>
+  useMutation({
+    mutationFn: (bookMark: BookMark) => request.post(`/book/bookmark`, bookMark),
+    onSuccess: async (data) => {
+      message.success(data.data.message)
+    },
+    onError: handleAxiosError
+  })
+
+export const deleteBookMarkMutation = () =>
+  useMutation({
+    mutationFn: (bookMark: BookMark) => request.put('/book/bookmark', bookMark),
+    onSuccess: async (data) => {
+      message.success(data.data.message)
+    },
+    onError: handleAxiosError
+  })

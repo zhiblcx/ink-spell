@@ -15,6 +15,7 @@ declare global {
   const Drawer: typeof import('antd')['Drawer']
   const Dropdown: typeof import('antd')['Dropdown']
   const Flex: typeof import('antd')['Flex']
+  const FloatButton: typeof import('antd')['FloatButton']
   const Form: typeof import('antd')['Form']
   const Image: (typeof import('antd'))['Image']
   const Input: typeof import('antd')['Input']
