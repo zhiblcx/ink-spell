@@ -14,7 +14,6 @@ interface SidebarActiveType {
 
 function Sidebar({ bookName, currentChapter, allChapter = [], bookMark = [] }: SidebarActiveType) {
   const router = useRouter()
-
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const { showDirectoryFlag } = useActionBookStore()
 
@@ -68,6 +67,7 @@ function Sidebar({ bookName, currentChapter, allChapter = [], bookMark = [] }: S
         <>
           {showDirectoryFlag && (
             <BookDirectory
+              bookMark={bookMark}
               bookName={bookName}
               currentChapter={currentChapter}
               allChapter={allChapter}
@@ -77,6 +77,7 @@ function Sidebar({ bookName, currentChapter, allChapter = [], bookMark = [] }: S
       ) : (
         showDirectoryFlag && (
           <BookDirectory
+            bookMark={bookMark}
             bookName={bookName}
             currentChapter={currentChapter}
             allChapter={allChapter}

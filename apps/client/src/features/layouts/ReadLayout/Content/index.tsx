@@ -7,6 +7,7 @@ import useSmoothScroll from 'react-smooth-scroll-hook'
 
 interface ContentActiveType {
   bookId: number
+  bookMark: Array<number>
   currentChapter: string
   currentContent: Array<string>
   allChapterTotal: number
@@ -49,13 +50,17 @@ function ChapterLink({ noContentText = '没有了', content, chapter, chapterFla
   )
 }
 
-function Content({ bookId, currentContent = [], currentChapter, allChapterTotal }: ContentActiveType) {
+function Content({ bookId, bookMark, currentContent = [], currentChapter, allChapterTotal }: ContentActiveType) {
   const location = useLocation()
   const ref = useRef(null)
   const { showDirectoryFlag, updateShowDirectoryFlag, updateShowSetUpFlag, showSetUpFlag } = useActionBookStore()
   const { chapter } = location.search as SearchType
   const encodeChapter = parseInt(UrlUtils.decodeUrlById(chapter.toString()))
-  const title = '目录'
+  const bookTitle = {
+    catalog: '目录',
+    previous: '上一章',
+    next: '下一章'
+  }
 
   const { scrollTo } = useSmoothScroll({
     ref,
@@ -84,7 +89,7 @@ function Content({ bookId, currentContent = [], currentChapter, allChapterTotal 
       <ul className="my-5 flex justify-around text-xl font-bold">
         <li>
           <ChapterLink
-            content="上一章"
+            content={bookTitle.previous}
             chapter={encodeChapter - 1}
             chapterFlag={encodeChapter == 1}
             scrollToHeight={() => {
@@ -98,11 +103,11 @@ function Content({ bookId, currentContent = [], currentChapter, allChapterTotal 
             updateShowDirectoryFlag(!showDirectoryFlag)
           }}
         >
-          {title}
+          {bookTitle.catalog}
         </li>
         <li>
           <ChapterLink
-            content="下一章"
+            content={bookTitle.next}
             chapter={encodeChapter + 1}
             chapterFlag={encodeChapter == allChapterTotal}
             scrollToHeight={() => {
@@ -112,6 +117,8 @@ function Content({ bookId, currentContent = [], currentChapter, allChapterTotal 
         </li>
       </ul>
       <BookContentSetUp
+        bookId={bookId}
+        bookMark={bookMark}
         encodeChapter={encodeChapter}
         currentChapter={currentChapter}
         allChapterTotal={allChapterTotal}

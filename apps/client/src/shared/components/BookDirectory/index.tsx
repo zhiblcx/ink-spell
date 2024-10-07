@@ -3,11 +3,13 @@ import { useActionBookStore } from '@/shared/store'
 import { useSetUpStore } from '@/shared/store/SetupStore'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useRouter } from '@tanstack/react-router'
+import clsx from 'clsx'
 import { motion } from 'framer-motion'
-import { BookMarked, BookText } from 'lucide-react'
 import useSmoothScroll from 'react-smooth-scroll-hook'
+import { DirectoryButtons } from './DirectoryButtons'
 
 interface SidebarActiveType {
+  bookMark: Array<number>
   bookName: string
   currentChapter: number
   allChapter: Array<string>
@@ -15,6 +17,7 @@ interface SidebarActiveType {
 }
 
 export default function BookDirectory({
+  bookMark,
   bookName,
   currentChapter,
   allChapter = [],
@@ -25,15 +28,13 @@ export default function BookDirectory({
   const ref = useRef(null)
   const { setup, setSetUp } = useSetUpStore()
   const [open, setOpen] = useState(false)
+  const [bookmark, setBookMark] = useState<Array<Array<string>>>([])
+  const [catalog, setCatalog] = useState(setup.directoryMode !== DirectoryMode.BOOK_MARK)
   const { scrollTo } = useSmoothScroll({
     ref,
     speed: 200,
     direction: 'y'
   })
-
-  if (setup.directoryMode === null) {
-    setSetUp({ ...setup, directoryMode: DirectoryMode.CATALOG })
-  }
 
   const onClose = () => {
     updateShowDirectoryFlag(false)
@@ -56,23 +57,24 @@ export default function BookDirectory({
     setSetUp({ ...setup, openDirectory: open })
   }, [open])
 
+  useEffect(() => {
+    const result = allChapter
+      .map((chapter, index) => [chapter, (index + 1).toString()]) // 创建一个包含章节和索引的数组
+      .filter(([_, index]) => bookMark.includes(parseInt(index)))
+    setBookMark(result)
+  }, [bookMark])
+
   const directoryContent = (
     <div>
       {showDirectoryFlag ? (
-        <div
-          className="my-3 h-auto min-w-[220px] max-w-[220px] text-center text-xl"
-          // onClick={() => {
-          //   updateShowDirectoryFlag(!showDirectoryFlag)
-          // }}
-        >
+        <div className="my-3 h-auto min-w-[220px] max-w-[220px] text-center text-xl">
           <div>{bookName}</div>
-          <div className="mt-2 flex justify-center space-x-10">
-            <BookText
-              size={30}
-              color="#1296db"
-            />
-            <BookMarked size={30} />
-          </div>
+          <DirectoryButtons
+            catalog={catalog}
+            setCatalog={setCatalog}
+            setup={setup}
+            setSetUp={setSetUp}
+          />
         </div>
       ) : null}
       <motion.div
@@ -84,32 +86,55 @@ export default function BookDirectory({
         style={{ overflowY: 'scroll', overflowX: 'hidden', maxHeight: '100%' }}
         className="scroll min-w-[220px] max-w-[220px]"
       >
-        {/* <ul className="ml-2 flex flex-col space-y-1">
-          {allChapter.map((item, index) => (
-            <li
-              className={clsx(
-                currentChapter == index ? 'bg-[#474c50] text-white dark:bg-[#4b4b4b]' : null,
-                'truncate rounded-md px-4 py-1 hover:bg-[#4b4b4b] hover:text-white dark:hover:bg-[#474c50]'
-              )}
-              key={index}
-              id={`y-item-${index + 1}`}
-            >
-              <a
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  router.navigate({
-                    to: router.latestLocation.pathname,
-                    search: { chapter: UrlUtils.encodeUrlById((index + 1).toString()) },
-                    replace: true
-                  })
-                }}
-              >
-                {item}
-              </a>
-            </li>
-          ))}
-        </ul> */}
-        <ul></ul>
+        <ul className="ml-2 flex flex-col space-y-1">
+          {catalog
+            ? allChapter.map((item, index) => (
+                <li
+                  className={clsx(
+                    currentChapter == index ? 'bg-[#474c50] text-white dark:bg-[#4b4b4b]' : null,
+                    'truncate rounded-md px-4 py-1 hover:bg-[#4b4b4b] hover:text-white dark:hover:bg-[#474c50]'
+                  )}
+                  key={index}
+                  id={`y-item-${index + 1}`}
+                >
+                  <a
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      router.navigate({
+                        to: router.latestLocation.pathname,
+                        search: { chapter: UrlUtils.encodeUrlById((index + 1).toString()) },
+                        replace: true
+                      })
+                    }}
+                  >
+                    {item}
+                  </a>
+                </li>
+              ))
+            : bookmark.map((item) => (
+                <li
+                  className={clsx(
+                    currentChapter == parseInt(item[1]) - 1 ? 'bg-[#474c50] text-white dark:bg-[#4b4b4b]' : null,
+                    'truncate rounded-md px-4 py-1 hover:bg-[#4b4b4b] hover:text-white dark:hover:bg-[#474c50]'
+                  )}
+                  key={item[1]}
+                  id={`y-item-${item[1]}`}
+                >
+                  <a
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      router.navigate({
+                        to: router.latestLocation.pathname,
+                        search: { chapter: UrlUtils.encodeUrlById(item[1].toString()) },
+                        replace: true
+                      })
+                    }}
+                  >
+                    {item[0]}
+                  </a>
+                </li>
+              ))}
+        </ul>
         <div className="h-[140px]" />
       </motion.div>
     </div>
@@ -121,7 +146,17 @@ export default function BookDirectory({
     <Drawer
       loading={allChapter.length === 0}
       className="dark:text-[#929493]"
-      title={<div className="text-center text-xl">{bookName}</div>}
+      title={
+        <div className="text-center text-xl">
+          <div>{bookName}</div>
+          <DirectoryButtons
+            catalog={catalog}
+            setCatalog={setCatalog}
+            setup={setup}
+            setSetUp={setSetUp}
+          />
+        </div>
+      }
       onClose={onClose}
       open={open}
       closeIcon={false}

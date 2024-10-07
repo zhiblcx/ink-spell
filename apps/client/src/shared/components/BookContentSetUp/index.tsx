@@ -1,12 +1,16 @@
+import { deleteBookMarkMutation, insertBookMarkMutation } from '@/features/book'
 import { Theme } from '@/shared/enums'
 import { useActionBookStore, useThemeStore } from '@/shared/store'
 import { useSetUpStore } from '@/shared/store/SetupStore'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
+import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import {
   AArrowDown,
   AArrowUp,
   AlignJustify,
+  BookmarkMinus,
+  BookmarkPlus,
   ChevronLeft,
   ChevronRight,
   Equal,
@@ -25,13 +29,21 @@ function Icon_28({ Icon }: IconProps) {
 }
 
 interface BookContentSetUpType {
+  bookId: number
+  bookMark: Array<number>
   // 当前章节下标
   encodeChapter: number
   currentChapter: string
   allChapterTotal: number
 }
 
-export default function BookContentSetUp({ encodeChapter, currentChapter, allChapterTotal }: BookContentSetUpType) {
+export default function BookContentSetUp({
+  bookId,
+  bookMark,
+  encodeChapter,
+  currentChapter,
+  allChapterTotal
+}: BookContentSetUpType) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const { setup, setSetUp } = useSetUpStore()
@@ -39,7 +51,12 @@ export default function BookContentSetUp({ encodeChapter, currentChapter, allCha
   const [clickSetUp, setClickSetUp] = useState(false)
   const [sliderDirectory, setSliderDirectory] = useState(encodeChapter)
   const [schedule, setSchedule] = useState('0.0%')
+  const [bookmark, setBookMark] = useState(false)
   const { showSetUpFlag, showDirectoryFlag, updateShowSetUpFlag, updateShowDirectoryFlag } = useActionBookStore()
+  const queryClient = useQueryClient()
+  const queryClientFunction = () => queryClient.invalidateQueries({ queryKey: ['bookMark'] })
+  const { mutate: collectBookMarkMutation } = insertBookMarkMutation(queryClientFunction)
+  const { mutate: cancelCollectBookMarkMutation } = deleteBookMarkMutation(queryClientFunction)
   const setupTitle = {
     lightness: '亮度',
     fontSize: '字号',
@@ -48,11 +65,14 @@ export default function BookContentSetUp({ encodeChapter, currentChapter, allCha
     directory: '目录',
     darkMode: '暗夜模式',
     lightMode: '日间模式',
+    collectBookmark: '添加书签',
+    cancelCollectBookmark: '删除书签',
     setup: '设置'
   }
 
   useEffect(() => {
     setSchedule(((encodeChapter / allChapterTotal) * 100).toFixed(1) + '%')
+    setBookMark(bookMark.findIndex((item) => item == encodeChapter) != -1)
   }, [encodeChapter])
 
   useEffect(() => {
@@ -68,6 +88,18 @@ export default function BookContentSetUp({ encodeChapter, currentChapter, allCha
       })
     }
   }, [sliderDirectory])
+
+  const operateBookMark = () => {
+    if (bookmark) {
+      // 取消书签
+      cancelCollectBookMarkMutation({ bookId, chapter: encodeChapter })
+      setBookMark(false)
+    } else {
+      // 添加书签
+      collectBookMarkMutation({ bookId, chapter: encodeChapter })
+      setBookMark(true)
+    }
+  }
 
   return (
     <Drawer
@@ -184,10 +216,20 @@ export default function BookContentSetUp({ encodeChapter, currentChapter, allCha
             <Icon_28 Icon={List} />
             <p>{setupTitle.directory}</p>
           </li>
+
           <li className="flex cursor-pointer flex-col items-center space-y-1">
             <ThemeToggle size={28} />
             <p>{theme === Theme.DARK ? setupTitle.darkMode : setupTitle.lightMode}</p>
           </li>
+
+          <li
+            className="flex cursor-pointer flex-col items-center space-y-1"
+            onClick={operateBookMark}
+          >
+            <Icon_28 Icon={!bookmark ? BookmarkPlus : BookmarkMinus} />
+            <p>{!bookmark ? setupTitle.collectBookmark : setupTitle.cancelCollectBookmark}</p>
+          </li>
+
           <li
             className="flex cursor-pointer flex-col items-center space-y-1"
             onClick={() => setClickSetUp(!clickSetUp)}
