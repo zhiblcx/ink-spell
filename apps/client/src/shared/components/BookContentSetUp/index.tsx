@@ -38,6 +38,7 @@ export default function BookContentSetUp({ encodeChapter, currentChapter, allCha
   const { theme } = useThemeStore()
   const [clickSetUp, setClickSetUp] = useState(false)
   const [sliderDirectory, setSliderDirectory] = useState(encodeChapter)
+  const [schedule, setSchedule] = useState('0.0%')
   const { showSetUpFlag, showDirectoryFlag, updateShowSetUpFlag, updateShowDirectoryFlag } = useActionBookStore()
   const setupTitle = {
     lightness: '亮度',
@@ -49,6 +50,10 @@ export default function BookContentSetUp({ encodeChapter, currentChapter, allCha
     lightMode: '日间模式',
     setup: '设置'
   }
+
+  useEffect(() => {
+    setSchedule(((encodeChapter / allChapterTotal) * 100).toFixed(1) + '%')
+  }, [encodeChapter])
 
   useEffect(() => {
     showSetUpFlag ? setOpen(true) : setOpen(false)
@@ -143,7 +148,7 @@ export default function BookContentSetUp({ encodeChapter, currentChapter, allCha
             <div className="flex h-[100%] flex-col items-center justify-center">
               <div>
                 <span>{currentChapter}</span>
-                <span className="ml-5">{'11.1%'}</span>
+                <span className="ml-5">{schedule}</span>
               </div>
               <div className="flex w-[100%] items-center justify-center">
                 <ChevronLeft

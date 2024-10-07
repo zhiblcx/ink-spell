@@ -9,9 +9,10 @@ interface SidebarActiveType {
   bookName: string
   currentChapter: number
   allChapter: Array<string>
+  bookMark: Array<number>
 }
 
-function Sidebar({ bookName, currentChapter, allChapter = [] }: SidebarActiveType) {
+function Sidebar({ bookName, currentChapter, allChapter = [], bookMark = [] }: SidebarActiveType) {
   const router = useRouter()
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)

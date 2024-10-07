@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import useSmoothScroll from 'react-smooth-scroll-hook'
 
 interface ContentActiveType {
+  bookId: number
   currentChapter: string
   currentContent: Array<string>
   allChapterTotal: number
@@ -48,7 +49,7 @@ function ChapterLink({ noContentText = '没有了', content, chapter, chapterFla
   )
 }
 
-function Content({ currentContent = [], currentChapter, allChapterTotal }: ContentActiveType) {
+function Content({ bookId, currentContent = [], currentChapter, allChapterTotal }: ContentActiveType) {
   const location = useLocation()
   const ref = useRef(null)
   const { showDirectoryFlag, updateShowDirectoryFlag, updateShowSetUpFlag, showSetUpFlag } = useActionBookStore()
