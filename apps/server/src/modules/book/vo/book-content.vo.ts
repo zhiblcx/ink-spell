@@ -2,6 +2,12 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class BookContentVo {
   @ApiProperty({
+    example: '平凡的世界',
+    description: '书名',
+  })
+  bookName: string;
+
+  @ApiProperty({
     example: ['简介', '第001章 恭喜您'],
     description: '目录',
   })

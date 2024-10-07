@@ -5,6 +5,7 @@ import { PrismaExceptionFilter } from './core/prisma-client-exception/prisma-cli
 import { SocketGateway } from './events/socket.gateway';
 import { AuthModule } from './modules/auth/auth.module';
 import { BookModule } from './modules/book/book.module';
+import { BookmarkModule } from './modules/bookmark/bookmark.module';
 import { BookshelfModule } from './modules/bookshelf/bookshelf.module';
 import { CollectBookshelfModule } from './modules/collect-bookshelf/collect-bookshelf.module';
 import { FollowModule } from './modules/follow/follow.module';
@@ -24,6 +25,7 @@ import { UserService } from './modules/user/user.service';
     CollectBookshelfModule,
     AuthModule,
     PrismaModule,
+    BookmarkModule,
   ],
   controllers: [],
   providers: [

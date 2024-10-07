@@ -5,5 +5,5 @@ export class BookMarkVo {
     example: [2, 4],
     description: '书签目录',
   })
-  directory: Array<number>;
+  bookmark: Array<number>;
 }
