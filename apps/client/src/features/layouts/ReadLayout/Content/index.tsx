@@ -1,5 +1,6 @@
 import BookContentSetUp from '@/shared/components/BookContentSetUp'
 import { useActionBookStore } from '@/shared/store'
+import { BookUtils } from '@/shared/utils'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useLocation, useRouter } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
@@ -62,6 +63,15 @@ function Content({ bookId, bookMark, currentContent = [], currentChapter, allCha
     next: '下一章'
   }
 
+  const backgroundImage = BookUtils.getReaderBackground()
+
+  const backgroundStyle = {
+    background: `url(${backgroundImage})`,
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center'
+  }
+
   const { scrollTo } = useSmoothScroll({
     ref,
     speed: Infinity,
@@ -78,6 +88,7 @@ function Content({ bookId, bookMark, currentContent = [], currentChapter, allCha
     <motion.div
       layout
       ref={ref}
+      style={BookUtils.getReaderBackground() ? backgroundStyle : undefined}
       className="scroll grow overflow-y-auto px-5 pr-2"
     >
       <div className="my-3 text-center text-3xl font-bold">{currentChapter}</div>

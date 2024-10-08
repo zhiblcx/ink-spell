@@ -4,6 +4,7 @@ import { UrlUtils } from './UrlUtils'
 export class BookUtils {
   static readonly #INK_SPELL_BOOKS = 'ink_spell_books'
   static readonly #INK_SPELL_SETUP = 'ink_spell_setup'
+  static readonly #INK_SPELL_READER_BACKGROUND = 'ink_spell_reader_background'
 
   /**
    *
@@ -30,6 +31,16 @@ export class BookUtils {
   }
 
   /**
+   * @example
+   * ```ts
+   * JSON.parse(BookUtils.getBooks() ?? '[]')
+   * ```
+   */
+  static getReaderBackground(): string | null {
+    return localStorage.getItem(this.#INK_SPELL_READER_BACKGROUND)
+  }
+
+  /**
    *
    * @example
    * ```ts
@@ -53,6 +64,16 @@ export class BookUtils {
   /**
    * @example
    * ```ts
+   * BookUtils.setSetup(JSON.stringify(Array.from(map)))
+   * ```
+   */
+  static setReaderBackground(readerBackground: string) {
+    return localStorage.setItem(this.#INK_SPELL_READER_BACKGROUND, readerBackground)
+  }
+
+  /**
+   * @example
+   * ```ts
    * BookUtils.clearBooks()
    * ```
    */
@@ -68,6 +89,16 @@ export class BookUtils {
    */
   static clearSetup() {
     localStorage.removeItem(this.#INK_SPELL_SETUP)
+  }
+
+  /**
+   * @example
+   * ```ts
+   * BookUtils.clearSetup()
+   * ```
+   */
+  static clearReaderBackground() {
+    localStorage.removeItem(this.#INK_SPELL_READER_BACKGROUND)
   }
 
   /**

@@ -107,7 +107,7 @@ export default function BookContentSetUp({
       closable={false}
       onClose={() => setOpen(false)}
       open={open}
-      height={clickSetUp ? 260 : 200}
+      height={clickSetUp ? 270 : 200}
     >
       <div className="flex h-[100%] flex-col justify-between">
         <div className="grow">
@@ -170,8 +170,12 @@ export default function BookContentSetUp({
                     />
                   </div>
                 </li>
-                <li>
-                  <p className="mr-4">{setupTitle.setupTheme}：正在开发中，请尽情期待~</p>
+                <li className="flex grow items-center">
+                  <p className="mr-4">{setupTitle.setupTheme}：</p>
+                  <div className="flex grow items-center justify-around">
+                    <Button>背景</Button>
+                    <Button>字体</Button>
+                  </div>
                 </li>
               </ul>
             </div>

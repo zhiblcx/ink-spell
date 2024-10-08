@@ -6,4 +6,5 @@ export type SetUp = {
   openDirectory: boolean
   lineHeight: number
   directoryMode: DirectoryMode
+  readerBackground: ArrayBuffer
 }
