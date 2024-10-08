@@ -43,6 +43,7 @@
     "Radio": true,
     "Card": true,
     "Tooltip": true,
-    "Slider": true
+    "Slider": true,
+    "FloatButton": true
   }
 }
