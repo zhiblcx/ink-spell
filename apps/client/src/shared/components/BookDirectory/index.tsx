@@ -64,84 +64,86 @@ export default function BookDirectory({
     setBookMark(result)
   }, [bookMark])
 
-  const directoryContent = (
-    <div>
-      {showDirectoryFlag ? (
-        <div className="my-3 h-auto min-w-[220px] max-w-[220px] text-center text-xl">
-          <div>{bookName}</div>
-          <DirectoryButtons
-            catalog={catalog}
-            setCatalog={setCatalog}
-            setup={setup}
-            setSetUp={setSetUp}
-          />
-        </div>
-      ) : null}
-      <motion.div
-        layout
-        ref={ref}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        style={{ overflowY: 'scroll', overflowX: 'hidden', maxHeight: '100%' }}
-        className="scroll min-w-[220px] max-w-[220px]"
-      >
-        <ul className="ml-2 flex flex-col space-y-1">
-          {catalog
-            ? allChapter.map((item, index) => (
-                <li
-                  className={clsx(
-                    currentChapter == index ? 'bg-[#474c50] text-white dark:bg-[#4b4b4b]' : null,
-                    'truncate rounded-md px-4 py-1 hover:bg-[#4b4b4b] hover:text-white dark:hover:bg-[#474c50]'
-                  )}
-                  key={index}
-                  id={`y-item-${index + 1}`}
+  const directoryContent = (bottomHeight = 10) => (
+    <motion.div
+      layout
+      ref={ref}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      style={{ overflowY: 'scroll', overflowX: 'hidden', maxHeight: '100%' }}
+      className="scroll min-w-[220px] max-w-[220px]"
+    >
+      <ul className="ml-2 flex flex-col space-y-1">
+        {catalog
+          ? allChapter.map((item, index) => (
+              <li
+                className={clsx(
+                  currentChapter == index ? 'bg-[#474c50] text-white dark:bg-[#4b4b4b]' : null,
+                  'truncate rounded-md px-4 py-1 hover:bg-[#4b4b4b] hover:text-white dark:hover:bg-[#474c50]'
+                )}
+                key={index}
+                id={`y-item-${index + 1}`}
+              >
+                <a
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => {
+                    router.navigate({
+                      to: router.latestLocation.pathname,
+                      search: { chapter: UrlUtils.encodeUrlById((index + 1).toString()) },
+                      replace: true
+                    })
+                  }}
                 >
-                  <a
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => {
-                      router.navigate({
-                        to: router.latestLocation.pathname,
-                        search: { chapter: UrlUtils.encodeUrlById((index + 1).toString()) },
-                        replace: true
-                      })
-                    }}
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))
-            : bookmark.map((item) => (
-                <li
-                  className={clsx(
-                    currentChapter == parseInt(item[1]) - 1 ? 'bg-[#474c50] text-white dark:bg-[#4b4b4b]' : null,
-                    'truncate rounded-md px-4 py-1 hover:bg-[#4b4b4b] hover:text-white dark:hover:bg-[#474c50]'
-                  )}
-                  key={item[1]}
-                  id={`y-item-${item[1]}`}
+                  {item}
+                </a>
+              </li>
+            ))
+          : bookmark.map((item) => (
+              <li
+                className={clsx(
+                  currentChapter == parseInt(item[1]) - 1 ? 'bg-[#474c50] text-white dark:bg-[#4b4b4b]' : null,
+                  'truncate rounded-md px-4 py-1 hover:bg-[#4b4b4b] hover:text-white dark:hover:bg-[#474c50]'
+                )}
+                key={item[1]}
+                id={`y-item-${item[1]}`}
+              >
+                <a
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => {
+                    router.navigate({
+                      to: router.latestLocation.pathname,
+                      search: { chapter: UrlUtils.encodeUrlById(item[1].toString()) },
+                      replace: true
+                    })
+                  }}
                 >
-                  <a
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => {
-                      router.navigate({
-                        to: router.latestLocation.pathname,
-                        search: { chapter: UrlUtils.encodeUrlById(item[1].toString()) },
-                        replace: true
-                      })
-                    }}
-                  >
-                    {item[0]}
-                  </a>
-                </li>
-              ))}
-        </ul>
-        <div className="h-[140px]" />
-      </motion.div>
-    </div>
+                  {item[0]}
+                </a>
+              </li>
+            ))}
+      </ul>
+      <div className={`h-[${bottomHeight}px]`} />
+    </motion.div>
   )
 
   return showDirectoryFlag ? (
-    <>{directoryContent}</>
+    <>
+      <div>
+        {showDirectoryFlag ? (
+          <div className="my-3 line-clamp-2 h-auto min-w-[220px] max-w-[220px] px-2 text-center text-xl">
+            <div>{bookName}</div>
+            <DirectoryButtons
+              catalog={catalog}
+              setCatalog={setCatalog}
+              setup={setup}
+              setSetUp={setSetUp}
+            />
+          </div>
+        ) : null}
+        {directoryContent(130)}
+      </div>
+    </>
   ) : (
     <Drawer
       loading={allChapter.length === 0}
@@ -164,7 +166,7 @@ export default function BookDirectory({
       width={230}
       styles={{ body: { padding: '10px', overflow: 'hidden' } }}
     >
-      {directoryContent}
+      {directoryContent()}
     </Drawer>
   )
 }
