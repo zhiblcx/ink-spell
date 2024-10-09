@@ -1,10 +1,11 @@
 import BookContentSetUp from '@/shared/components/BookContentSetUp'
 import { useActionBookStore } from '@/shared/store'
-import { BookUtils } from '@/shared/utils'
+import { useSetUpStore } from '@/shared/store/SetupStore'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useLocation, useRouter } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import useSmoothScroll from 'react-smooth-scroll-hook'
+import { backgroundStyleFunc } from './backgroundStyle'
 
 interface ContentActiveType {
   bookId: number
@@ -57,19 +58,11 @@ function Content({ bookId, bookMark, currentContent = [], currentChapter, allCha
   const { showDirectoryFlag, updateShowDirectoryFlag, updateShowSetUpFlag, showSetUpFlag } = useActionBookStore()
   const { chapter } = location.search as SearchType
   const encodeChapter = parseInt(UrlUtils.decodeUrlById(chapter.toString()))
+  const { setup } = useSetUpStore()
   const bookTitle = {
     catalog: '目录',
     previous: '上一章',
     next: '下一章'
-  }
-
-  const backgroundImage = BookUtils.getReaderBackground()
-
-  const backgroundStyle = {
-    background: `url(${backgroundImage})`,
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center'
   }
 
   const { scrollTo } = useSmoothScroll({
@@ -88,7 +81,11 @@ function Content({ bookId, bookMark, currentContent = [], currentChapter, allCha
     <motion.div
       layout
       ref={ref}
-      style={BookUtils.getReaderBackground() ? backgroundStyle : undefined}
+      style={
+        setup.readerBackground
+          ? backgroundStyleFunc(setup.readerBackground?.background?.includes('data:image'), setup.readerBackground)
+          : undefined
+      }
       className="scroll grow overflow-y-auto px-5 pr-2"
     >
       <div className="my-3 text-center text-3xl font-bold">{currentChapter}</div>

@@ -33,7 +33,7 @@ export class BookUtils {
   /**
    * @example
    * ```ts
-   * JSON.parse(BookUtils.getBooks() ?? '[]')
+   * JSON.parse(BookUtils.getReaderBackground() ?? '[]')
    * ```
    */
   static getReaderBackground(): string | null {
@@ -64,7 +64,7 @@ export class BookUtils {
   /**
    * @example
    * ```ts
-   * BookUtils.setSetup(JSON.stringify(Array.from(map)))
+   * BookUtils.setReaderBackground(JSON.stringify(Array.from(map)))
    * ```
    */
   static setReaderBackground(readerBackground: string) {
@@ -94,7 +94,7 @@ export class BookUtils {
   /**
    * @example
    * ```ts
-   * BookUtils.clearSetup()
+   * BookUtils.clearReaderBackground()
    * ```
    */
   static clearReaderBackground() {

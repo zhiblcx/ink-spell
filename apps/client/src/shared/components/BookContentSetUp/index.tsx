@@ -1,10 +1,13 @@
 import { deleteBookMarkMutation, insertBookMarkMutation } from '@/features/book'
 import { Theme } from '@/shared/enums'
+import { ClickSetupEnum } from '@/shared/enums/ClickSetupEnum'
 import { useActionBookStore, useThemeStore } from '@/shared/store'
 import { useSetUpStore } from '@/shared/store/SetupStore'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
+import { DownOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
+
 import {
   AArrowDown,
   AArrowUp,
@@ -19,6 +22,8 @@ import {
   Settings
 } from 'lucide-react'
 import ThemeToggle from '../ThemeToggle'
+import UploadBase64Photo from '../UploadBase64Photo'
+import { SetupTitleEnum } from './SetupTitleEnum'
 
 interface IconProps {
   Icon: React.ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>>
@@ -27,7 +32,6 @@ interface IconProps {
 function Icon_28({ Icon }: IconProps) {
   return <Icon size={28} />
 }
-
 interface BookContentSetUpType {
   bookId: number
   bookMark: Array<number>
@@ -48,7 +52,7 @@ export default function BookContentSetUp({
   const [open, setOpen] = useState(false)
   const { setup, setSetUp } = useSetUpStore()
   const { theme } = useThemeStore()
-  const [clickSetUp, setClickSetUp] = useState(false)
+  const [clickSetUp, setClickSetUp] = useState(ClickSetupEnum.DEFAULT)
   const [sliderDirectory, setSliderDirectory] = useState(encodeChapter)
   const [schedule, setSchedule] = useState('0.0%')
   const [bookmark, setBookMark] = useState(false)
@@ -57,18 +61,6 @@ export default function BookContentSetUp({
   const queryClientFunction = () => queryClient.invalidateQueries({ queryKey: ['bookMark'] })
   const { mutate: collectBookMarkMutation } = insertBookMarkMutation(queryClientFunction)
   const { mutate: cancelCollectBookMarkMutation } = deleteBookMarkMutation(queryClientFunction)
-  const setupTitle = {
-    lightness: '亮度',
-    fontSize: '字号',
-    lineHeight: '行距',
-    setupTheme: '主题',
-    directory: '目录',
-    darkMode: '暗夜模式',
-    lightMode: '日间模式',
-    collectBookmark: '添加书签',
-    cancelCollectBookmark: '删除书签',
-    setup: '设置'
-  }
 
   useEffect(() => {
     setSchedule(((encodeChapter / allChapterTotal) * 100).toFixed(1) + '%')
@@ -107,16 +99,16 @@ export default function BookContentSetUp({
       closable={false}
       onClose={() => setOpen(false)}
       open={open}
-      height={clickSetUp ? 270 : 200}
+      height={clickSetUp === ClickSetupEnum.DEFAULT ? 270 : 200}
     >
       <div className="flex h-[100%] flex-col justify-between">
         <div className="grow">
-          {clickSetUp ? (
+          {clickSetUp === ClickSetupEnum.DEFAULT ? (
             // 设置
             <div className="flex w-[100%] text-base">
               <ul className="grow space-y-2">
                 <li className="flex grow items-center">
-                  <p className="mr-4 flex items-center">{setupTitle.lightness}:</p>
+                  <p className="mr-4 flex items-center">{SetupTitleEnum.LIGHTNESS}:</p>
                   <Slider
                     max={1}
                     min={0.4}
@@ -127,7 +119,7 @@ export default function BookContentSetUp({
                   />
                 </li>
                 <li className="flex grow items-center">
-                  <p className="mr-4">{setupTitle.fontSize}：</p>
+                  <p className="mr-4">{SetupTitleEnum.FONT_SIZE}：</p>
                   <div className="flex grow items-center justify-around">
                     <AArrowDown
                       size={34}
@@ -149,7 +141,7 @@ export default function BookContentSetUp({
                   </div>
                 </li>
                 <li className="flex grow items-center">
-                  <p className="mr-4">{setupTitle.lineHeight}：</p>
+                  <p className="mr-4">{SetupTitleEnum.LINE_HEIGHT}：</p>
                   <div className="flex grow items-center justify-around">
                     <Equal
                       size={34}
@@ -171,15 +163,15 @@ export default function BookContentSetUp({
                   </div>
                 </li>
                 <li className="flex grow items-center">
-                  <p className="mr-4">{setupTitle.setupTheme}：</p>
+                  <p className="mr-4">{SetupTitleEnum.SETUP_THEME}：</p>
                   <div className="flex grow items-center justify-around">
-                    <Button>背景</Button>
-                    <Button>字体</Button>
+                    <Button onClick={() => setClickSetUp(ClickSetupEnum.BACKGROUND)}>自定义</Button>
+                    <Button onClick={() => setSetUp({ ...setup, readerBackground: undefined })}>恢复</Button>
                   </div>
                 </li>
               </ul>
             </div>
-          ) : (
+          ) : clickSetUp === ClickSetupEnum.SETUP ? (
             // 阅读进度
             <div className="flex h-[100%] flex-col items-center justify-center">
               <div>
@@ -207,6 +199,90 @@ export default function BookContentSetUp({
                 />
               </div>
             </div>
+          ) : (
+            // 背景设置
+            <div className="flex w-[100%] text-base">
+              <ul className="grow space-y-4">
+                <li className="flex grow items-center">
+                  <p className="mr-4">{SetupTitleEnum.BACKGROUND}：</p>
+                  <div className="flex grow items-center justify-around">
+                    <UploadBase64Photo />
+                    <ColorPicker
+                      defaultValue={[
+                        {
+                          color: 'rgb(16, 142, 233)',
+                          percent: 0
+                        },
+                        {
+                          color: 'rgb(135, 208, 104)',
+                          percent: 100
+                        }
+                      ]}
+                      allowClear
+                      placement="top"
+                      showText={() => <DownOutlined />}
+                      mode={['single', 'gradient']}
+                      onChangeComplete={(color) =>
+                        setSetUp({
+                          ...setup,
+                          readerBackground: {
+                            background: color.toCssString(),
+                            typeFont: setup.readerBackground?.typeFont
+                          }
+                        })
+                      }
+                    />
+                    <Button
+                      onClick={() =>
+                        setSetUp({
+                          ...setup,
+                          readerBackground: {
+                            background: undefined,
+                            typeFont: setup.readerBackground?.typeFont
+                          }
+                        })
+                      }
+                    >
+                      恢复
+                    </Button>
+                  </div>
+                </li>
+                <li className="flex grow items-center">
+                  <p className="mr-4">{SetupTitleEnum.TYPE_FONT}：</p>
+                  <div className="flex grow items-center justify-around">
+                    <ColorPicker
+                      defaultValue={setup.readerBackground?.typeFont ?? null}
+                      allowClear
+                      placement="top"
+                      showText={() => <DownOutlined />}
+                      mode={['single']}
+                      onChangeComplete={(color) =>
+                        setSetUp({
+                          ...setup,
+                          readerBackground: {
+                            typeFont: color.toCssString(),
+                            background: setup.readerBackground?.background
+                          }
+                        })
+                      }
+                    />
+                    <Button
+                      onClick={() =>
+                        setSetUp({
+                          ...setup,
+                          readerBackground: {
+                            typeFont: undefined,
+                            background: setup.readerBackground?.background
+                          }
+                        })
+                      }
+                    >
+                      恢复
+                    </Button>
+                  </div>
+                </li>
+              </ul>
+            </div>
           )}
         </div>
         <ul className="flex justify-around text-xs">
@@ -218,12 +294,12 @@ export default function BookContentSetUp({
             }}
           >
             <Icon_28 Icon={List} />
-            <p>{setupTitle.directory}</p>
+            <p>{SetupTitleEnum.CATALOG}</p>
           </li>
 
           <li className="flex cursor-pointer flex-col items-center space-y-1">
             <ThemeToggle size={28} />
-            <p>{theme === Theme.DARK ? setupTitle.darkMode : setupTitle.lightMode}</p>
+            <p>{theme === Theme.DARK ? SetupTitleEnum.DARK_MODE : SetupTitleEnum.LIGHT_MODE}</p>
           </li>
 
           <li
@@ -231,15 +307,19 @@ export default function BookContentSetUp({
             onClick={operateBookMark}
           >
             <Icon_28 Icon={!bookmark ? BookmarkPlus : BookmarkMinus} />
-            <p>{!bookmark ? setupTitle.collectBookmark : setupTitle.cancelCollectBookmark}</p>
+            <p>{!bookmark ? SetupTitleEnum.COLLECT_BOOKMARK : SetupTitleEnum.CANCEL_COLLECT_BOOKMARK}</p>
           </li>
 
           <li
             className="flex cursor-pointer flex-col items-center space-y-1"
-            onClick={() => setClickSetUp(!clickSetUp)}
+            onClick={() =>
+              clickSetUp === ClickSetupEnum.DEFAULT
+                ? setClickSetUp(ClickSetupEnum.SETUP)
+                : setClickSetUp(ClickSetupEnum.DEFAULT)
+            }
           >
             <Icon_28 Icon={Settings} />
-            <p>{setupTitle.setup}</p>
+            <p>{SetupTitleEnum.SETUP}</p>
           </li>
         </ul>
       </div>

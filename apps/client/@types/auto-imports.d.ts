@@ -10,6 +10,7 @@ declare global {
   const Button: typeof import('antd')['Button']
   const Card: typeof import('antd')['Card']
   const Checkbox: typeof import('antd')['Checkbox']
+  const ColorPicker: typeof import('antd')['ColorPicker']
   const ConfigProvider: typeof import('antd')['ConfigProvider']
   const Divider: typeof import('antd')['Divider']
   const Drawer: typeof import('antd')['Drawer']

@@ -1,9 +1,10 @@
-import { BookUtils } from '@/shared/utils'
+import { useSetUpStore } from '@/shared/store/SetupStore'
 import { UploadOutlined } from '@ant-design/icons'
 import { message, UploadProps } from 'antd'
 import ImgCrop from 'antd-img-crop'
 
 export default function UploadBase64Photo() {
+  const { setup, setSetUp } = useSetUpStore()
   const props: UploadProps = {
     maxCount: 1,
     fileList: [],
@@ -16,8 +17,11 @@ export default function UploadBase64Photo() {
 
         reader.onloadend = () => {
           const base64String = reader.result
-          message.success('上传成功，请重新刷新一下吧~')
-          BookUtils.setReaderBackground(base64String as string)
+          message.success('上传成功')
+          setSetUp({
+            ...setup,
+            readerBackground: { background: base64String as string, typeFont: setup.readerBackground?.typeFont }
+          })
         }
 
         reader.readAsDataURL(file)
@@ -30,7 +34,7 @@ export default function UploadBase64Photo() {
   return (
     <ImgCrop rotationSlider>
       <Upload {...props}>
-        <Button icon={<UploadOutlined />}>上传背景图片</Button>
+        <Button icon={<UploadOutlined />}>上传</Button>
       </Upload>
     </ImgCrop>
   )
