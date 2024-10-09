@@ -29,19 +29,23 @@ export default function BookShelfDetail({
   const noteParent = useRef(null)
   const [fallLayout, setFallLayout] = useState(false)
 
-  const handleResize = useCallback(() => {
+  let handleResize = useCallback(() => {
     if (noteParent.current && noteGrantParent.current) {
       setFallLayout(cardLocation(noteParent, noteGrantParent))
     }
   }, [noteParent])
 
   useEffect(() => {
-    setTimeout(() => {
-      handleResize()
+    if (window.innerWidth > 400) {
       setTimeout(() => {
         handleResize()
-      }, 0)
-    }, 500)
+        setTimeout(() => {
+          handleResize()
+        }, 0)
+      }, 500)
+    } else {
+      handleResize = () => {}
+    }
 
     window.addEventListener('resize', handleResize)
 

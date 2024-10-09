@@ -27,10 +27,17 @@ function Page() {
   const { mutate } = downloadBookShelfNotesMutation()
 
   useEffect(() => {
-    const handleResize = () => {
+    let handleResize = () => {
       cardLocation(noteParent, noteGrantParent)
     }
-    setFallLayout(cardLocation(noteParent, noteGrantParent))
+    if (window.innerWidth > 400) {
+      handleResize = () => {
+        cardLocation(noteParent, noteGrantParent)
+      }
+      setFallLayout(cardLocation(noteParent, noteGrantParent))
+    } else {
+      handleResize = () => {}
+    }
 
     window.addEventListener('resize', handleResize)
     return () => {
