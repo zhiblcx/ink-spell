@@ -20,7 +20,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma:migrate:dev": "pnpm set:env -- prisma migrate dev --skip-seed",
-    "prisma:seed": "pnpm set:env -- ts-node ./prisma/seed/user.ts",
+    "prisma:seed": "pnpm set:env -- ts-node ./prisma/seed/role.ts && pnpm set:env -- ts-node ./prisma/seed/user.ts",
+    "prisma:seed:user": "pnpm set:env -- ts-node ./prisma/seed/user.ts",
+    "prisma:seed:role": "pnpm set:env -- ts-node ./prisma/seed/role.ts",
     "prisma:generate": "pnpm set:env  -- prisma generate",
     "postinstall": "prisma generate"
   },

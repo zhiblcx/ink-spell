@@ -11,7 +11,8 @@ async function seed() {
       account: 'nicole123',
       password: '123456',
       avatar: appConfig.DEFAULT_AVATAR,
-      boofShlefs: {
+      rolesId: 'user',
+      bookShelfs: {
         create: {
           label: '全部图书',
           createTimer: dayjs().toDate(),
@@ -23,7 +24,19 @@ async function seed() {
     },
   });
 
-  process.stdout.write('Seed your database successfully!\n');
+  await prisma.user.upsert({
+    where: { username: 'admin' },
+    update: {},
+    create: {
+      username: 'admin',
+      account: 'admin123',
+      password: '123456',
+      rolesId: 'admin',
+      avatar: appConfig.DEFAULT_AVATAR,
+    },
+  });
+
+  process.stdout.write('user Seed your database successfully!\n');
 }
 
 seed()

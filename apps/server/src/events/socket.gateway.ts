@@ -1,6 +1,6 @@
 import { PrismaService } from '@/modules/prisma/prisma.service';
 import { UserService } from '@/modules/user/user.service';
-import { MessageEnum } from '@/shared/constants/MessageEnum';
+import { MessageEnum } from '@/shared/enums/MessageEnum';
 import { BadRequestException } from '@nestjs/common';
 import {
   ConnectedSocket,

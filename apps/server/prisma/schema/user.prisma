@@ -6,7 +6,7 @@ model User {
   sex              String             @default("女")
   email            String?            @unique
   avatar           String
-  boofShlefs       BookShelf[]
+  bookShelfs       BookShelf[]
   books            Book[]
   isDelete         Boolean            @default(false) @map("is_delete")
   Message          Message[]
@@ -14,4 +14,6 @@ model User {
   following        Follow[]           @relation("UserFollowing")
   CollectBookShelf CollectBookShelf[]
   BookMark         BookMark[]
+  Roles            Roles              @relation(fields: [rolesId], references: [id])
+  rolesId          String             @default("user")
 }

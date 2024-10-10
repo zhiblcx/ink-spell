@@ -1,7 +1,9 @@
 import { APIResponse } from '@/core/decorator/APIResponse';
+import { Public } from '@/core/decorator/auth.decorator';
+import { Roles } from '@/core/decorator/roles.decorator';
+import { Role } from '@/shared/enums/role.enum';
 import { E } from '@/shared/res/e';
 import { R } from '@/shared/res/r';
-import { Public } from '@/shared/utils/setMetadata';
 import {
   Body,
   Controller,
@@ -202,6 +204,7 @@ export class UserController {
     });
   }
 
+  @Roles(Role.Admin)
   // 管理员重置用户密码
   @Put('/reset/password/:userId')
   @ApiOperation({ summary: '重置用户密码' })

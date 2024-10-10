@@ -1,7 +1,7 @@
 import { APIResponse } from '@/core/decorator/APIResponse';
+import { Public } from '@/core/decorator/auth.decorator';
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Public } from '../../shared/utils/setMetadata';
 import { AuthService } from './auth.service';
 import { LoginDao } from './dto/login-auth.dto';
 import { RegisterDto } from './dto/register-auth.dto';
