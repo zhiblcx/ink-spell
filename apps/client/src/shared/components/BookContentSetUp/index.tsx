@@ -65,6 +65,7 @@ export default function BookContentSetUp({
   useEffect(() => {
     setSchedule(((encodeChapter / allChapterTotal) * 100).toFixed(1) + '%')
     setBookMark(bookMark.findIndex((item) => item == encodeChapter) != -1)
+    setSliderDirectory(encodeChapter)
   }, [encodeChapter])
 
   useEffect(() => {
@@ -90,6 +91,22 @@ export default function BookContentSetUp({
       // 添加书签
       collectBookMarkMutation({ bookId, chapter: encodeChapter })
       setBookMark(true)
+    }
+  }
+
+  let DEFAULT_COLOR = null
+  DEFAULT_COLOR = setup.readerBackground?.background
+
+  if (setup.readerBackground?.background?.includes('linear-gradient')) {
+    // 渐变色
+    DEFAULT_COLOR = []
+    const regex = /(rgb\(\d+,\d+,\d+\) \d+%)|(rgba\(\d+,\d+,\d+\,\d+(\.\d+)?\) \d+%)/g
+    const match = setup.readerBackground?.background.match(regex) || []
+    for (let i = 0; i < match?.length; i++) {
+      DEFAULT_COLOR.push({
+        color: match && match[i].split(' ')[0],
+        percent: parseInt(match && match[i].split(' ')[1])
+      })
     }
   }
 
@@ -186,7 +203,6 @@ export default function BookContentSetUp({
                 <Slider
                   min={1}
                   max={allChapterTotal}
-                  defaultValue={encodeChapter}
                   className="w-[80%]"
                   value={sliderDirectory}
                   onChange={(value) => {
@@ -208,16 +224,7 @@ export default function BookContentSetUp({
                   <div className="flex grow items-center justify-around">
                     <UploadBase64Photo />
                     <ColorPicker
-                      defaultValue={[
-                        {
-                          color: 'rgb(16, 142, 233)',
-                          percent: 0
-                        },
-                        {
-                          color: 'rgb(135, 208, 104)',
-                          percent: 100
-                        }
-                      ]}
+                      defaultValue={DEFAULT_COLOR ?? null}
                       allowClear
                       placement="top"
                       showText={() => <DownOutlined />}
