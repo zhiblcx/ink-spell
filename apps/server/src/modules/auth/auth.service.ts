@@ -71,7 +71,7 @@ export class AuthService {
           username,
           email,
           avatar: appConfig.DEFAULT_AVATAR,
-          boofShlefs: {
+          bookShelfs: {
             create: {
               label: '全部图书',
               createTimer: dayjs().toDate(),

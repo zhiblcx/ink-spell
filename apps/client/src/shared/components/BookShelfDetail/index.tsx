@@ -44,7 +44,7 @@ export default function BookShelfDetail({
         }, 0)
       }, 500)
     } else {
-      handleResize = () => {}
+      setFallLayout(true)
     }
 
     window.addEventListener('resize', handleResize)
@@ -80,7 +80,11 @@ export default function BookShelfDetail({
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         style={{ height: 'calc(100% - 80px)' }}
-        className={clsx(fallLayout ? 'block' : 'hidden', 'scroll absolute h-full overflow-hidden overflow-y-scroll')}
+        className={clsx(
+          fallLayout ? 'block' : 'hidden',
+          window.innerWidth < 400 ? 'flex justify-center' : 'absolute',
+          'scroll h-full overflow-hidden overflow-y-scroll'
+        )}
       >
         <div
           className="relative"

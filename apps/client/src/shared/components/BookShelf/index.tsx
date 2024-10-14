@@ -229,7 +229,9 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
 
   useEffect(() => {
     if (searchBookName !== '') {
-      const regex = new RegExp('.*' + searchBookName.split('').join('.*') + '.*', 'i')
+      const escapedKeyword = searchBookName.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+      const regexPattern = `.*${escapedKeyword}.*`
+      const regex = new RegExp(regexPattern, 'i')
       const filterOptions = books.filter((item) => {
         return regex.test(item.name ?? '')
       })
@@ -271,7 +273,7 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
               .map((item: Ink) => {
                 return (
                   <li
-                    className="flex bg-red-100 pb-5"
+                    className="flex pb-5"
                     key={item.id}
                   >
                     <Card

@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client';
+import { hash } from 'bcrypt';
 import * as dayjs from 'dayjs';
+import { env } from 'process';
 import { appConfig } from '../../src/config/AppConfig';
 const prisma = new PrismaClient();
 async function seed() {
@@ -9,7 +11,7 @@ async function seed() {
     create: {
       username: 'nicole',
       account: 'nicole123',
-      password: '123456',
+      password: await hash('123456', Number(env.HASH_SALT_OR_ROUNDS)),
       avatar: appConfig.DEFAULT_AVATAR,
       rolesId: 'user',
       bookShelfs: {
@@ -30,7 +32,7 @@ async function seed() {
     create: {
       username: 'admin',
       account: 'admin123',
-      password: '123456',
+      password: await hash('123456', Number(env.HASH_SALT_OR_ROUNDS)),
       rolesId: 'admin',
       avatar: appConfig.DEFAULT_AVATAR,
     },

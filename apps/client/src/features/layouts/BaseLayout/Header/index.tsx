@@ -14,7 +14,7 @@ import { useQuery } from '@tanstack/react-query'
 import { ReactNode, useNavigate, useRouter } from '@tanstack/react-router'
 import type { MenuProps, UploadFile, UploadProps } from 'antd'
 import { message } from 'antd'
-import { AlignLeft, AlignRight } from 'lucide-react'
+import { AlignLeft, AlignRight, FileUp, RotateCw } from 'lucide-react'
 
 export default function Header() {
   const router = useRouter()
@@ -169,8 +169,14 @@ export default function Header() {
   }
 
   function fuzzySearch(keyword: string, item: { label: string }) {
-    const regex = new RegExp('.*' + keyword.split('').join('.*') + '.*', 'i')
-    return regex.test(item.label)
+    const escapedKeyword = keyword.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+    const regexPattern = `.*${escapedKeyword}.*`
+    return new RegExp(regexPattern, 'i').test(item.label)
+  }
+
+  // 刷新页面
+  function refresh() {
+    location.reload()
   }
 
   return (
@@ -197,6 +203,7 @@ export default function Header() {
         ) : null}
       </div>
       <div className="flex items-center justify-center min-[375px]:ml-2 min-[375px]:space-x-2 md:mr-10 md:space-x-4">
+        <RotateCw onClick={refresh} />
         <ThemeToggle />
         <Dropdown
           menu={{ items }}
@@ -211,7 +218,16 @@ export default function Header() {
           {...props}
           multiple
         >
-          <Button type="primary">导入图书</Button>
+          {window.innerWidth > 400 ? (
+            <Button type="primary">导入图书</Button>
+          ) : (
+            <Button
+              type="primary"
+              shape="circle"
+            >
+              <FileUp />
+            </Button>
+          )}
         </Upload>
       </div>
 
