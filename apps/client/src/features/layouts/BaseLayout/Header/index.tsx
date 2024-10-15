@@ -1,27 +1,20 @@
 import { selectBookByBookShelfIdQuery, selectMyBookShelfQuery } from '@/features/bookshelf'
 import { selectOneselfInfoQuery, updateUserPasswordMutation } from '@/features/user'
-import { request } from '@/shared/API'
 import ThemeToggle from '@/shared/components/ThemeToggle'
 import { Menu } from '@/shared/enums'
 import { useActionBookStore, useMenuStore } from '@/shared/store'
 import { Book } from '@/shared/types'
-import { AuthUtils } from '@/shared/utils'
-import { newConfirmPasswordRule } from '@/shared/utils/confirmPasswordRule'
-import { Md5Utils } from '@/shared/utils/Md5Utils'
-import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { LockOutlined } from '@ant-design/icons'
+import { UrlUtils } from '@/shared/utils'
 import { useQuery } from '@tanstack/react-query'
-import { ReactNode, useNavigate, useRouter } from '@tanstack/react-router'
-import type { MenuProps, UploadFile, UploadProps } from 'antd'
-import { message } from 'antd'
-import { AlignLeft, AlignRight, FileUp, RotateCw } from 'lucide-react'
+import { ReactNode, useRouter } from '@tanstack/react-router'
+import { AlignLeft, AlignRight, RotateCw } from 'lucide-react'
+import { AvatarItems, ImportBook, ResetPassword } from './components'
 
 export default function Header() {
   const router = useRouter()
-  const navigate = useNavigate()
   const showSearchReg = /^\/$|^\/bookshelf\/.*$/
   const { menu, setMenu } = useMenuStore()
-  const { uploadFileFlag, updateUploadFileFlag, updateSearchBookName } = useActionBookStore()
+  const { updateSearchBookName } = useActionBookStore()
   const [options, setOptions] = useState([])
   const [optionTotal, setOptionTotal] = useState([])
   const [openFlag, setOpenFlag] = useState(false)
@@ -51,93 +44,6 @@ export default function Header() {
 
   const query = useQuery(selectOneselfInfoQuery)
   const { mutate } = updateUserPasswordMutation()
-
-  interface FileWithMD5 extends File {
-    md5?: string
-  }
-  interface UploadFileMD5 extends UploadFile {
-    md5?: string
-  }
-
-  const getExtraData: UploadProps['data'] = (file: UploadFileMD5) => {
-    return {
-      md5: file.md5,
-      bookShelfId
-    }
-  }
-
-  const props: UploadProps = {
-    accept: 'text/plain',
-    action: '/api/book/upload/file',
-    data: getExtraData,
-    headers: {
-      authorization: `Bearer ${AuthUtils.getToken()}`
-    },
-    showUploadList: false,
-    method: 'post',
-    maxCount: 5,
-    name: 'file',
-    beforeUpload: async (file: FileWithMD5) => {
-      const isTxt = file.type === 'text/plain'
-      if (!isTxt) {
-        message.error(`仅支持上传 txt 文件`)
-      }
-
-      file.md5 = await Md5Utils.getFileMD5(file)
-      const result = await request.get(`/book/md5?md5=${file.md5}&file_name=${file.name}`)
-
-      if (result.data.data.md5) {
-        if (result.data.data.path === '') {
-          message.error('请勿重复上传')
-        } else {
-          message.success('上传成功')
-          if (!uploadFileFlag) {
-            updateUploadFileFlag(true)
-          }
-        }
-        return false
-      }
-      return isTxt || Upload.LIST_IGNORE
-    },
-    onChange: (info) => {
-      if (info.file.status === 'done') {
-        message.success('上传成功')
-        if (!uploadFileFlag) {
-          updateUploadFileFlag(true)
-        }
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`)
-      }
-    }
-  }
-
-  const items: MenuProps['items'] = [
-    {
-      key: 1,
-      label: <div onClick={() => navigate({ to: '/profile' })}>个人资料</div>
-    },
-    {
-      key: 2,
-      label: <div onClick={() => navigate({ to: '/collectbookshelf' })}>我的收藏</div>
-    },
-    {
-      key: 3,
-      label: <div onClick={() => setOpenFlag(true)}>重置密码</div>
-    },
-    {
-      key: 4,
-      label: (
-        <div
-          onClick={() => {
-            AuthUtils.clearToken()
-            navigate({ to: '/signin', replace: true })
-          }}
-        >
-          退出登录
-        </div>
-      )
-    }
-  ]
 
   function Icon(props: ReactNode) {
     return (
@@ -204,90 +110,23 @@ export default function Header() {
       </div>
       <div className="flex items-center justify-center min-[375px]:ml-2 min-[375px]:space-x-2 md:mr-10 md:space-x-4">
         <RotateCw onClick={refresh} />
+
         <ThemeToggle />
-        <Dropdown
-          menu={{ items }}
-          placement="bottomLeft"
-        >
-          <Avatar
-            src={import.meta.env.VITE_SERVER_URL + query.data?.data.data.avatar}
-            size={34}
-          />
-        </Dropdown>
-        <Upload
-          {...props}
-          multiple
-        >
-          {window.innerWidth > 400 ? (
-            <Button type="primary">导入图书</Button>
-          ) : (
-            <Button
-              type="primary"
-              shape="circle"
-            >
-              <FileUp />
-            </Button>
-          )}
-        </Upload>
+
+        <AvatarItems
+          setOpenFlag={setOpenFlag}
+          avatar={query.data?.data.data.avatar}
+        />
+
+        <ImportBook bookShelfId={bookShelfId} />
       </div>
 
-      <Modal
-        maskClosable
-        onCancel={() => {
-          setOpenFlag(false)
-        }}
-        onOk={() => {
-          form.submit()
-          setOpenFlag(false)
-        }}
-        title="重置密码"
-        open={openFlag}
-        okText="保存"
-        cancelText="取消"
-      >
-        <Form
-          className="flex flex-col justify-center p-5 px-8"
-          layout="vertical"
-          form={form}
-          onFinish={mutate}
-        >
-          <Form.Item
-            className="min-[375px]:w-[200px] md:w-[250px]"
-            label="旧密码"
-            name="password"
-            rules={[{ required: true, message: '密码未填写' }]}
-          >
-            <Input.Password placeholder="请输入你的密码" />
-          </Form.Item>
-
-          <Form.Item
-            className="min-[375px]:w-[200px] md:w-[250px]"
-            label="新密码"
-            name="newPassword"
-            hasFeedback
-            rules={[{ required: true, message: '密码未填写' }]}
-          >
-            <Input.Password
-              prefix={<LockOutlined />}
-              placeholder="请输入你的确认密码"
-            />
-          </Form.Item>
-
-          <Form.Item
-            className="min-[375px]:w-[200px] md:w-[250px]"
-            label="确认密码"
-            name="confirmPassword"
-            dependencies={['password']}
-            hasFeedback
-            rules={[{ required: true, message: '密码未填写' }, newConfirmPasswordRule]}
-          >
-            <Input.Password
-              prefix={<LockOutlined />}
-              placeholder="请再输入一次密码"
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
+      <ResetPassword
+        form={form}
+        openFlag={openFlag}
+        setOpenFlag={setOpenFlag}
+        mutate={mutate}
+      />
     </div>
   )
 }
