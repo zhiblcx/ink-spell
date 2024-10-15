@@ -2,7 +2,7 @@ import { collectBookByBookIdMutation, deleteBookByBookIdMutation } from '@/featu
 import { operateBookShelfMutation, selectMyBookShelfQuery, updateBookShelfDetailMutation } from '@/features/bookshelf'
 import { selectOneselfInfoQuery } from '@/features/user'
 import InkCard from '@/shared/components/InkCard'
-import { AllSelectBookFlag } from '@/shared/enums'
+import { AllSelectBookFlag, QueryKeys } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Book, BookShelfType, Ink } from '@/shared/types'
 import { BookUtils } from '@/shared/utils'
@@ -82,24 +82,26 @@ function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
 
   const queryClient = useQueryClient()
 
-  const { mutate } = deleteBookByBookIdMutation(() => queryClient.invalidateQueries({ queryKey: ['bookshelf_book'] }))
+  const { mutate } = deleteBookByBookIdMutation(() =>
+    queryClient.invalidateQueries({ queryKey: [QueryKeys.BOOKSHELF_BOOK_KEY] })
+  )
 
   const { mutate: operateBookShelfMutate } = operateBookShelfMutation(
     handlerUpdateBookShelf,
-    () => queryClient.invalidateQueries({ queryKey: ['bookshelf'] }),
-    () => queryClient.invalidateQueries({ queryKey: ['bookshelf_book'] })
+    () => queryClient.invalidateQueries({ queryKey: [QueryKeys.BOOKSHELF_KEY] }),
+    () => queryClient.invalidateQueries({ queryKey: [QueryKeys.BOOKSHELF_BOOK_KEY] })
   )
 
   const { mutate: updateBookShelfMutate } = updateBookShelfDetailMutation(() =>
-    queryClient.invalidateQueries({ queryKey: ['bookshelf'] })
+    queryClient.invalidateQueries({ queryKey: [QueryKeys.BOOKSHELF_KEY] })
   )
 
   const { mutate: collectBookMutate } = collectBookByBookIdMutation(() =>
-    queryClient.invalidateQueries({ queryKey: ['user'] })
+    queryClient.invalidateQueries({ queryKey: [QueryKeys.USER_KEY] })
   )
 
   const { mutate: cancelCollectBookMutate } = deleteBookByBookIdMutation(() =>
-    queryClient.invalidateQueries({ queryKey: ['user'] })
+    queryClient.invalidateQueries({ queryKey: [QueryKeys.USER_KEY] })
   )
 
   const handleChange = (value: string) => {

@@ -1,5 +1,5 @@
 import { deleteBookMarkMutation, insertBookMarkMutation } from '@/features/book'
-import { Theme } from '@/shared/enums'
+import { QueryKeys, Theme } from '@/shared/enums'
 import { ClickSetupEnum } from '@/shared/enums/ClickSetupEnum'
 import { useActionBookStore, useThemeStore } from '@/shared/store'
 import { useSetUpStore } from '@/shared/store/SetupStore'
@@ -58,7 +58,7 @@ export default function BookContentSetUp({
   const [bookmark, setBookMark] = useState(false)
   const { showSetUpFlag, showDirectoryFlag, updateShowSetUpFlag, updateShowDirectoryFlag } = useActionBookStore()
   const queryClient = useQueryClient()
-  const queryClientFunction = () => queryClient.invalidateQueries({ queryKey: ['bookMark'] })
+  const queryClientFunction = () => queryClient.invalidateQueries({ queryKey: [QueryKeys.BOOK_MARK_KEY] })
   const { mutate: collectBookMarkMutation } = insertBookMarkMutation(queryClientFunction)
   const { mutate: cancelCollectBookMarkMutation } = deleteBookMarkMutation(queryClientFunction)
 

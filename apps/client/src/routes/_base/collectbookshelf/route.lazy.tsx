@@ -2,6 +2,7 @@ import { cancelCollectBookShelfMutation } from '@/features/bookshelf'
 import { selectUserCollectBookShelfQuery } from '@/features/bookshelf/query'
 import BookShelfDetail from '@/shared/components/BookShelfDetail'
 import EmptyPage from '@/shared/components/EmptyPage'
+import { QueryKeys } from '@/shared/enums'
 import { BookShelfType } from '@/shared/types'
 import { useQueryClient } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
@@ -20,7 +21,7 @@ function Page() {
 
   const queryClient = useQueryClient()
   const { mutate: cancelCollectShelfMutate } = cancelCollectBookShelfMutation(() =>
-    queryClient.invalidateQueries({ queryKey: ['user-collect'] })
+    queryClient.invalidateQueries({ queryKey: [QueryKeys.USER_COLLECT_KEY] })
   )
 
   const bookShelfDetail = userCollectQuery?.data.data.reduce(

@@ -1,6 +1,6 @@
 import { selectBookByBookShelfIdQuery, selectMyBookShelfQuery } from '@/features/bookshelf'
 import BookShelf from '@/shared/components/BookShelf'
-import { AllSelectBookFlag } from '@/shared/enums'
+import { AllSelectBookFlag, QueryKeys } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
 import { useQueryClient } from '@tanstack/react-query'
@@ -26,7 +26,7 @@ export function Page() {
     setBooks(queryBook?.data?.data ?? [])
     updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
     if (uploadFileFlag) {
-      queryClient.invalidateQueries({ queryKey: ['bookshelf_book'] })
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.BOOKSHELF_BOOK_KEY] })
       updateUploadFileFlag(false)
     }
     updateIsOtherBookShelfFlag(false)
