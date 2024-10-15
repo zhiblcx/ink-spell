@@ -1,3 +1,4 @@
+import { ALL_BOOK } from '@/shared/constants';
 import { R } from '@/shared/res/r';
 import Email from '@/shared/utils/EmailTool';
 import {
@@ -73,7 +74,7 @@ export class AuthService {
           avatar: appConfig.DEFAULT_AVATAR,
           bookShelfs: {
             create: {
-              label: '全部图书',
+              label: ALL_BOOK,
               createTimer: dayjs().toDate(),
               allFlag: true,
               position: 1,

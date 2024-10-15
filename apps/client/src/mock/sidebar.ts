@@ -1,19 +1,20 @@
+import { ALL_BOOK, CHAR_ROOM, MY_FRIEND } from '@/shared/constants'
 import { BookText, Bot, Users } from 'lucide-react'
 
 export const menuList = [
   {
-    label: '/',
-    value: '全部图书',
+    label: ALL_BOOK.URL,
+    value: ALL_BOOK.NAME,
     Icon: BookText
   },
   {
-    label: '/myfriend',
-    value: '我的好友',
+    label: MY_FRIEND.URL,
+    value: MY_FRIEND.NAME,
     Icon: Users
   },
   {
-    label: '/chatroom',
-    value: '聊天室',
+    label: CHAR_ROOM.URL,
+    value: CHAR_ROOM.NAME,
     Icon: Bot
   }
 ]

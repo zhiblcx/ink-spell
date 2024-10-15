@@ -25,9 +25,7 @@ const PublicSignupRouteLazyImport = createFileRoute('/_public/signup')()
 const PublicSigninRouteLazyImport = createFileRoute('/_public/signin')()
 const BaseProfileRouteLazyImport = createFileRoute('/_base/profile')()
 const BaseMyfriendRouteLazyImport = createFileRoute('/_base/myfriend')()
-const BaseCollectbookshelfRouteLazyImport = createFileRoute(
-  '/_base/collectbookshelf',
-)()
+const BaseFavoritesRouteLazyImport = createFileRoute('/_base/favorites')()
 const BaseChatroomRouteLazyImport = createFileRoute('/_base/chatroom')()
 const BaseIndexRouteLazyImport = createFileRoute('/_base/')()
 const BaseOtherbookshelfUserIdRouteLazyImport = createFileRoute(
@@ -90,13 +88,12 @@ const BaseMyfriendRouteLazyRoute = BaseMyfriendRouteLazyImport.update({
   import('./routes/_base/myfriend/route.lazy').then((d) => d.Route),
 )
 
-const BaseCollectbookshelfRouteLazyRoute =
-  BaseCollectbookshelfRouteLazyImport.update({
-    path: '/collectbookshelf',
-    getParentRoute: () => BaseRouteRoute,
-  } as any).lazy(() =>
-    import('./routes/_base/collectbookshelf/route.lazy').then((d) => d.Route),
-  )
+const BaseFavoritesRouteLazyRoute = BaseFavoritesRouteLazyImport.update({
+  path: '/favorites',
+  getParentRoute: () => BaseRouteRoute,
+} as any).lazy(() =>
+  import('./routes/_base/favorites/route.lazy').then((d) => d.Route),
+)
 
 const BaseChatroomRouteLazyRoute = BaseChatroomRouteLazyImport.update({
   path: '/chatroom',
@@ -193,11 +190,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BaseChatroomRouteLazyImport
       parentRoute: typeof BaseRouteImport
     }
-    '/_base/collectbookshelf': {
-      id: '/_base/collectbookshelf'
-      path: '/collectbookshelf'
-      fullPath: '/collectbookshelf'
-      preLoaderRoute: typeof BaseCollectbookshelfRouteLazyImport
+    '/_base/favorites': {
+      id: '/_base/favorites'
+      path: '/favorites'
+      fullPath: '/favorites'
+      preLoaderRoute: typeof BaseFavoritesRouteLazyImport
       parentRoute: typeof BaseRouteImport
     }
     '/_base/myfriend': {
@@ -266,7 +263,7 @@ export const routeTree = rootRoute.addChildren({
   BaseRouteRoute: BaseRouteRoute.addChildren({
     BaseIndexRouteLazyRoute,
     BaseChatroomRouteLazyRoute,
-    BaseCollectbookshelfRouteLazyRoute,
+    BaseFavoritesRouteLazyRoute,
     BaseMyfriendRouteLazyRoute,
     BaseProfileRouteLazyRoute,
     BaseBookshelfBookIdRouteLazyRoute,
@@ -303,7 +300,7 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/_base/",
         "/_base/chatroom",
-        "/_base/collectbookshelf",
+        "/_base/favorites",
         "/_base/myfriend",
         "/_base/profile",
         "/_base/bookshelf/$bookId",
@@ -330,8 +327,8 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_base/chatroom/route.lazy.tsx",
       "parent": "/_base"
     },
-    "/_base/collectbookshelf": {
-      "filePath": "_base/collectbookshelf/route.lazy.tsx",
+    "/_base/favorites": {
+      "filePath": "_base/favorites/route.lazy.tsx",
       "parent": "/_base"
     },
     "/_base/myfriend": {

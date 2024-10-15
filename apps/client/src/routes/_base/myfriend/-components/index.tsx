@@ -1,6 +1,7 @@
 import { followUserByUserIdMutation, unfollowUserByFollowMutation } from '@/features/user'
 import { request } from '@/shared/API'
 import PersonCard from '@/shared/components/PersonCard'
+import { NO_EMAIL_CURRENTLY_AVAILABLE, RelationshipStatus, SHOW_BOOKSHELF } from '@/shared/constants'
 import { PaginationParams } from '@/shared/enums/PaginationParams'
 import { User } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
@@ -136,14 +137,14 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
                           {item.following.username}
                         </span>
                       }
-                      description={item.following.email ?? '暂无邮箱'}
+                      description={item.following.email ?? NO_EMAIL_CURRENTLY_AVAILABLE}
                     />
                     <div className="flex space-x-2">
                       <div
                         className="cursor-pointer"
                         onClick={() => cancelMutate(item.following.id)}
                       >
-                        {item.isMutual ? '互相关注' : '取关'}
+                        {item.isMutual ? RelationshipStatus.MUTUAL_FOLLOWING : RelationshipStatus.UNLOCK}
                       </div>
                       <div
                         className="cursor-pointer"
@@ -152,7 +153,7 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
                           router.navigate({ to: `/otherbookshelf/${id}` })
                         }}
                       >
-                        查看书架
+                        {SHOW_BOOKSHELF}
                       </div>
                     </div>
                   </List.Item>
@@ -166,14 +167,14 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
                     <List.Item.Meta
                       avatar={<Avatar src={import.meta.env.VITE_SERVER_URL + item.follower.avatar} />}
                       title={<span onClick={() => followingClick(item)}>{item.follower.username}</span>}
-                      description={item.follower.email ?? '暂无邮箱'}
+                      description={item.follower.email ?? NO_EMAIL_CURRENTLY_AVAILABLE}
                     />
                     <div className="flex space-x-2">
                       <div
                         className="cursor-pointer"
                         onClick={() => followMutate(item.follower.id)}
                       >
-                        {item.isMutual ? '互相关注' : '回关'}
+                        {item.isMutual ? RelationshipStatus.MUTUAL_FOLLOWING : RelationshipStatus.RETURN_TO_CUSTOMS}
                       </div>
                       <div
                         className="cursor-pointer"
@@ -182,7 +183,7 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
                           router.navigate({ to: `/otherbookshelf/${id}` })
                         }}
                       >
-                        查看书架
+                        {SHOW_BOOKSHELF}
                       </div>
                     </div>
                   </List.Item>
@@ -196,14 +197,14 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
                     <List.Item.Meta
                       avatar={<Avatar src={import.meta.env.VITE_SERVER_URL + item.avatar} />}
                       title={<span>{item.username}</span>}
-                      description={item.email ?? '暂无邮箱'}
+                      description={item.email ?? NO_EMAIL_CURRENTLY_AVAILABLE}
                     />
                     <div className="flex space-x-2">
                       <div
                         className="cursor-pointer"
                         onClick={() => followMutate(item.id)}
                       >
-                        关注
+                        {RelationshipStatus.FOCUS_ON}
                       </div>
                       <div
                         className="cursor-pointer"
@@ -212,7 +213,7 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
                           router.navigate({ to: `/otherbookshelf/${id}` })
                         }}
                       >
-                        查看书架
+                        {SHOW_BOOKSHELF}
                       </div>
                     </div>
                   </List.Item>

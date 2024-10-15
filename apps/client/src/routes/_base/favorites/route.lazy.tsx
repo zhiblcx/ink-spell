@@ -7,7 +7,7 @@ import { BookShelfType } from '@/shared/types'
 import { useQueryClient } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
 
-export const Route = createLazyFileRoute('/_base/collectbookshelf')({
+export const Route = createLazyFileRoute('/_base/favorites')({
   component: () => <Page />
 })
 

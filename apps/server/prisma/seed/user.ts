@@ -1,3 +1,4 @@
+import { ALL_BOOK } from '@/shared/constants';
 import { PrismaClient } from '@prisma/client';
 import { hash } from 'bcrypt';
 import * as dayjs from 'dayjs';
@@ -16,7 +17,7 @@ async function seed() {
       rolesId: 'user',
       bookShelfs: {
         create: {
-          label: '全部图书',
+          label: ALL_BOOK,
           createTimer: dayjs().toDate(),
           allFlag: true,
           position: 1,
