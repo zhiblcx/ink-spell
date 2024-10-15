@@ -66,7 +66,7 @@ export function SetupBottom({
 
       <li className="flex cursor-pointer flex-col items-center space-y-1">
         <ThemeToggle size={28} />
-        <p>{theme === Theme.DARK ? SetupTitleEnum.DARK_MODE : SetupTitleEnum.LIGHT_MODE}</p>
+        <p>{theme === Theme.DARK ? SetupTitleEnum.LIGHT_MODE : SetupTitleEnum.DARK_MODE} </p>
       </li>
 
       <li
