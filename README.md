@@ -21,6 +21,7 @@
 - [x] follow user
 - [x] ChatRoom
 - [x] myFriend
+- [x] Forgot Password via Email
 
 ## design sketch
 

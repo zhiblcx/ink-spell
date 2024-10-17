@@ -10,3 +10,4 @@
 - [x] jschardet
 - [x] iconv-lite
 - [x] socket.io
+- [x] nodemailer @nestjs-modules/mailer
