@@ -17,7 +17,7 @@ export function AvatarItems({ setOpenFlag, avatar }: AvatarItemsType) {
     },
     {
       key: 2,
-      label: <div onClick={() => navigate({ to: PERSON_INFO.URL })}>{MY_FAVORITES.NAME}</div>
+      label: <div onClick={() => navigate({ to: MY_FAVORITES.URL })}>{MY_FAVORITES.NAME}</div>
     },
     {
       key: 3,

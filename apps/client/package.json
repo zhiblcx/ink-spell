@@ -6,9 +6,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --force --host",
-    "dev:prod": "vite --force --mode production",
-    "build": "tsc -b && vite build --prod",
+    "dev": "vite --force --host --mode dev",
+    "prod": "vite --force --mode prod",
+    "build": "tsc -b && vite build --mode production",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
