@@ -1,3 +1,4 @@
+import imageLoading from '@/assets/images/image-loading.png'
 import { updateBookByBookIdMutation } from '@/features/book'
 import { useActionBookStore } from '@/shared/store'
 import { type Ink } from '@/shared/types'
@@ -74,8 +75,14 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
             onClick={() => BookUtils.redirectToBookPage(book)}
           >
             <img
-              src={import.meta.env.VITE_SERVER_URL + book.cover}
+              style={{
+                backgroundImage: `url(${imageLoading})`,
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center'
+              }}
               className="h-[100%] w-[100%] object-cover"
+              src={import.meta.env.VITE_SERVER_URL + book.cover}
             />
           </div>
           <p className="ink-name roboto absolute bottom-4 w-[90%] truncate text-center text-xl text-white">

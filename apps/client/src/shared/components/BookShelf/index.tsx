@@ -19,12 +19,10 @@ interface BookShelfPropsType {
 export default function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
   const {
     allSelectBookFlag,
-    cancelFlag,
     bookToBookShelfFlag,
     searchBookName,
     modifyBookShelfFlag,
     isOtherBookShelfFlag,
-    updateAllSelectFlag,
     updateSearchBookName
   } = useActionBookStore()
   const [form] = Form.useForm()
