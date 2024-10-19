@@ -1,6 +1,7 @@
 export * from '../components/BookContentSetUp/Enums/ClickSetupEnum'
 export * from './AllSelectBookFlag'
 export * from './DirectoryMode'
+export * from './LanguageEnums'
 export * from './Menu'
 export * from './MessageEnum'
 export * from './PaginationParams'

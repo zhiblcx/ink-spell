@@ -9,7 +9,6 @@ const DEFAULT_PORT = 6600
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const { VITE_BASE_API_PORT, VITE_BASE_API_PREFIX, VITE_SERVER_URL } = loadEnv(mode, process.cwd())
-  console.log(mode)
   return {
     server: {
       port: parseInt(VITE_BASE_API_PORT) || DEFAULT_PORT,

@@ -1,5 +1,6 @@
 export * from './AuthUtils'
 export * from './BookUtils'
+export * from './LanguageUtils'
 export * from './Md5Utils'
 export * from './MenuUtils'
 export * from './ThemeUtils'

@@ -1,0 +1,20 @@
+{
+  "recover": "恢复",
+  "reset_password": "重置密码",
+  "import_book": "导入图书",
+  "show_bookshelf": "查看书架",
+  "no_email_currently_available": "暂无邮箱",
+  "customize": "自定义",
+  "focus_on": "关注",
+  "un_focus": "取关",
+  "follow": "关注",
+  "mutual_following": "互相关注",
+  "return_to_customs": "回关",
+  "person_info": "个人资料",
+  "my_favorites": "我的收藏",
+  "logout": "退出登录",
+  "all_book": "全部图书",
+  "my_friend": "我的好友",
+  "char_room": "聊天室",
+  "language": "语言"
+}

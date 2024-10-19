@@ -1,6 +1,5 @@
 import { selectBookByBookShelfIdQuery, selectMyBookShelfQuery } from '@/features/bookshelf'
 import { selectOneselfInfoQuery, updateUserPasswordMutation } from '@/features/user'
-import ThemeToggle from '@/shared/components/ThemeToggle'
 import { Menu } from '@/shared/enums'
 import { useActionBookStore, useMenuStore } from '@/shared/store'
 import { Book } from '@/shared/types'
@@ -8,7 +7,7 @@ import { UrlUtils } from '@/shared/utils'
 import { useQuery } from '@tanstack/react-query'
 import { ReactNode, useRouter } from '@tanstack/react-router'
 import { AlignLeft, AlignRight, RotateCw } from 'lucide-react'
-import { AvatarItems, ImportBook, ResetPassword } from './components'
+import { AvatarItems, ImportBook, ResetPassword, SettingMenu } from './components'
 
 export default function Header() {
   const router = useRouter()
@@ -111,7 +110,7 @@ export default function Header() {
       <div className="flex items-center justify-center min-[375px]:ml-2 min-[375px]:space-x-2 md:mr-10 md:space-x-4">
         <RotateCw onClick={refresh} />
 
-        <ThemeToggle />
+        <SettingMenu />
 
         <AvatarItems
           setOpenFlag={setOpenFlag}

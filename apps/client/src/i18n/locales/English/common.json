@@ -1,0 +1,20 @@
+{
+  "recover": "recover",
+  "reset_password": "reset password",
+  "import_book": "import book",
+  "show_bookshelf": "show bookshelf",
+  "no_email_currently_available": "no email currently available",
+  "customize": "customize",
+  "focus_on": "focus on",
+  "un_focus": "un focus",
+  "follow": "follow",
+  "mutual_following": "mutual following",
+  "return_to_customs": "return to customs",
+  "person_info": "person info",
+  "my_favorites": "my favorites",
+  "logout": "logout",
+  "all_book": "all book",
+  "my_friend": "my friend",
+  "char_room": "char room",
+  "language": "language"
+}
