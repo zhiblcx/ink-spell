@@ -1,12 +1,14 @@
 import { ClickSetupEnum } from '@/shared/components/BookContentSetUp/Enums/ClickSetupEnum'
-import { RECOVER } from '@/shared/constants'
+import { CUSTOMIZE, RECOVER } from '@/shared/constants'
 import { useSetUpStore } from '@/shared/store/SetupStore'
+import { SetUp } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { DownOutlined } from '@ant-design/icons'
 import { useRouter } from '@tanstack/react-router'
 import { AArrowDown, AArrowUp, AlignJustify, ChevronLeft, ChevronRight, Equal } from 'lucide-react'
 import UploadBase64Photo from '../../UploadBase64Photo'
 import { SetupTitleEnum } from '../Enums/SetupTitleEnum'
+import Adjuster from './Adjuster'
 
 interface SetupTopProps {
   currentChapter: string
@@ -46,6 +48,28 @@ export function SetupTop({
     })
   }
 
+  const adjustSetting = (
+    propName: keyof SetUp,
+    min: number,
+    max: number,
+    step: number,
+    action: 'increase' | 'decrement',
+    dot = false
+  ) => {
+    let newValue = setup[propName] as number | undefined
+    switch (action) {
+      case 'increase': {
+        newValue = newValue === undefined ? min + step : Math.min(newValue + step, max)
+        break
+      }
+      case 'decrement': {
+        newValue = newValue === undefined ? min : Math.max(newValue - step, min)
+        break
+      }
+    }
+    setSetUp({ ...setup, [propName]: dot ? Math.ceil(newValue * 10) / 10 : newValue })
+  }
+
   useEffect(() => {
     if (sliderDirectory != null) {
       router.navigate({
@@ -74,54 +98,30 @@ export function SetupTop({
               />
             </li>
             <li className="flex grow items-center">
-              <p className="mr-4">{SetupTitleEnum.FONT_SIZE}：</p>
-              <div className="flex grow items-center justify-around">
-                <AArrowDown
-                  size={34}
-                  onClick={() => {
-                    if (setup.fontSize > 16) {
-                      setSetUp({ ...setup, fontSize: setup.fontSize - 2 })
-                    }
-                  }}
-                />
-                <p>{setup.fontSize}</p>
-                <AArrowUp
-                  size={34}
-                  onClick={() => {
-                    if (setup.fontSize < 32) {
-                      setSetUp({ ...setup, fontSize: setup.fontSize + 2 })
-                    }
-                  }}
-                />
-              </div>
+              <Adjuster
+                label={SetupTitleEnum.FONT_SIZE}
+                value={setup.fontSize}
+                IconDown={AArrowDown}
+                IconUp={AArrowUp}
+                onDecrement={() => adjustSetting('fontSize', 16, 32, 2, 'decrement')}
+                onIncrement={() => adjustSetting('fontSize', 16, 32, 2, 'increase')}
+              />
             </li>
             <li className="flex grow items-center">
-              <p className="mr-4">{SetupTitleEnum.LINE_HEIGHT}：</p>
-              <div className="flex grow items-center justify-around">
-                <Equal
-                  size={34}
-                  onClick={() => {
-                    if (setup.lineHeight > 1.5) {
-                      setSetUp({ ...setup, lineHeight: Number(((setup.lineHeight * 10 - 3) / 10).toFixed(1)) })
-                    }
-                  }}
-                />
-                <p>{setup.lineHeight}</p>
-                <AlignJustify
-                  size={34}
-                  onClick={() => {
-                    if (setup.lineHeight < 6) {
-                      setSetUp({ ...setup, lineHeight: Number(((setup.lineHeight * 10 + 3) / 10).toFixed(1)) })
-                    }
-                  }}
-                />
-              </div>
+              <Adjuster
+                label={SetupTitleEnum.LINE_HEIGHT}
+                value={setup.lineHeight || 1.5}
+                IconDown={Equal}
+                IconUp={AlignJustify}
+                onDecrement={() => adjustSetting('lineHeight', 1.5, 6, 0.3, 'decrement', true)}
+                onIncrement={() => adjustSetting('lineHeight', 1.5, 6, 0.3, 'increase', true)}
+              />
             </li>
             <li className="flex grow items-center">
               <p className="mr-4">{SetupTitleEnum.SETUP_THEME}：</p>
               <div className="flex grow items-center justify-around">
-                <Button onClick={() => setClickSetUp(ClickSetupEnum.BACKGROUND)}>自定义</Button>
-                <Button onClick={() => setSetUp({ ...setup, readerBackground: undefined })}>恢复</Button>
+                <Button onClick={() => setClickSetUp(ClickSetupEnum.BACKGROUND)}>{CUSTOMIZE}</Button>
+                <Button onClick={() => setSetUp({ ...setup, readerBackground: undefined })}>{RECOVER}</Button>
               </div>
             </li>
           </ul>

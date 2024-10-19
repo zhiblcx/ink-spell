@@ -1,6 +1,7 @@
 import BookContentSetUp from '@/shared/components/BookContentSetUp'
 import { useActionBookStore } from '@/shared/store'
 import { useSetUpStore } from '@/shared/store/SetupStore'
+import { BookUtils } from '@/shared/utils'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useLocation, useRouter } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
@@ -72,8 +73,31 @@ function Content({ bookId, bookMark, currentContent = [], currentChapter, allCha
   })
 
   useEffect(() => {
-    if (ref !== null) {
-      scrollTo(-Infinity)
+    const timer = setInterval(() => {
+      // 当前的进度 = 距离上方的区域 / 可视区域 ( scrollTop  / offsetHeight ) 去尾
+      const page = Math.floor(
+        Number(ref.current && (ref.current as HTMLElement).scrollTop) /
+          Number(ref.current && (ref.current as HTMLElement).offsetHeight)
+      )
+      const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
+      const localBookIndex = localBooks.findIndex((item: Array<string>) => parseInt(item[0]) === bookId)
+      localBooks[localBookIndex][1]['page'] = page
+      BookUtils.setBooks(JSON.stringify(localBooks))
+    }, 8000)
+    return () => clearInterval(timer)
+  })
+
+  useEffect(() => {
+    if (ref !== null && ref.current != null) {
+      const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
+      const localBookIndex = localBooks.findIndex((item: Array<string>) => parseInt(item[0]) === bookId)
+      const page = localBooks[localBookIndex][1]['page']
+      if (page != undefined) {
+        const view = (ref.current as HTMLElement).offsetHeight
+        scrollTo(view * page)
+      } else {
+        scrollTo(-Infinity)
+      }
     }
   }, [currentContent])
 
@@ -88,10 +112,20 @@ function Content({ bookId, bookMark, currentContent = [], currentChapter, allCha
       }
       className="scroll grow overflow-y-auto px-5 pr-2"
     >
-      <div className="my-3 text-center text-3xl font-bold">{currentChapter}</div>
+      <div
+        className="my-3 text-center text-3xl font-bold"
+        id={`item-0`}
+      >
+        {currentChapter}
+      </div>
       <ul onClick={() => updateShowSetUpFlag(!showSetUpFlag)}>
         {currentContent.map((item, index) => (
-          <li key={index}>{item}</li>
+          <li
+            key={index}
+            id={`item-${index + 1}`}
+          >
+            {item}
+          </li>
         ))}
       </ul>
       <ul className="my-5 flex justify-around text-xl font-bold">

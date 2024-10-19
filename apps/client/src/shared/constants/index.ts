@@ -3,6 +3,7 @@ export const RESET_PASSWORD = '重置密码'
 export const IMPORT_BOOK = '导入图书'
 export const SHOW_BOOKSHELF = '查看书架'
 export const NO_EMAIL_CURRENTLY_AVAILABLE = '暂无邮箱'
+export const CUSTOMIZE = '自定义'
 
 export const RelationshipStatus = {
   FOCUS_ON: '关注',
