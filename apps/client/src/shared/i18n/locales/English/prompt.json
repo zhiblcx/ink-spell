@@ -1,0 +1,17 @@
+{
+  "import_books_prompt": "You haven't imported any books yet, please do so first",
+  "error_prompt": "Oops, an error occurred",
+  "contact_admin_prompt": "Please try contacting the administrator!",
+  "reconnect_prompt": "Connection failed, please try to reconnect",
+  "no_more_prompt": "That's all, there's no more",
+  "invite_to_share_books": "This user hasn't uploaded any books yet! Invite them to share some!",
+  "invite_to_share_bookshelf": "This user hasn't made their bookshelf public yet! Invite them to share it!",
+  "no_email_currently_available": "no email currently available",
+  "retry_in_seconds": "retry in {{seconds}} seconds",
+  "no_email_entered": "Hi there, you haven't entered an email address yet.",
+  "search_book_name": "enter book name to search",
+  "upload_successful": "upload successful",
+  "upload_failed": "upload failed",
+  "no_duplicate_uploads": "No duplicate uploads",
+  "file_type_supported": "Only {{ fileType }} files are supported for upload."
+}

@@ -1,0 +1,15 @@
+{
+  "enter_account": "请输入你的账号",
+  "enter_password": "请输入你的密码",
+  "enter_new_password": "请输入你的新密码",
+  "enter_old_password": "请输入你的旧密码",
+  "enter_verification_code": "请输入验证码",
+  "enter_email": "请输入你的邮箱",
+  "enter_username": "请输入你的用户名",
+  "account_not_filled": "账号未填写",
+  "password_not_filled": "密码未填写",
+  "verification_code_not_filled": "验证码未填写",
+  "username_not_filled": "用户名未填写",
+  "email_not_filled": "邮箱未填写",
+  "add_friend_username": "请输入要添加好友的用户名"
+}

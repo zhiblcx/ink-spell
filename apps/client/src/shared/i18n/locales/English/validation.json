@@ -1,0 +1,14 @@
+{
+  "enter_account": "please enter your account",
+  "enter_password": "please enter your password",
+  "enter_new_password": "please enter your new password",
+  "enter_old_password": "please enter your old password",
+  "enter_verification_code": "please enter the verification code",
+  "enter_email": "please enter your email",
+  "enter_username": "please enter your username",
+  "account_not_filled": "account not filled",
+  "password_not_filled": "password not filled",
+  "verification_code_not_filled": "verification code not filled",
+  "username_not_filled": "username not filled",
+  "add_friend_username": "enter friend's username"
+}

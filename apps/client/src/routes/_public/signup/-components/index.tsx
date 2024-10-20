@@ -3,6 +3,7 @@ import loginLightImg from '@/assets/images/login-light.png'
 import logoLight from '@/assets/images/logo-light.png'
 import { signupMutation, SignupValue } from '@/features/auth'
 import { sendRegisterEmailMutation } from '@/features/user'
+import { APP_NAME } from '@/shared/constants/app'
 import { Theme } from '@/shared/enums'
 import { useThemeStore } from '@/shared/store'
 import { confirmPasswordRule } from '@/shared/utils/confirmPasswordRule'
@@ -11,14 +12,16 @@ import { EditOutlined, LockOutlined, MailOutlined, UserOutlined, VerifiedOutline
 import { Link } from '@tanstack/react-router'
 import { message } from 'antd'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import './index.scss'
 
 export default function Signup() {
+  const { t } = useTranslation(['AUTH', 'COMMON', 'VALIDATION', 'PROMPT'])
   const { theme } = useThemeStore()
   const { mutate } = signupMutation()
   const { mutate: emailMutate } = sendRegisterEmailMutation()
   const [form] = Form.useForm<SignupValue>()
-  const [sendVerificationCode, setSendVerificationCode] = useState('发送')
+  const [sendVerificationCode, setSendVerificationCode] = useState(t('COMMON:send'))
   return (
     <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden">
       <img
@@ -51,64 +54,66 @@ export default function Signup() {
               src={logoLight}
               className="mb-2 w-[200px]"
             ></img>
-            <div className="mb-2">欢迎加入 ink-spell 平台👋</div>
+            <div className="mb-2">
+              {t('COMMON:welcome_to_join')} {APP_NAME} {t('COMMON:platform')} 👋
+            </div>
 
-            <div className="mb-2 text-xl">注册</div>
+            <div className="mb-2 text-xl">{t('AUTH:register')}</div>
 
             <Form.Item<SignupValue>
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="账号"
+              label={t('AUTH:account')}
               name="account"
-              rules={[{ required: true, message: '账号未填写' }]}
+              rules={[{ required: true, message: t('VALIDATION:account_not_filled') }]}
             >
               <Input
                 prefix={<UserOutlined />}
-                placeholder="请输入你的账号"
+                placeholder={t('VALIDATION:enter_account')}
               />
             </Form.Item>
 
             <Form.Item<SignupValue>
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="密码"
+              label={t('AUTH:password')}
               name="password"
               hasFeedback
-              rules={[{ required: true, message: '密码未填写' }]}
+              rules={[{ required: true, message: t('VALIDATION:password_not_filled') }]}
             >
               <Input.Password
                 prefix={<LockOutlined />}
-                placeholder="请输入你的密码"
+                placeholder={t('VALIDATION:enter_password')}
               />
             </Form.Item>
 
             <Form.Item<SignupValue>
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="确认密码"
+              label={t('AUTH:confirm_password')}
               name="confirmPassword"
               dependencies={['password']}
               hasFeedback
-              rules={[{ required: true, message: '密码未填写' }, confirmPasswordRule]}
+              rules={[{ required: true, message: t('VALIDATION:password_not_filled') }, confirmPasswordRule]}
             >
               <Input.Password
                 prefix={<LockOutlined />}
-                placeholder="请再输入一次密码"
+                placeholder={t('AUTH:reenter_password')}
               />
             </Form.Item>
 
             <Form.Item<SignupValue>
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="用户名"
+              label={t('AUTH:username')}
               name="username"
-              rules={[{ required: true, message: '用户名未填写' }]}
+              rules={[{ required: true, message: t('VALIDATION:username_not_filled') }]}
             >
               <Input
                 prefix={<EditOutlined />}
-                placeholder="请输入你的用户名"
+                placeholder={t('VALIDATION:enter_username')}
               />
             </Form.Item>
 
             <Form.Item<SignupValue>
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="邮箱"
+              label={t('AUTH:email')}
               name="email"
             >
               <Input
@@ -116,44 +121,44 @@ export default function Signup() {
                 prefix={<MailOutlined />}
                 suffix={
                   <Button
-                    disabled={sendVerificationCode != '发送'}
+                    disabled={sendVerificationCode != t('COMMON:send')}
                     onClick={() => {
                       let countdown = 60
                       if (form.getFieldValue('email') != undefined) {
-                        setSendVerificationCode(countdown + '秒后重试') // 初始状态
+                        setSendVerificationCode(t('PROMPT:retry_in_seconds', { seconds: countdown })) // 初始状态
                         emailMutate(form.getFieldValue('email'))
                         startCountdown(countdown, setSendVerificationCode)
                       } else {
-                        message.error('亲，你还没有输入邮箱')
+                        message.error(t('PROMPT:no_email_entered'))
                       }
                     }}
                   >
                     {sendVerificationCode}
                   </Button>
                 }
-                placeholder="请输入你的邮箱"
+                placeholder={t('VALIDATION:enter_email')}
               />
             </Form.Item>
 
             <Form.Item<SignupValue>
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="验证码"
+              label={t('AUTH:code')}
               name="code"
             >
               <Input
                 prefix={<VerifiedOutlined />}
-                placeholder="请输入验证码"
+                placeholder={t('VALIDATION:enter_verification_code')}
               />
             </Form.Item>
 
             <Form.Item>
               <span>
-                已有账号，
+                {t('AUTH:already_have_account')}
                 <Link
                   to="/signin"
                   className="hover:text-blue-200"
                 >
-                  立即登录
+                  {t('login_now')}
                 </Link>
               </span>
             </Form.Item>
@@ -163,7 +168,7 @@ export default function Signup() {
                 htmlType="submit"
                 className="min-[375px]:w-[200px] md:w-[250px]"
               >
-                注册
+                {t('AUTH:register')}
               </Button>
             </Form.Item>
           </Form>

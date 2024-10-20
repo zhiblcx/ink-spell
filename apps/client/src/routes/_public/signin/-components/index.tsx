@@ -11,7 +11,9 @@ import { LockOutlined, MailOutlined, UserOutlined, VerifiedOutlined } from '@ant
 import { Link } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 
+import { APP_NAME } from '@/shared/constants/app'
 import startCountdown from '@/shared/utils/startCountdown'
+import { useTranslation } from 'react-i18next'
 import './index.scss'
 
 type SigninType = {
@@ -21,17 +23,18 @@ type SigninType = {
 }
 
 export default function Signin() {
+  const { t } = useTranslation(['AUTH', 'VALIDATION', 'COMMON', 'PROMPT'])
   const { theme } = useThemeStore()
   const [form] = Form.useForm()
   const [forgetPasswordForm] = Form.useForm()
   const { mutate } = signinMutation()
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [sendVerificationCode, setSendVerificationCode] = useState('发送')
+  const [sendVerificationCode, setSendVerificationCode] = useState(t('COMMON:send'))
   const sendEmail = useRef(null)
   const { mutate: forgetPasswordMutation } = forgetPasswordByEmailMutation(() => setIsModalOpen(false))
   const { mutate: sendResetPasswordEmailMutate } = sendResetPasswordEmailMutation((email) => {
     let countdown = 60
-    setSendVerificationCode(countdown + '秒后重试') // 初始状态
+    setSendVerificationCode(t('PROMPT:retry_in_seconds', { seconds: countdown })) // 初始状态
     startCountdown(countdown, setSendVerificationCode)
     forgetPasswordForm.setFieldValue('email', email)
     setState(false)
@@ -94,28 +97,30 @@ export default function Signin() {
               src={logoLight}
               className="mb-2 w-[200px]"
             ></img>
-            <div className="mb-2">欢迎来到 ink-spell 🎉</div>
-            <div className="mb-2 text-xl">登录</div>
+            <div className="mb-2">
+              {t('COMMON:welcome_to')} {APP_NAME} 🎉
+            </div>
+            <div className="mb-2 text-xl">{t('AUTH:login')}</div>
             <Form.Item<SigninType>
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="账号"
+              label={t('AUTH:account')}
               name="account"
-              rules={[{ required: true, message: '账号未填写' }]}
+              rules={[{ required: true, message: t('VALIDATION:account_not_filled') }]}
             >
               <Input
                 prefix={<UserOutlined />}
-                placeholder="请输入你的账号"
+                placeholder={t('VALIDATION:enter_account')}
               />
             </Form.Item>
             <Form.Item<SigninType>
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="密码"
+              label={t('AUTH:password')}
               name="password"
-              rules={[{ required: true, message: '密码未填写' }]}
+              rules={[{ required: true, message: t('VALIDATION:password_not_filled') }]}
             >
               <Input.Password
                 prefix={<LockOutlined />}
-                placeholder="请输入你的密码"
+                placeholder={t('VALIDATION:enter_password')}
               />
             </Form.Item>
             <Form.Item>
@@ -128,16 +133,16 @@ export default function Signin() {
                   name="remember"
                   valuePropName="checked"
                 >
-                  <Checkbox>记住密码</Checkbox>
+                  <Checkbox>{t('AUTH:remember_password')}</Checkbox>
                 </Form.Item>
                 <Form.Item>
                   <span>
-                    没有账号，
+                    {t('AUTH:no_account')}，
                     <Link
                       to="/signup"
                       className="hover:text-blue-200"
                     >
-                      立即注册
+                      {t('AUTH:register_now')}
                     </Link>
                   </span>
                 </Form.Item>
@@ -148,7 +153,7 @@ export default function Signin() {
                 htmlType="submit"
                 className="min-[375px]:w-[200px] md:w-[250px]"
               >
-                登录
+                {t('AUTH:login')}
               </Button>
             </Form.Item>
             <Form.Item>
@@ -156,7 +161,7 @@ export default function Signin() {
                 className="cursor-pointer hover:text-blue-200"
                 onClick={showModal}
               >
-                忘记密码
+                {t('AUTH:forgot_password')}
               </span>
             </Form.Item>
           </Form>
@@ -164,19 +169,19 @@ export default function Signin() {
       </ConfigProvider>
 
       <Modal
-        title="忘记密码"
+        title={t('AUTH:forgot_password')}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        okText={state ? '下一步' : '确定'}
-        cancelText="取消"
+        okText={state ? t('COMMON:next') : t('COMMON:confirm')}
+        cancelText={t('COMMON:cancel')}
       >
         {state ? (
           <div className="flex items-center justify-center">
             <div className="min-[375px]:w-[200px] md:w-[250px]">
-              <span className="pl-2">账号</span>
+              <span className="pl-2">{t('AUTH:account')}</span>
               <Input
-                placeholder="请输入你的账号"
+                placeholder={t('VALIDATION:enter_account')}
                 prefix={<UserOutlined />}
                 onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setAccount(e.target.value)}
               />
@@ -202,9 +207,9 @@ export default function Signin() {
               <Tooltip title={forgetPasswordForm.getFieldValue('email')}>
                 <Form.Item
                   className="min-[375px]:w-[200px] md:w-[250px]"
-                  label="邮箱"
+                  label={t('AUTH:email')}
                   name="email"
-                  rules={[{ required: true, message: '邮箱未填写' }]}
+                  rules={[{ required: true, message: t('VALIDATION:email_not_filled') }]}
                 >
                   <Input
                     disabled
@@ -212,7 +217,7 @@ export default function Signin() {
                     suffix={
                       <Button
                         ref={sendEmail}
-                        disabled={sendVerificationCode != '发送'}
+                        disabled={sendVerificationCode != t('COMMON:send')}
                         onClick={() => sendResetPasswordEmailMutate(account)}
                       >
                         {sendVerificationCode}
@@ -223,41 +228,41 @@ export default function Signin() {
               </Tooltip>
 
               <Form.Item
-                label="验证码"
+                label={t('AUTH:code')}
                 name="code"
                 className="min-[375px]:w-[200px] md:w-[250px]"
-                rules={[{ required: true, message: '验证码未填写' }]}
+                rules={[{ required: true, message: t('VALIDATION:enter_verification_code') }]}
               >
                 <Input
                   prefix={<VerifiedOutlined />}
-                  placeholder="请输入验证码"
+                  placeholder={t('VALIDATION:verification_code_not_filled')}
                 />
               </Form.Item>
 
               <Form.Item
                 className="min-[375px]:w-[200px] md:w-[250px]"
-                label="新密码"
+                label={t('AUTH:new_password')}
                 name="password"
                 hasFeedback
-                rules={[{ required: true, message: '密码未填写' }]}
+                rules={[{ required: true, message: t('VALIDATION:password_not_filled') }]}
               >
                 <Input.Password
                   prefix={<LockOutlined />}
-                  placeholder="请输入你的新密码"
+                  placeholder={t('VALIDATION:enter_new_password')}
                 />
               </Form.Item>
 
               <Form.Item
                 className="min-[375px]:w-[200px] md:w-[250px]"
-                label="确认密码"
+                label={t('AUTH:confirm_password')}
                 name="confirmPassword"
                 dependencies={['password']}
                 hasFeedback
-                rules={[{ required: true, message: '密码未填写' }, confirmPasswordRule]}
+                rules={[{ required: true, message: t('VALIDATION:password_not_filled') }, confirmPasswordRule]}
               >
                 <Input.Password
                   prefix={<LockOutlined />}
-                  placeholder="请再输入一次密码"
+                  placeholder={t('AUTH:reenter_password')}
                 />
               </Form.Item>
             </Form>

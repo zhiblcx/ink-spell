@@ -17,4 +17,4 @@
 - [x] lodash
 - [x] socket.io-client
 - [x] react-infinite-scroll-component
-- [] i18n
+- [x] i18n

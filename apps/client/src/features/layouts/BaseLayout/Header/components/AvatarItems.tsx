@@ -1,7 +1,8 @@
-import { LOGOUT, MY_FAVORITES, PERSON_INFO, RESET_PASSWORD } from '@/shared/constants'
+import { LOGOUT, MY_FAVORITES, PERSON_INFO } from '@/shared/constants'
 import { AuthUtils } from '@/shared/utils'
 import { useNavigate } from '@tanstack/react-router'
 import type { MenuProps } from 'antd'
+import { useTranslation } from 'react-i18next'
 
 interface AvatarItemsType {
   setOpenFlag: React.Dispatch<React.SetStateAction<boolean>>
@@ -10,18 +11,19 @@ interface AvatarItemsType {
 
 export function AvatarItems({ setOpenFlag, avatar }: AvatarItemsType) {
   const navigate = useNavigate()
+  const { t } = useTranslation(['AUTH', 'COMMON'])
   const items: MenuProps['items'] = [
     {
       key: 1,
-      label: <div onClick={() => navigate({ to: PERSON_INFO.URL })}>{PERSON_INFO.NAME}</div>
+      label: <div onClick={() => navigate({ to: PERSON_INFO.URL })}>{t('COMMON:person_info')}</div>
     },
     {
       key: 2,
-      label: <div onClick={() => navigate({ to: MY_FAVORITES.URL })}>{MY_FAVORITES.NAME}</div>
+      label: <div onClick={() => navigate({ to: MY_FAVORITES.URL })}>{t('COMMON:my_favorites')}</div>
     },
     {
       key: 3,
-      label: <div onClick={() => setOpenFlag(true)}>{RESET_PASSWORD}</div>
+      label: <div onClick={() => setOpenFlag(true)}>{t('AUTH:reset_password')}</div>
     },
     {
       key: 4,
@@ -32,7 +34,7 @@ export function AvatarItems({ setOpenFlag, avatar }: AvatarItemsType) {
             navigate({ to: LOGOUT.URL, replace: true })
           }}
         >
-          {LOGOUT.NAME}
+          {t('AUTH:logout')}
         </div>
       )
     }

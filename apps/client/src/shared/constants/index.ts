@@ -1,6 +1,7 @@
+import i18next from 'i18next'
+
 export const RECOVER = '恢复'
-export const RESET_PASSWORD = '重置密码'
-export const IMPORT_BOOK = '导入图书'
+export const IMPORT_BOOK = i18next.t('COMMON:import_book')
 export const SHOW_BOOKSHELF = '查看书架'
 export const NO_EMAIL_CURRENTLY_AVAILABLE = '暂无邮箱'
 export const CUSTOMIZE = '自定义'
@@ -9,39 +10,32 @@ export const LANGUAGE = [
   { value: 'English', label: 'English' }
 ]
 
-export const RelationshipStatus = {
-  FOCUS_ON: '关注',
-  MUTUAL_FOLLOWING: '互相关注',
-  UNLOCK: '取关',
-  RETURN_TO_CUSTOMS: '回关'
-}
-
 export const PERSON_INFO = {
-  NAME: '个人资料',
+  NAME: i18next.t('AUTH:person_info'),
   URL: '/profile'
 }
 
 export const MY_FAVORITES = {
-  NAME: '我的收藏',
+  NAME: i18next.t('COMMON:my_favorites'),
   URL: '/favorites'
 }
 
 export const LOGOUT = {
-  NAME: '退出登录',
+  NAME: i18next.t('AUTH:logout'),
   URL: '/signin'
 }
 
 export const ALL_BOOK = {
-  NAME: '全部图书',
+  NAME: i18next.t('COMMON:all_book'),
   URL: '/'
 }
 
 export const MY_FRIEND = {
-  NAME: '我的好友',
+  NAME: i18next.t('COMMON:my_friend'),
   URL: '/myfriend'
 }
 
 export const CHAR_ROOM = {
-  NAME: '聊天室',
+  NAME: i18next.t('COMMON:chat_room'),
   URL: '/chatroom'
 }

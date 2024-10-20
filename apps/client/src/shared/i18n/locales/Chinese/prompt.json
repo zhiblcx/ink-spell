@@ -1,0 +1,17 @@
+{
+  "import_books_prompt": "暂时没有书籍，请先导入书籍哦~",
+  "error_prompt": "啊哦，出错了",
+  "contact_admin_prompt": "请联系管理员试试吧！",
+  "reconnect_prompt": "连接失败，请尝试重新连接",
+  "no_more_prompt": "以上是全部了，没有更多了",
+  "invite_to_share_books": "该用户还没有上传书籍哦！快邀请TA分享吧！",
+  "invite_to_share_bookshelf": "该用户还没有公开书架哦！快邀请TA分享吧！",
+  "no_email_currently_available": "暂无邮箱",
+  "retry_in_seconds": "{{seconds}}秒后重试",
+  "no_email_entered": "亲，你还没有输入邮箱",
+  "search_book_name": "请输入要搜索的书名",
+  "upload_successful": "上传成功",
+  "upload_failed": "上传失败",
+  "no_duplicate_uploads": "请勿重复上传",
+  "file_type_supported": "仅支持上传 {{fileType}} 文件"
+}

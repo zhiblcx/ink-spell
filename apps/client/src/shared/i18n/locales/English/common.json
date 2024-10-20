@@ -1,9 +1,7 @@
 {
   "recover": "recover",
-  "reset_password": "reset password",
   "import_book": "import book",
   "show_bookshelf": "show bookshelf",
-  "no_email_currently_available": "no email currently available",
   "customize": "customize",
   "focus_on": "focus on",
   "un_focus": "un focus",
@@ -12,9 +10,17 @@
   "return_to_customs": "return to customs",
   "person_info": "person info",
   "my_favorites": "my favorites",
-  "logout": "logout",
   "all_book": "all book",
   "my_friend": "my friend",
   "char_room": "char room",
-  "language": "language"
+  "language": "language",
+  "appearance": "appearance",
+  "welcome_to": "welcome to",
+  "welcome_to_join": "welcome to join",
+  "platform": "platform",
+  "cancel": "cancel",
+  "send": "send",
+  "confirm": "confirm",
+  "my_bookshelf": "my bookshelf",
+  "save": "save"
 }

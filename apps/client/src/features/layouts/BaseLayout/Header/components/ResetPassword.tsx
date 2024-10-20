@@ -4,6 +4,7 @@ import { LockOutlined } from '@ant-design/icons'
 import { UseMutateFunction } from '@tanstack/react-query'
 import { FormInstance } from 'antd'
 import { AxiosError, AxiosResponse } from 'axios'
+import { useTranslation } from 'react-i18next'
 
 interface ResetPasswordType {
   form: FormInstance<any>
@@ -13,6 +14,7 @@ interface ResetPasswordType {
 }
 
 export function ResetPassword({ form, openFlag, setOpenFlag, mutate }: ResetPasswordType) {
+  const { t } = useTranslation(['AUTH', 'COMMON', 'VALIDATION', 'PROMPT'])
   return (
     <Modal
       maskClosable
@@ -23,10 +25,10 @@ export function ResetPassword({ form, openFlag, setOpenFlag, mutate }: ResetPass
         form.submit()
         setOpenFlag(false)
       }}
-      title="重置密码"
+      title={t('AUTH:reset_password')}
       open={openFlag}
-      okText="保存"
-      cancelText="取消"
+      okText={t('COMMON:save')}
+      cancelText={t('COMMON:cancel')}
     >
       <Form
         className="flex flex-col justify-center p-5 px-8"
@@ -36,37 +38,37 @@ export function ResetPassword({ form, openFlag, setOpenFlag, mutate }: ResetPass
       >
         <Form.Item
           className="min-[375px]:w-[200px] md:w-[250px]"
-          label="旧密码"
+          label={t('AUTH:old_password')}
           name="password"
-          rules={[{ required: true, message: '密码未填写' }]}
+          rules={[{ required: true, message: t('VALIDATION:password_not_filled') }]}
         >
-          <Input.Password placeholder="请输入你的密码" />
+          <Input.Password placeholder={t('VALIDATION:enter_old_password')} />
         </Form.Item>
 
         <Form.Item
           className="min-[375px]:w-[200px] md:w-[250px]"
-          label="新密码"
+          label={t('AUTH:new_password')}
           name="newPassword"
           hasFeedback
-          rules={[{ required: true, message: '密码未填写' }]}
+          rules={[{ required: true, message: t('VALIDATION:password_not_filled') }]}
         >
           <Input.Password
             prefix={<LockOutlined />}
-            placeholder="请输入你的确认密码"
+            placeholder={t('VALIDATION:enter_password')}
           />
         </Form.Item>
 
         <Form.Item
           className="min-[375px]:w-[200px] md:w-[250px]"
-          label="确认密码"
+          label={t('AUTH:confirm_password')}
           name="confirmPassword"
           dependencies={['password']}
           hasFeedback
-          rules={[{ required: true, message: '密码未填写' }, newConfirmPasswordRule]}
+          rules={[{ required: true, message: t('VALIDATION:password_not_filled') }, newConfirmPasswordRule]}
         >
           <Input.Password
             prefix={<LockOutlined />}
-            placeholder="请再输入一次密码"
+            placeholder={t('VALIDATION:enter_password')}
           />
         </Form.Item>
       </Form>

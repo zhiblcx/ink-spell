@@ -1,9 +1,9 @@
 import { request } from '@/shared/API'
-import { IMPORT_BOOK } from '@/shared/constants'
 import { useActionBookStore } from '@/shared/store'
 import { AuthUtils, Md5Utils } from '@/shared/utils'
 import { message, type UploadFile, type UploadProps } from 'antd'
 import { FileUp } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 interface FileWithMD5 extends File {
   md5?: string
@@ -17,6 +17,7 @@ interface ImportBookType {
 }
 
 export function ImportBook({ bookShelfId }: ImportBookType) {
+  const { t } = useTranslation(['COMMON', 'PROMPT'])
   const { uploadFileFlag, updateUploadFileFlag } = useActionBookStore()
   const getExtraData: UploadProps['data'] = (file: UploadFileMD5) => {
     return {
@@ -39,7 +40,7 @@ export function ImportBook({ bookShelfId }: ImportBookType) {
     beforeUpload: async (file: FileWithMD5) => {
       const isTxt = file.type === 'text/plain'
       if (!isTxt) {
-        message.error(`仅支持上传 txt 文件`)
+        message.error(t('PROMPT:file_type_supported', { fileType: 'txt' }))
       }
 
       file.md5 = await Md5Utils.getFileMD5(file)
@@ -47,9 +48,9 @@ export function ImportBook({ bookShelfId }: ImportBookType) {
 
       if (result.data.data.md5) {
         if (result.data.data.path === '') {
-          message.error('请勿重复上传')
+          message.error(t('PROMPT:no_duplicate_uploads'))
         } else {
-          message.success('上传成功')
+          message.success(t('PROMPT:upload_successful'))
           if (!uploadFileFlag) {
             updateUploadFileFlag(true)
           }
@@ -60,12 +61,12 @@ export function ImportBook({ bookShelfId }: ImportBookType) {
     },
     onChange: (info) => {
       if (info.file.status === 'done') {
-        message.success('上传成功')
+        message.success(t('PROMPT:upload_successful'))
         if (!uploadFileFlag) {
           updateUploadFileFlag(true)
         }
       } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`)
+        message.error(`${info.file.name} ${t('PROMPT:upload_failed')}`)
       }
     }
   }
@@ -76,7 +77,7 @@ export function ImportBook({ bookShelfId }: ImportBookType) {
       multiple
     >
       {window.innerWidth > 400 ? (
-        <Button type="primary">{IMPORT_BOOK}</Button>
+        <Button type="primary">{t('COMMON:import_book')}</Button>
       ) : (
         <Button
           type="primary"

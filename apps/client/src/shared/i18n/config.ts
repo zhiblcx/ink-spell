@@ -7,3 +7,5 @@ i18next.use(initReactI18next).init({
   ns: Object.keys(localeTransitions),
   resources: localeTransitions
 })
+
+export default i18next

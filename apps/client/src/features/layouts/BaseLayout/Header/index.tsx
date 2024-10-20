@@ -7,9 +7,11 @@ import { UrlUtils } from '@/shared/utils'
 import { useQuery } from '@tanstack/react-query'
 import { ReactNode, useRouter } from '@tanstack/react-router'
 import { AlignLeft, AlignRight, RotateCw } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { AvatarItems, ImportBook, ResetPassword, SettingMenu } from './components'
 
 export default function Header() {
+  const { t } = useTranslation('PROMPT')
   const router = useRouter()
   const showSearchReg = /^\/$|^\/bookshelf\/.*$/
   const { menu, setMenu } = useMenuStore()
@@ -100,7 +102,7 @@ export default function Header() {
           >
             <Input.Search
               className="mx-2 flex items-center justify-center min-[375px]:mx-0 min-[375px]:w-[145px] md:w-[200px]"
-              placeholder="请输入要搜索的书名"
+              placeholder={t('search_book_name')}
               onSearch={onSearch}
               enterButton
             />

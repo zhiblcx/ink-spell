@@ -14,8 +14,10 @@ import { Menu, Theme } from '@/shared/enums'
 import { useMenuStore, useThemeStore } from '@/shared/store'
 import { BookShelfType } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
+import { useTranslation } from 'react-i18next'
 
 function Sidebar() {
+  const { t } = useTranslation(['COMMON'])
   const { theme } = useThemeStore()
   const { menu } = useMenuStore()
   const [arrow, setArrow] = useState(true)
@@ -67,7 +69,7 @@ function Sidebar() {
         <div
           className={clsx(menu == Menu.EXTEND ? 'hidden' : '', 'relative mb-1 flex w-[220px] items-center px-3 py-2')}
         >
-          <div className="text-lg font-bold">我的书架</div>
+          <div className="text-lg font-bold">{t('COMMON:my_bookshelf')}</div>
           <div
             className="absolute right-6"
             onClick={() => {

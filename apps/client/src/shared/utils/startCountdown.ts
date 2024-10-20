@@ -1,13 +1,15 @@
+import i18next from 'i18next'
+
 export default function startCountdown(initialCount: number, callback: React.Dispatch<React.SetStateAction<string>>) {
   let countdown = initialCount
-  callback(countdown + '秒后重试') // 初始状态
+  callback(i18next.t('PROMPT:retry_in_seconds', { seconds: countdown })) // 初始状态
   const timer = setInterval(() => {
     countdown--
     if (countdown >= 0) {
-      callback(countdown + '秒后重试')
+      callback(i18next.t('PROMPT:retry_in_seconds', { seconds: countdown }))
     } else {
       clearInterval(timer)
-      callback('发送')
+      callback(i18next.t('COMMON:send'))
     }
   }, 1000)
 }
