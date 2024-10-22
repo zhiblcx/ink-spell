@@ -6,6 +6,7 @@ import { QueryKeys } from '@/shared/enums'
 import { BookShelfType } from '@/shared/types'
 import { useQueryClient } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 
 export const Route = createLazyFileRoute('/_base/favorites')({
   component: () => <Page />
@@ -17,8 +18,8 @@ interface CollectBookShelfType {
 }
 
 function Page() {
+  const { t } = useTranslation(['PROMPT'])
   const { data: userCollectQuery } = selectUserCollectBookShelfQuery()
-
   const queryClient = useQueryClient()
   const { mutate: cancelCollectShelfMutate } = cancelCollectBookShelfMutation(() =>
     queryClient.invalidateQueries({ queryKey: [QueryKeys.USER_COLLECT_KEY] })
@@ -34,7 +35,7 @@ function Page() {
   return (
     <>
       {bookShelfDetail === undefined || userCollectQuery?.data.data.length === 0 ? (
-        <EmptyPage name="您还没有收藏任何书架呢！快来收藏您喜欢的书架吧！" />
+        <EmptyPage name={t('PROMPT:no_bookshelf_collected')} />
       ) : (
         <BookShelfDetail
           bookshelf_detail={bookShelfDetail ?? []}

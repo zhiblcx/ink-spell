@@ -41,6 +41,7 @@ export const signupMutation = () => {
     mutationFn: async (signUpDao: SignUpDao) => request.post('/auth/register', signUpDao),
     onSuccess: (result) => {
       AuthUtils.setToken(result.data.data.access_token)
+      AuthUtils.clearRememberAccountData()
       navigate({ to: '/', replace: true })
       message.success(t('PROMPT:login_successful'))
     },

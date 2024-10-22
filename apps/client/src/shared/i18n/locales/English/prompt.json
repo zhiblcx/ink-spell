@@ -23,5 +23,6 @@
   "login_successful": "login successful",
   "server_error": "server error",
   "confirm_unfavorite_bookshelf": "Are you sure you want to unfavorite this bookshelf?",
-  "bookshelf_no_longer_top_choice": "Does this bookshelf no longer seem to be your top choice?"
+  "bookshelf_no_longer_top_choice": "Does this bookshelf no longer seem to be your top choice?",
+  "no_bookshelf_collected": "You haven't collected any bookshelves yet! Come and collect your favorite bookshelves now!"
 }
