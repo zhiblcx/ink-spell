@@ -99,10 +99,37 @@ export class UserService {
   }
 
   async updatePersonUserInfo(userId, updateUserDto) {
-    return await this.prisma.user.update({
-      data: { ...updateUserDto },
-      where: { id: parseInt(userId) },
+    const updateUser = async (userData) => {
+      return await this.prisma.user.update({
+        data: userData,
+        where: { id: parseInt(userId) },
+      });
+    };
+
+    // 用户没有邮箱，直接更新
+    if (updateUserDto.email === undefined) {
+      return await updateUser(updateUserDto);
+    }
+
+    const { email, code } = updateUserDto;
+    const userEmail = await this.prisma.user.findUnique({
+      where: { id: userId },
     });
+    // 证明没有修改邮箱
+    if (userEmail.email === email) {
+      return await updateUser(updateUserDto);
+    }
+
+    const index = Email.getUpdatePasswordByEmail().findIndex(
+      (userEmail) => userEmail.email == email && userEmail.code == code,
+    );
+    if (index != -1) {
+      return await this.prisma.user.update({
+        data: { ...updateUserDto },
+        where: { id: parseInt(userId) },
+      });
+    }
+    throw new BadRequestException('验证码错误');
   }
 
   async updatePassword(userId, updateUserDto) {

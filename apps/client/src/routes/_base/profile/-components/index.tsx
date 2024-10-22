@@ -1,6 +1,8 @@
 import { selectOneselfInfoQuery, updateUserInfoMutation } from '@/features/user'
+import EmailInput from '@/shared/components/EmailInput'
 import UploadPhoto from '@/shared/components/UploadPhoto'
 import { QueryKeys } from '@/shared/enums'
+import { VerifiedOutlined } from '@ant-design/icons'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { type UploadFile, Input } from 'antd'
 import { useTranslation } from 'react-i18next'
@@ -15,7 +17,10 @@ export default function Profile() {
   const queryClient = useQueryClient()
   const query = useQuery(selectOneselfInfoQuery)
 
-  const { mutate } = updateUserInfoMutation(() => queryClient.invalidateQueries({ queryKey: [QueryKeys.USER_KEY] }))
+  const { mutate } = updateUserInfoMutation(
+    () => queryClient.invalidateQueries({ queryKey: [QueryKeys.USER_KEY] }),
+    setOpenFlag
+  )
 
   useEffect(() => {
     setAvatar([
@@ -75,10 +80,7 @@ export default function Profile() {
       <Modal
         title={t('COMMON:edit_personal_information')}
         open={openFlag}
-        onOk={() => {
-          form.submit()
-          setOpenFlag(false)
-        }}
+        onOk={() => form.submit()}
         onCancel={() => {
           setOpenFlag(false)
         }}
@@ -129,7 +131,20 @@ export default function Profile() {
               name="email"
               rules={[{ type: 'email', message: t('VALIDATION:enter_valid_email') }]}
             >
-              <Input placeholder={t('VALIDATION:enter_email')} />
+              <EmailInput
+                form={form}
+                email={query.data?.data.data.email}
+              />
+            </Form.Item>
+            <Form.Item
+              className="min-[375px]:w-[200px] md:w-[250px]"
+              label={t('AUTH:code')}
+              name="code"
+            >
+              <Input
+                prefix={<VerifiedOutlined />}
+                placeholder={t('VALIDATION:enter_verification_code')}
+              />
             </Form.Item>
           </Form>
         </ConfigProvider>
