@@ -1,12 +1,12 @@
 import { followUserByUserIdMutation, unfollowUserByFollowMutation } from '@/features/user'
 import { request } from '@/shared/API'
 import PersonCard from '@/shared/components/PersonCard'
-import { NO_EMAIL_CURRENTLY_AVAILABLE, RelationshipStatus, SHOW_BOOKSHELF } from '@/shared/constants'
 import { PaginationParams } from '@/shared/enums/PaginationParams'
 import { User } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { FollowEnum } from './FollowEnum'
 
@@ -28,6 +28,7 @@ interface PageParam {
 }
 
 export default function MyFriend({ api, type, username }: { api: string; type: string; username?: string }) {
+  const { t } = useTranslation(['COMMON', 'PROMPT'])
   const router = useRouter()
   const [openFlag, setOpenFlag] = useState(false)
   const [lookUser, setLookUser] = useState<User | null>(null)
@@ -119,7 +120,7 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
               />
             }
             // It is all, nothing more 🤐
-            endMessage={<Divider plain>以上是全部了，没有更多了🤐</Divider>}
+            endMessage={<Divider plain>{t('PROMPT:no_more_prompt')}</Divider>}
             scrollableTarget={type}
           >
             {type === FollowEnum.FOLLOWING ? (
@@ -137,14 +138,14 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
                           {item.following.username}
                         </span>
                       }
-                      description={item.following.email ?? NO_EMAIL_CURRENTLY_AVAILABLE}
+                      description={item.following.email ?? t('PROMPT:no_email_currently_available')}
                     />
                     <div className="flex space-x-2">
                       <div
                         className="cursor-pointer"
                         onClick={() => cancelMutate(item.following.id)}
                       >
-                        {item.isMutual ? RelationshipStatus.MUTUAL_FOLLOWING : RelationshipStatus.UNLOCK}
+                        {item.isMutual ? t('COMMON:mutual_following') : t('COMMON:unfollow')}
                       </div>
                       <div
                         className="cursor-pointer"
@@ -153,7 +154,7 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
                           router.navigate({ to: `/otherbookshelf/${id}` })
                         }}
                       >
-                        {SHOW_BOOKSHELF}
+                        {t('COMMON:show_bookshelf')}
                       </div>
                     </div>
                   </List.Item>
@@ -167,14 +168,14 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
                     <List.Item.Meta
                       avatar={<Avatar src={import.meta.env.VITE_SERVER_URL + item.follower.avatar} />}
                       title={<span onClick={() => followingClick(item)}>{item.follower.username}</span>}
-                      description={item.follower.email ?? NO_EMAIL_CURRENTLY_AVAILABLE}
+                      description={item.follower.email ?? t('PROMPT:no_email_currently_available')}
                     />
                     <div className="flex space-x-2">
                       <div
                         className="cursor-pointer"
                         onClick={() => followMutate(item.follower.id)}
                       >
-                        {item.isMutual ? RelationshipStatus.MUTUAL_FOLLOWING : RelationshipStatus.RETURN_TO_CUSTOMS}
+                        {item.isMutual ? t('COMMON:mutual_following') : t('COMMON:return_to_customs')}
                       </div>
                       <div
                         className="cursor-pointer"
@@ -183,7 +184,7 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
                           router.navigate({ to: `/otherbookshelf/${id}` })
                         }}
                       >
-                        {SHOW_BOOKSHELF}
+                        {t('COMMON:show_bookshelf')}
                       </div>
                     </div>
                   </List.Item>
@@ -197,14 +198,14 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
                     <List.Item.Meta
                       avatar={<Avatar src={import.meta.env.VITE_SERVER_URL + item.avatar} />}
                       title={<span>{item.username}</span>}
-                      description={item.email ?? NO_EMAIL_CURRENTLY_AVAILABLE}
+                      description={item.email ?? t('PROMPT:no_email_currently_available')}
                     />
                     <div className="flex space-x-2">
                       <div
                         className="cursor-pointer"
                         onClick={() => followMutate(item.id)}
                       >
-                        {RelationshipStatus.FOCUS_ON}
+                        {t('COMMON:follow')}
                       </div>
                       <div
                         className="cursor-pointer"
@@ -213,7 +214,7 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
                           router.navigate({ to: `/otherbookshelf/${id}` })
                         }}
                       >
-                        {SHOW_BOOKSHELF}
+                        {t('COMMON:show_bookshelf')}
                       </div>
                     </div>
                   </List.Item>

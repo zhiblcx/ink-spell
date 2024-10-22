@@ -6,6 +6,7 @@ import { BookUtils } from '@/shared/utils'
 import { type UploadFile, Input } from 'antd'
 import clsx from 'clsx'
 import { Pencil } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import UploadPhoto from '../UploadPhoto'
 import './index.scss'
 interface InkCardProps {
@@ -17,6 +18,7 @@ interface InkCardProps {
 }
 
 export default function InkCard({ ink, customClassName, cancelFlag, onClickCheckbox, schedule = '无' }: InkCardProps) {
+  const { t } = useTranslation(['COMMON', 'PROMPT', 'VALIDATION'])
   const { TextArea } = Input
   const [form] = Form.useForm()
   const [openFlag, setOpenFlag] = useState(false)
@@ -90,22 +92,22 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
               <span> {book.name ? `${book.name}` : ''}</span>
             </Tooltip>
           </p>
-          <p className="roboto mt-[130px] text-sm">{book.author ? book.author : '无作者'}</p>
+          <p className="roboto mt-[130px] text-sm">{book.author ? book.author : t('COMMON:no_author')}</p>
           <p className="roboto text-sm">
             {book.protagonist
               ? `
       ${book.protagonist.split('|')[0]}|${book.protagonist.split('|')[1]}`
-              : '无主角'}
+              : t('COMMON:no_main_character')}
           </p>
           <p className="w-[80%] border-2 border-b-zinc-300"></p>
           <p className="roboto mt-2 line-clamp-3 w-[80%] overflow-hidden break-all text-sm">
-            {book.description === '' || book.description === null ? '暂无描述' : book.description}
+            {book.description === '' || book.description === null ? t('COMMON:no_description') : book.description}
           </p>
         </div>
       </Tooltip>
 
       <Modal
-        title="编辑图书"
+        title={t('COMMON:edit_book')}
         open={openFlag}
         onOk={() => {
           form.submit()
@@ -114,8 +116,8 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
         onCancel={() => {
           setOpenFlag(false)
         }}
-        okText="保存"
-        cancelText="取消"
+        okText={t('COMMON:save')}
+        cancelText={t('COMMON:cancel')}
         className="flex justify-center text-center"
       >
         <ConfigProvider
@@ -144,7 +146,7 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
           >
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="封面"
+              label={t('COMMON:cover')}
               name="cover"
             >
               <UploadPhoto
@@ -156,39 +158,39 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
             </Form.Item>
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="书名"
+              label={t('COMMON:book_title')}
               name="name"
             >
-              <Input placeholder="请输入书名" />
+              <Input placeholder={t('VALIDATION:enter_book_name')} />
             </Form.Item>
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="作者"
+              label={t('COMMON:author')}
               name="author"
             >
-              <Input placeholder="请输入作者姓名" />
+              <Input placeholder={t('VALIDATION:enter_author_name')} />
             </Form.Item>
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="主角1"
+              label={t('COMMON:character1')}
               name="role1"
             >
-              <Input placeholder="请输入主角1的名字" />
+              <Input placeholder={t('VALIDATION:enter_character1_name')} />
             </Form.Item>
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="主角2"
+              label={t('COMMON:character2')}
               name="role2"
             >
-              <Input placeholder="请输入主角2的名字" />
+              <Input placeholder={t('VALIDATION:enter_character2_name')} />
             </Form.Item>
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="简介 "
+              label={t('COMMON:introduction')}
               name="description"
             >
               <TextArea
-                placeholder="请输入书的简介"
+                placeholder={t('VALIDATION:enter_book_intro')}
                 autoSize={{ minRows: 2, maxRows: 4 }}
               />
             </Form.Item>

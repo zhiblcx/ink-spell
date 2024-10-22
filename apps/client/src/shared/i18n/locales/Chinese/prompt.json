@@ -3,7 +3,7 @@
   "error_prompt": "啊哦，出错了",
   "contact_admin_prompt": "请联系管理员试试吧！",
   "reconnect_prompt": "连接失败，请尝试重新连接",
-  "no_more_prompt": "以上是全部了，没有更多了",
+  "no_more_prompt": "以上是全部了，没有更多了 🤐",
   "invite_to_share_books": "该用户还没有上传书籍哦！快邀请TA分享吧！",
   "invite_to_share_bookshelf": "该用户还没有公开书架哦！快邀请TA分享吧！",
   "no_email_currently_available": "暂无邮箱",
@@ -13,5 +13,15 @@
   "upload_successful": "上传成功",
   "upload_failed": "上传失败",
   "no_duplicate_uploads": "请勿重复上传",
-  "file_type_supported": "仅支持上传 {{fileType}} 文件"
+  "file_type_supported": "仅支持上传 {{fileType}} 文件",
+  "connection_failed": "连接失败，请尝试重新连接",
+  "failed_to_join_room": "加入房间失败",
+  "people_in_room": "房间里有{{peopleNumber}}人",
+  "no_blank_message": "不能发送空白信息",
+  "confirm_delete_book": "确定要删除选中的书籍吗？",
+  "confirm_delete_bookshelf": "确定要删除该书架吗？",
+  "login_successful": "登录成功",
+  "server_error": "服务器错误",
+  "confirm_unfavorite_bookshelf": "确定要取消收藏这个书架吗？",
+  "bookshelf_no_longer_top_choice": "这个书架看起来不再是您的首选了吗？"
 }

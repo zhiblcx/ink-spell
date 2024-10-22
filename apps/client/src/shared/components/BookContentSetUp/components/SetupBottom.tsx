@@ -1,10 +1,11 @@
 import { deleteBookMarkMutation, insertBookMarkMutation } from '@/features/book'
-import { ClickSetupEnum, QueryKeys, Theme } from '@/shared/enums'
+import { QueryKeys, Theme } from '@/shared/enums'
 import { useActionBookStore, useThemeStore } from '@/shared/store'
 import { useQueryClient } from '@tanstack/react-query'
 import { BookmarkMinus, BookmarkPlus, List, LucideProps, Settings } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import ThemeToggle from '../../ThemeToggle'
-import { SetupTitleEnum } from '../Enums/SetupTitleEnum'
+import { ClickSetupEnum } from '../enums/ClickSetupEnum'
 
 interface IconProps {
   Icon: React.ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>>
@@ -31,6 +32,7 @@ export function SetupBottom({
   bookmark,
   setBookMark
 }: SetupButtomProps) {
+  const { t } = useTranslation(['COMMON'])
   const { showDirectoryFlag, updateShowSetUpFlag, updateShowDirectoryFlag } = useActionBookStore()
   const { theme } = useThemeStore()
   const queryClient = useQueryClient()
@@ -61,22 +63,19 @@ export function SetupBottom({
         }}
       >
         <Icon_28 Icon={List} />
-        <p>{SetupTitleEnum.CATALOG}</p>
+        <p>{t('COMMON:catalog')}</p>
       </li>
-
       <li className="flex cursor-pointer flex-col items-center space-y-1">
         <ThemeToggle size={28} />
-        <p>{theme === Theme.DARK ? SetupTitleEnum.LIGHT_MODE : SetupTitleEnum.DARK_MODE} </p>
+        <p>{theme === Theme.DARK ? t('COMMON:light_mode') : t('COMMON:dark_mode')} </p>
       </li>
-
       <li
         className="flex cursor-pointer flex-col items-center space-y-1"
         onClick={operateBookMark}
       >
         <Icon_28 Icon={!bookmark ? BookmarkPlus : BookmarkMinus} />
-        <p>{!bookmark ? SetupTitleEnum.COLLECT_BOOKMARK : SetupTitleEnum.CANCEL_COLLECT_BOOKMARK}</p>
+        <p>{!bookmark ? t('COMMON:add_bookmark') : t('COMMON:remove_bookmark')}</p>
       </li>
-
       <li
         className="flex cursor-pointer flex-col items-center space-y-1"
         onClick={() =>
@@ -86,7 +85,7 @@ export function SetupBottom({
         }
       >
         <Icon_28 Icon={Settings} />
-        <p>{SetupTitleEnum.SETUP}</p>
+        <p>{t('COMMON:settings')}</p>
       </li>
     </ul>
   )

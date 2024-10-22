@@ -1,5 +1,6 @@
 import { followUserByUserIdMutation } from '@/features/user'
 import { User } from '@/shared/types'
+import { useTranslation } from 'react-i18next'
 import styles from './styles.module.scss'
 
 interface PersonCardType {
@@ -9,6 +10,7 @@ interface PersonCardType {
 }
 
 export default function PersonCard({ openFlag, lookUser, setOpenFlag }: PersonCardType) {
+  const { t } = useTranslation(['COMMON', 'PROMPT'])
   const { mutate: followMutate } = followUserByUserIdMutation()
 
   return (
@@ -18,7 +20,7 @@ export default function PersonCard({ openFlag, lookUser, setOpenFlag }: PersonCa
         setOpenFlag(false)
       }}
       footer={null}
-      title="个人信息"
+      title={t('COMMON:personal_information')}
       open={openFlag}
     >
       <div className="flex h-[580px] items-center justify-center">
@@ -31,23 +33,23 @@ export default function PersonCard({ openFlag, lookUser, setOpenFlag }: PersonCa
               <h2>
                 {lookUser?.username}
                 <br />
-                <span>{lookUser?.email ?? '暂无邮箱'}</span>
+                <span>{lookUser?.email ?? t('PROMPT:no_email_currently_available')}</span>
               </h2>
               <div className={styles.data}>
                 <h3>
                   {lookUser?.books}
                   <br />
-                  <span>books</span>
+                  <span>{t('COMMON:upload_book')}</span>
                 </h3>
                 <h3>
                   {lookUser?.followers}
                   <br />
-                  <span>Followers</span>
+                  <span>{t('followers')}</span>
                 </h3>
                 <h3>
                   {lookUser?.following}
                   <br />
-                  <span>Following</span>
+                  <span>{t('COMMON:following')}</span>
                 </h3>
               </div>
               <div>
@@ -55,7 +57,7 @@ export default function PersonCard({ openFlag, lookUser, setOpenFlag }: PersonCa
                   className="p-5"
                   onClick={() => followMutate(lookUser?.id as number)}
                 >
-                  关注
+                  {t('COMMON:follow')}
                 </Button>
               </div>
             </div>

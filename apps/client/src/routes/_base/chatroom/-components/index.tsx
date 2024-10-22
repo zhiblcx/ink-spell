@@ -1,7 +1,7 @@
 import { selectAllMessages, selectOneselfInfoQuery } from '@/features/user'
-import { menuList } from '@/mock'
 import EmptyPage from '@/shared/components/EmptyPage'
 import PersonCard from '@/shared/components/PersonCard'
+import { CHAR_ROOM } from '@/shared/constants'
 import { Menu } from '@/shared/enums'
 import { MessageEnum } from '@/shared/enums/MessageEnum'
 import { useMenuStore } from '@/shared/store'
@@ -11,6 +11,7 @@ import { useRouter } from '@tanstack/react-router'
 import { InputRef, message } from 'antd'
 import clsx from 'clsx'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import useSmoothScroll from 'react-smooth-scroll-hook'
 import '../index.scss'
 import { socket } from './socket.io'
@@ -23,6 +24,7 @@ interface MessageType {
 }
 
 export default function ChatRoom() {
+  const { t } = useTranslation(['COMMON', 'VALIDATION', 'PROMPT'])
   const inputRef = useRef<InputRef>(null)
   const router = useRouter()
   const chatContent = useRef(null)
@@ -44,7 +46,7 @@ export default function ChatRoom() {
   })
 
   useEffect(() => {
-    if (router.latestLocation.pathname !== menuList[2].label) {
+    if (router.latestLocation.pathname !== CHAR_ROOM.URL) {
       leaveRoom()
     }
   }, [router.latestLocation.pathname])
@@ -118,7 +120,7 @@ export default function ChatRoom() {
 
   const sendMessage = () => {
     if (messageValue.trim() === '') {
-      message.error('不能发送空白信息')
+      message.error(t('PROMPT:no_blank_message'))
       return
     }
 
@@ -145,9 +147,11 @@ export default function ChatRoom() {
         />
       ) : (
         <>
-          <div>{!connect ? '加入房间失败' : `房间里有${peopleNumber}人`}</div>
+          <div>
+            {!connect ? t('PROMPT:failed_to_join_room') : t('PROMPT:people_in_room', { peopleNumber: peopleNumber })}
+          </div>
           {!connect ? (
-            <EmptyPage name="连接失败，请尝试重新连接" />
+            <EmptyPage name={t('PROMPT:connection_failed')} />
           ) : (
             <>
               <ul
@@ -226,7 +230,7 @@ export default function ChatRoom() {
                     setMessageValue(e.target.value)
                   }}
                   ref={inputRef}
-                  placeholder="请输入想说的话..."
+                  placeholder={t('VALIDATION:enter_message')}
                   showCount
                   onPressEnter={sendMessage}
                   maxLength={200}
@@ -237,12 +241,11 @@ export default function ChatRoom() {
                   disabled={disableFlag}
                   className="mx-2"
                 >
-                  发送消息
+                  {t('COMMON:send_message')}
                 </Button>
               </div>
             </>
           )}
-
           <PersonCard
             openFlag={openFlag}
             setOpenFlag={setOpenFlag}

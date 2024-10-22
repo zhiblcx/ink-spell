@@ -1,11 +1,13 @@
 import { selectMyBookShelfQuery } from '@/features/bookshelf'
 import { selectOneselfInfoQuery } from '@/features/user'
+import { ALL_BOOK } from '@/shared/constants'
 import { AllSelectBookFlag } from '@/shared/enums'
 import { EditBookShelfOpenFlag } from '@/shared/enums/EditBookShelfOpenFlag'
 import { useActionBookStore } from '@/shared/store'
 import { BookShelfType, Ink } from '@/shared/types'
 import { useQuery } from '@tanstack/react-query'
 import { UploadFile } from 'antd'
+import { useTranslation } from 'react-i18next'
 import EmptyPage from '../EmptyPage'
 import { BookShelfList } from './components/BookShelfList'
 import { OperateBookShelfModal } from './components/OperateBookShelfModal'
@@ -25,10 +27,11 @@ export default function BookShelf({ bookShelfId, books, setBooks }: BookShelfPro
     isOtherBookShelfFlag,
     updateSearchBookName
   } = useActionBookStore()
+  const { t } = useTranslation(['COMMON', 'PROMPT'])
   const [form] = Form.useForm()
   const [editBookShelfOpenFlag, setEditBookShelfOpenFlag] = useState(EditBookShelfOpenFlag.MODIFY)
   const [cover, setCover] = useState<UploadFile[]>([])
-  const [selectOptions] = useState([{ value: 'new', label: '新建书架' }])
+  const [selectOptions] = useState([{ value: 'new', label: t('COMMON:create_new_bookshelf') }])
   const [selectBookShelfValue, setSelectBookShelfValue] = useState(selectOptions[0].value)
   const [options, setOptions] = useState([] as Ink[])
   const { data: query } = useQuery(selectOneselfInfoQuery)
@@ -55,7 +58,7 @@ export default function BookShelf({ bookShelfId, books, setBooks }: BookShelfPro
           id: currentBookShelf.id,
           bookShelfName: currentBookShelf.label,
           status: currentBookShelf.isPublic,
-          bookShelfDescription: currentBookShelf.description ?? '暂无描述'
+          bookShelfDescription: currentBookShelf.description ?? t('COMMON:no_description')
         })
       } else {
         // 新增
@@ -91,10 +94,17 @@ export default function BookShelf({ bookShelfId, books, setBooks }: BookShelfPro
     if (isSuccess) {
       if (!acquireBookShelfFlag) {
         data.data.data.forEach((item: BookShelfType) => {
-          selectOptions.push({
-            value: item.id.toString(),
-            label: item.label
-          })
+          if (item.label === ALL_BOOK.label) {
+            selectOptions.push({
+              value: item.id.toString(),
+              label: t('COMMON:all_book')
+            })
+          } else {
+            selectOptions.push({
+              value: item.id.toString(),
+              label: item.label
+            })
+          }
         })
         acquireBookShelfFlag = true
       }
@@ -130,9 +140,9 @@ export default function BookShelf({ bookShelfId, books, setBooks }: BookShelfPro
         />
       ) : books.length === 0 ? (
         !isOtherBookShelfFlag ? (
-          <EmptyPage name="暂时没有书籍，请先导入书籍哦~" />
+          <EmptyPage name={t('PROMPT:import_books_prompt')} />
         ) : (
-          <EmptyPage name="该用户还没有上传书籍哦！快邀请TA分享吧！" />
+          <EmptyPage name={t('PROMPT:invite_to_share_books')} />
         )
       ) : (
         <BookShelfList

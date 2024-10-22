@@ -22,6 +22,7 @@
 - [x] ChatRoom
 - [x] myFriend
 - [x] Forgot Password via Email
+- [x] Internationalization
 
 ## design sketch
 

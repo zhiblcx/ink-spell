@@ -3,8 +3,10 @@ import { useActionBookStore, useMenuStore } from '@/shared/store'
 import { useRouter } from '@tanstack/react-router'
 import clsx from 'clsx'
 import { CircleX } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 function Footer() {
+  const { t } = useTranslation(['COMMON', 'PROMPT'])
   const router = useRouter()
   const bookShelfId = router.latestLocation.href.split('/')[2]
   const showFooterReg = /^\/$|^\/bookshelf\/(?!show\/).*$/
@@ -25,11 +27,11 @@ function Footer() {
 
   const handlerDeleteBook = () => {
     modal.confirm({
-      title: '删除书籍',
+      title: t('COMMON:delete_book'),
       icon: <CircleX className="mr-2 text-red-500" />,
-      content: '确定要删除选中的书籍吗?',
-      okText: '确定',
-      cancelText: '取消',
+      content: t('PROMPT:confirm_delete_book'),
+      okText: t('COMMON:confirm'),
+      cancelText: t('COMMON:cancel'),
       maskClosable: true,
       onOk: () => {
         updateDeleteBookFlag(true)
@@ -39,11 +41,11 @@ function Footer() {
 
   const handlerDeleteBookShelf = () => {
     modal.confirm({
-      title: '删除该书架',
+      title: t('COMMON:delete_bookshelf'),
       icon: <CircleX className="mr-2 text-red-500" />,
-      content: '确定要删除该书架吗？?',
-      okText: '确定',
-      cancelText: '取消',
+      content: t('PROMPT:confirm_delete_bookshelf'),
+      okText: t('COMMON:confirm'),
+      cancelText: t('COMMON:cancel'),
       maskClosable: true,
       onOk: () => {
         updateDeleteShelfFlag(true)
@@ -67,7 +69,7 @@ function Footer() {
               updateCancelFlag(!cancelFlag)
             }}
           >
-            {showShelfFlag ? '展示/隐藏' : '取消'}
+            {showShelfFlag ? t('COMMON:show') + '/' + t('COMMON:hide') : t('COMMON:cancel')}
           </li>
 
           <li
@@ -76,7 +78,7 @@ function Footer() {
               updateCancelFlag(!cancelFlag)
             }}
           >
-            {cancelFlag ? '展示' : '隐藏'}
+            {cancelFlag ? t('COMMON:show') : t('COMMON:hide')}
           </li>
 
           <li
@@ -85,7 +87,7 @@ function Footer() {
               updateBookToBookShelfFlag(true)
             }}
           >
-            添加到书架
+            {t('COMMON:add_to_bookshelf')}
           </li>
 
           {showShelfFlag ? (
@@ -95,7 +97,7 @@ function Footer() {
                 updateModifyBookShelfFlag(true)
               }}
             >
-              编辑该书架
+              {t('COMMON:edit_bookshelf')}
             </li>
           ) : null}
 
@@ -109,14 +111,16 @@ function Footer() {
               )
             }}
           >
-            {allSelectBookFlag == AllSelectBookFlag.NOT_ALL_SELECT_FLAG ? '全不选' : '全选'}
+            {allSelectBookFlag == AllSelectBookFlag.NOT_ALL_SELECT_FLAG
+              ? t('COMMON:deselect_all')
+              : t('COMMON:select_all')}
           </li>
 
           <li
             className="cursor-pointer text-red-500"
             onClick={handlerDeleteBook}
           >
-            删除
+            {t('COMMON:delete')}
           </li>
           {showShelfFlag ? (
             <>
@@ -124,7 +128,7 @@ function Footer() {
                 className="cursor-pointer text-red-500"
                 onClick={handlerDeleteBookShelf}
               >
-                删除该书架
+                {t('COMMON:delete_bookshelf')}
               </li>
               <li
                 className="cursor-pointer"
@@ -132,7 +136,7 @@ function Footer() {
                   window.open(`/bookshelf/show/${bookShelfId}`, '_blank')
                 }}
               >
-                查看笔记
+                {t('COMMON:view_notes')}
               </li>
             </>
           ) : null}

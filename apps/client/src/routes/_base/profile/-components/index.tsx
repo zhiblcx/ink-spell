@@ -3,9 +3,11 @@ import UploadPhoto from '@/shared/components/UploadPhoto'
 import { QueryKeys } from '@/shared/enums'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { type UploadFile, Input } from 'antd'
+import { useTranslation } from 'react-i18next'
 import styles from './styles.module.scss'
 
 export default function Profile() {
+  const { t } = useTranslation(['AUTH', 'COMMON', 'PROMPT', 'VALIDATION'])
   const [openFlag, setOpenFlag] = useState(false)
   const [form] = Form.useForm()
   const [avatar, setAvatar] = useState<UploadFile[]>([])
@@ -37,23 +39,23 @@ export default function Profile() {
             <h2>
               {query.data?.data.data.username}
               <br />
-              <span>{query.data?.data.data.email ?? '暂无邮箱'}</span>
+              <span>{query.data?.data.data.email ?? t('PROMPT:no_email_currently_available')}</span>
             </h2>
             <div className={styles.data}>
               <h3>
                 {query.data?.data.data.books}
                 <br />
-                <span>books</span>
+                <span>{t('COMMON:upload_book')}</span>
               </h3>
               <h3>
                 {query.data?.data.data.followers}
                 <br />
-                <span>Followers</span>
+                <span>{t('COMMON:followers')}</span>
               </h3>
               <h3>
                 {query.data?.data.data.following}
                 <br />
-                <span>Following</span>
+                <span>{t('COMMON:following')}</span>
               </h3>
             </div>
             <div>
@@ -63,7 +65,7 @@ export default function Profile() {
                   setOpenFlag(true)
                 }}
               >
-                Message
+                {t('COMMON:manage')}
               </Button>
             </div>
           </div>
@@ -71,7 +73,7 @@ export default function Profile() {
       </div>
 
       <Modal
-        title="编辑个人信息"
+        title={t('COMMON:edit_personal_information')}
         open={openFlag}
         onOk={() => {
           form.submit()
@@ -80,8 +82,8 @@ export default function Profile() {
         onCancel={() => {
           setOpenFlag(false)
         }}
-        okText="保存"
-        cancelText="取消"
+        okText={t('COMMON:save')}
+        cancelText={t('COMMON:cancel')}
         className="flex justify-center"
       >
         <ConfigProvider
@@ -103,7 +105,7 @@ export default function Profile() {
           >
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="头像"
+              label={t('AUTH:avatar')}
               name="avatar"
             >
               <UploadPhoto
@@ -115,19 +117,19 @@ export default function Profile() {
             </Form.Item>
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="用户名"
+              label={t('AUTH:username')}
               name="username"
-              rules={[{ required: true, message: '用户名未填写' }]}
+              rules={[{ required: true, message: t('VALIDATION:username_not_filled') }]}
             >
-              <Input placeholder="请输入用户名" />
+              <Input placeholder={t('VALIDATION:enter_username')} />
             </Form.Item>
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="邮箱"
+              label={t('AUTH:email')}
               name="email"
-              rules={[{ type: 'email', message: '请输入正确的邮箱' }]}
+              rules={[{ type: 'email', message: t('VALIDATION:enter_valid_email') }]}
             >
-              <Input placeholder="请输入邮箱" />
+              <Input placeholder={t('VALIDATION:enter_email')} />
             </Form.Item>
           </Form>
         </ConfigProvider>

@@ -7,6 +7,7 @@ import { cardLocation } from '@/shared/utils/waterfallLayout'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { FloatButton } from 'antd'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 
 export const Route = createLazyFileRoute('/_base/bookshelf/show/$bookShelfId')({
   component: () => <Page />
@@ -17,6 +18,7 @@ interface pageType {
 }
 
 function Page() {
+  const { t } = useTranslation(['COMMON', 'PROMPT'])
   const { bookShelfId }: pageType = Route.useParams()
   const id = UrlUtils.decodeUrlById(bookShelfId)
   const { data: query, isSuccess, isPending } = selectBookByBookShelfIdQuery(id)
@@ -60,7 +62,7 @@ function Page() {
           paragraph={{ rows: 10 }}
         />
       ) : data.length === 0 && fallLayout ? (
-        <EmptyPage name="暂时没有书籍，请先导入书籍哦~" />
+        <EmptyPage name={t('PROMPT:import_books_prompt')} />
       ) : (
         <motion.div
           ref={noteGrantParent}
@@ -83,9 +85,15 @@ function Page() {
                   className="w-[325px]"
                 >
                   <div className="space-y-1">
-                    <div>作者名：{item.author || '暂无'}</div>
-                    <div>主角：{item.protagonist || '暂无'}</div>
-                    <div>描述：{item.description || '暂无'}</div>
+                    <div>
+                      {t('COMMON:author')}：{item.author || t('COMMON:not_available')}
+                    </div>
+                    <div>
+                      {t('COMMON:description')}：{item.protagonist || t('COMMON:not_available')}
+                    </div>
+                    <div>
+                      {t('COMMON:description')}：{item.description || t('COMMON:not_available')}
+                    </div>
                   </div>
                 </Card>
               </div>

@@ -1,4 +1,3 @@
-export * from '../components/BookContentSetUp/Enums/ClickSetupEnum'
 export * from './AllSelectBookFlag'
 export * from './DirectoryMode'
 export * from './LanguageEnums'

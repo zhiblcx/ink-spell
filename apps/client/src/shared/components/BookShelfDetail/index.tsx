@@ -7,6 +7,7 @@ import Meta from 'antd/es/card/Meta'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import { CircleX } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 interface BookShelfDetailType {
   bookshelf_detail: []
@@ -23,6 +24,7 @@ export default function BookShelfDetail({
   cancelCollectButton,
   isIdsFlag = true
 }: BookShelfDetailType) {
+  const { t } = useTranslation(['COMMON', 'PROMPT'])
   const navigate = useNavigate()
   const [modal, contextHolder] = Modal.useModal()
   const noteGrantParent = useRef(null)
@@ -56,11 +58,11 @@ export default function BookShelfDetail({
 
   const handleCancelCollect = (item: BookShelfType) => {
     modal.confirm({
-      title: '取消收藏',
+      title: t('COMMON:cancel_favorite'),
       icon: <CircleX className="mr-2 text-red-500" />,
-      content: '确定要取消收藏这个书架吗？这个书架看起来不再是您的首选了吗？',
-      okText: '确定',
-      cancelText: '取消',
+      content: t('PROMPT:confirm_unfavorite_bookshelf') + t('PROMPT:bookshelf_no_longer_top_choice'),
+      okText: t('COMMON:confirm'),
+      cancelText: t('COMMON:cancel'),
       maskClosable: true,
       onOk: () => {
         cancelCollectButton(item)

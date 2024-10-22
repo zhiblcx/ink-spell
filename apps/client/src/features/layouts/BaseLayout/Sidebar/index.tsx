@@ -1,19 +1,18 @@
-import clsx from 'clsx'
-import { AnimatePresence, motion } from 'framer-motion'
-import { BookHeart, ChevronDown, ChevronRight, Move } from 'lucide-react'
-
 import iconDark from '@/assets/images/icon-dark.png'
 import iconLight from '@/assets/images/icon-light.png'
 import logoDark from '@/assets/images/logo-dark.png'
 import logoLight from '@/assets/images/logo-light.png'
 import { selectMyBookShelfQuery } from '@/features/bookshelf'
-import { menuList } from '@/mock'
 import Navigation from '@/shared/components/Navigation'
 import Sortable, { SortableItem } from '@/shared/components/Sortable'
+import { ALL_BOOK, CHAR_ROOM, MY_FRIEND } from '@/shared/constants'
 import { Menu, Theme } from '@/shared/enums'
 import { useMenuStore, useThemeStore } from '@/shared/store'
 import { BookShelfType } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
+import clsx from 'clsx'
+import { AnimatePresence, motion } from 'framer-motion'
+import { BookHeart, BookText, Bot, ChevronDown, ChevronRight, Move, Users } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 function Sidebar() {
@@ -23,6 +22,24 @@ function Sidebar() {
   const [arrow, setArrow] = useState(true)
   const [bookShelfMenu, setBookShelfMenu] = useState([] as BookShelfType[])
   const { data: query, isSuccess } = selectMyBookShelfQuery()
+
+  const menuList = [
+    {
+      label: ALL_BOOK.URL,
+      value: t('COMMON:all_book'),
+      Icon: BookText
+    },
+    {
+      label: MY_FRIEND.URL,
+      value: t('COMMON:my_friend'),
+      Icon: Users
+    },
+    {
+      label: CHAR_ROOM.URL,
+      value: t('COMMON:char_room'),
+      Icon: Bot
+    }
+  ]
 
   useEffect(() => {
     if (isSuccess) {

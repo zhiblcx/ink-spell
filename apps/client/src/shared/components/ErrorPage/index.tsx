@@ -1,14 +1,16 @@
 import { Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 
 function ErrorPage() {
+  const { t } = useTranslation(['COMMON', 'PROMPT'])
   return (
     <Result
       status="500"
-      title="啊哦，出错了"
-      subTitle="请联系管理员试试吧！"
+      title={t('PROMPT:error_prompt')}
+      subTitle={t('PROMPT:contact_admin_prompt')}
       extra={
         <Button type="primary">
-          <Link to={'/'}>Back Home</Link>
+          <Link to={'/'}>{t('COMMON:back_home')}</Link>
         </Button>
       }
     />

@@ -7,6 +7,7 @@ import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import { AxiosResponse } from 'axios'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import InkCard from '../../InkCard'
 
 interface BookShelfListProps {
@@ -17,6 +18,7 @@ interface BookShelfListProps {
 }
 
 export function BookShelfList({ books, setBooks, options, query }: BookShelfListProps) {
+  const { t } = useTranslation(['COMMON'])
   const {
     deleteBookFlag,
     cancelFlag,
@@ -118,17 +120,19 @@ export function BookShelfList({ books, setBooks, options, query }: BookShelfList
                   }
                 >
                   <p className="roboto text-xl font-bold">
-                    <span> {item.name ? `${item.name}` : '暂无书名'}</span>
+                    <span> {item.name ? `${item.name}` : t('COMMON:no_book_title_available')}</span>
                   </p>
-                  <p className="roboto">{item.author ? item.author : '无作者'}</p>
+                  <p className="roboto">{item.author ? item.author : t('COMMON:no_author')}</p>
                   <p className="roboto">
                     {item.protagonist
                       ? `
       ${item.protagonist.split('|')[0]}|${item.protagonist.split('|')[1]}`
-                      : '无主角'}
+                      : t('COMMON:no_main_character')}
                   </p>
                   <p className="roboto line-clamp-3 w-[90%] break-all">
-                    {item.description === null || item.description === '' ? '暂无描述' : item.description}
+                    {item.description === null || item.description === ''
+                      ? t('COMMON:no_description')
+                      : item.description}
                   </p>
                 </Card>
               </li>

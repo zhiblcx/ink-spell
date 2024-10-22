@@ -1,13 +1,12 @@
-import { ClickSetupEnum } from '@/shared/components/BookContentSetUp/Enums/ClickSetupEnum'
-import { CUSTOMIZE, RECOVER } from '@/shared/constants'
 import { useSetUpStore } from '@/shared/store/SetupStore'
 import { SetUp } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { DownOutlined } from '@ant-design/icons'
 import { useRouter } from '@tanstack/react-router'
 import { AArrowDown, AArrowUp, AlignJustify, ChevronLeft, ChevronRight, Equal } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import UploadBase64Photo from '../../UploadBase64Photo'
-import { SetupTitleEnum } from '../Enums/SetupTitleEnum'
+import { ClickSetupEnum } from '../enums/ClickSetupEnum'
 import Adjuster from './Adjuster'
 
 interface SetupTopProps {
@@ -30,6 +29,7 @@ export function SetupTop({
   clickSetUp,
   setClickSetUp
 }: SetupTopProps) {
+  const { t } = useTranslation(['COMMON'])
   const { setup, setSetUp } = useSetUpStore()
   const router = useRouter()
 
@@ -87,7 +87,7 @@ export function SetupTop({
         <div className="flex w-[100%] text-base">
           <ul className="grow space-y-2">
             <li className="flex grow items-center">
-              <p className="mr-4 flex items-center">{SetupTitleEnum.LIGHTNESS}:</p>
+              <p className="mr-4 flex items-center">{t('COMMON:brightness')}:</p>
               <Slider
                 max={1}
                 min={0.4}
@@ -99,7 +99,7 @@ export function SetupTop({
             </li>
             <li className="flex grow items-center">
               <Adjuster
-                label={SetupTitleEnum.FONT_SIZE}
+                label={t('COMMON:font_size')}
                 value={setup.fontSize}
                 IconDown={AArrowDown}
                 IconUp={AArrowUp}
@@ -109,7 +109,7 @@ export function SetupTop({
             </li>
             <li className="flex grow items-center">
               <Adjuster
-                label={SetupTitleEnum.LINE_HEIGHT}
+                label={t('COMMON:line_height')}
                 value={setup.lineHeight || 1.5}
                 IconDown={Equal}
                 IconUp={AlignJustify}
@@ -118,10 +118,12 @@ export function SetupTop({
               />
             </li>
             <li className="flex grow items-center">
-              <p className="mr-4">{SetupTitleEnum.SETUP_THEME}：</p>
+              <p className="mr-4">{t('COMMON:theme')}：</p>
               <div className="flex grow items-center justify-around">
-                <Button onClick={() => setClickSetUp(ClickSetupEnum.BACKGROUND)}>{CUSTOMIZE}</Button>
-                <Button onClick={() => setSetUp({ ...setup, readerBackground: undefined })}>{RECOVER}</Button>
+                <Button onClick={() => setClickSetUp(ClickSetupEnum.BACKGROUND)}>{t('COMMON:customize')}</Button>
+                <Button onClick={() => setSetUp({ ...setup, readerBackground: undefined })}>
+                  {t('COMMON:recover')}
+                </Button>
               </div>
             </li>
           </ul>
@@ -158,7 +160,7 @@ export function SetupTop({
         <div className="flex w-[100%] text-base">
           <ul className="grow space-y-4">
             <li className="flex grow items-center">
-              <p className="mr-4">{SetupTitleEnum.BACKGROUND}：</p>
+              <p>{t('COMMON:background')}：</p>
               <div className="flex grow items-center justify-around">
                 <UploadBase64Photo />
                 <ColorPicker
@@ -188,12 +190,12 @@ export function SetupTop({
                     })
                   }
                 >
-                  {RECOVER}
+                  {t('COMMON:recover')}
                 </Button>
               </div>
             </li>
             <li className="flex grow items-center">
-              <p className="mr-4">{SetupTitleEnum.TYPE_FONT}：</p>
+              <p>{t('COMMON:font_type')}：</p>
               <div className="flex grow items-center justify-around">
                 <ColorPicker
                   defaultValue={setup.readerBackground?.typeFont ?? null}
@@ -222,7 +224,7 @@ export function SetupTop({
                     })
                   }
                 >
-                  {RECOVER}
+                  {t('COMMON:recover')}
                 </Button>
               </div>
             </li>

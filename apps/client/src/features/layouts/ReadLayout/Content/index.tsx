@@ -5,6 +5,7 @@ import { BookUtils } from '@/shared/utils'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useLocation, useRouter } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import useSmoothScroll from 'react-smooth-scroll-hook'
 import { backgroundStyleFunc } from './backgroundStyle'
 
@@ -54,6 +55,7 @@ function ChapterLink({ noContentText = '没有了', content, chapter, chapterFla
 }
 
 function Content({ bookId, bookMark, currentContent = [], currentChapter, allChapterTotal }: ContentActiveType) {
+  const { t } = useTranslation(['COMMON'])
   const location = useLocation()
   const ref = useRef(null)
   const { showDirectoryFlag, updateShowDirectoryFlag, updateShowSetUpFlag, showSetUpFlag } = useActionBookStore()
@@ -61,9 +63,9 @@ function Content({ bookId, bookMark, currentContent = [], currentChapter, allCha
   const encodeChapter = parseInt(UrlUtils.decodeUrlById(chapter.toString()))
   const { setup } = useSetUpStore()
   const bookTitle = {
-    catalog: '目录',
-    previous: '上一章',
-    next: '下一章'
+    catalog: t('COMMON:catalog'),
+    previous: t('COMMON:previous_chapter'),
+    next: t('COMMON:next_chapter')
   }
 
   const { scrollTo } = useSmoothScroll({

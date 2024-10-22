@@ -5,6 +5,7 @@ import { useActionBookStore } from '@/shared/store'
 import { BookShelfType, Ink } from '@/shared/types'
 import { useQueryClient } from '@tanstack/react-query'
 import { RadioChangeEvent, UploadFile } from 'antd'
+import { useTranslation } from 'react-i18next'
 import UploadPhoto from '../../UploadPhoto'
 
 interface formProps {
@@ -40,6 +41,7 @@ export function OperateBookShelfModal({
   setSelectBookShelfValue,
   selectOptions
 }: OperateBookShelfModalProps) {
+  const { t } = useTranslation(['COMMON', 'PROMPT', 'VALIDATION'])
   const { TextArea } = Input
   const [form] = Form.useForm()
   const { bookToBookShelfFlag, updateBookToBookShelfFlag, updateModifyBookShelfFlag } = useActionBookStore()
@@ -112,7 +114,7 @@ export function OperateBookShelfModal({
 
   return (
     <Modal
-      title={bookToBookShelfFlag ? '添加到书架' : '编辑书架信息'}
+      title={bookToBookShelfFlag ? t('COMMON:add_to_bookshelf') : t('COMMON:edit_bookshelf_info')}
       open={editBookShelfOpenFlag == EditBookShelfOpenFlag.INCREASE}
       onOk={() => {
         form.submit()
@@ -127,8 +129,8 @@ export function OperateBookShelfModal({
         updateBookToBookShelfFlag(false)
         updateModifyBookShelfFlag(false)
       }}
-      okText="保存"
-      cancelText="取消"
+      okText={t('COMMON:save')}
+      cancelText={t('COMMON:cancel')}
       className="flex justify-center text-center"
     >
       <Form
@@ -139,7 +141,7 @@ export function OperateBookShelfModal({
         {bookToBookShelfFlag ? (
           <Form.Item
             className="min-[375px]:w-[200px] md:w-[250px]"
-            label="选择书架"
+            label={t('COMMON:select_bookshelf')}
             name="bookShelfId"
           >
             <Select
@@ -154,29 +156,29 @@ export function OperateBookShelfModal({
           <>
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="书架名"
+              label={t('COMMON:bookshelf_name')}
               name="bookShelfName"
-              rules={[{ required: true, message: '请填写完整' }]}
+              rules={[{ required: true, message: t('VALIDATION:fill_in_completely') }]}
             >
-              <Input placeholder="请输入书架名" />
+              <Input placeholder={t('VALIDATION:enter_book_name')} />
             </Form.Item>
 
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="书架状态"
+              label={t('COMMON:bookshelf_status')}
               name="status"
             >
               <Radio.Group
                 value={value}
                 onChange={onChange}
               >
-                <Radio value={false}>私有</Radio>
-                <Radio value={true}>公开</Radio>
+                <Radio value={false}>{t('COMMON:private')}</Radio>
+                <Radio value={true}>{t('COMMON:public')}</Radio>
               </Radio.Group>
             </Form.Item>
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="书架封面"
+              label={t('COMMON:bookshelf_cover')}
               name="bookShelfCover"
             >
               <UploadPhoto
@@ -188,11 +190,11 @@ export function OperateBookShelfModal({
             </Form.Item>
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
-              label="书架描述 "
+              label={t('COMMON:bookshelf_description')}
               name="bookShelfDescription"
             >
               <TextArea
-                placeholder="请输入书架的描述"
+                placeholder={t('VALIDATION:enter_bookshelf_description')}
                 autoSize={{ minRows: 2, maxRows: 4 }}
               />
             </Form.Item>
