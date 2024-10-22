@@ -6,6 +6,8 @@ import { User } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
+import { message } from 'antd'
+import { AxiosError } from 'axios'
 import { useTranslation } from 'react-i18next'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { FollowEnum } from './FollowEnum'
@@ -35,13 +37,25 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
 
   // TODO: mobile 实现左滑关注
   const fetchProjects = async ({ pageParam }: { pageParam: PageParam }) => {
-    let res
-    if (username === undefined) {
-      res = await request.get(`${api}?page=${pageParam.page}&limit=${pageParam.limit}`)
-    } else {
-      res = await request.get(`${api}${username}?page=${pageParam.page}&limit=${pageParam.limit}&username=${username}`)
+    try {
+      let res
+      if (username === undefined) {
+        res = await request.get(`${api}?page=${pageParam.page}&limit=${pageParam.limit}`)
+      } else {
+        res = await request.get(
+          `${api}${username}?page=${pageParam.page}&limit=${pageParam.limit}&username=${username}`
+        )
+      }
+      return res.data.data
+    } catch (_) {
+      const error = _ as AxiosError
+      message.error((error.response?.data as { message?: string }).message || t('PROMPT:server_error'))
+      return {
+        items: [],
+        page: PaginationParams.PAGE,
+        limit: PaginationParams.LIMIT
+      }
     }
-    return res.data.data
   }
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPending } = useInfiniteQuery({
@@ -49,9 +63,11 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
     queryFn: fetchProjects,
     initialPageParam: { page: PaginationParams.PAGE, limit: PaginationParams.LIMIT },
     getNextPageParam: (lastPage) => {
-      return lastPage.items.length != PaginationParams.LIMIT
-        ? undefined
-        : { page: parseInt(lastPage.currentPage) + 1, limit: PaginationParams.LIMIT }
+      if ((lastPage.items.length === 0 && lastPage.page === 1) || lastPage.items.length != PaginationParams.LIMIT) {
+        return undefined
+      } else {
+        return { page: parseInt(lastPage.currentPage) + 1, limit: PaginationParams.LIMIT }
+      }
     },
     select: (data) => ({
       pages: data.pages.reduce((acc, item) => {

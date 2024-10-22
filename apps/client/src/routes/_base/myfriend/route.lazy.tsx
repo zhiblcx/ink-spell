@@ -1,5 +1,6 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import type { TabsProps } from 'antd'
+import { useTranslation } from 'react-i18next'
 import MyFriend from './-components'
 import { FollowEnum } from './-components/FollowEnum'
 import IncreaseFriend from './-components/IncreaseFriend'
@@ -9,10 +10,11 @@ export const Route = createLazyFileRoute('/_base/myfriend')({
 })
 
 function Page() {
+  const { t } = useTranslation(['COMMON'])
   const items: TabsProps['items'] = [
     {
       key: '1',
-      label: '关注',
+      label: t('follow'),
       children: (
         <MyFriend
           type={FollowEnum.FOLLOWING}
