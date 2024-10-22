@@ -2,15 +2,13 @@ import loginDarkImg from '@/assets/images/login-dark.png'
 import loginLightImg from '@/assets/images/login-light.png'
 import logoLight from '@/assets/images/logo-light.png'
 import { signupMutation, SignupValue } from '@/features/auth'
-import { sendRegisterEmailMutation } from '@/features/user'
+import EmailInput from '@/shared/components/EmailInput'
 import { APP_NAME } from '@/shared/constants/app'
 import { Theme } from '@/shared/enums'
 import { useThemeStore } from '@/shared/store'
 import { confirmPasswordRule } from '@/shared/utils/confirmPasswordRule'
-import startCountdown from '@/shared/utils/startCountdown'
-import { EditOutlined, LockOutlined, MailOutlined, UserOutlined, VerifiedOutlined } from '@ant-design/icons'
+import { EditOutlined, LockOutlined, UserOutlined, VerifiedOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
-import { message } from 'antd'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import './index.scss'
@@ -19,9 +17,7 @@ export default function Signup() {
   const { t } = useTranslation(['AUTH', 'COMMON', 'VALIDATION', 'PROMPT'])
   const { theme } = useThemeStore()
   const { mutate } = signupMutation()
-  const { mutate: emailMutate } = sendRegisterEmailMutation()
   const [form] = Form.useForm<SignupValue>()
-  const [sendVerificationCode, setSendVerificationCode] = useState(t('COMMON:send'))
   return (
     <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden">
       <img
@@ -116,28 +112,7 @@ export default function Signup() {
               label={t('AUTH:email')}
               name="email"
             >
-              <Input
-                type="email"
-                prefix={<MailOutlined />}
-                suffix={
-                  <Button
-                    disabled={sendVerificationCode != t('COMMON:send')}
-                    onClick={() => {
-                      let countdown = 60
-                      if (form.getFieldValue('email') != undefined) {
-                        setSendVerificationCode(t('PROMPT:retry_in_seconds', { seconds: countdown })) // 初始状态
-                        emailMutate(form.getFieldValue('email'))
-                        startCountdown(countdown, setSendVerificationCode)
-                      } else {
-                        message.error(t('PROMPT:no_email_entered'))
-                      }
-                    }}
-                  >
-                    {sendVerificationCode}
-                  </Button>
-                }
-                placeholder={t('VALIDATION:enter_email')}
-              />
+              <EmailInput form={form} />
             </Form.Item>
 
             <Form.Item<SignupValue>

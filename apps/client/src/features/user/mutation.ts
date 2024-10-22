@@ -4,13 +4,18 @@ import { AuthUtils } from '@/shared/utils'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { message } from 'antd'
+import { Dispatch, SetStateAction } from 'react'
 import { handleAxiosError } from '../utils'
 import { forgetPasswordByEmailDao, updatePasswordDao } from './types'
 
-export const updateUserInfoMutation = (queryClient: () => Promise<void>) => {
+export const updateUserInfoMutation = (
+  queryClient: () => Promise<void>,
+  setOpenFlag: Dispatch<SetStateAction<boolean>>
+) => {
   return useMutation({
     mutationFn: (user: User) => request.put('/user', user),
     onSuccess: async (data) => {
+      setOpenFlag(false)
       message.success(data.data.message)
       await queryClient()
     },
