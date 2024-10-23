@@ -112,10 +112,31 @@ export function OperateBookShelfModal({
     }
   }
 
+  useEffect(() => {
+    // bookToBookShelfFlag 为 true 添加到其他书架
+    if (bookToBookShelfFlag) {
+      form.setFieldsValue({
+        bookShelfId: selectOptions[0],
+        bookShelfName: '',
+        bookShelfDescription: '',
+        status: true
+      })
+    } else {
+      // bookToBookShelfFlag 为 false 编辑该书架
+      if (currentBookShelf !== undefined) {
+        form.setFieldsValue({
+          bookShelfName: currentBookShelf.label,
+          bookShelfDescription: currentBookShelf.description,
+          status: currentBookShelf.isPublic
+        })
+      }
+    }
+  }, [bookToBookShelfFlag, currentBookShelf])
+
   return (
     <Modal
       title={bookToBookShelfFlag ? t('COMMON:add_to_bookshelf') : t('COMMON:edit_bookshelf_info')}
-      open={editBookShelfOpenFlag == EditBookShelfOpenFlag.INCREASE}
+      open={editBookShelfOpenFlag === EditBookShelfOpenFlag.INCREASE}
       onOk={() => {
         form.submit()
         setEditBookShelfOpenFlag(EditBookShelfOpenFlag.MODIFY)
