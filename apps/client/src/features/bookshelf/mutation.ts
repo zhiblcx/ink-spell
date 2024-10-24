@@ -1,4 +1,4 @@
-import { request } from '@/shared/API'
+import { axiosInstance } from '@/shared/API'
 import { BookShelfType } from '@/shared/types'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
@@ -10,7 +10,7 @@ import { BookShelfDao, operateBookShelfType } from './types'
 export const deleteBookShelfMutation = (deleteId: string, queryClient: () => Promise<void>) => {
   const navigate = useNavigate()
   return useMutation({
-    mutationFn: () => request.delete(`/bookshelf/${deleteId}`),
+    mutationFn: () => axiosInstance.delete(`/bookshelf/${deleteId}`),
     onSuccess: async (data) => {
       message.success(data.data.message)
       navigate({ to: '/', replace: true })
@@ -22,7 +22,7 @@ export const deleteBookShelfMutation = (deleteId: string, queryClient: () => Pro
 
 export const updateBookShelfPositionMutation = (showMessage: (data: AxiosResponse) => void) => {
   return useMutation({
-    mutationFn: (data: BookShelfDao) => request.put(`bookshelf/${data.id}`, data),
+    mutationFn: (data: BookShelfDao) => axiosInstance.put(`bookshelf/${data.id}`, data),
     onSuccess: (data) => {
       showMessage(data)
     },
@@ -32,7 +32,7 @@ export const updateBookShelfPositionMutation = (showMessage: (data: AxiosRespons
 
 export const updateBookShelfDetailMutation = (queryClient: () => Promise<void>) => {
   return useMutation({
-    mutationFn: (bookShelfData: BookShelfType) => request.put(`/bookshelf/${bookShelfData.id}`, bookShelfData),
+    mutationFn: (bookShelfData: BookShelfType) => axiosInstance.put(`/bookshelf/${bookShelfData.id}`, bookShelfData),
     onSuccess: async (data) => {
       message.success(data.data.message)
       await queryClient()
@@ -50,9 +50,9 @@ export const operateBookShelfMutation = (
   return useMutation({
     mutationFn: (result: operateBookShelfType) => {
       if (result.operate === 'add') {
-        return request.post(result.api, result.bookShelfInfo)
+        return axiosInstance.post(result.api, result.bookShelfInfo)
       } else {
-        return request.put(result.api, result.bookShelfInfo)
+        return axiosInstance.put(result.api, result.bookShelfInfo)
       }
     },
     onSuccess: async (data) => {
@@ -76,7 +76,7 @@ export const operateBookShelfMutation = (
 
 export const cancelCollectBookShelfMutation = (queryClient: () => Promise<void>) => {
   return useMutation({
-    mutationFn: (bookShelfId: number) => request.delete(`/collect/bookshelf/${bookShelfId}`),
+    mutationFn: (bookShelfId: number) => axiosInstance.delete(`/collect/bookshelf/${bookShelfId}`),
     onSuccess: async (data) => {
       message.success(data.data.message)
       await queryClient()
@@ -87,7 +87,7 @@ export const cancelCollectBookShelfMutation = (queryClient: () => Promise<void>)
 
 export const collectBookShelfMutation = (queryClient: () => Promise<void>) => {
   return useMutation({
-    mutationFn: (bookShelfId: number) => request.post(`/collect/bookshelf/${bookShelfId}`),
+    mutationFn: (bookShelfId: number) => axiosInstance.post(`/collect/bookshelf/${bookShelfId}`),
     onSuccess: async (data) => {
       message.success(data.data.message)
       await queryClient()
@@ -98,7 +98,7 @@ export const collectBookShelfMutation = (queryClient: () => Promise<void>) => {
 
 export const downloadBookShelfNotesMutation = () => {
   return useMutation({
-    mutationFn: (bookShelfId: number) => request.get(`/bookshelf/download/${bookShelfId}`),
+    mutationFn: (bookShelfId: number) => axiosInstance.get(`/bookshelf/download/${bookShelfId}`),
     onSuccess: (data) => {
       const fileName = data.headers['content-disposition'].split('"')[1]
       const url = window.URL.createObjectURL(new Blob([data.data]))

@@ -1,6 +1,6 @@
 import { Theme } from '../enums'
 export class ThemeUtils {
-  static readonly #THEME_KEY = 'theme'
+  static readonly #THEME_KEY = 'ink_spell_theme'
 
   static getTheme(): string | null {
     return localStorage.getItem(this.#THEME_KEY)

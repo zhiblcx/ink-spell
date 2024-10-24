@@ -1,4 +1,4 @@
-import { request } from '@/shared/API'
+import { axiosInstance } from '@/shared/API'
 import { useActionBookStore } from '@/shared/store'
 import { AuthUtils, Md5Utils } from '@/shared/utils'
 import { message, type UploadFile, type UploadProps } from 'antd'
@@ -31,7 +31,7 @@ export function ImportBook({ bookShelfId }: ImportBookType) {
     action: '/api/book/upload/file',
     data: getExtraData,
     headers: {
-      authorization: `Bearer ${AuthUtils.getToken()}`
+      authorization: `Bearer ${AuthUtils.getAccessToken()}`
     },
     showUploadList: false,
     method: 'post',
@@ -44,7 +44,7 @@ export function ImportBook({ bookShelfId }: ImportBookType) {
       }
 
       file.md5 = await Md5Utils.getFileMD5(file)
-      const result = await request.get(`/book/md5?md5=${file.md5}&file_name=${file.name}`)
+      const result = await axiosInstance.get(`/book/md5?md5=${file.md5}&file_name=${file.name}`)
 
       if (result.data.data.md5) {
         if (result.data.data.path === '') {

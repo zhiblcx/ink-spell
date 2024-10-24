@@ -9,7 +9,7 @@ export const Route = createFileRoute('/_public')({
       router.location.href === '/signup' ||
       router.location.href === 'signup'
     ) {
-      if (AuthUtils.getToken() !== null) {
+      if (AuthUtils.getAccessToken() !== null) {
         redirect({ to: '/', throw: true })
       }
     }

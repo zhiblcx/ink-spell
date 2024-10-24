@@ -1,5 +1,5 @@
 import { followUserByUserIdMutation, unfollowUserByFollowMutation } from '@/features/user'
-import { request } from '@/shared/API'
+import { axiosInstance } from '@/shared/API'
 import PersonCard from '@/shared/components/PersonCard'
 import { PaginationParams } from '@/shared/enums/PaginationParams'
 import { User } from '@/shared/types'
@@ -40,9 +40,9 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
     try {
       let res
       if (username === undefined) {
-        res = await request.get(`${api}?page=${pageParam.page}&limit=${pageParam.limit}`)
+        res = await axiosInstance.get(`${api}?page=${pageParam.page}&limit=${pageParam.limit}`)
       } else {
-        res = await request.get(
+        res = await axiosInstance.get(
           `${api}${username}?page=${pageParam.page}&limit=${pageParam.limit}&username=${username}`
         )
       }
@@ -94,14 +94,14 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
   const followClick = async (item: FollowerType) => {
     setOpenFlag(true)
     // TODO: 优化
-    const query = await request.get(`/user/${item.following.id}`)
+    const query = await axiosInstance.get(`/user/${item.following.id}`)
     setLookUser(query.data.data as User)
   }
 
   const followingClick = async (item: FollowingType) => {
     setOpenFlag(true)
     // TODO: 优化
-    const query = await request.get(`/user/${item.follower.id}`)
+    const query = await axiosInstance.get(`/user/${item.follower.id}`)
     setLookUser(query.data.data as User)
   }
 

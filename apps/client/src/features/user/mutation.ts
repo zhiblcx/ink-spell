@@ -1,4 +1,4 @@
-import { request } from '@/shared/API'
+import { axiosInstance } from '@/shared/API'
 import { User } from '@/shared/types'
 import { AuthUtils } from '@/shared/utils'
 import { useMutation } from '@tanstack/react-query'
@@ -13,7 +13,7 @@ export const updateUserInfoMutation = (
   setOpenFlag: Dispatch<SetStateAction<boolean>>
 ) => {
   return useMutation({
-    mutationFn: (user: User) => request.put('/user', user),
+    mutationFn: (user: User) => axiosInstance.put('/user', user),
     onSuccess: async (data) => {
       setOpenFlag(false)
       message.success(data.data.message)
@@ -25,7 +25,7 @@ export const updateUserInfoMutation = (
 
 export const followUserByUserIdMutation = (queryClient1?: () => Promise<void>, queryClient2?: () => Promise<void>) => {
   return useMutation({
-    mutationFn: (followID: number) => request.post(`/follow/${followID}`),
+    mutationFn: (followID: number) => axiosInstance.post(`/follow/${followID}`),
     onSuccess: async (data) => {
       message.success(data.data.message)
       queryClient1 && (await queryClient1())
@@ -37,7 +37,7 @@ export const followUserByUserIdMutation = (queryClient1?: () => Promise<void>, q
 
 export const unfollowUserByFollowMutation = (queryClient: () => Promise<void>) => {
   return useMutation({
-    mutationFn: (followID: number) => request.delete(`/follow/${followID}`),
+    mutationFn: (followID: number) => axiosInstance.delete(`/follow/${followID}`),
     onSuccess: async (data) => {
       message.success(data.data.message)
       await queryClient()
@@ -49,10 +49,11 @@ export const unfollowUserByFollowMutation = (queryClient: () => Promise<void>) =
 export const updateUserPasswordMutation = () => {
   const navigate = useNavigate()
   return useMutation({
-    mutationFn: (user: updatePasswordDao) => request.put('/user/password', user),
+    mutationFn: (user: updatePasswordDao) => axiosInstance.put('/user/password', user),
     onSuccess: async (data) => {
       message.success(data.data.message)
-      AuthUtils.clearToken()
+      AuthUtils.clearAccessToken()
+      AuthUtils.clearFreshToken()
       navigate({ to: '/', replace: true })
     },
     onError: handleAxiosError
@@ -61,7 +62,7 @@ export const updateUserPasswordMutation = () => {
 
 export const sendRegisterEmailMutation = () =>
   useMutation({
-    mutationFn: (email: string) => request.get(`/user/register/email?email=${email}`),
+    mutationFn: (email: string) => axiosInstance.get(`/user/register/email?email=${email}`),
     onSuccess: async (data) => {
       message.success(data.data.message)
     },
@@ -70,7 +71,7 @@ export const sendRegisterEmailMutation = () =>
 
 export const sendResetPasswordEmailMutation = (callback: (email: string) => void) =>
   useMutation({
-    mutationFn: (account: string) => request.get(`/user/forget/password?account=${account}`),
+    mutationFn: (account: string) => axiosInstance.get(`/user/forget/password?account=${account}`),
     onSuccess: async (data) => {
       message.success(data.data.message)
       callback(data.data.data.email)
@@ -80,7 +81,7 @@ export const sendResetPasswordEmailMutation = (callback: (email: string) => void
 
 export const forgetPasswordByEmailMutation = (callback: () => void) =>
   useMutation({
-    mutationFn: (data: forgetPasswordByEmailDao) => request.put('/user/forget/password', data),
+    mutationFn: (data: forgetPasswordByEmailDao) => axiosInstance.put('/user/forget/password', data),
     onSuccess: async (data) => {
       message.success(data.data.message)
       callback()

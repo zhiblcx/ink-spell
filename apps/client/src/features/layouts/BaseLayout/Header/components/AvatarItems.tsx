@@ -30,7 +30,8 @@ export function AvatarItems({ setOpenFlag, avatar }: AvatarItemsType) {
       label: (
         <div
           onClick={() => {
-            AuthUtils.clearToken()
+            AuthUtils.clearAccessToken()
+            AuthUtils.clearFreshToken()
             navigate({ to: LOGOUT.URL, replace: true })
           }}
         >

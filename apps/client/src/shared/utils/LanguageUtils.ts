@@ -1,6 +1,6 @@
 import { LanguageEnums } from '../enums'
 export class LanguageUtils {
-  static readonly #LANGUAGE_KEY = 'language'
+  static readonly #LANGUAGE_KEY = 'ink_spell_language'
 
   static getLanguage(): string | null {
     return localStorage.getItem(this.#LANGUAGE_KEY)

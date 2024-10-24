@@ -22,7 +22,7 @@ export default function UploadPhoto({
     accept: 'image/png, image/jpeg, image/jpg',
     action: api,
     headers: {
-      authorization: `Bearer ${AuthUtils.getToken()}`
+      authorization: `Bearer ${AuthUtils.getAccessToken()}`
     },
     listType: 'picture-card',
     method: 'post',

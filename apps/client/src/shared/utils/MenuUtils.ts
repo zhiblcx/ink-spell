@@ -1,6 +1,6 @@
 import { Menu } from '../enums'
 export class MenuUtils {
-  static readonly #MENU_KEY = 'menu'
+  static readonly #MENU_KEY = 'ink_spell_menu'
 
   static getMenu(): string | null {
     return localStorage.getItem(this.#MENU_KEY)

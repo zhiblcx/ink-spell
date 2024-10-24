@@ -1,4 +1,4 @@
-import { request } from '@/shared/API'
+import { axiosInstance } from '@/shared/API'
 import { AuthUtils } from '@/shared/utils'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
@@ -11,9 +11,11 @@ export const signinMutation = () => {
   const { t } = useTranslation(['PROMPT'])
   const navigate = useNavigate()
   return useMutation({
-    mutationFn: async (signInDao: SignInDao) => request.post('/auth/login', signInDao),
+    mutationFn: async (signInDao: SignInDao) => axiosInstance.post('/auth/login', signInDao),
     onSuccess: (result, variables: SigninValue) => {
-      AuthUtils.setToken(result.data.data.access_token)
+      const { access_token, refresh_token } = result.data.data
+      AuthUtils.setAccessToken(access_token)
+      AuthUtils.setFreshToken(refresh_token)
       navigate({ to: '/', replace: true })
       message.success(t('PROMPT:login_successful'))
       if (variables) {
@@ -38,9 +40,11 @@ export const signupMutation = () => {
   const { t } = useTranslation(['PROMPT'])
   const navigate = useNavigate()
   return useMutation({
-    mutationFn: async (signUpDao: SignUpDao) => request.post('/auth/register', signUpDao),
+    mutationFn: async (signUpDao: SignUpDao) => axiosInstance.post('/auth/register', signUpDao),
     onSuccess: (result) => {
-      AuthUtils.setToken(result.data.data.access_token)
+      const { access_token, refresh_token } = result.data.data
+      AuthUtils.setAccessToken(access_token)
+      AuthUtils.setFreshToken(refresh_token)
       AuthUtils.clearRememberAccountData()
       navigate({ to: '/', replace: true })
       message.success(t('PROMPT:login_successful'))

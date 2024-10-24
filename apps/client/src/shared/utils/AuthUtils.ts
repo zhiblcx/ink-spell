@@ -1,16 +1,30 @@
 export class AuthUtils {
-  static readonly #TOKEN_KEY = 'token'
-  static readonly #REMEMBER_ACCOUNT_DATA = 'remember_account_data'
-  static getToken(): string | null {
-    return localStorage.getItem(this.#TOKEN_KEY)
+  static readonly #ACCESS_TOKEN_KEY = 'ink_spell_access_token'
+  static readonly #REFRESH_TOKEN_KEY = 'ink_spell_refresh_token'
+  static readonly #REMEMBER_ACCOUNT_DATA = 'ink_spell_remember_account_data'
+
+  static getAccessToken(): string | null {
+    return localStorage.getItem(this.#ACCESS_TOKEN_KEY)
   }
 
-  static setToken(token: string): void {
-    localStorage.setItem(this.#TOKEN_KEY, token)
+  static setAccessToken(access_token: string): void {
+    localStorage.setItem(this.#ACCESS_TOKEN_KEY, access_token)
   }
 
-  static clearToken(): void {
-    localStorage.removeItem(this.#TOKEN_KEY)
+  static clearAccessToken(): void {
+    localStorage.removeItem(this.#ACCESS_TOKEN_KEY)
+  }
+
+  static getFreshToken(): string | null {
+    return localStorage.getItem(this.#REFRESH_TOKEN_KEY)
+  }
+
+  static setFreshToken(refresh_token: string): void {
+    localStorage.setItem(this.#REFRESH_TOKEN_KEY, refresh_token)
+  }
+
+  static clearFreshToken(): void {
+    localStorage.removeItem(this.#REFRESH_TOKEN_KEY)
   }
 
   /**
@@ -20,7 +34,6 @@ export class AuthUtils {
    * JSON.parse(AuthUtils.getRememberAccountData() ?? 'null')
    * ```
    */
-
   static getRememberAccountData(): string | null {
     return localStorage.getItem(this.#REMEMBER_ACCOUNT_DATA)
   }
