@@ -3,10 +3,11 @@ import { Public } from '@/core/decorator/auth.decorator';
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
-  Param,
   Post,
+  Query,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -30,7 +31,7 @@ export class AuthController {
   @ApiOperation({ summary: '登录' })
   @APIResponse(LoginVo, '登录成功')
   async signIn(@Body() loginDao: LoginDao) {
-    return this.authService.signIn(loginDao);
+    return await this.authService.signIn(loginDao);
   }
 
   @Public()
@@ -39,23 +40,23 @@ export class AuthController {
   @ApiOperation({ summary: '注册' })
   @APIResponse(LoginVo, '登录成功')
   async signUp(@Body() registerDto: RegisterDto) {
-    return this.authService.signUp(registerDto);
+    return await this.authService.signUp(registerDto);
   }
 
   @Public()
   @HttpCode(HttpStatus.OK)
-  @Post('/refresh/:refresh_token')
+  @Get('/refresh')
   @ApiOperation({ summary: '刷新token' })
   @APIResponse(LoginVo, '刷新成功')
-  async refresh_token(@Param('refresh_token') refresh_token: string) {
+  async refresh_token(@Query('refresh_token') refresh_token: string) {
     try {
       const payload = await this.jwtService.verifyAsync(refresh_token);
-      return this.authService.refreshToken({
-        userId: payload,
+      return await this.authService.refreshToken({
+        userId: payload.userId,
         account: payload.account,
       });
     } catch (_) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('token 失效，请重新登录');
     }
   }
 }
