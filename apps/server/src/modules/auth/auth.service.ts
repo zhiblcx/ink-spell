@@ -23,13 +23,33 @@ export class AuthService {
     private prisma: PrismaService,
   ) {}
 
+  async generateToken(payload: { userId: number; account: string }) {
+    return {
+      access_token: await this.jwtService.signAsync(payload, {
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
+      }),
+      refresh_token: await this.jwtService.signAsync(payload, {
+        expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN,
+      }),
+    };
+  }
+
+  async refreshToken(payload: { userId: number; account: string }) {
+    return new R({
+      data: await this.generateToken(payload),
+      message: '刷新成功',
+    });
+  }
+
   async signIn(loginDao: LoginDao) {
     const { account, password } = loginDao;
     try {
       const user = await this.validateLogin(account, password);
-      const payload = { userId: user.id, account: user.account };
       return new R({
-        data: { access_token: await this.jwtService.signAsync(payload) },
+        data: await this.generateToken({
+          userId: user.id,
+          account: user.account,
+        }),
         message: '登录成功',
       });
     } catch (err) {
@@ -83,12 +103,11 @@ export class AuthService {
           },
         },
       });
-      const payload = {
-        userId: currentUser.id,
-        account: currentUser.account,
-      };
       return new R({
-        data: { access_token: await this.jwtService.signAsync(payload) },
+        data: await this.generateToken({
+          userId: currentUser.id,
+          account: currentUser.account,
+        }),
         message: '登录成功',
       });
     }
