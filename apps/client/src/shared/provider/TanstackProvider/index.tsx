@@ -20,12 +20,10 @@ declare module '@tanstack/react-router' {
   }
 }
 
-function TanstackProvider() {
+export default function TanstackProvider() {
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
     </QueryClientProvider>
   )
 }
-
-export default TanstackProvider
