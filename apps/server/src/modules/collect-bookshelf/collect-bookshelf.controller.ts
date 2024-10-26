@@ -26,12 +26,9 @@ export class CollectBookshelfController {
   @HttpCode(HttpStatus.OK)
   @APIResponse([CollectBookshelfVo], '获取成功')
   async getCollectBookshelfList(@Request() req) {
-    return new R({
-      message: '获取成功',
-      data: await this.collectBookshelfService.getCollectBookshelfList(
-        req.user.userId,
-      ),
-    });
+    return await this.collectBookshelfService.getCollectBookshelfList(
+      req.user.userId,
+    );
   }
 
   @Post(':bookShelfId')
@@ -54,15 +51,12 @@ export class CollectBookshelfController {
   @Delete(':collectBookShelfId')
   @ApiOperation({ summary: '取消收藏书架' })
   @HttpCode(HttpStatus.OK)
-  @APIResponse(CollectBookshelfVo, '取消收藏成功')
+  @APIResponse(CollectBookshelfVo, '取消成功')
   async unCollectBookShelf(
     @Param('collectBookShelfId') collectBookShelfId: number,
   ) {
-    return new R({
-      message: '取消收藏成功',
-      data: await this.collectBookshelfService.unCollectBookShelf(
-        collectBookShelfId,
-      ),
-    });
+    return await this.collectBookshelfService.unCollectBookShelf(
+      collectBookShelfId,
+    );
   }
 }

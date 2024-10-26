@@ -1,9 +1,15 @@
+import { E } from '@/shared/res/e';
+import { R } from '@/shared/res/r';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { TranslationService } from '../translation/translation.service';
 
 @Injectable()
 export class FollowService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly translation: TranslationService,
+  ) {}
 
   // 获取关注列表
   async getFollower(userId, page, limit) {
@@ -41,7 +47,14 @@ export class FollowService {
       isMutual: followingIds.includes(item.followingId),
     }));
 
-    return followerWithMutual;
+    return new R({
+      message: this.translation.t('prompt.acquire_successful'),
+      data: new E({
+        items: followerWithMutual,
+        currentPage: page,
+        itemsPerPage: limit,
+      }),
+    });
   }
 
   // 获取粉丝列表
@@ -77,36 +90,43 @@ export class FollowService {
       isMutual: followerIds.includes(item.followerId),
     }));
 
-    return followingWithMutual;
+    return new R({
+      message: this.translation.t('prompt.acquire_successful'),
+      data: new E({
+        items: followingWithMutual,
+        currentPage: page,
+        itemsPerPage: limit,
+      }),
+    });
   }
 
+  // 关注
   async follower(req, followID) {
-    const follow = await this.prisma.follow.findFirst({
-      where: {
-        followerId: req.user.userId,
-        followingId: parseInt(followID),
-      },
+    const followerId = parseInt(req.user.userId);
+    const followingId = parseInt(followID);
+    const existingFollow = await this.prisma.follow.findFirst({
+      where: { followerId, followingId },
     });
 
-    if (follow) {
-      if (follow.isDelete) {
+    if (existingFollow) {
+      if (existingFollow.isDelete) {
         return await this.prisma.follow.update({
-          where: { id: follow.id },
+          where: { id: existingFollow.id },
           data: { isDelete: false },
         });
       } else {
-        throw new ConflictException('咦，看起来已经关注了呢。');
+        throw new ConflictException(
+          this.translation.t('validation.already_followed'),
+        );
       }
     } else {
       return await this.prisma.follow.create({
-        data: {
-          followerId: parseInt(req.user.userId),
-          followingId: parseInt(followID),
-        },
+        data: { followerId, followingId },
       });
     }
   }
 
+  // 取关
   async cancelFollower(req, followID) {
     const follow = await this.prisma.follow.findFirst({
       where: {
@@ -115,7 +135,7 @@ export class FollowService {
       },
     });
     if (follow) {
-      return await this.prisma.follow.update({
+      await this.prisma.follow.update({
         where: { id: follow.id },
         data: { isDelete: true },
       });

@@ -1,10 +1,14 @@
 import { appConfig } from '@/config/AppConfig';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { TranslationService } from '../translation/translation.service';
 
 @Injectable()
 export class BookshelfService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly translation: TranslationService,
+  ) {}
   async createBookShelf(req, createBookshelfDto) {
     const currentBookShelf = await this.prisma.bookShelf.findFirst({
       where: {
@@ -32,7 +36,7 @@ export class BookshelfService {
           })) + 1,
         description:
           createBookshelfDto.bookShelfDescription == ''
-            ? '暂无描述'
+            ? this.translation.t('prompt.no_description')
             : createBookshelfDto.bookShelfDescription,
       },
     });

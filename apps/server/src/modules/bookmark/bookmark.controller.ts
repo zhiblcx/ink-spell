@@ -1,5 +1,4 @@
 import { APIResponse } from '@/core/decorator/APIResponse';
-import { R } from '@/shared/res/r';
 import {
   Body,
   Controller,
@@ -27,13 +26,10 @@ export class BookmarkController {
   @HttpCode(HttpStatus.OK)
   @APIResponse(BookMarkVo, '查询成功')
   async showBookMark(@Request() req, @Param() bookMarkDto: BookMarkDto) {
-    return new R({
-      message: '查询成功',
-      data: await this.bookmarkService.showBookMark(
-        parseInt(req.user.userId),
-        bookMarkDto.bookId,
-      ),
-    });
+    return await this.bookmarkService.showBookMark(
+      parseInt(req.user.userId),
+      bookMarkDto.bookId,
+    );
   }
 
   @Post()
@@ -45,14 +41,11 @@ export class BookmarkController {
     @Body() operateBookMarkDto: OperateBookMarkDto,
   ) {
     const { bookId, chapter } = { ...operateBookMarkDto };
-    await this.bookmarkService.insertBookMark(
+    return await this.bookmarkService.insertBookMark(
       bookId,
       parseInt(req.user.userId),
       chapter,
     );
-    return new R({
-      message: '添加成功',
-    });
   }
 
   @Put()
@@ -64,13 +57,10 @@ export class BookmarkController {
     @Body() operateBookMarkDto: OperateBookMarkDto,
   ) {
     const { bookId, chapter } = { ...operateBookMarkDto };
-    await this.bookmarkService.deleteBookMark(
+    return await this.bookmarkService.deleteBookMark(
       bookId,
       parseInt(req.user.userId),
       chapter,
     );
-    return new R({
-      message: '删除成功',
-    });
   }
 }

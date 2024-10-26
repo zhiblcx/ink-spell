@@ -1,0 +1,10 @@
+{
+  "already_collected_bookshelf": "you have already collected this bookshelf",
+  "already_followed": "Hmm, it seems you've already followed",
+  "incorrect_original_password": "incorrect original password",
+  "no_matching_user_found": "Oops, no matching user found!",
+  "account_not_found": "Sorry, the account was not found. Please check if the account you entered is correct.",
+  "account_not_linked_to_email": "Sorry, this account is not linked to an email.",
+  "email_sending_failed": "email sending failed",
+  "bookshelf_name_taken": "Looks like this bookshelf name is taken, let's pick another one!"
+}

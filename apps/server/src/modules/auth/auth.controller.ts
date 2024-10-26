@@ -8,9 +8,7 @@ import {
   HttpStatus,
   Post,
   Query,
-  UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDao } from './dto/login-auth.dto';
@@ -20,10 +18,7 @@ import { LoginVo } from './vo/login-auth-vo';
 @Controller('/auth')
 @ApiTags('认证')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly jwtService: JwtService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Public()
   @HttpCode(HttpStatus.OK)
@@ -48,15 +43,7 @@ export class AuthController {
   @Get('/refresh')
   @ApiOperation({ summary: '刷新token' })
   @APIResponse(LoginVo, '刷新成功')
-  async refresh_token(@Query('refresh_token') refresh_token: string) {
-    try {
-      const payload = await this.jwtService.verifyAsync(refresh_token);
-      return await this.authService.refreshToken({
-        userId: payload.userId,
-        account: payload.account,
-      });
-    } catch (_) {
-      throw new UnauthorizedException('token 失效，请重新登录');
-    }
+  async refresh_token(@Query('refresh_token') refreshToken: string) {
+    return await this.authService.refreshToken(refreshToken);
   }
 }

@@ -1,0 +1,20 @@
+{
+  "refresh_successful": "刷新成功",
+  "login_successful": "登录成功",
+  "acquire_successful": "获取成功",
+  "added_successfully": "添加成功",
+  "no_such_bookmark": "书签不存在",
+  "deleted_successfully": "删除成功",
+  "collection_successful": "收藏成功",
+  "cancellation_successful": "取消成功",
+  "followed_successfully": "关注成功",
+  "reset_successful": "重置成功",
+  "update_successful": "更新成功",
+  "send_successful": "发送成功",
+  "upload_successful": "上传成功",
+  "note_download_failed": "笔记下载失败，请稍后再试哦~",
+  "no_book_title": "暂无书名",
+  "no_author": "暂无作者",
+  "no_main_character": "暂无主角",
+  "no_description": "暂无描述"
+}

@@ -1,0 +1,10 @@
+{
+  "already_collected_bookshelf": "你已经收藏过该书架",
+  "already_followed": "咦，看起来已经关注了呢",
+  "incorrect_original_password": "原密码错误",
+  "no_matching_user_found": "哎呀，未找到匹配的用户！",
+  "account_not_found": "抱歉，找不到相应的账号。请检查您输入的账号是否有误",
+  "account_not_linked_to_email": "抱歉，该账号未绑定邮箱",
+  "email_sending_failed": "邮件发送失败",
+  "bookshelf_name_taken": "看起来这个书架名字已经被使用了，我们来选另一个吧！"
+}

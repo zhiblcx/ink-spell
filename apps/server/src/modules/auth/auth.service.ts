@@ -13,15 +13,19 @@ import * as dayjs from 'dayjs';
 import { env } from 'process';
 import { appConfig } from '../../config/AppConfig';
 import { PrismaService } from '../prisma/prisma.service';
+import { TranslationService } from '../translation/translation.service';
 import { LoginDao } from './dto/login-auth.dto';
 import { RegisterDto } from './dto/register-auth.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private jwtService: JwtService,
-    private prisma: PrismaService,
+    private readonly jwtService: JwtService,
+    private readonly prisma: PrismaService,
+    private readonly translation: TranslationService,
   ) {}
+
+  t = this.translation.t;
 
   async generateToken(payload: { userId: number; account: string }) {
     return {
@@ -34,11 +38,17 @@ export class AuthService {
     };
   }
 
-  async refreshToken(payload: { userId: number; account: string }) {
-    return new R({
-      data: await this.generateToken(payload),
-      message: '刷新成功',
-    });
+  async refreshToken(refreshToken: string) {
+    try {
+      const { userId, account } =
+        await this.jwtService.verifyAsync(refreshToken);
+      return new R({
+        data: await this.generateToken({ userId, account }),
+        message: this.t('prompt.refresh_successful'),
+      });
+    } catch (_) {
+      throw new UnauthorizedException(this.t('auth.token_expired'));
+    }
   }
 
   async signIn(loginDao: LoginDao) {
@@ -50,10 +60,12 @@ export class AuthService {
           userId: user.id,
           account: user.account,
         }),
-        message: '登录成功',
+        message: this.t('prompt.login_successful'),
       });
     } catch (err) {
-      throw new BadRequestException('账号或密码错误');
+      throw new BadRequestException(
+        this.t('auth.incorrect_username_or_password'),
+      );
     }
   }
 
@@ -70,10 +82,10 @@ export class AuthService {
     });
     if (user) {
       if (user.account === account) {
-        throw new UnprocessableEntityException('账号已存在');
+        throw new UnprocessableEntityException(this.t('auth.username_exists'));
       }
       if (user.username === username) {
-        throw new UnprocessableEntityException('用户名已存在');
+        throw new UnprocessableEntityException(this.t('auth.username_exists'));
       }
     } else {
       const pass = await hash(password, Number(env.HASH_SALT_OR_ROUNDS));
@@ -82,7 +94,7 @@ export class AuthService {
           (item) => item.email === email,
         );
         if (index === -1 || Email.getRegisterEmail()[index].code !== code) {
-          throw new UnprocessableEntityException('验证码错误');
+          throw new UnprocessableEntityException(this.t('auth.token_expired'));
         }
       }
       const currentUser = await this.prisma.user.create({
@@ -108,7 +120,7 @@ export class AuthService {
           userId: currentUser.id,
           account: currentUser.account,
         }),
-        message: '登录成功',
+        message: this.t('prompt.login_successful'),
       });
     }
   }
@@ -122,6 +134,8 @@ export class AuthService {
       const { password: _, ...result } = user;
       return result;
     }
-    throw new UnauthorizedException('账号或密码错误');
+    throw new UnauthorizedException(
+      this.t('auth.incorrect_username_or_password'),
+    );
   }
 }

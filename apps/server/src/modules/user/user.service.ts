@@ -8,31 +8,40 @@ import {
 import { compare, hash } from 'bcrypt';
 import { env } from 'process';
 import { PrismaService } from '../prisma/prisma.service';
+import { TranslationService } from '../translation/translation.service';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly translation: TranslationService,
+  ) {}
 
-  async getProfile(user) {
+  t = this.translation.t;
+
+  async getProfileData(userId: number) {
     try {
       const { password: _, ...userInfo } = await this.prisma.user.findUnique({
-        where: { id: parseInt(user.userId) },
+        where: { id: userId },
         include: {
           books: {
-            where: {
-              isDelete: false,
-            },
+            where: { isDelete: false },
           },
         },
       });
+
+      if (!userInfo) {
+        throw new UnauthorizedException(this.t('auth.token_expired'));
+      }
+
       const books = await this.prisma.book.count({
-        where: { userId: user.userId, isDelete: false },
+        where: { userId, isDelete: false },
       });
       const followers = await this.prisma.follow.count({
-        where: { followingId: user.userId, isDelete: false },
+        where: { followingId: userId, isDelete: false },
       });
       const following = await this.prisma.follow.count({
-        where: { followerId: user.userId, isDelete: false },
+        where: { followerId: userId, isDelete: false },
       });
 
       return {
@@ -43,42 +52,16 @@ export class UserService {
         following,
       };
     } catch (err) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException(this.t('auth.token_expired'));
     }
   }
 
+  async getProfile(user) {
+    return await this.getProfileData(parseInt(user.userId));
+  }
+
   async getUserInfo(userId) {
-    const { password: _, ...userInfo } = await this.prisma.user.findUnique({
-      where: {
-        id: parseInt(userId),
-        isDelete: false,
-      },
-      include: {
-        books: {
-          where: {
-            isDelete: false,
-          },
-        },
-      },
-    });
-
-    const books = await this.prisma.book.count({
-      where: { userId: parseInt(userId), isDelete: false },
-    });
-    const followers = await this.prisma.follow.count({
-      where: { followingId: parseInt(userId), isDelete: false },
-    });
-    const following = await this.prisma.follow.count({
-      where: { followerId: parseInt(userId), isDelete: false },
-    });
-
-    return {
-      ...userInfo,
-      booksInfo: userInfo.books,
-      books,
-      followers,
-      following,
-    };
+    return await this.getProfileData(parseInt(userId));
   }
 
   async getBookshelf(userId) {
@@ -129,7 +112,7 @@ export class UserService {
         where: { id: parseInt(userId) },
       });
     }
-    throw new BadRequestException('验证码错误');
+    throw new BadRequestException();
   }
 
   async updatePassword(userId, updateUserDto) {
@@ -137,9 +120,9 @@ export class UserService {
       where: { id: parseInt(userId) },
     });
     if (!(await compare(updateUserDto.password, user.password))) {
-      throw new BadRequestException({
-        message: '原密码错误',
-      });
+      throw new BadRequestException(
+        this.t('validation.incorrect_original_password'),
+      );
     } else {
       return await this.prisma.user.update({
         where: { id: parseInt(userId) },
@@ -224,7 +207,7 @@ export class UserService {
       take: parseInt(limit),
     });
     if (users.length === 0) {
-      throw new NotFoundException('哎呀，未找到匹配的用户！');
+      throw new NotFoundException(this.t('validation.no_matching_user_found'));
     } else {
       const result = users.map((user) => ({
         ...user,
@@ -261,13 +244,13 @@ export class UserService {
         });
 
         if (user === null) {
-          throw new NotFoundException(
-            '抱歉，找不到相应的账号。请检查您输入的账号是否有误。',
-          );
+          throw new NotFoundException(this.t('validation.account_not_found'));
         }
 
         if (user.email === null) {
-          throw new NotFoundException('抱歉，该账号未绑定邮箱。');
+          throw new NotFoundException(
+            this.t('validation.account_not_linked_to_email'),
+          );
         }
 
         await Email.send({
@@ -287,7 +270,7 @@ export class UserService {
       if (err.status == 404) {
         throw new NotFoundException(err.message);
       }
-      throw new BadRequestException('邮件发送失败');
+      throw new BadRequestException(this.t('validation.email_sending_failed'));
     }
   }
 
@@ -303,7 +286,7 @@ export class UserService {
         },
       });
     }
-    throw new NotFoundException('验证码错误');
+    throw new BadRequestException(this.t('auth.token_expired'));
   }
 
   async resetPassword(userId, password) {

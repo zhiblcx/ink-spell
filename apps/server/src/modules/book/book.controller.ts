@@ -27,6 +27,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { MultipleStorage } from 'src/config/MultipleStorage';
+import { TranslationService } from '../translation/translation.service';
 import { BookService } from './book.service';
 import { BookContentDto } from './dto/book-content.dto';
 import { BookFileDto } from './dto/book-file.dto';
@@ -42,7 +43,10 @@ import { Md5Vo } from './vo/md5.vo';
 @ApiTags('书籍管理')
 @ApiBearerAuth()
 export class BookController {
-  constructor(private readonly bookService: BookService) {}
+  constructor(
+    private readonly bookService: BookService,
+    private readonly translation: TranslationService,
+  ) {}
 
   @Post('upload/cover')
   @ApiOperation({ summary: '上传图片' })
@@ -68,7 +72,7 @@ export class BookController {
   ) {
     const filePath = file.path.replace(/\\/g, '/').replace('public', '/static');
     return new R({
-      message: '上传成功',
+      message: this.translation.t('prompt.upload_successful'),
       data: { filePath },
     });
   }
@@ -98,7 +102,7 @@ export class BookController {
       await this.bookService.uploadFile(req, file, data.md5, data.bookShelfId)
     ) {
       return new R({
-        message: '上传成功',
+        message: this.translation.t('prompt.upload_successful'),
         data: {
           path: file.originalname,
         },
@@ -112,7 +116,7 @@ export class BookController {
   @APIResponse(null, '收藏成功')
   async collectBook(@Request() req, @Param('bookID') bookID: number) {
     return new R({
-      message: '收藏成功',
+      message: this.translation.t('prompt.collection_successful'),
       data: await this.bookService.collectBook(req.user.userId, bookID),
     });
   }
@@ -134,7 +138,7 @@ export class BookController {
   @APIResponse(null, '删除成功')
   async deleteBook(@Param('bookID') bookID: number) {
     return new R({
-      message: '删除成功',
+      message: this.translation.t('prompt.deleted_successfully'),
       data: await this.bookService.deleteBook(bookID),
     });
   }
@@ -142,10 +146,10 @@ export class BookController {
   @Get(':bookID')
   @ApiOperation({ summary: '查看书籍' })
   @HttpCode(HttpStatus.OK)
-  @APIResponse(BookContentVo, '查询成功')
+  @APIResponse(BookContentVo, '获取成功')
   async showBookContent(@Param('bookID') bookID: number) {
     return new R({
-      message: '查询成功',
+      message: this.translation.t('prompt.acquire_successful'),
       data: await this.bookService.showBookContent(bookID),
     });
   }
@@ -153,17 +157,17 @@ export class BookController {
   @Put(':bookID')
   @ApiOperation({ summary: '修改书籍' })
   @HttpCode(HttpStatus.OK)
-  @APIResponse(BookInfoVo, '修改成功')
+  @APIResponse(BookInfoVo, '更新成功')
   async updateBookDescription(
     @Param('bookID') bookID: number,
     @Body() bookContentDto: BookContentDto,
   ) {
     return new R({
+      message: this.translation.t('prompt.update_successful'),
       data: await this.bookService.updateBookDescription(
         bookID,
         bookContentDto,
       ),
-      message: '修改成功',
     });
   }
 }

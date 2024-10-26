@@ -1,3 +1,4 @@
+import { appConfig } from '@/config/AppConfig';
 import { APIResponse } from '@/core/decorator/APIResponse';
 import { Public } from '@/core/decorator/auth.decorator';
 import { Roles } from '@/core/decorator/roles.decorator';
@@ -21,6 +22,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateBookShelfVo } from '../bookshelf/vo/create-bookshelf.vo';
+import { TranslationService } from '../translation/translation.service';
 import { ForgetPasswordEmailDto } from './dto/forget-password-email.dto';
 import { ForgetPasswordDto } from './dto/forget-password.dto';
 import { RegisterEmailUserDto } from './dto/register-email-user.dto';
@@ -36,7 +38,10 @@ import { UserVo } from './vo/user.vo';
 @ApiTags('用户管理')
 @ApiBearerAuth()
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly translation: TranslationService,
+  ) {}
 
   @Get('profile')
   @ApiOperation({ summary: '获取个人信息' })
@@ -52,7 +57,7 @@ export class UserController {
   @APIResponse([MessageVo], '获取成功')
   async handleGetMessages() {
     return new R({
-      message: '获取成功',
+      message: this.translation.t('prompt.acquire_successful'),
       data: await this.userService.handleGetMessages(),
     });
   }
@@ -78,7 +83,7 @@ export class UserController {
     @Query('limit') limit: number,
   ) {
     return new R({
-      message: '获取成功',
+      message: this.translation.t('prompt.acquire_successful'),
       data: new E({
         items: await this.userService.getUserInfoByUsername(
           username,
@@ -96,6 +101,7 @@ export class UserController {
   @APIResponse(UserInfoVo)
   async getUserInfo(@Param('userId') userId: number) {
     return new R({
+      message: this.translation.t('prompt.acquire_successful'),
       data: await this.userService.getUserInfo(userId),
     });
   }
@@ -105,7 +111,7 @@ export class UserController {
   @APIResponse([CreateBookShelfVo])
   async getBookshelf(@Param('userId') userId: number) {
     return new R({
-      message: '获取成功',
+      message: this.translation.t('prompt.acquire_successful'),
       data: await this.userService.getBookshelf(userId),
     });
   }
@@ -116,7 +122,7 @@ export class UserController {
   async deleteUser(@Param('userId') userId: number) {
     await this.userService.deleteUser(userId);
     return new R({
-      message: '删除成功',
+      message: this.translation.t('prompt.deleted_successfully'),
     });
   }
 
@@ -128,7 +134,7 @@ export class UserController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     return new R({
-      message: '修改成功',
+      message: this.translation.t('prompt.update_successful'),
       data: await this.userService.updatePersonUserInfo(
         req.user.userId,
         updateUserDto,
@@ -138,14 +144,14 @@ export class UserController {
 
   @Put('/password')
   @ApiOperation({ summary: '修改密码' })
-  @APIResponse(null, '修改成功')
+  @APIResponse(null, '更新成功')
   async updatePassword(
     @Request() req,
     @Body() updateUserDto: UpdateUserPasswordDto,
   ) {
     await this.userService.updatePassword(req.user.userId, updateUserDto);
     return new R({
-      message: '修改成功',
+      message: this.translation.t('prompt.update_successful'),
     });
   }
 
@@ -154,7 +160,7 @@ export class UserController {
   @APIResponse([UserVo], '获取成功', true)
   async getAllUser() {
     return new R({
-      message: '获取成功',
+      message: this.translation.t('prompt.acquire_successful'),
       data: await this.userService.getAllUser(),
     });
   }
@@ -166,11 +172,11 @@ export class UserController {
   async sendEmail(@Query() registerEmailUserDto: RegisterEmailUserDto) {
     await this.userService.sendEmail(
       1,
-      '[ink-spell]  注册邮箱请求 -- ',
+      `[${appConfig.APP_NAME}]  ${this.translation.t('auth.register_email_request')} -- `,
       registerEmailUserDto.email,
     );
     return new R({
-      message: '发送成功',
+      message: this.translation.t('prompt.send_successful'),
     });
   }
 
@@ -183,11 +189,11 @@ export class UserController {
   ) {
     const email = await this.userService.sendEmail(
       0,
-      '[ink-spell]  忘记密码请求 -- ',
+      `[${appConfig.APP_NAME}]  ${this.translation.t('auth.forgot_password_request')} -- `,
       forgetPasswordEmailDto.account,
     );
     return new R({
-      message: '发送成功',
+      message: this.translation.t('prompt.send_successful'),
       data: { email },
     });
   }
@@ -200,7 +206,7 @@ export class UserController {
     const { email, code, password } = { ...forgetPassword };
     await this.userService.updateForgetPassword(email, code, password);
     return new R({
-      message: '修改成功',
+      message: this.translation.t('prompt.update_successful'),
     });
   }
 
@@ -212,7 +218,7 @@ export class UserController {
   async resetPassword(@Param('userId') userId: number) {
     await this.userService.resetPassword(userId, '123456');
     return new R({
-      message: '重置成功',
+      message: this.translation.t('prompt.reset_successful'),
       data: { password: '123456' },
     });
   }

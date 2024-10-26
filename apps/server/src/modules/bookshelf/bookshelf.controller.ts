@@ -17,6 +17,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import * as fs from 'node:fs';
+import { TranslationService } from '../translation/translation.service';
 import { BookshelfService } from './bookshelf.service';
 import { CreateBookshelfDto } from './dto/create-bookshelf.dto';
 import { BookShelfInfoVo } from './vo/bookshelf.info.vo';
@@ -26,7 +27,10 @@ import { CreateBookShelfVo } from './vo/create-bookshelf.vo';
 @ApiTags('书架管理')
 @ApiBearerAuth()
 export class BookshelfController {
-  constructor(private readonly bookshelfService: BookshelfService) {}
+  constructor(
+    private readonly bookshelfService: BookshelfService,
+    private readonly translation: TranslationService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: '新增书架' })
@@ -42,11 +46,11 @@ export class BookshelfController {
     );
     if (result == undefined) {
       return new R({
-        message: '书架名称重复',
+        message: this.translation.t('validation.bookshelf_name_taken'),
       });
     } else {
       return new R({
-        message: '新增成功',
+        message: this.translation.t('prompt.added_successfully'),
         data: new CreateBookShelfVo(result),
       });
     }
@@ -59,17 +63,17 @@ export class BookshelfController {
   async deleteBookShelf(@Param('bookShelfId') bookShelfId: number) {
     await this.bookshelfService.deleteBookShelf(bookShelfId);
     return new R({
-      message: '删除成功',
+      message: this.translation.t('prompt.deleted_successfully'),
     });
   }
 
   @Get()
   @ApiOperation({ summary: '查询书架' })
   @HttpCode(HttpStatus.OK)
-  @APIResponse([CreateBookShelfVo], '查询成功')
+  @APIResponse([CreateBookShelfVo], '获取成功')
   async acquireBookShelf(@Request() req) {
     return new R({
-      message: '查询成功',
+      message: this.translation.t('prompt.acquire_successful'),
       data: await this.bookshelfService.acquireBookShelf(req.user.userId),
     });
   }
@@ -87,15 +91,17 @@ export class BookshelfController {
     const fileName = `${bookShelfId}.txt`;
     let content = '';
     for (let i = 0; i < data.length; i++) {
-      content += `${data[i].name || '暂无书名'}\n`;
-      content += `作者：${data[i].author || '暂无作者'}\n`;
-      content += `主角：${data[i].protagonist || '暂无主角'}\n`;
-      content += `描述：${data[i].description || '暂无描述'}\n\n`;
+      content += `${data[i].name || this.translation.t('prompt.no_book_title')}\n`;
+      content += `${this.translation.t('common.author')}：${data[i].author || this.translation.t('prompt.no_author')}\n`;
+      content += `${this.translation.t('common.main_character')}：${data[i].protagonist || this.translation.t('prompt.no_main_character')}\n`;
+      content += `${this.translation.t('common.description')}：${data[i].description || this.translation.t('prompt.no_description')}\n\n`;
     }
 
     fs.writeFile(filePath + fileName, content, (err) => {
       if (err) {
-        throw new BadRequestException('笔记下载失败，请稍后再试哦~');
+        throw new BadRequestException(
+          this.translation.t('prompt.note_download_failed'),
+        );
       } else {
         res.download(filePath + fileName, new Date().valueOf() + '.txt');
       }
@@ -105,12 +111,12 @@ export class BookshelfController {
   @Get(':bookShelfId')
   @ApiOperation({ summary: '查询书架书本' })
   @HttpCode(HttpStatus.OK)
-  @APIResponse(BookShelfInfoVo, '查询成功')
+  @APIResponse(BookShelfInfoVo, '获取成功')
   async acquireBookShelfByBookShelfId(
     @Param('bookShelfId') bookShelfId: number,
   ) {
     return new R({
-      message: '查询成功',
+      message: this.translation.t('prompt.acquire_successful'),
       data: await this.bookshelfService.acquireBookShelfByBookShelfId(
         bookShelfId,
       ),
@@ -126,7 +132,7 @@ export class BookshelfController {
     @Body() updateBookshelfDto: CreateBookshelfDto,
   ) {
     return new R({
-      message: '更新成功',
+      message: this.translation.t('prompt.update_successful'),
       data: await this.bookshelfService.updateBookShelf(
         bookShelfId,
         updateBookshelfDto,

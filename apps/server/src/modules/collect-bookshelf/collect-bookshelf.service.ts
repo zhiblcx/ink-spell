@@ -1,62 +1,79 @@
+import { R } from '@/shared/res/r';
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { TranslationService } from '../translation/translation.service';
 
 @Injectable()
 export class CollectBookshelfService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly translation: TranslationService,
+  ) {}
   async getCollectBookshelfList(userId) {
-    return await this.prisma.collectBookShelf.findMany({
-      where: {
-        userId: parseInt(userId),
-        isDelete: false,
-      },
-      include: {
-        bookShelf: true,
-      },
+    return new R({
+      message: this.translation.t('prompt.acquire_successful'),
+      data: await this.prisma.collectBookShelf.findMany({
+        where: {
+          userId: parseInt(userId),
+          isDelete: false,
+        },
+        include: {
+          bookShelf: true,
+        },
+      }),
     });
   }
 
   async collectBookShelf(userId, bookShelfId) {
-    const result = await this.prisma.collectBookShelf.findUnique({
-      where: {
-        userId_bookShelfId: {
-          userId: parseInt(userId),
-          bookShelfId: parseInt(bookShelfId),
-        },
-      },
+    const uniqueCondition = {
+      userId: parseInt(userId),
+      bookShelfId: parseInt(bookShelfId),
+    };
+
+    const bookshelf = await this.prisma.collectBookShelf.findUnique({
+      where: { userId_bookShelfId: uniqueCondition },
     });
 
-    if (!result) {
-      return await this.prisma.collectBookShelf.create({
-        data: {
-          userId: parseInt(userId),
-          bookShelfId: parseInt(bookShelfId),
-        },
+    // 如果没有收藏记录，创建新的收藏
+    if (!bookshelf) {
+      return new R({
+        message: this.translation.t('prompt.collection_successful'),
+        data: await this.prisma.collectBookShelf.create({
+          data: {
+            userId: parseInt(userId),
+            bookShelfId: parseInt(bookShelfId),
+          },
+        }),
       });
     }
 
-    if (result.isDelete === false) {
-      throw new UnprocessableEntityException('已经收藏过该书架');
-    } else if (result.isDelete === true) {
-      return await this.prisma.collectBookShelf.update({
-        where: {
-          id: result.id,
-        },
-        data: {
-          isDelete: false,
-        },
-      });
+    if (!bookshelf.isDelete) {
+      throw new UnprocessableEntityException(
+        this.translation.t('validation.already_collected_bookshelf'),
+      );
     }
+
+    // 如果记录存在但删除，更新记录恢复收藏
+    return new R({
+      message: this.translation.t('prompt.collection_successful'),
+      data: await this.prisma.collectBookShelf.update({
+        where: { id: bookshelf.id },
+        data: { isDelete: false },
+      }),
+    });
   }
 
   async unCollectBookShelf(collectBookShelfId) {
-    return this.prisma.collectBookShelf.update({
-      where: {
-        id: parseInt(collectBookShelfId),
-      },
-      data: {
-        isDelete: true,
-      },
+    return new R({
+      message: this.translation.t('prompt.cancellation_successful'),
+      data: await this.prisma.collectBookShelf.update({
+        where: {
+          id: parseInt(collectBookShelfId),
+        },
+        data: {
+          isDelete: true,
+        },
+      }),
     });
   }
 }

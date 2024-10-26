@@ -1,0 +1,20 @@
+{
+  "refresh_successful": "refresh successful",
+  "login_successful": "login successful",
+  "acquire_successful": "acquire successful",
+  "added_successfully": "added successfully",
+  "no_such_bookmark": "bookmark not found",
+  "deleted_successfully": "deleted successfully",
+  "collection_successful": "collection successful",
+  "cancellation_successful": "cancellation successful",
+  "followed_successfully": "followed successfully",
+  "reset_successful": "reset successful",
+  "update_successful": "update successful",
+  "send_successful": "send successful",
+  "upload_successful": "upload successful",
+  "note_download_failed": "note download failed, please try again later.",
+  "no_book_title": "No book title available",
+  "no_author": "No author available",
+  "no_main_character": "No main character available",
+  "no_description": "No description available"
+}
