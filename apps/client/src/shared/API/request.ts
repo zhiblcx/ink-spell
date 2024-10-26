@@ -1,6 +1,6 @@
 // 创建 axios 实例
 
-import { AuthUtils } from '@/shared/utils'
+import { AuthUtils, LanguageUtils } from '@/shared/utils'
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 
 interface PendingTask {
@@ -25,6 +25,7 @@ axiosInstance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
+    config.headers['x-custom-lang'] = LanguageUtils.getLanguage()
     return config
   },
   (error: AxiosError) => Promise.reject(error)

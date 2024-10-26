@@ -25,8 +25,6 @@ export class AuthService {
     private readonly translation: TranslationService,
   ) {}
 
-  t = this.translation.t;
-
   async generateToken(payload: { userId: number; account: string }) {
     return {
       access_token: await this.jwtService.signAsync(payload, {
@@ -44,10 +42,10 @@ export class AuthService {
         await this.jwtService.verifyAsync(refreshToken);
       return new R({
         data: await this.generateToken({ userId, account }),
-        message: this.t('prompt.refresh_successful'),
+        message: this.translation.t('prompt.refresh_successful'),
       });
     } catch (_) {
-      throw new UnauthorizedException(this.t('auth.token_expired'));
+      throw new UnauthorizedException(this.translation.t('auth.token_expired'));
     }
   }
 
@@ -60,11 +58,11 @@ export class AuthService {
           userId: user.id,
           account: user.account,
         }),
-        message: this.t('prompt.login_successful'),
+        message: this.translation.t('prompt.login_successful'),
       });
     } catch (err) {
       throw new BadRequestException(
-        this.t('auth.incorrect_username_or_password'),
+        this.translation.t('auth.incorrect_username_or_password'),
       );
     }
   }
@@ -82,10 +80,14 @@ export class AuthService {
     });
     if (user) {
       if (user.account === account) {
-        throw new UnprocessableEntityException(this.t('auth.username_exists'));
+        throw new UnprocessableEntityException(
+          this.translation.t('auth.username_exists'),
+        );
       }
       if (user.username === username) {
-        throw new UnprocessableEntityException(this.t('auth.username_exists'));
+        throw new UnprocessableEntityException(
+          this.translation.t('auth.username_exists'),
+        );
       }
     } else {
       const pass = await hash(password, Number(env.HASH_SALT_OR_ROUNDS));
@@ -94,7 +96,9 @@ export class AuthService {
           (item) => item.email === email,
         );
         if (index === -1 || Email.getRegisterEmail()[index].code !== code) {
-          throw new UnprocessableEntityException(this.t('auth.token_expired'));
+          throw new UnprocessableEntityException(
+            this.translation.t('auth.token_expired'),
+          );
         }
       }
       const currentUser = await this.prisma.user.create({
@@ -120,7 +124,7 @@ export class AuthService {
           userId: currentUser.id,
           account: currentUser.account,
         }),
-        message: this.t('prompt.login_successful'),
+        message: this.translation.t('prompt.login_successful'),
       });
     }
   }
@@ -135,7 +139,7 @@ export class AuthService {
       return result;
     }
     throw new UnauthorizedException(
-      this.t('auth.incorrect_username_or_password'),
+      this.translation.t('auth.incorrect_username_or_password'),
     );
   }
 }

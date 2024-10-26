@@ -17,8 +17,6 @@ export class UserService {
     private readonly translation: TranslationService,
   ) {}
 
-  t = this.translation.t;
-
   async getProfileData(userId: number) {
     try {
       const { password: _, ...userInfo } = await this.prisma.user.findUnique({
@@ -31,7 +29,9 @@ export class UserService {
       });
 
       if (!userInfo) {
-        throw new UnauthorizedException(this.t('auth.token_expired'));
+        throw new UnauthorizedException(
+          this.translation.t('auth.token_expired'),
+        );
       }
 
       const books = await this.prisma.book.count({
@@ -52,7 +52,7 @@ export class UserService {
         following,
       };
     } catch (err) {
-      throw new UnauthorizedException(this.t('auth.token_expired'));
+      throw new UnauthorizedException(this.translation.t('auth.token_expired'));
     }
   }
 
@@ -121,7 +121,7 @@ export class UserService {
     });
     if (!(await compare(updateUserDto.password, user.password))) {
       throw new BadRequestException(
-        this.t('validation.incorrect_original_password'),
+        this.translation.t('validation.incorrect_original_password'),
       );
     } else {
       return await this.prisma.user.update({
@@ -207,7 +207,9 @@ export class UserService {
       take: parseInt(limit),
     });
     if (users.length === 0) {
-      throw new NotFoundException(this.t('validation.no_matching_user_found'));
+      throw new NotFoundException(
+        this.translation.t('validation.no_matching_user_found'),
+      );
     } else {
       const result = users.map((user) => ({
         ...user,
@@ -244,12 +246,14 @@ export class UserService {
         });
 
         if (user === null) {
-          throw new NotFoundException(this.t('validation.account_not_found'));
+          throw new NotFoundException(
+            this.translation.t('validation.account_not_found'),
+          );
         }
 
         if (user.email === null) {
           throw new NotFoundException(
-            this.t('validation.account_not_linked_to_email'),
+            this.translation.t('validation.account_not_linked_to_email'),
           );
         }
 
@@ -270,7 +274,9 @@ export class UserService {
       if (err.status == 404) {
         throw new NotFoundException(err.message);
       }
-      throw new BadRequestException(this.t('validation.email_sending_failed'));
+      throw new BadRequestException(
+        this.translation.t('validation.email_sending_failed'),
+      );
     }
   }
 
@@ -286,7 +292,7 @@ export class UserService {
         },
       });
     }
-    throw new BadRequestException(this.t('auth.token_expired'));
+    throw new BadRequestException(this.translation.t('auth.token_expired'));
   }
 
   async resetPassword(userId, password) {
