@@ -1,19 +1,21 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { I18nTranslations } from '@/i18n/i18n.generated';
+import { RegisterDto } from '@/modules/auth/dto/register-auth.dto';
+import { ApiProperty, PickType } from '@nestjs/swagger';
 import { IsString, Length, NotContains } from 'class-validator';
+import { i18nValidationMessage as t } from 'nestjs-i18n';
 
-export class UpdateUserPasswordDto {
-  @NotContains(' ', { message: '密码不能有空格' })
-  @Length(6, 16, { message: '密码长度为 6-16 位' })
-  @IsString({ message: '密码必须为字符串' })
-  @ApiProperty({
-    example: '123456',
-    description: '密码',
+type I18n = I18nTranslations;
+
+export class UpdateUserPasswordDto extends PickType(RegisterDto, ['password']) {
+  @NotContains(' ', {
+    message: t<I18n>('validation.new_password_cannot_contain_spaces'),
   })
-  password: string;
-
-  @NotContains(' ', { message: '密码不能有空格' })
-  @Length(6, 16, { message: '密码长度为 6-16 位' })
-  @IsString({ message: '密码必须为字符串' })
+  @Length(6, 16, {
+    message: t<I18n>('validation.new_password_must_be_length_characters_long', {
+      length: '6-16',
+    }),
+  })
+  @IsString({ message: t<I18n>('validation.new_password_must_be_a_string') })
   @ApiProperty({
     example: '456789',
     description: '密码',

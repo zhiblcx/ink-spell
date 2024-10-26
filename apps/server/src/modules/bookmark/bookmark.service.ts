@@ -22,7 +22,7 @@ export class BookmarkService {
       message: this.translation.t('prompt.acquire_successful'),
       data: {
         ...bookMark,
-        bookmark: bookMark.catalog.sort((a, b) => a - b) ?? [],
+        bookmark: bookMark?.catalog.sort((a, b) => a - b) ?? [],
       },
     });
   }

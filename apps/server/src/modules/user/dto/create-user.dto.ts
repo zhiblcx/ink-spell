@@ -1,49 +1,14 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsString,
-  Length,
-  NotContains,
-} from 'class-validator';
+import { LoginDao } from '@/modules/auth/dto/login-auth.dto';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
-export class CreateUserDto {
-  @IsNotEmpty({ message: '账号不能为空' })
-  @Length(6, 12, { message: '账号长度为 6-12 位' })
-  @ApiProperty({
-    example: 'nicole123',
-    description: '账号',
-  })
-  account: string;
+import { I18nTranslations } from '@/i18n/i18n.generated';
+import { i18nValidationMessage as t } from 'nestjs-i18n';
 
-  @IsNotEmpty({ message: '密码不能为空' })
-  @NotContains(' ', { message: '密码不能有空格' })
-  @Length(6, 16, { message: '密码长度为 6-16 位' })
-  @IsString({ message: '密码必须为字符串' })
-  @ApiProperty({
-    example: '123456',
-    description: '密码',
-  })
-  password: string;
+type I18n = I18nTranslations;
 
-  @Length(6, 12, { message: '用户名长度在 3-12 位' })
-  @IsNotEmpty({ message: '用户名不能为空' })
-  @ApiProperty({
-    example: 'nicole123',
-    description: '用户名',
-    required: true,
-  })
-  username: string;
-
-  @IsEmail(undefined, { message: '邮箱格式不正确' })
-  @ApiProperty({
-    example: 'nicolezhi@qq.com',
-    description: '邮箱',
-    required: false,
-  })
-  email?: string;
-
-  @IsString({ message: '必须为字符串' })
+export class CreateUserDto extends PartialType(LoginDao) {
+  @IsString({ message: t<I18n>('validation.avatar_must_be_a_string') })
   @ApiProperty({
     example: '/static/cover/1723522466228.png',
     description: '头像',

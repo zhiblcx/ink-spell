@@ -1,12 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail } from 'class-validator';
+import { RegisterDto } from '@/modules/auth/dto/register-auth.dto';
+import { PickType } from '@nestjs/swagger';
 
-export class RegisterEmailUserDto {
-  @IsEmail(undefined, { message: '邮箱格式不正确' })
-  @ApiProperty({
-    example: 'nicolezhi@qq.com',
-    description: '邮箱',
-    required: false,
-  })
-  email: string;
-}
+export class RegisterEmailUserDto extends PickType(RegisterDto, ['email']) {}

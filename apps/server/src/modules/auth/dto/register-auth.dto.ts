@@ -1,16 +1,24 @@
+import { I18nTranslations } from '@/i18n/i18n.generated';
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import {
   IsEmail,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   Length,
-  NotContains,
 } from 'class-validator';
+import { i18nValidationMessage as t } from 'nestjs-i18n';
 import { LoginDao } from './login-auth.dto';
 
+type I18n = I18nTranslations;
+
 export class RegisterDto extends PartialType(LoginDao) {
-  @Length(6, 12, { message: '用户名长度在 6-12 位' })
-  @IsNotEmpty({ message: '用户名不能为空' })
+  @Length(6, 12, {
+    message: t<I18n>('validation.username_must_be_length_characters_long', {
+      length: '6-12',
+    }),
+  })
+  @IsNotEmpty({ message: t<I18n>('validation.username_cannot_be_empty') })
   @ApiProperty({
     example: 'nicole123',
     description: '用户名',
@@ -18,7 +26,7 @@ export class RegisterDto extends PartialType(LoginDao) {
   })
   username: string;
 
-  @IsEmail(undefined, { message: '邮箱格式不正确' })
+  @IsEmail(undefined, { message: t<I18n>('validation.email_format_invalid') })
   @IsOptional()
   @ApiProperty({
     example: 'nicolezhi@qq.com',
@@ -27,8 +35,12 @@ export class RegisterDto extends PartialType(LoginDao) {
   })
   email?: string;
 
-  @Length(6, 6, { message: '验证码长度为 6 位' })
-  @NotContains(' ', { message: '密码不能有空格' })
+  @Length(6, 6, {
+    message: t<I18n>('validation.code_must_be_length_characters_long', {
+      length: 6,
+    }),
+  })
+  @IsNumber(undefined, { message: t<I18n>('validation.code_must_be_number') })
   @IsOptional()
   @ApiProperty({
     example: '123456',

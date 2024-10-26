@@ -48,6 +48,25 @@ export type I18nTranslations = {
         "account_not_linked_to_email": string;
         "email_sending_failed": string;
         "bookshelf_name_taken": string;
+        "password_cannot_contain_spaces": string;
+        "new_password_cannot_contain_spaces": string;
+        "username_cannot_contain_spaces": string;
+        "account_cannot_be_empty": string;
+        "bookshelf_name_cannot_by_empty": string;
+        "account_must_be_length_characters_long": string;
+        "username_must_be_length_characters_long": string;
+        "password_must_be_length_characters_long": string;
+        "new_password_must_be_length_characters_long": string;
+        "code_must_be_length_characters_long": string;
+        "password_cannot_be_empty": string;
+        "new_password_cannot_be_empty": string;
+        "password_must_be_a_string": string;
+        "new_password_must_be_a_string": string;
+        "bookshelf_name_must_be_a_string": string;
+        "avatar_must_be_a_string": string;
+        "code_must_be_number": string;
+        "email_format_invalid": string;
+        "username_cannot_be_empty": string;
     };
 };
 /* prettier-ignore */

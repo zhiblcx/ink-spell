@@ -1,19 +1,35 @@
+import { I18nTranslations } from '@/i18n/i18n.generated';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, Length, NotContains } from 'class-validator';
+import { i18nValidationMessage as t } from 'nestjs-i18n';
+
+type I18n = I18nTranslations;
 
 export class LoginDao {
-  @IsNotEmpty({ message: '账号不能为空' })
-  @Length(6, 12, { message: '账号长度为 6-12 位' })
+  @IsNotEmpty({ message: t<I18n>('validation.account_cannot_be_empty') })
+  @Length(6, 12, {
+    message: t<I18n>('validation.account_must_be_length_characters_long', {
+      length: '6-12',
+    }),
+  })
   @ApiProperty({
     example: 'nicole123',
     description: '账号',
   })
   account: string;
 
-  @IsNotEmpty({ message: '密码不能为空' })
-  @NotContains(' ', { message: '密码不能有空格' })
-  @Length(6, 16, { message: '密码长度为 6-16 位' })
-  @IsString({ message: '密码必须为字符串' })
+  @IsNotEmpty({
+    message: t<I18n>('validation.password_cannot_be_empty'),
+  })
+  @NotContains(' ', {
+    message: t<I18n>('validation.password_cannot_contain_spaces'),
+  })
+  @Length(6, 16, {
+    message: t<I18n>('validation.password_must_be_length_characters_long', {
+      length: '6-16',
+    }),
+  })
+  @IsString({ message: t<I18n>('validation.password_must_be_a_string') })
   @ApiProperty({
     example: '123456',
     description: '密码',

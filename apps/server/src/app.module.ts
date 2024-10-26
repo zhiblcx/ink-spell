@@ -1,7 +1,12 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
-import { HeaderResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
+import {
+  HeaderResolver,
+  I18nModule,
+  I18nValidationPipe,
+  QueryResolver,
+} from 'nestjs-i18n';
 import * as path from 'node:path';
 import { PrismaExceptionFilter } from './core/prisma-client-exception/prisma-client-exception.filter';
 import { SocketGateway } from './events/socket.gateway';
@@ -48,9 +53,9 @@ import { UserService } from './modules/user/user.service';
     PrismaModule,
     TranslationModule,
   ],
-  controllers: [],
   providers: [
     { provide: APP_PIPE, useClass: ValidationPipe },
+    { provide: APP_PIPE, useClass: I18nValidationPipe },
     { provide: APP_FILTER, useClass: PrismaExceptionFilter },
     SocketGateway,
     UserService,

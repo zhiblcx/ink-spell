@@ -1,9 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
+import { I18nTranslations } from '@/i18n/i18n.generated';
+import { i18nValidationMessage as t } from 'nestjs-i18n';
+
+type I18n = I18nTranslations;
+
 export class CreateBookshelfDto {
-  @IsString({ message: '书架名称必须为字符串' })
-  @IsNotEmpty({ message: '书架名称不能为空' })
+  @IsString({ message: t<I18n>('validation.bookshelf_name_must_be_a_string') })
+  @IsNotEmpty({ message: t<I18n>('validation.bookshelf_name_cannot_by_empty') })
   @ApiProperty({
     example: '末世',
     description: '书架名称',
