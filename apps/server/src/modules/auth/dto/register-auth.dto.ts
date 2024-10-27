@@ -13,6 +13,12 @@ import { LoginDao } from './login-auth.dto';
 type I18n = I18nTranslations;
 
 export class RegisterDto extends PartialType(LoginDao) {
+  @ApiProperty({ required: true })
+  account: string;
+
+  @ApiProperty({ required: true })
+  password: string;
+
   @Length(6, 12, {
     message: t<I18n>('validation.username_must_be_length_characters_long', {
       length: '6-12',
@@ -22,7 +28,6 @@ export class RegisterDto extends PartialType(LoginDao) {
   @ApiProperty({
     example: 'nicole123',
     description: '用户名',
-    required: true,
   })
   username: string;
 

@@ -1,4 +1,4 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import {
@@ -42,7 +42,6 @@ import { UserService } from './modules/user/user.service';
       ],
       typesOutputPath: path.join(__dirname, '../../src/i18n/i18n.generated.ts'),
     }),
-
     UserModule,
     BookModule,
     BookshelfModule,
@@ -54,7 +53,6 @@ import { UserService } from './modules/user/user.service';
     TranslationModule,
   ],
   providers: [
-    { provide: APP_PIPE, useClass: ValidationPipe },
     { provide: APP_PIPE, useClass: I18nValidationPipe },
     { provide: APP_FILTER, useClass: PrismaExceptionFilter },
     SocketGateway,

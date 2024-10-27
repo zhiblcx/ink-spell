@@ -19,7 +19,6 @@ import { LoginVo } from './vo/login-auth-vo';
 @ApiTags('认证')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
