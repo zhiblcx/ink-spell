@@ -1,4 +1,5 @@
 import { PrismaService } from '@/modules/prisma/prisma.service';
+import { TranslationService } from '@/modules/translation/translation.service';
 import { UserService } from '@/modules/user/user.service';
 import { MessageEnum } from '@/shared/enums/MessageEnum';
 import { BadRequestException } from '@nestjs/common';
@@ -27,38 +28,56 @@ export class SocketGateway {
   constructor(
     private readonly prisma: PrismaService,
     private readonly userService: UserService,
+    private readonly translation: TranslationService,
   ) {}
   @WebSocketServer()
   server: Server;
   roomId = '1';
-  currentUsers = [];
-  isHandlingLeave = false;
-  isHandlingJoin = false;
+  currentUsers = new Set();
   joinQueue = [];
   leaveQueue = [];
   allMessages = [];
+  // 取数据库之后的最后一个下标，确保没有取出来再存进去
+  saveIndex = 0;
+  isHandlingLeave = false;
+  isHandlingJoin = false;
+  // 时间
+  timeout = 300000;
 
-  async handleBatchMessages() {
+  // 存储数据，可以等五分钟之后存储，防止频繁存储
+  handleBatchMessages = async () => {
     try {
+      const messages = this.allMessages
+        .slice(this.saveIndex)
+        .map(({ id: _, user: __, ...rest }) => rest);
       await this.prisma.message.createMany({
-        data: this.allMessages,
+        data: messages,
       });
       this.allMessages = [];
+      this.allMessages = await this.userService.handleGetMessages();
+      this.saveIndex = this.allMessages.length;
     } catch (err) {
-      throw new BadRequestException('服务器错误');
+      throw new BadRequestException(this.translation.t('prompt.server_error'));
     }
-  }
+  };
+
+  saveMessageTimer = () =>
+    setInterval(() => this.handleBatchMessages(), this.timeout);
 
   // 发送消息
   @SubscribeMessage('newMessage')
   async handleMessage(@MessageBody() body: any) {
     const msg: any = {};
     const { userId, message } = body || {};
+
     msg.text = message;
     msg.userId = userId;
     msg.user = await this.userService.getUserInfo(userId);
-    this.allMessages.push({ userId, text: message, type: MessageEnum.MESSAGE });
     msg.type = MessageEnum.MESSAGE;
+    this.allMessages.push({
+      id: dayjs().valueOf(),
+      ...msg,
+    });
     this.server
       .to(this.roomId)
       .emit('newMessage', { ...msg, id: dayjs().toDate().valueOf() });
@@ -70,9 +89,10 @@ export class SocketGateway {
     @MessageBody() body: any,
     @ConnectedSocket() client: Socket,
   ) {
-    await this.handleBatchMessages();
     const { name, id } = body || {};
-    if (!this.currentUsers.includes(id)) {
+
+    // 如果当前用户存在，则执行下一步
+    if (!this.currentUsers.has(id)) {
       return;
     }
 
@@ -87,46 +107,47 @@ export class SocketGateway {
     if (this.isHandlingLeave || this.leaveQueue.length < 1) {
       return;
     }
-
-    // 处理队列中的请求
+    this.isHandlingLeave = true;
+    // 处理队列中的请求;
     const processQueue = async () => {
-      this.isHandlingLeave = true;
       const nextRequest = this.leaveQueue[0];
       try {
-        const message = await this.prisma.message.create({
-          data: {
-            text: `用户：${nextRequest.name}离开了聊天室`,
-            userId: id,
-            type: MessageEnum.LEAVE,
-          },
-        });
-
-        this.currentUsers = this.currentUsers.filter(
-          (item) => item !== nextRequest.id,
-        );
-
-        client.leave(this.roomId);
-
-        this.server.to(this.roomId).emit('leave', {
+        const data = {
+          id: dayjs().valueOf(),
+          userId: id,
           text: `用户：${nextRequest.name}离开了聊天室`,
           type: MessageEnum.LEAVE,
-          id: message.id,
-        });
+        };
+
+        this.allMessages.push(data);
+        this.server.to(this.roomId).emit('leave', data);
       } catch (error) {
         // 处理错误
-        throw new BadRequestException('服务器错误');
+        throw new BadRequestException(
+          this.translation.t('prompt.server_error'),
+        );
       } finally {
+        // 断开连接
+        client.leave(this.roomId);
+        // 删除这个人
+        this.currentUsers.delete(id);
+        if (this.currentUsers.size === 0) {
+          clearInterval(this.saveMessageTimer());
+          this.handleBatchMessages();
+        }
         // 处理完一个请求后，从队列中移除并继续处理下一个请求
         this.leaveQueue.shift();
+        // 如果还有请求，则继续执行
         if (this.leaveQueue.length > 0) {
           processQueue();
         } else {
+          // 标记处理完成
           this.isHandlingLeave = false;
         }
       }
     };
-
-    processQueue();
+    await processQueue();
+    await this.handleGetRoomUsers();
   }
 
   // 创建房间并加入房间
@@ -136,76 +157,77 @@ export class SocketGateway {
     @ConnectedSocket() client: Socket,
   ) {
     const { name, id } = body || {};
-    const message = await this.prisma.message.create({
-      data: {
-        text: `用户：${name}加入了聊天室`,
-        userId: id,
-        type: MessageEnum.JOIN,
-      },
-    });
+    // 如果用户不存在则执行下一步
+    if (this.currentUsers.has(id)) {
+      return;
+    }
 
-    client.join(this.roomId);
-    this.currentUsers.push(id);
-    this.server.to(this.roomId).emit('join', {
-      text: `用户：${name}加入了聊天室`,
-      type: MessageEnum.JOIN,
-      id: message.id,
-    });
+    // 检查用户是否已经在队列中，存在的话，退出
+    if (this.joinQueue.some((user) => user.id === id)) {
+      return;
+    }
 
-    // if (this.currentUsers.includes(id)) {
-    //   return;
-    // }
-    // // 检查用户是否已经在队列中
-    // if (this.joinQueue.some((user) => user.id === id)) {
-    //   return;
-    // }
+    // 将用户添加到队列当中
+    this.joinQueue.push({ name, id });
 
-    // this.joinQueue.push({ name, id });
+    // 如果正在处理或者队列已经没有任务了，则退出，等待任务队列自己处理
+    if (this.isHandlingJoin || this.joinQueue.length < 1) {
+      return;
+    }
 
-    // // 如果当前有请求正在处理或队列为空，则直接返回
-    // if (this.isHandlingJoin || this.joinQueue.length < 1) {
-    //   return;
-    // }
+    this.isHandlingJoin = true;
 
-    // // 处理队列中的请求
-    // const processQueue = async () => {
-    //   this.isHandlingJoin = true;
-    //   const nextRequest = this.joinQueue[0];
-    //   try {
-    //     const message = await this.prisma.message.create({
-    //       data: {
-    //         text: `用户：${nextRequest.name}加入了聊天室`,
-    //         userId: id,
-    //         type: MessageEnum.JOIN,
-    //       },
-    //     });
+    // 处理队列中的请求
+    const processQueue = async () => {
+      const nextRequest = this.joinQueue[0];
+      try {
+        const data = {
+          id: dayjs().valueOf(),
+          userId: id,
+          text: `用户：${nextRequest.name}加入了聊天室`,
 
-    //     client.join(this.roomId);
-    //     this.currentUsers.push(id);
-    //     this.server.to(this.roomId).emit('join', {
-    //       text: `用户：${nextRequest.name}加入了聊天室`,
-    //       type: MessageEnum.JOIN,
-    //       id: message.id,
-    //     });
-    //   } catch (error) {
-    //     // 处理错误
-    //   } finally {
-    //     // 处理完一个请求后，从队列中移除并继续处理下一个请求
-    //     this.joinQueue.shift();
-    //     if (this.joinQueue.length > 0) {
-    //       processQueue();
-    //     } else {
-    //       this.isHandlingJoin = false;
-    //     }
-    //   }
-    // };
+          type: MessageEnum.JOIN,
+        };
 
-    // processQueue();
+        this.allMessages.push(data);
+        // 加入房间
+        client.join(this.roomId);
+
+        await this.server.to(this.roomId).emit('join', data);
+      } catch (error) {
+        // 处理错误
+        throw new BadRequestException(
+          this.translation.t('prompt.server_error'),
+        );
+      } finally {
+        // 加入这个人
+        this.currentUsers.add(id);
+        if (this.currentUsers.size === 1) {
+          this.handleBatchMessages();
+          this.saveMessageTimer();
+        }
+        // 处理完一个请求后，从队列中移除并继续处理下一个请求
+        this.joinQueue.shift();
+        if (this.joinQueue.length > 0) {
+          processQueue();
+        } else {
+          this.isHandlingJoin = false;
+        }
+      }
+    };
+    await processQueue();
+    await this.handleGetRoomUsers();
   }
 
   // 获取当前房间的人数
   @SubscribeMessage('getRoomUsers')
   handleGetRoomUsers() {
-    this.server.to(this.roomId).emit('getRoomUsers', this.currentUsers.length);
+    this.server.to(this.roomId).emit('getRoomUsers', this.currentUsers.size);
+  }
+
+  // 获取消息
+  @SubscribeMessage('getMessages')
+  async handleGetMessages() {
+    this.server.to(this.roomId).emit('getMessages', this.allMessages);
   }
 }
