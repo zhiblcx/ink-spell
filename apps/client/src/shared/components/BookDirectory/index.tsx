@@ -84,19 +84,16 @@ export default function BookDirectory({
                 )}
                 key={index}
                 id={`y-item-${index + 1}`}
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  router.navigate({
+                    to: router.latestLocation.pathname,
+                    search: { chapter: UrlUtils.encodeUrlById((index + 1).toString()) },
+                    replace: true
+                  })
+                }}
               >
-                <a
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => {
-                    router.navigate({
-                      to: router.latestLocation.pathname,
-                      search: { chapter: UrlUtils.encodeUrlById((index + 1).toString()) },
-                      replace: true
-                    })
-                  }}
-                >
-                  {item}
-                </a>
+                {item}
               </li>
             ))
           : bookmark.map((item) => (
