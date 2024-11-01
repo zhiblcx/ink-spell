@@ -1,20 +1,19 @@
-import { selectAllMessages, selectOneselfInfoQuery } from '@/features/user'
-import EmptyPage from '@/shared/components/EmptyPage'
-import PersonCard from '@/shared/components/PersonCard'
+import { selectOneselfInfoQuery } from '@/features/user'
+import { EmptyPage, PersonCard } from '@/shared/components'
 import { CHAR_ROOM } from '@/shared/constants'
-import { Menu } from '@/shared/enums'
-import { MessageEnum } from '@/shared/enums/MessageEnum'
+import { Menu, MessageEnum } from '@/shared/enums'
 import { useMenuStore } from '@/shared/store'
 import { User } from '@/shared/types'
-import { useQuery } from '@tanstack/react-query'
+import { VerticalAlignBottomOutlined } from '@ant-design/icons'
 import { useRouter } from '@tanstack/react-router'
 import { InputRef, message } from 'antd'
 import clsx from 'clsx'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import useSmoothScroll from 'react-smooth-scroll-hook'
-import '../index.scss'
+import styles from '../index.module.scss'
 import { socket } from './socket.io'
+
 interface MessageType {
   id: number
   userId: number
@@ -34,57 +33,61 @@ export default function ChatRoom() {
   const [disableFlag, setDisableFlag] = useState(false)
   const [messageValue, setMessageValue] = useState('')
   const [peopleNumber, setPeopleNumber] = useState(0)
+  const [loading, setLoading] = useState(true)
   const [messages, setMessages] = useState([] as MessageType[])
+  const [count, setCount] = useState(0)
   const { TextArea } = Input
   const { menu } = useMenuStore()
-  const { data: query, isSuccess } = useQuery(selectOneselfInfoQuery)
-  const { data: messageQuery, isSuccess: isMessageSuccess } = useQuery(selectAllMessages())
+  const { data: query, isSuccess } = selectOneselfInfoQuery()
   const { scrollTo } = useSmoothScroll({
     ref: chatContent,
     speed: Infinity,
     direction: 'y'
   })
+  let reconnect = false
 
+  // 是否离开聊天室
   useEffect(() => {
     if (router.latestLocation.pathname !== CHAR_ROOM.URL) {
       leaveRoom()
     }
   }, [router.latestLocation.pathname])
 
-  useEffect(() => {
-    if (isMessageSuccess) {
-      const getMessages = (data: MessageType[]) => {
-        const result = data.map((item: MessageType) => {
-          if (item.type === MessageEnum.MESSAGE) {
-            item.type = item.userId === query?.data.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
-          }
-          return item
-        })
-        setMessages(() => [...(result as MessageType[])])
-        setTimeout(() => {
-          scrollTo(`#y-item-${result[result.length - 1].id}`)
-        }, 200)
+  function acquireMessage(data: MessageType[]) {
+    // 获取历史消息
+    const result = data.map((item: MessageType) => {
+      if (item.type === MessageEnum.MESSAGE) {
+        item.type = item.userId === query?.data.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
       }
+      return item
+    })
 
-      getMessages(messageQuery.data.data)
-    }
-  }, [isMessageSuccess])
+    setMessages(() => [...(result as MessageType[])])
+    setLoading(false)
 
-  let reconnect = false
+    setTimeout(() => {
+      scrollTo(`#y-item-${result[result.length - 1].id}`)
+    }, 200)
+  }
+
+  // 初始化数据
   useEffect(() => {
-    if (isSuccess && isMessageSuccess && !reconnect) {
+    if (isSuccess && !reconnect) {
       reconnect = true
       socket.open()
       socket.emit('join', { name: query?.data.data.username, id: query?.data.data.id })
 
       socket.on('join', (data) => {
         setConnect(true)
-        setMessages((prevMessages) => [...prevMessages, data])
-        setTimeout(() => {
-          scrollTo(`#y-item-${data.id}`)
-        }, 200)
-
+        if (query?.data.data.id !== data.userId) {
+          handleNewMessage(data)
+        }
+        socket.emit('getMessages')
         socket.emit('getRoomUsers')
+      })
+
+      socket.once('getMessages', (data) => {
+        acquireMessage(data)
       })
 
       socket.on('getRoomUsers', (num) => {
@@ -96,40 +99,55 @@ export default function ChatRoom() {
       socket.on('leave', (data) => {
         socket.emit('getRoomUsers')
         setMessages((prevMessages) => [...prevMessages, data])
+        setCount((preCount) => preCount + 1)
       })
 
+      // 关闭网站触发
       window.addEventListener('beforeunload', leaveRoom)
     }
   }, [isSuccess])
 
+  // 离开房间
   const leaveRoom = () => {
-    console.log('离开了')
     socket.emit('leave', { name: query?.data.data.username, id: query?.data.data.id })
     socket.close()
   }
 
+  // 处理新消息
   const handleNewMessage = (data: MessageType) => {
     data.type = data.userId === query?.data.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
-    setMessages((prevMessages) => {
-      setTimeout(() => {
-        scrollTo(`#y-item-${data.id}`)
-      }, 100)
-      return [...prevMessages, data]
-    })
+    if (chatContent.current) {
+      const container = chatContent.current as HTMLElement
+      if (
+        Math.ceil(container.scrollHeight) - Math.floor(container.scrollTop) <= Math.ceil(container.clientHeight) ||
+        data.type === MessageEnum.MESSAGE_SELF
+      ) {
+        setMessages((prevMessages) => {
+          setTimeout(() => {
+            scrollTo(`#y-item-${data.id}`)
+          }, 100)
+          return [...prevMessages, data]
+        })
+      } else {
+        setMessages((prevMessages) => [...prevMessages, data])
+        setCount((preCount) => preCount + 1)
+      }
+    }
   }
 
+  // 用户发送消息
   const sendMessage = () => {
     if (messageValue.trim() === '') {
       message.error(t('PROMPT:no_blank_message'))
       return
     }
-
     const newMessage = { message: messageValue, userId: query?.data.data.id }
     socket.emit('newMessage', newMessage)
     setMessageValue('')
     handlerDisableButton()
   }
 
+  // 发送消息后禁用按钮，2秒后启用
   const handlerDisableButton = () => {
     setDisableFlag(true)
     setTimeout(() => {
@@ -139,7 +157,7 @@ export default function ChatRoom() {
 
   return (
     <>
-      {messages.length === 0 ? (
+      {loading ? (
         <Skeleton
           className="p-5"
           active
@@ -156,9 +174,19 @@ export default function ChatRoom() {
             <>
               <ul
                 ref={chatContent}
+                onScroll={(scroll) => {
+                  const scrollTop = Math.ceil((scroll.target as HTMLElement).scrollTop)
+                  const scrollHeight = (scroll.target as HTMLElement).scrollHeight
+                  const clientHeight = (scroll.target as HTMLElement).clientHeight
+                  if (scrollHeight - scrollTop <= clientHeight) {
+                    setCount(0)
+                  }
+                }}
                 className={clsx(
-                  'height scroll absolute mt-2 space-y-4 overflow-y-scroll',
-                  menu === Menu.EXTEND ? 'w-[93%]' : 'min-[375px]:min-w-[20%] md:min-w-[70%]'
+                  `scroll absolute mt-2 space-y-4 overflow-y-scroll ${styles.height}`,
+                  menu === Menu.EXTEND
+                    ? `min-[375px]:w-[92%] ${styles.width_extend} `
+                    : `min-[375px]:min-w-[20%] ${styles.width_shrink}`
                 )}
               >
                 {messages.map((item: MessageType) => {
@@ -217,6 +245,19 @@ export default function ChatRoom() {
                     </React.Fragment>
                   )
                 })}
+
+                <FloatButton
+                  icon={<VerticalAlignBottomOutlined />}
+                  className={clsx(
+                    count === 0 ? 'hidden' : 'block',
+                    'min-[375px]:bottom-[100px] min-[375px]:right-[30px] md:bottom-[110px] md:right-[200px]'
+                  )}
+                  onClick={() => {
+                    scrollTo(`#y-item-${messages[messages.length - 1].id}`)
+                    setCount(0)
+                  }}
+                  badge={{ count: count, overflowCount: 99 }}
+                />
               </ul>
               <div
                 className={clsx(
@@ -239,9 +280,9 @@ export default function ChatRoom() {
                 <Button
                   onClick={sendMessage}
                   disabled={disableFlag}
-                  className="mx-2"
+                  className="min-[375px]:min-w-[70px]"
                 >
-                  {t('COMMON:send_message')}
+                  {t('COMMON:send')}
                 </Button>
               </div>
             </>

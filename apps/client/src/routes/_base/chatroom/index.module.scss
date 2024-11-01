@@ -1,0 +1,13 @@
+.height {
+  height: calc(100% - 200px);
+}
+
+@media (min-width: 768px) {
+  .width_extend {
+    width: calc(100% - 100px);
+  }
+
+  .width_shrink {
+    width: calc(100% - 270px);
+  }
+}
