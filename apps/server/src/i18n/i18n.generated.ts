@@ -38,6 +38,7 @@ export type I18nTranslations = {
         "no_author": string;
         "no_main_character": string;
         "no_description": string;
+        "server_error": string;
     };
     "validation": {
         "already_collected_bookshelf": string;

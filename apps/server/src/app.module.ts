@@ -18,6 +18,7 @@ import { CollectBookshelfModule } from './modules/collect-bookshelf/collect-book
 import { FollowModule } from './modules/follow/follow.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { TranslationModule } from './modules/translation/translation.module';
+import { defaultLang } from './modules/translation/translation.service';
 import { UserModule } from './modules/user/user.module';
 import { UserService } from './modules/user/user.service';
 
@@ -27,7 +28,7 @@ import { UserService } from './modules/user/user.service';
       envFilePath: ['.env.local', '.env.example'],
     }),
     I18nModule.forRoot({
-      fallbackLanguage: 'Chinese',
+      fallbackLanguage: defaultLang,
       // 加载器选项
       loaderOptions: {
         // 指定国际化路径

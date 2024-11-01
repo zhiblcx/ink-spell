@@ -16,5 +16,6 @@
   "no_book_title": "No book title available",
   "no_author": "No author available",
   "no_main_character": "No main character available",
-  "no_description": "No description available"
+  "no_description": "No description available",
+  "server_error": "server error"
 }
