@@ -7,7 +7,7 @@ interface EmptyPageType {
   description?: string
 }
 
-function EmptyPage(props: EmptyPageType) {
+export function EmptyPage(props: EmptyPageType) {
   const { name, description = '' } = props
   const { theme } = useThemeStore()
   return (
@@ -22,5 +22,3 @@ function EmptyPage(props: EmptyPageType) {
     />
   )
 }
-
-export default EmptyPage

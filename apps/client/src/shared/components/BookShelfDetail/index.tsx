@@ -17,7 +17,7 @@ interface BookShelfDetailType {
   cancelCollectButton: (item: BookShelfType & { collectId?: number }) => void
 }
 
-export default function BookShelfDetail({
+export function BookShelfDetail({
   bookshelf_detail,
   userCollectBookShelfIds,
   collectButton,

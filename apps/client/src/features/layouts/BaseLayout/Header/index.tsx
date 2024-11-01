@@ -4,7 +4,6 @@ import { Menu } from '@/shared/enums'
 import { useActionBookStore, useMenuStore } from '@/shared/store'
 import { Book } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils'
-import { useQuery } from '@tanstack/react-query'
 import { ReactNode, useRouter } from '@tanstack/react-router'
 import { AlignLeft, AlignRight, RotateCw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -43,7 +42,7 @@ export default function Header() {
     }
   }, [isSuccess])
 
-  const query = useQuery(selectOneselfInfoQuery)
+  const query = selectOneselfInfoQuery()
   const { mutate } = updateUserPasswordMutation()
 
   function Icon(props: ReactNode) {

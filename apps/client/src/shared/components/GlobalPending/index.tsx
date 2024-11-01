@@ -2,7 +2,7 @@ import './index.scss'
 
 function GlobalPending() {
   return (
-    <div className="dark:bg-black h-screen w-screen flex justify-center items-center bg-white">
+    <div className="flex h-screen w-screen items-center justify-center dark:bg-black">
       <div className="ghost">
         {/* <!-- 身体部分 --> */}
         <div className="body">

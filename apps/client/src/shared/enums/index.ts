@@ -1,5 +1,6 @@
 export * from './AllSelectBookFlag'
 export * from './DirectoryMode'
+export * from './EditBookShelfOpenFlag'
 export * from './LanguageEnums'
 export * from './Menu'
 export * from './MessageEnum'

@@ -6,7 +6,7 @@ import { createLazyFileRoute } from '@tanstack/react-router'
 
 export const Route = createLazyFileRoute('/_base')({
   component: () => (
-    <div className="flex h-screen overflow-hidden dark:bg-[#1f1f1f]">
+    <div className="flex h-screen w-screen overflow-hidden dark:bg-[#1f1f1f]">
       <Sidebar />
       <div className="flex grow flex-col">
         <Header />

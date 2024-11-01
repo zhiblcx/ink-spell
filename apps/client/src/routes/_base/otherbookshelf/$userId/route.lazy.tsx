@@ -1,7 +1,10 @@
-import { cancelCollectBookShelfMutation, collectBookShelfMutation } from '@/features/bookshelf'
-import { selectUserCollectBookShelfByUserIdQuery, selectUserCollectBookShelfQuery } from '@/features/bookshelf/query'
-import BookShelfDetail from '@/shared/components/BookShelfDetail'
-import EmptyPage from '@/shared/components/EmptyPage'
+import {
+  cancelCollectBookShelfMutation,
+  collectBookShelfMutation,
+  selectUserCollectBookShelfByUserIdQuery,
+  selectUserCollectBookShelfQuery
+} from '@/features/bookshelf'
+import { BookShelfDetail, EmptyPage } from '@/shared/components'
 import { QueryKeys } from '@/shared/enums'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useQueryClient } from '@tanstack/react-query'

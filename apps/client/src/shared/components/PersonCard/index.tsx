@@ -9,7 +9,7 @@ interface PersonCardType {
   lookUser: User
 }
 
-export default function PersonCard({ openFlag, lookUser, setOpenFlag }: PersonCardType) {
+export function PersonCard({ openFlag, lookUser, setOpenFlag }: PersonCardType) {
   const { t } = useTranslation(['COMMON', 'PROMPT'])
   const { mutate: followMutate } = followUserByUserIdMutation()
 

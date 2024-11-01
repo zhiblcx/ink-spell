@@ -1,6 +1,6 @@
 import { followUserByUserIdMutation, unfollowUserByFollowMutation } from '@/features/user'
 import { axiosInstance } from '@/shared/API'
-import PersonCard from '@/shared/components/PersonCard'
+import { PersonCard } from '@/shared/components'
 import { PaginationParams } from '@/shared/enums/PaginationParams'
 import { User } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'

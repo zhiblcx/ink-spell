@@ -1,6 +1,5 @@
-import { downloadBookShelfNotesMutation } from '@/features/bookshelf'
-import { selectBookByBookShelfIdQuery } from '@/features/bookshelf/query'
-import EmptyPage from '@/shared/components/EmptyPage'
+import { downloadBookShelfNotesMutation, selectBookByBookShelfIdQuery } from '@/features/bookshelf'
+import { EmptyPage } from '@/shared/components'
 import { Book } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { cardLocation } from '@/shared/utils/waterfallLayout'

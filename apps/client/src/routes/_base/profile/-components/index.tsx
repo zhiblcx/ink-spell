@@ -3,7 +3,7 @@ import EmailInput from '@/shared/components/EmailInput'
 import UploadPhoto from '@/shared/components/UploadPhoto'
 import { QueryKeys } from '@/shared/enums'
 import { VerifiedOutlined } from '@ant-design/icons'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { type UploadFile, Input } from 'antd'
 import { useTranslation } from 'react-i18next'
 import styles from './styles.module.scss'
@@ -15,7 +15,7 @@ export default function Profile() {
   const [avatar, setAvatar] = useState<UploadFile[]>([])
 
   const queryClient = useQueryClient()
-  const query = useQuery(selectOneselfInfoQuery)
+  const query = selectOneselfInfoQuery()
 
   const { mutate } = updateUserInfoMutation(
     () => queryClient.invalidateQueries({ queryKey: [QueryKeys.USER_KEY] }),
