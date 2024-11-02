@@ -6,14 +6,15 @@ model User {
   sex              String             @default("女")
   email            String?            @unique
   avatar           String
+  isDelete         Boolean            @default(false) @map("is_delete")
+  Roles            Roles              @relation(fields: [rolesId], references: [id])
+  rolesId          String             @default("user")
   bookShelfs       BookShelf[]
   books            Book[]
-  isDelete         Boolean            @default(false) @map("is_delete")
   Message          Message[]
   followers        Follow[]           @relation("UserFollowers")
   following        Follow[]           @relation("UserFollowing")
   CollectBookShelf CollectBookShelf[]
   BookMark         BookMark[]
-  Roles            Roles              @relation(fields: [rolesId], references: [id])
-  rolesId          String             @default("user")
+  readTimer        ReadTimer[]
 }
