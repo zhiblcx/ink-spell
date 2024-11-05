@@ -118,7 +118,7 @@ export class HttpRequest {
    * @param data 请求数据
    * @param config 请求配置
    */
-  post<T>(url: string, data: Record<string, unknown>, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
+  post<T>(url: string, data?: Record<string, unknown>, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
     return this.instance.post(url, data, config)
   }
 
@@ -128,7 +128,7 @@ export class HttpRequest {
    * @param data 请求数据
    * @param config 请求配置
    */
-  put<T>(url: string, data: Record<string, unknown>, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
+  put<T>(url: string, data?: Record<string, unknown>, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
     return this.instance.post(url, data, config)
   }
 

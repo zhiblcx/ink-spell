@@ -1,13 +1,20 @@
-import { axiosInstance } from '@/shared/API'
+import {
+  collectBookByBookIdApi,
+  deleteBookByBookIdApi,
+  deleteBookMarkApi,
+  insertBookMarkApi,
+  ResponseData,
+  updateBookByBookIdApi
+} from '@/shared/API'
 import { Book, BookMark, Ink } from '@/shared/types'
 import { message } from 'antd'
 import { handleAxiosError } from '../utils'
 
 export const deleteBookByBookIdMutation = (queryClient: () => Promise<void>) =>
   useMutation({
-    mutationFn: (bookId: number) => axiosInstance.delete(`/book/${bookId}`),
+    mutationFn: (bookId: number) => deleteBookByBookIdApi(bookId),
     onSuccess: async (data) => {
-      message.success(data.data.message)
+      message.success(data.message)
       await queryClient()
     },
     onError: handleAxiosError
@@ -15,9 +22,9 @@ export const deleteBookByBookIdMutation = (queryClient: () => Promise<void>) =>
 
 export const collectBookByBookIdMutation = (queryClient: () => Promise<void>) =>
   useMutation({
-    mutationFn: (bookId: number) => axiosInstance.post(`/book/${bookId}`),
+    mutationFn: (bookId: number) => collectBookByBookIdApi(bookId),
     onSuccess: async (data) => {
-      message.success(data.data.message)
+      message.success(data.message)
       await queryClient()
     },
     onError: handleAxiosError
@@ -26,9 +33,9 @@ export const collectBookByBookIdMutation = (queryClient: () => Promise<void>) =>
 // TODO: 利用 key 去掉 setBook
 export const updateBookByBookIdMutation = (setBook: (value: React.SetStateAction<Ink>) => void) =>
   useMutation({
-    mutationFn: (book: Book) => axiosInstance.put(`/book/${book.id}`, book),
-    onSuccess: (result) => {
-      setBook({ ...result.data.data })
+    mutationFn: (book: Book) => updateBookByBookIdApi(book),
+    onSuccess: (result: ResponseData) => {
+      setBook({ ...result.data })
       message.success('修改成功')
     },
     onError: handleAxiosError
@@ -36,9 +43,9 @@ export const updateBookByBookIdMutation = (setBook: (value: React.SetStateAction
 
 export const insertBookMarkMutation = (queryClient: () => Promise<void>) =>
   useMutation({
-    mutationFn: (bookMark: BookMark) => axiosInstance.post(`/bookmark`, bookMark),
+    mutationFn: (bookMark: BookMark) => insertBookMarkApi(bookMark),
     onSuccess: async (data) => {
-      message.success(data.data.message)
+      message.success(data.message)
       await queryClient()
     },
     onError: handleAxiosError
@@ -46,9 +53,9 @@ export const insertBookMarkMutation = (queryClient: () => Promise<void>) =>
 
 export const deleteBookMarkMutation = (queryClient: () => Promise<void>) =>
   useMutation({
-    mutationFn: (bookMark: BookMark) => axiosInstance.put('/bookmark', bookMark),
+    mutationFn: (bookMark: BookMark) => deleteBookMarkApi(bookMark),
     onSuccess: async (data) => {
-      message.success(data.data.message)
+      message.success(data.message)
       await queryClient()
     },
     onError: handleAxiosError
