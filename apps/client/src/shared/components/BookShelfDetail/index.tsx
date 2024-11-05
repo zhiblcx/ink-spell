@@ -2,7 +2,6 @@ import { BookShelfType } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { cardLocation } from '@/shared/utils/waterfallLayout'
 import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
-import { useNavigate } from '@tanstack/react-router'
 import Meta from 'antd/es/card/Meta'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
@@ -60,7 +59,8 @@ export function BookShelfDetail({
     modal.confirm({
       title: t('COMMON:cancel_favorite'),
       icon: <CircleX className="mr-2 text-red-500" />,
-      content: t('PROMPT:confirm_unfavorite_bookshelf') + t('PROMPT:bookshelf_no_longer_top_choice'),
+      content:
+        t('PROMPT:confirm_unfavorite_bookshelf') + t('PROMPT:bookshelf_no_longer_top_choice'),
       okText: t('COMMON:confirm'),
       cancelText: t('COMMON:cancel'),
       maskClosable: true,
