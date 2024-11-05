@@ -27,6 +27,7 @@
     "antd": "^5.21.2",
     "antd-img-crop": "^4.22.0",
     "axios": "^1.7.2",
+    "@ink-spell/axios": "workspace:^",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "clsx": "^2.1.1",
