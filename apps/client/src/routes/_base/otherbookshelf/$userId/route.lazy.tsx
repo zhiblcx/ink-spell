@@ -7,8 +7,6 @@ import {
 import { BookShelfDetail, EmptyPage } from '@/shared/components'
 import { QueryKeys } from '@/shared/enums'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { useQueryClient } from '@tanstack/react-query'
-import { createLazyFileRoute } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 
 export const Route = createLazyFileRoute('/_base/otherbookshelf/$userId')({
@@ -26,9 +24,12 @@ export function Page() {
   const { userId } = Route.useParams()
   const query = selectUserCollectBookShelfByUserIdQuery(UrlUtils.decodeUrlById(userId))
   const { data: userCollectQuery } = selectUserCollectBookShelfQuery()
-  const userCollectBookShelfIds = userCollectQuery?.data.data.reduce((acc: Array<number>, item: UserCollectType) => {
-    return acc.concat(item.bookShelfId)
-  }, [])
+  const userCollectBookShelfIds = userCollectQuery?.data.data.reduce(
+    (acc: Array<number>, item: UserCollectType) => {
+      return acc.concat(item.bookShelfId)
+    },
+    []
+  )
 
   const queryClient = useQueryClient()
 

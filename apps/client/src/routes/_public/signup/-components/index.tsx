@@ -8,7 +8,6 @@ import { Theme } from '@/shared/enums'
 import { useThemeStore } from '@/shared/store'
 import { confirmPasswordRule } from '@/shared/utils/confirmPasswordRule'
 import { EditOutlined, LockOutlined, UserOutlined, VerifiedOutlined } from '@ant-design/icons'
-import { Link } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import './index.scss'
@@ -87,7 +86,10 @@ export default function Signup() {
               name="confirmPassword"
               dependencies={['password']}
               hasFeedback
-              rules={[{ required: true, message: t('VALIDATION:password_not_filled') }, confirmPasswordRule]}
+              rules={[
+                { required: true, message: t('VALIDATION:password_not_filled') },
+                confirmPasswordRule
+              ]}
             >
               <Input.Password
                 prefix={<LockOutlined />}

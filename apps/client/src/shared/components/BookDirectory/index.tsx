@@ -2,7 +2,6 @@ import { DirectoryMode } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { useSetUpStore } from '@/shared/store/SetupStore'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { useRouter } from '@tanstack/react-router'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import useSmoothScroll from 'react-smooth-scroll-hook'
@@ -99,7 +98,9 @@ export default function BookDirectory({
           : bookmark.map((item) => (
               <li
                 className={clsx(
-                  currentChapter == parseInt(item[1]) - 1 ? 'bg-[#474c50] text-white dark:bg-[#4b4b4b]' : null,
+                  currentChapter == parseInt(item[1]) - 1
+                    ? 'bg-[#474c50] text-white dark:bg-[#4b4b4b]'
+                    : null,
                   'truncate rounded-md px-4 py-1 hover:bg-[#4b4b4b] hover:text-white dark:hover:bg-[#474c50]'
                 )}
                 key={item[1]}

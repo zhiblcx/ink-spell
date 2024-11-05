@@ -4,11 +4,21 @@
   "version": "1.0.0",
   "main": "index.js",
   "author": "nicole",
+  "private": "true",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepare": "husky",
+    "lint": "eslint ./ --ext .ts,.js,.json --max-warnings=0",
+    "format": "prettier --config .prettierrc '.' --write"
   },
   "keywords": [
     "ink-spell"
   ],
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.12.2",
+    "@typescript-eslint/parser": "^8.12.2",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^9.1.6"
+  }
 }

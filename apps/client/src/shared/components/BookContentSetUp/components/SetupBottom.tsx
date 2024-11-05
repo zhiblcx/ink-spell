@@ -1,14 +1,15 @@
 import { deleteBookMarkMutation, insertBookMarkMutation } from '@/features/book'
 import { QueryKeys, Theme } from '@/shared/enums'
 import { useActionBookStore, useThemeStore } from '@/shared/store'
-import { useQueryClient } from '@tanstack/react-query'
 import { BookmarkMinus, BookmarkPlus, List, LucideProps, Settings } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import ThemeToggle from '../../ThemeToggle'
 import { ClickSetupEnum } from '../enums/ClickSetupEnum'
 
 interface IconProps {
-  Icon: React.ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>>
+  Icon: React.ForwardRefExoticComponent<
+    Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
+  >
 }
 
 function Icon_28({ Icon }: IconProps) {
@@ -36,7 +37,8 @@ export function SetupBottom({
   const { showDirectoryFlag, updateShowSetUpFlag, updateShowDirectoryFlag } = useActionBookStore()
   const { theme } = useThemeStore()
   const queryClient = useQueryClient()
-  const queryClientFunction = () => queryClient.invalidateQueries({ queryKey: [QueryKeys.BOOK_MARK_KEY] })
+  const queryClientFunction = () =>
+    queryClient.invalidateQueries({ queryKey: [QueryKeys.BOOK_MARK_KEY] })
 
   const { mutate: collectBookMarkMutation } = insertBookMarkMutation(queryClientFunction)
   const { mutate: cancelCollectBookMarkMutation } = deleteBookMarkMutation(queryClientFunction)

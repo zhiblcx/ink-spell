@@ -3,7 +3,6 @@ import Content from '@/features/layouts/ReadLayout/Content'
 import Sidebar from '@/features/layouts/ReadLayout/Sidebar'
 import { useSetUpStore } from '@/shared/store/SetupStore'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { createLazyFileRoute } from '@tanstack/react-router'
 
 interface BookChapterType {
   chapter: number

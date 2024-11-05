@@ -4,8 +4,6 @@ import { PersonCard } from '@/shared/components'
 import { PaginationParams } from '@/shared/enums/PaginationParams'
 import { User } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
-import { useRouter } from '@tanstack/react-router'
 import { message } from 'antd'
 import { AxiosError } from 'axios'
 import { useTranslation } from 'react-i18next'
@@ -29,7 +27,15 @@ interface PageParam {
   limit: number
 }
 
-export default function MyFriend({ api, type, username }: { api: string; type: string; username?: string }) {
+export default function MyFriend({
+  api,
+  type,
+  username
+}: {
+  api: string
+  type: string
+  username?: string
+}) {
   const { t } = useTranslation(['COMMON', 'PROMPT'])
   const router = useRouter()
   const [openFlag, setOpenFlag] = useState(false)
@@ -49,7 +55,9 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
       return res.data.data
     } catch (_) {
       const error = _ as AxiosError
-      message.error((error.response?.data as { message?: string }).message || t('PROMPT:server_error'))
+      message.error(
+        (error.response?.data as { message?: string }).message || t('PROMPT:server_error')
+      )
       return {
         items: [],
         page: PaginationParams.PAGE,
@@ -63,7 +71,10 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
     queryFn: fetchProjects,
     initialPageParam: { page: PaginationParams.PAGE, limit: PaginationParams.LIMIT },
     getNextPageParam: (lastPage) => {
-      if ((lastPage.items.length === 0 && lastPage.page === 1) || lastPage.items.length != PaginationParams.LIMIT) {
+      if (
+        (lastPage.items.length === 0 && lastPage.page === 1) ||
+        lastPage.items.length != PaginationParams.LIMIT
+      ) {
         return undefined
       } else {
         return { page: parseInt(lastPage.currentPage) + 1, limit: PaginationParams.LIMIT }
@@ -145,7 +156,9 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
                 renderItem={(item: FollowerType) => (
                   <List.Item key={item.id}>
                     <List.Item.Meta
-                      avatar={<Avatar src={import.meta.env.VITE_SERVER_URL + item.following.avatar} />}
+                      avatar={
+                        <Avatar src={import.meta.env.VITE_SERVER_URL + item.following.avatar} />
+                      }
                       title={
                         <span
                           className="cursor-pointer"
@@ -182,8 +195,12 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
                 renderItem={(item: FollowingType) => (
                   <List.Item key={item.id}>
                     <List.Item.Meta
-                      avatar={<Avatar src={import.meta.env.VITE_SERVER_URL + item.follower.avatar} />}
-                      title={<span onClick={() => followingClick(item)}>{item.follower.username}</span>}
+                      avatar={
+                        <Avatar src={import.meta.env.VITE_SERVER_URL + item.follower.avatar} />
+                      }
+                      title={
+                        <span onClick={() => followingClick(item)}>{item.follower.username}</span>
+                      }
                       description={item.follower.email ?? t('PROMPT:no_email_currently_available')}
                     />
                     <div className="flex space-x-2">
@@ -191,7 +208,9 @@ export default function MyFriend({ api, type, username }: { api: string; type: s
                         className="cursor-pointer"
                         onClick={() => followMutate(item.follower.id)}
                       >
-                        {item.isMutual ? t('COMMON:mutual_following') : t('COMMON:return_to_customs')}
+                        {item.isMutual
+                          ? t('COMMON:mutual_following')
+                          : t('COMMON:return_to_customs')}
                       </div>
                       <div
                         className="cursor-pointer"

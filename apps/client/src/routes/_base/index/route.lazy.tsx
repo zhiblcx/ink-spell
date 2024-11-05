@@ -3,8 +3,6 @@ import BookShelf from '@/shared/components/BookShelf'
 import { AllSelectBookFlag, QueryKeys } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
-import { useQueryClient } from '@tanstack/react-query'
-import { createLazyFileRoute } from '@tanstack/react-router'
 
 export function Page() {
   const [_, setBooks] = useState<Ink[]>([])

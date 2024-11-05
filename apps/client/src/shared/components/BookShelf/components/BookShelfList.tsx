@@ -4,7 +4,6 @@ import { useActionBookStore } from '@/shared/store'
 import { Book, Ink } from '@/shared/types'
 import { BookUtils } from '@/shared/utils'
 import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
-import { useQueryClient } from '@tanstack/react-query'
 import { AxiosResponse } from 'axios'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
@@ -29,7 +28,10 @@ export function BookShelfList({ books, setBooks, options, query }: BookShelfList
   } = useActionBookStore()
 
   const queryClient = useQueryClient()
-  const collectBookMd5 = query?.data.data.booksInfo.reduce((acc: Array<string>, item: Book) => acc.concat(item.md5), [])
+  const collectBookMd5 = query?.data.data.booksInfo.reduce(
+    (acc: Array<string>, item: Book) => acc.concat(item.md5),
+    []
+  )
   const { mutate } = deleteBookByBookIdMutation(() =>
     queryClient.invalidateQueries({ queryKey: [QueryKeys.BOOKSHELF_BOOK_KEY] })
   )
@@ -92,7 +94,9 @@ export function BookShelfList({ books, setBooks, options, query }: BookShelfList
                         style={{ color: 'rgb(253 224 71)' }}
                         key="collect"
                         onClick={() => {
-                          const index = query?.data.data.booksInfo.findIndex((ink: Book) => ink.md5 === item.md5)
+                          const index = query?.data.data.booksInfo.findIndex(
+                            (ink: Book) => ink.md5 === item.md5
+                          )
                           cancelCollectBookMutate(query?.data.data.booksInfo[index].id)
                         }}
                       />
@@ -154,7 +158,9 @@ export function BookShelfList({ books, setBooks, options, query }: BookShelfList
           .map((item: Ink) => {
             const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
             const index = localBooks.find((i: Array<string>) => i[0] == item.id.toString())
-            const schedule = index ? ((index[1].currentChapter / index[1].allChapter) * 100).toFixed(1) + '%' : '0.0%'
+            const schedule = index
+              ? ((index[1].currentChapter / index[1].allChapter) * 100).toFixed(1) + '%'
+              : '0.0%'
 
             return (
               <li key={item.id}>
@@ -165,7 +171,8 @@ export function BookShelfList({ books, setBooks, options, query }: BookShelfList
                       updateCancelFlag(false)
                     }
                     const currentBooks: Ink[] = Array.from(books)
-                    currentBooks[currentBooks.findIndex((i) => i.id === item.id)].checked = !item.checked
+                    currentBooks[currentBooks.findIndex((i) => i.id === item.id)].checked =
+                      !item.checked
                     setBooks(currentBooks)
 
                     // 判断用户是否是部分选择

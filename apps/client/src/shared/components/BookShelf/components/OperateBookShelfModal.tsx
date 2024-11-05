@@ -3,7 +3,6 @@ import { QueryKeys } from '@/shared/enums'
 import { EditBookShelfOpenFlag } from '@/shared/enums/EditBookShelfOpenFlag'
 import { useActionBookStore } from '@/shared/store'
 import { BookShelfType, Ink } from '@/shared/types'
-import { useQueryClient } from '@tanstack/react-query'
 import { RadioChangeEvent, UploadFile } from 'antd'
 import { useTranslation } from 'react-i18next'
 import UploadPhoto from '../../UploadPhoto'
@@ -44,7 +43,8 @@ export function OperateBookShelfModal({
   const { t } = useTranslation(['COMMON', 'PROMPT', 'VALIDATION'])
   const { TextArea } = Input
   const [form] = Form.useForm()
-  const { bookToBookShelfFlag, updateBookToBookShelfFlag, updateModifyBookShelfFlag } = useActionBookStore()
+  const { bookToBookShelfFlag, updateBookToBookShelfFlag, updateModifyBookShelfFlag } =
+    useActionBookStore()
   const [value, setValue] = useState(true)
 
   const handleChange = (value: string) => {

@@ -1,4 +1,3 @@
-import { createLazyFileRoute } from '@tanstack/react-router'
 import type { TabsProps } from 'antd'
 import { useTranslation } from 'react-i18next'
 import MyFriend from './-components'

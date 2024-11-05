@@ -1,6 +1,7 @@
 export interface SignInDao {
   account: string
   password: string
+  [key: string]: string | undefined | boolean
 }
 
 export interface SignUpDao extends SignInDao {

@@ -1,13 +1,16 @@
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities'
-import { Link } from '@tanstack/react-router'
 import clsx from 'clsx'
 import { LucideProps } from 'lucide-react'
 
 interface NavigationProps {
   value: string
   label?: string
-  Icon?: React.ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>>
-  Move?: React.ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>>
+  Icon?: React.ForwardRefExoticComponent<
+    Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
+  >
+  Move?: React.ForwardRefExoticComponent<
+    Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
+  >
   move?: SyntheticListenerMap | undefined
 }
 

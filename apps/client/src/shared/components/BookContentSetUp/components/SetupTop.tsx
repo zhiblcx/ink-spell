@@ -2,7 +2,6 @@ import { useSetUpStore } from '@/shared/store/SetupStore'
 import { SetUp } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { DownOutlined } from '@ant-design/icons'
-import { useRouter } from '@tanstack/react-router'
 import { AArrowDown, AArrowUp, AlignJustify, ChevronLeft, ChevronRight, Equal } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import UploadBase64Photo from '../../UploadBase64Photo'
@@ -120,7 +119,9 @@ export function SetupTop({
             <li className="flex grow items-center">
               <p className="mr-4">{t('COMMON:theme')}：</p>
               <div className="flex grow items-center justify-around">
-                <Button onClick={() => setClickSetUp(ClickSetupEnum.BACKGROUND)}>{t('COMMON:customize')}</Button>
+                <Button onClick={() => setClickSetUp(ClickSetupEnum.BACKGROUND)}>
+                  {t('COMMON:customize')}
+                </Button>
                 <Button onClick={() => setSetUp({ ...setup, readerBackground: undefined })}>
                   {t('COMMON:recover')}
                 </Button>
@@ -151,7 +152,9 @@ export function SetupTop({
             />
             <ChevronRight
               size={28}
-              onClick={() => (sliderDirectory === allChapterTotal ? '' : setSliderDirectory(sliderDirectory + 1))}
+              onClick={() =>
+                sliderDirectory === allChapterTotal ? '' : setSliderDirectory(sliderDirectory + 1)
+              }
             />
           </div>
         </div>

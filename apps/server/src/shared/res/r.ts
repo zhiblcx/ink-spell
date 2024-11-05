@@ -5,10 +5,15 @@ export class R<T = any> {
   message?: string;
   @ApiPropertyOptional({ description: '响应数据', type: () => Object })
   data?: T;
+  @ApiPropertyOptional({ description: '响应码', example: '200' })
+  code?: 200;
 
   constructor(r?: R<T>) {
     if (r.message === undefined) {
       this.message = '请求成功';
+    }
+    if (r.code === undefined) {
+      this.code = 200;
     }
     Object.assign(this, r);
   }

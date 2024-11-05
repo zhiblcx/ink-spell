@@ -5,7 +5,6 @@ import { Menu, MessageEnum } from '@/shared/enums'
 import { useMenuStore } from '@/shared/store'
 import { User } from '@/shared/types'
 import { VerticalAlignBottomOutlined } from '@ant-design/icons'
-import { useRouter } from '@tanstack/react-router'
 import { InputRef, message } from 'antd'
 import clsx from 'clsx'
 import React from 'react'
@@ -57,7 +56,8 @@ export default function ChatRoom() {
     // 获取历史消息
     const result = data.map((item: MessageType) => {
       if (item.type === MessageEnum.MESSAGE) {
-        item.type = item.userId === query?.data.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
+        item.type =
+          item.userId === query?.data.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
       }
       return item
     })
@@ -115,11 +115,13 @@ export default function ChatRoom() {
 
   // 处理新消息
   const handleNewMessage = (data: MessageType) => {
-    data.type = data.userId === query?.data.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
+    data.type =
+      data.userId === query?.data.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
     if (chatContent.current) {
       const container = chatContent.current as HTMLElement
       if (
-        Math.ceil(container.scrollHeight) - Math.floor(container.scrollTop) <= Math.ceil(container.clientHeight) ||
+        Math.ceil(container.scrollHeight) - Math.floor(container.scrollTop) <=
+          Math.ceil(container.clientHeight) ||
         data.type === MessageEnum.MESSAGE_SELF
       ) {
         setMessages((prevMessages) => {
@@ -166,7 +168,9 @@ export default function ChatRoom() {
       ) : (
         <>
           <div>
-            {!connect ? t('PROMPT:failed_to_join_room') : t('PROMPT:people_in_room', { peopleNumber: peopleNumber })}
+            {!connect
+              ? t('PROMPT:failed_to_join_room')
+              : t('PROMPT:people_in_room', { peopleNumber: peopleNumber })}
           </div>
           {!connect ? (
             <EmptyPage name={t('PROMPT:connection_failed')} />
@@ -208,7 +212,9 @@ export default function ChatRoom() {
                           />
                           <div className="ml-2 flex max-w-[80%] flex-col items-start">
                             <span className="text-xs">{item.user?.username}</span>
-                            <div className="break-all rounded-md bg-[#f5f5f5] p-2 dark:bg-[#262729]">{item.text}</div>
+                            <div className="break-all rounded-md bg-[#f5f5f5] p-2 dark:bg-[#262729]">
+                              {item.text}
+                            </div>
                           </div>
                         </li>
                       )}
@@ -220,7 +226,9 @@ export default function ChatRoom() {
                         >
                           <div className="mr-2 flex max-w-[80%] flex-col items-end overflow-hidden">
                             <span className="text-xs">{item.user?.username}</span>
-                            <div className="break-all rounded-md bg-[#89d961] p-2 dark:bg-[#262729]">{item.text}</div>
+                            <div className="break-all rounded-md bg-[#89d961] p-2 dark:bg-[#262729]">
+                              {item.text}
+                            </div>
                           </div>
                           <Avatar
                             src={import.meta.env.VITE_SERVER_URL + item.user?.avatar}

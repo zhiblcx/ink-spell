@@ -1,8 +1,6 @@
 import { axiosInstance } from '@/shared/API'
 import { User } from '@/shared/types'
 import { AuthUtils } from '@/shared/utils'
-import { useMutation } from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
 import { message } from 'antd'
 import { Dispatch, SetStateAction } from 'react'
 import { handleAxiosError } from '../utils'

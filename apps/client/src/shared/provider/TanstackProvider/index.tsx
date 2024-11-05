@@ -1,7 +1,6 @@
 import NotFound from '@/routes/404/route.lazy.tsx'
 import ErrorPage from '@/shared/components/ErrorPage'
 import GlobalPending from '@/shared/components/GlobalPending'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { routeTree } from '../../../routeTree.gen'
 

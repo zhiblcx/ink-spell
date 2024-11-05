@@ -1,6 +1,5 @@
 import { LOGOUT, MY_FAVORITES, PERSON_INFO } from '@/shared/constants'
 import { AuthUtils } from '@/shared/utils'
-import { useNavigate } from '@tanstack/react-router'
 import type { MenuProps } from 'antd'
 import { useTranslation } from 'react-i18next'
 
@@ -19,7 +18,9 @@ export function AvatarItems({ setOpenFlag, avatar }: AvatarItemsType) {
     },
     {
       key: 2,
-      label: <div onClick={() => navigate({ to: MY_FAVORITES.URL })}>{t('COMMON:my_favorites')}</div>
+      label: (
+        <div onClick={() => navigate({ to: MY_FAVORITES.URL })}>{t('COMMON:my_favorites')}</div>
+      )
     },
     {
       key: 3,

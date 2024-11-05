@@ -1,22 +1,20 @@
 // 创建 axios 实例
-
 import { AuthUtils, LanguageUtils } from '@/shared/utils'
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
-
 interface PendingTask {
   config: AxiosRequestConfig
   resolve: Function
 }
 
-let refreshFlag = false
-const queue: PendingTask[] = []
-
 export const axiosInstance: AxiosInstance = axios.create({
   // 请求 api 公共部分
   baseURL: import.meta.env.VITE_BASE_API_PREFIX,
   // 超时
-  timeout: 30000
+  timeout: 5 * 1000
 })
+
+let refreshFlag = false
+const queue: PendingTask[] = []
 
 // 设置请求拦截器
 axiosInstance.interceptors.request.use(

@@ -1,7 +1,6 @@
 import { updatePasswordDao } from '@/features/user'
 import { newConfirmPasswordRule } from '@/shared/utils/confirmPasswordRule'
 import { LockOutlined } from '@ant-design/icons'
-import { UseMutateFunction } from '@tanstack/react-query'
 import { FormInstance } from 'antd'
 import { AxiosError, AxiosResponse } from 'axios'
 import { useTranslation } from 'react-i18next'
@@ -10,7 +9,12 @@ interface ResetPasswordType {
   form: FormInstance<any>
   openFlag: boolean
   setOpenFlag: React.Dispatch<React.SetStateAction<boolean>>
-  mutate: UseMutateFunction<AxiosResponse<any, any>, AxiosError<unknown, any>, updatePasswordDao, unknown>
+  mutate: UseMutateFunction<
+    AxiosResponse<any, any>,
+    AxiosError<unknown, any>,
+    updatePasswordDao,
+    unknown
+  >
 }
 
 export function ResetPassword({ form, openFlag, setOpenFlag, mutate }: ResetPasswordType) {
@@ -64,7 +68,10 @@ export function ResetPassword({ form, openFlag, setOpenFlag, mutate }: ResetPass
           name="confirmPassword"
           dependencies={['password']}
           hasFeedback
-          rules={[{ required: true, message: t('VALIDATION:password_not_filled') }, newConfirmPasswordRule]}
+          rules={[
+            { required: true, message: t('VALIDATION:password_not_filled') },
+            newConfirmPasswordRule
+          ]}
         >
           <Input.Password
             prefix={<LockOutlined />}

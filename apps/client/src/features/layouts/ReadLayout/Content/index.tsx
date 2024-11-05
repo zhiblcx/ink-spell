@@ -3,7 +3,6 @@ import { useActionBookStore } from '@/shared/store'
 import { useSetUpStore } from '@/shared/store/SetupStore'
 import { BookUtils } from '@/shared/utils'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { useLocation, useRouter } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import useSmoothScroll from 'react-smooth-scroll-hook'
@@ -29,7 +28,13 @@ interface ChapterLinkProps {
   scrollToHeight: () => void
 }
 
-function ChapterLink({ noContentText = '没有了', content, chapter, chapterFlag, scrollToHeight }: ChapterLinkProps) {
+function ChapterLink({
+  noContentText = '没有了',
+  content,
+  chapter,
+  chapterFlag,
+  scrollToHeight
+}: ChapterLinkProps) {
   const router = useRouter()
   return (
     <>
@@ -54,11 +59,18 @@ function ChapterLink({ noContentText = '没有了', content, chapter, chapterFla
   )
 }
 
-function Content({ bookId, bookMark, currentContent = [], currentChapter, allChapterTotal }: ContentActiveType) {
+function Content({
+  bookId,
+  bookMark,
+  currentContent = [],
+  currentChapter,
+  allChapterTotal
+}: ContentActiveType) {
   const { t } = useTranslation(['COMMON'])
   const location = useLocation()
   const ref = useRef(null)
-  const { showDirectoryFlag, updateShowDirectoryFlag, updateShowSetUpFlag, showSetUpFlag } = useActionBookStore()
+  const { showDirectoryFlag, updateShowDirectoryFlag, updateShowSetUpFlag, showSetUpFlag } =
+    useActionBookStore()
   const { chapter } = location.search as SearchType
   const encodeChapter = parseInt(UrlUtils.decodeUrlById(chapter.toString()))
   const { setup } = useSetUpStore()
@@ -82,7 +94,9 @@ function Content({ bookId, bookMark, currentContent = [], currentChapter, allCha
           Number(ref.current && (ref.current as HTMLElement).offsetHeight)
       )
       const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
-      const localBookIndex = localBooks.findIndex((item: Array<string>) => parseInt(item[0]) === bookId)
+      const localBookIndex = localBooks.findIndex(
+        (item: Array<string>) => parseInt(item[0]) === bookId
+      )
       localBooks[localBookIndex][1]['page'] = page
       BookUtils.setBooks(JSON.stringify(localBooks))
     }, 8000)
@@ -92,7 +106,9 @@ function Content({ bookId, bookMark, currentContent = [], currentChapter, allCha
   useEffect(() => {
     if (ref !== null && ref.current != null) {
       const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
-      const localBookIndex = localBooks.findIndex((item: Array<string>) => parseInt(item[0]) === bookId)
+      const localBookIndex = localBooks.findIndex(
+        (item: Array<string>) => parseInt(item[0]) === bookId
+      )
       const page = localBooks[localBookIndex][1]['page']
       if (page != undefined) {
         const view = (ref.current as HTMLElement).offsetHeight
@@ -109,7 +125,10 @@ function Content({ bookId, bookMark, currentContent = [], currentChapter, allCha
       ref={ref}
       style={
         setup.readerBackground
-          ? backgroundStyleFunc(setup.readerBackground?.background?.includes('data:image'), setup.readerBackground)
+          ? backgroundStyleFunc(
+              setup.readerBackground?.background?.includes('data:image'),
+              setup.readerBackground
+            )
           : undefined
       }
       className="scroll grow overflow-y-auto px-5 pr-2"

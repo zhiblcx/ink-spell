@@ -45,6 +45,22 @@
     "Tooltip": true,
     "Slider": true,
     "FloatButton": true,
-    "ColorPicker": true
+    "ColorPicker": true,
+    "useMutation": true,
+    "useQuery": true,
+    "useNavigate": true,
+    "useRouter": true,
+    "Outlet": true,
+    "createRouter": true,
+    "QueryClient": true,
+    "QueryClientProvider": true,
+    "Link": true,
+    "useLocation": true,
+    "createLazyFileRoute": true,
+    "createFileRoute": true,
+    "redirect": true,
+    "useInfiniteQuery": true,
+    "useQueryClient": true,
+    "createRootRoute": true
   }
 }

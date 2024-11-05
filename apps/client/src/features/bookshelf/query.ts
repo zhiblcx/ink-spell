@@ -1,6 +1,6 @@
 import { axiosInstance } from '@/shared/API'
+import httpRequest from '@/shared/API/HttpRequest'
 import { QueryKeys } from '@/shared/enums'
-import { useQuery } from '@tanstack/react-query'
 
 export const selectMyBookShelfQuery = () =>
   useQuery({
@@ -11,7 +11,11 @@ export const selectMyBookShelfQuery = () =>
 export const selectBookByBookShelfIdQuery = (bookShelfId: string) =>
   useQuery({
     queryKey: [QueryKeys.BOOKSHELF_BOOK_KEY, bookShelfId],
-    queryFn: () => axiosInstance.get(`/bookshelf/${bookShelfId}`)
+    queryFn: async () => {
+      const data = await httpRequest.get(`/bookshelf/${bookShelfId}`)
+      console.log(data)
+      return axiosInstance.get(`/bookshelf/${bookShelfId}`)
+    }
   })
 
 export const selectUserCollectBookShelfQuery = () =>

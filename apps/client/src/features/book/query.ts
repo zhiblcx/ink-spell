@@ -1,6 +1,5 @@
 import { axiosInstance } from '@/shared/API'
 import { QueryKeys } from '@/shared/enums'
-import { useQuery } from '@tanstack/react-query'
 
 export const selectBookByBookIdQuery = (bookID: number) =>
   useQuery({

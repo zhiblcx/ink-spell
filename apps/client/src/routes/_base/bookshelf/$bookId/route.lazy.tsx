@@ -5,8 +5,6 @@ import { AllSelectBookFlag, QueryKeys } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { useQueryClient } from '@tanstack/react-query'
-import { createLazyFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 interface pageType {
   bookId: string

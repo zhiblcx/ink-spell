@@ -1,6 +1,5 @@
 import { axiosInstance } from '@/shared/API'
 import { Book, BookMark, Ink } from '@/shared/types'
-import { useMutation } from '@tanstack/react-query'
 import { message } from 'antd'
 import { handleAxiosError } from '../utils'
 
@@ -24,6 +23,7 @@ export const collectBookByBookIdMutation = (queryClient: () => Promise<void>) =>
     onError: handleAxiosError
   })
 
+// TODO: 利用 key 去掉 setBook
 export const updateBookByBookIdMutation = (setBook: (value: React.SetStateAction<Ink>) => void) =>
   useMutation({
     mutationFn: (book: Book) => axiosInstance.put(`/book/${book.id}`, book),

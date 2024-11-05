@@ -8,7 +8,6 @@ import { useThemeStore } from '@/shared/store'
 import { AuthUtils } from '@/shared/utils'
 import { confirmPasswordRule } from '@/shared/utils/confirmPasswordRule'
 import { LockOutlined, MailOutlined, UserOutlined, VerifiedOutlined } from '@ant-design/icons'
-import { Link } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 
 import { APP_NAME } from '@/shared/constants/app'
@@ -31,7 +30,9 @@ export default function Signin() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [sendVerificationCode, setSendVerificationCode] = useState(t('COMMON:send'))
   const sendEmail = useRef(null)
-  const { mutate: forgetPasswordMutation } = forgetPasswordByEmailMutation(() => setIsModalOpen(false))
+  const { mutate: forgetPasswordMutation } = forgetPasswordByEmailMutation(() =>
+    setIsModalOpen(false)
+  )
   const { mutate: sendResetPasswordEmailMutate } = sendResetPasswordEmailMutation((email) => {
     let countdown = 60
     setSendVerificationCode(t('PROMPT:retry_in_seconds', { seconds: countdown })) // 初始状态
@@ -183,7 +184,9 @@ export default function Signin() {
               <Input
                 placeholder={t('VALIDATION:enter_account')}
                 prefix={<UserOutlined />}
-                onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setAccount(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+                  setAccount(e.target.value)
+                }
               />
             </div>
           </div>
@@ -258,7 +261,10 @@ export default function Signin() {
                 name="confirmPassword"
                 dependencies={['password']}
                 hasFeedback
-                rules={[{ required: true, message: t('VALIDATION:password_not_filled') }, confirmPasswordRule]}
+                rules={[
+                  { required: true, message: t('VALIDATION:password_not_filled') },
+                  confirmPasswordRule
+                ]}
               >
                 <Input.Password
                   prefix={<LockOutlined />}

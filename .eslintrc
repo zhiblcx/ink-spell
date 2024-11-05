@@ -1,0 +1,21 @@
+{
+  "root": true,
+  "parser":"@typescript-eslint/parser",
+  "env": { "browser": true, "es2020": true },
+  "extends": ["eslint:recommended","plugin:prettier/recommended", "plugin:@typescript-eslint/recommended","prettier"],
+  "ignorePatterns": ["dist", ".eslintrc.cjs"],
+  "plugins": ["react-refresh","prettier"],
+  "rules": {
+    "react-refresh/only-export-components": ["warn", { "allowConstantExport": true }],
+     "@typescript-eslint/interface-name-prefix": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+    ],
+      "no-console": ["warn",{ "allow": ["warn", "error"] }
+    ]
+  }
+}
