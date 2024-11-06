@@ -24,7 +24,7 @@ export function Page() {
   const { userId } = Route.useParams()
   const query = selectUserCollectBookShelfByUserIdQuery(UrlUtils.decodeUrlById(userId))
   const { data: userCollectQuery } = selectUserCollectBookShelfQuery()
-  const userCollectBookShelfIds = userCollectQuery?.data.data.reduce(
+  const userCollectBookShelfIds = userCollectQuery?.data.reduce(
     (acc: Array<number>, item: UserCollectType) => {
       return acc.concat(item.bookShelfId)
     },
@@ -49,14 +49,14 @@ export function Page() {
         <EmptyPage name={t('PROMPT:invite_to_share_bookshelf')} />
       ) : (
         <BookShelfDetail
-          bookshelf_detail={query.data?.data.data ?? []}
+          bookshelf_detail={query.data?.data ?? []}
           userCollectBookShelfIds={userCollectBookShelfIds}
           collectButton={(item) => collectShelfMutate(item.id)}
           cancelCollectButton={(item) => {
-            const index = userCollectQuery?.data.data.findIndex(
+            const index = userCollectQuery?.data.findIndex(
               (collect: UserCollectType) => collect.bookShelfId === item.id
             )
-            cancelCollectShelfMutate(userCollectQuery?.data.data[index].id)
+            cancelCollectShelfMutate(userCollectQuery?.data[index].id)
           }}
         />
       )}

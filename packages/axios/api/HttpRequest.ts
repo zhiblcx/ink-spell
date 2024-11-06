@@ -12,6 +12,14 @@ export interface ResponseData<T = any> {
   data: T
 }
 
+interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
+  expectData?: boolean
+}
+
+interface expectDataAxiosRequestConfig extends AxiosRequestConfig {
+  expectData?: boolean
+}
+
 export class HttpRequest {
   instance: AxiosInstance
 
@@ -27,6 +35,7 @@ export class HttpRequest {
       timeout: 5 * 1000
     })
 
+    // 请求拦截器
     this.instance.interceptors.request.use(
       (req: InternalAxiosRequestConfig) => {
         const token = AuthUtils.getAccessToken()
@@ -39,8 +48,9 @@ export class HttpRequest {
       (error: AxiosError) => Promise.reject(error)
     )
 
+    // 响应拦截器
     this.instance.interceptors.response.use(
-      (res: AxiosResponse) => res.data,
+      (res: AxiosResponse) => (!(res.config as CustomAxiosRequestConfig).expectData ? res.data : res),
       async (err) => {
         const { data, config } = err.response
 
@@ -108,7 +118,11 @@ export class HttpRequest {
    * @param params 请求参数
    * @param config 请求配置
    */
-  get<T>(url: string, params?: Record<string, unknown>, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
+  get<T = ResponseData>(
+    url: string,
+    params?: Record<string, unknown>,
+    config?: expectDataAxiosRequestConfig
+  ): Promise<T> {
     return this.instance.get(url, { params, ...config })
   }
 
@@ -118,7 +132,11 @@ export class HttpRequest {
    * @param data 请求数据
    * @param config 请求配置
    */
-  post<T>(url: string, data?: Record<string, unknown>, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
+  post<T = ResponseData>(
+    url: string,
+    data?: Record<string, unknown>,
+    config?: expectDataAxiosRequestConfig
+  ): Promise<T> {
     return this.instance.post(url, data, config)
   }
 
@@ -128,7 +146,11 @@ export class HttpRequest {
    * @param data 请求数据
    * @param config 请求配置
    */
-  put<T>(url: string, data?: Record<string, unknown>, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
+  put<T = ResponseData>(
+    url: string,
+    data?: Record<string, unknown>,
+    config?: expectDataAxiosRequestConfig
+  ): Promise<T> {
     return this.instance.post(url, data, config)
   }
 
@@ -138,7 +160,11 @@ export class HttpRequest {
    * @param params 请求参数
    * @param config 请求配置
    */
-  delete<T>(url: string, params?: Record<string, unknown>, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
+  delete<T = ResponseData>(
+    url: string,
+    params?: Record<string, unknown>,
+    config?: expectDataAxiosRequestConfig
+  ): Promise<T> {
     return this.instance.delete(url, { params, ...config })
   }
 }

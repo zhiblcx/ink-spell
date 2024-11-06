@@ -1,20 +1,17 @@
 import { updatePasswordDao } from '@/features/user'
 import { newConfirmPasswordRule } from '@/shared/utils/confirmPasswordRule'
 import { LockOutlined } from '@ant-design/icons'
+import { ResponseData } from '@ink-spell/axios'
+import { UseMutateFunction } from '@tanstack/react-query'
 import { FormInstance } from 'antd'
-import { AxiosError, AxiosResponse } from 'axios'
+import { AxiosError } from 'axios'
 import { useTranslation } from 'react-i18next'
 
 interface ResetPasswordType {
   form: FormInstance<any>
   openFlag: boolean
   setOpenFlag: React.Dispatch<React.SetStateAction<boolean>>
-  mutate: UseMutateFunction<
-    AxiosResponse<any, any>,
-    AxiosError<unknown, any>,
-    updatePasswordDao,
-    unknown
-  >
+  mutate: UseMutateFunction<ResponseData<any>, AxiosError<unknown, any>, updatePasswordDao, unknown>
 }
 
 export function ResetPassword({ form, openFlag, setOpenFlag, mutate }: ResetPasswordType) {

@@ -27,37 +27,37 @@ export default function Profile() {
         uid: '1',
         name: 'xxx.png',
         status: 'done',
-        url: import.meta.env.VITE_SERVER_URL + query.data?.data.data.avatar
+        url: import.meta.env.VITE_SERVER_URL + query.data?.data.avatar
       }
     ])
-  }, [query.data?.data.data.avatar])
+  }, [query.data?.data.avatar])
 
   return (
     <div className="flex h-[580px] items-center justify-center">
       <div className={styles.card}>
         <div className={styles.imgBx}>
-          <img src={import.meta.env.VITE_SERVER_URL + query.data?.data.data.avatar} />
+          <img src={import.meta.env.VITE_SERVER_URL + query.data?.data.avatar} />
         </div>
         <div className={styles.content}>
           <div className={styles.details}>
             <h2>
-              {query.data?.data.data.username}
+              {query.data?.data.username}
               <br />
-              <span>{query.data?.data.data.email ?? t('PROMPT:no_email_currently_available')}</span>
+              <span>{query.data?.data.email ?? t('PROMPT:no_email_currently_available')}</span>
             </h2>
             <div className={styles.data}>
               <h3>
-                {query.data?.data.data.books}
+                {query.data?.data.books}
                 <br />
                 <span>{t('COMMON:upload_book')}</span>
               </h3>
               <h3>
-                {query.data?.data.data.followers}
+                {query.data?.data.followers}
                 <br />
                 <span>{t('COMMON:followers')}</span>
               </h3>
               <h3>
-                {query.data?.data.data.following}
+                {query.data?.data.following}
                 <br />
                 <span>{t('COMMON:following')}</span>
               </h3>
@@ -101,7 +101,7 @@ export default function Profile() {
             className="flex flex-col justify-center p-5 px-8"
             layout="vertical"
             form={form}
-            initialValues={query.data?.data.data}
+            initialValues={query.data?.data}
             onFinish={mutate}
           >
             <Form.Item
@@ -132,7 +132,7 @@ export default function Profile() {
             >
               <EmailInput
                 form={form}
-                email={query.data?.data.data.email}
+                email={query.data?.data.email}
               />
             </Form.Item>
             <Form.Item

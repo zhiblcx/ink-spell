@@ -37,7 +37,9 @@ export default function BookShelf({ bookShelfId, books, setBooks }: BookShelfPro
 
   const { data, isSuccess, isPending } = selectMyBookShelfQuery()
 
-  const currentBookShelf: BookShelfType = data?.data.data.filter((item: BookShelfType) => item.id == bookShelfId)[0]
+  const currentBookShelf: BookShelfType = data?.data.filter(
+    (item: BookShelfType) => item.id == bookShelfId
+  )[0]
 
   useEffect(() => {
     if (bookToBookShelfFlag || modifyBookShelfFlag) {
@@ -90,7 +92,7 @@ export default function BookShelf({ bookShelfId, books, setBooks }: BookShelfPro
   useEffect(() => {
     if (isSuccess) {
       if (!acquireBookShelfFlag) {
-        data.data.data.forEach((item: BookShelfType) => {
+        data.data.forEach((item: BookShelfType) => {
           if (item.label === ALL_BOOK.label) {
             selectOptions.push({
               value: item.id.toString(),
@@ -107,7 +109,7 @@ export default function BookShelf({ bookShelfId, books, setBooks }: BookShelfPro
       }
     }
     return () => updateSearchBookName('')
-  }, [data?.data.data])
+  }, [data?.data])
 
   useEffect(() => {
     setOptions(books)

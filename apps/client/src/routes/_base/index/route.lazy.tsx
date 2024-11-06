@@ -16,12 +16,12 @@ export function Page() {
   } = useActionBookStore()
 
   const { data } = selectMyBookShelfQuery()
-  const bookShelfId = data?.data.data[0].id
+  const bookShelfId = data?.data[0].id
   const { data: queryBook, isLoading } = selectBookByBookShelfIdQuery(bookShelfId)
 
   const queryClient = useQueryClient()
   useEffect(() => {
-    setBooks(queryBook?.data?.data ?? [])
+    setBooks(queryBook?.data ?? [])
     updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
     if (uploadFileFlag) {
       queryClient.invalidateQueries({ queryKey: [QueryKeys.BOOKSHELF_BOOK_KEY] })
@@ -32,7 +32,7 @@ export function Page() {
       updateShowShelfFlag(false)
       updateCancelFlag(true)
     }
-  }, [queryBook?.data?.data, uploadFileFlag])
+  }, [queryBook?.data, uploadFileFlag])
 
   return (
     <>
@@ -45,7 +45,7 @@ export function Page() {
       ) : (
         <BookShelf
           bookShelfId={bookShelfId}
-          books={queryBook?.data?.data}
+          books={queryBook?.data}
           setBooks={setBooks}
         />
       )}

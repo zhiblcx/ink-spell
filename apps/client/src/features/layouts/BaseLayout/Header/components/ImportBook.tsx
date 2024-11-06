@@ -1,4 +1,4 @@
-import { axiosInstance } from '@/shared/API'
+import { httpRequest } from '@/shared/API'
 import { useActionBookStore } from '@/shared/store'
 import { AuthUtils, Md5Utils } from '@/shared/utils'
 import { message, type UploadFile, type UploadProps } from 'antd'
@@ -44,10 +44,10 @@ export function ImportBook({ bookShelfId }: ImportBookType) {
       }
 
       file.md5 = await Md5Utils.getFileMD5(file)
-      const result = await axiosInstance.get(`/book/md5?md5=${file.md5}&file_name=${file.name}`)
+      const result = await httpRequest.get(`/book/md5?md5=${file.md5}&file_name=${file.name}`)
 
-      if (result.data.data.md5) {
-        if (result.data.data.path === '') {
+      if (result.data.md5) {
+        if (result.data.path === '') {
           message.error(t('PROMPT:no_duplicate_uploads'))
         } else {
           message.success(t('PROMPT:upload_successful'))

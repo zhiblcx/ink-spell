@@ -47,7 +47,7 @@ function Page() {
 
   useEffect(() => {
     if (isSuccess) {
-      setData(query?.data.data)
+      setData(query?.data)
     }
   }, [isSuccess])
 

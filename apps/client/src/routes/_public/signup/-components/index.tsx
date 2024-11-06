@@ -1,6 +1,4 @@
-import loginDarkImg from '@/assets/images/login-dark.png'
-import loginLightImg from '@/assets/images/login-light.png'
-import logoLight from '@/assets/images/logo-light.png'
+import { loginDarkImg, loginLightImg, logoLightImg } from '@/assets/images'
 import { signupMutation, SignupValue } from '@/features/auth'
 import EmailInput from '@/shared/components/EmailInput'
 import { APP_NAME } from '@/shared/constants/app'
@@ -46,7 +44,7 @@ export default function Signup() {
             onFinish={mutate}
           >
             <img
-              src={logoLight}
+              src={logoLightImg}
               className="mb-2 w-[200px]"
             ></img>
             <div className="mb-2">

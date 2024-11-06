@@ -24,7 +24,7 @@ function Page() {
     queryClient.invalidateQueries({ queryKey: [QueryKeys.USER_COLLECT_KEY] })
   )
 
-  const bookShelfDetail = userCollectQuery?.data.data.reduce(
+  const bookShelfDetail = userCollectQuery?.data.reduce(
     (acc: Array<BookShelfType & { collectId: number }>, item: CollectBookShelfType) => {
       return acc.concat({ ...item.bookShelf, collectId: item.id })
     },
@@ -33,7 +33,7 @@ function Page() {
 
   return (
     <>
-      {bookShelfDetail === undefined || userCollectQuery?.data.data.length === 0 ? (
+      {bookShelfDetail === undefined || userCollectQuery?.data.length === 0 ? (
         <EmptyPage name={t('PROMPT:no_bookshelf_collected')} />
       ) : (
         <BookShelfDetail

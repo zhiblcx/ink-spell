@@ -1,6 +1,5 @@
 import { selectBookByBookIdQuery, showBookMarkQuery } from '@/features/book'
-import Content from '@/features/layouts/ReadLayout/Content'
-import Sidebar from '@/features/layouts/ReadLayout/Sidebar'
+import { Content, Sidebar } from '@/features/layouts/ReadLayout'
 import { useSetUpStore } from '@/shared/store/SetupStore'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 
@@ -37,17 +36,17 @@ function Page() {
           className="flex h-screen w-screen overflow-hidden bg-white dark:bg-[#1f1f1f] dark:text-[#929493]"
         >
           <Sidebar
-            bookMark={bookMark?.data.data.bookmark}
-            bookName={query?.data.data.bookName}
-            allChapter={query?.data.data.chapter}
+            bookMark={bookMark?.data.bookmark}
+            bookName={query?.data.bookName}
+            allChapter={query?.data.chapter}
             currentChapter={currentChapter - 1}
           />
           <Content
             bookId={bookID}
-            bookMark={bookMark?.data.data.bookmark}
-            allChapterTotal={query?.data.data.chapter.length}
-            currentChapter={query?.data.data.chapter[currentChapter - 1]}
-            currentContent={query?.data.data.content[currentChapter - 1]}
+            bookMark={bookMark?.data.bookmark}
+            allChapterTotal={query?.data.chapter.length}
+            currentChapter={query?.data.chapter[currentChapter - 1]}
+            currentContent={query?.data.content[currentChapter - 1]}
           />
         </div>
       )}

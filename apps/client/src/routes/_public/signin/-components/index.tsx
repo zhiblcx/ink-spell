@@ -1,17 +1,14 @@
-import loginDarkImg from '@/assets/images/login-dark.png'
-import loginLightImg from '@/assets/images/login-light.png'
-import logoLight from '@/assets/images/logo-light.png'
+import { loginDarkImg, loginLightImg, logoLightImg } from '@/assets/images'
 import { signinMutation } from '@/features/auth'
 import { forgetPasswordByEmailMutation, sendResetPasswordEmailMutation } from '@/features/user'
+import { APP_NAME } from '@/shared/constants/app'
 import { Theme } from '@/shared/enums'
 import { useThemeStore } from '@/shared/store'
 import { AuthUtils } from '@/shared/utils'
 import { confirmPasswordRule } from '@/shared/utils/confirmPasswordRule'
+import startCountdown from '@/shared/utils/startCountdown'
 import { LockOutlined, MailOutlined, UserOutlined, VerifiedOutlined } from '@ant-design/icons'
 import { motion } from 'framer-motion'
-
-import { APP_NAME } from '@/shared/constants/app'
-import startCountdown from '@/shared/utils/startCountdown'
 import { useTranslation } from 'react-i18next'
 import './index.scss'
 
@@ -95,7 +92,7 @@ export default function Signin() {
             onFinish={mutate}
           >
             <img
-              src={logoLight}
+              src={logoLightImg}
               className="mb-2 w-[200px]"
             ></img>
             <div className="mb-2">

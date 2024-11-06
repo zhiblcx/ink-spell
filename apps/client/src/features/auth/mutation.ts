@@ -1,4 +1,4 @@
-import { ResponseData, signinApi, signupApi } from '@/shared/API'
+import { httpRequest, ResponseData } from '@/shared/API'
 import { AuthUtils } from '@/shared/utils'
 import { message } from 'antd'
 import { useTranslation } from 'react-i18next'
@@ -9,8 +9,8 @@ export const signinMutation = () => {
   const { t } = useTranslation(['PROMPT'])
   const navigate = useNavigate()
   return useMutation({
-    mutationFn: async (signInDao: SignInDao) => signinApi(signInDao),
-    onSuccess: (result: ResponseData, variables: SigninValue) => {
+    mutationFn: async (signInDao: SignInDao) => httpRequest.post('/auth/login', signInDao),
+    onSuccess: (result, variables: SigninValue) => {
       const { access_token, refresh_token } = result.data
       AuthUtils.setAccessToken(access_token)
       AuthUtils.setFreshToken(refresh_token)
@@ -35,7 +35,7 @@ export const signupMutation = () => {
   const { t } = useTranslation(['PROMPT'])
   const navigate = useNavigate()
   return useMutation({
-    mutationFn: async (signUpDao: SignUpDao) => signupApi(signUpDao),
+    mutationFn: async (signUpDao: SignUpDao) => httpRequest.post('/auth/register', signUpDao),
     onSuccess: (result: ResponseData) => {
       const { access_token, refresh_token } = result.data
       AuthUtils.setAccessToken(access_token)

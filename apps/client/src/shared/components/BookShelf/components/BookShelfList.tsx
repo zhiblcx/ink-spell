@@ -4,7 +4,7 @@ import { useActionBookStore } from '@/shared/store'
 import { Book, Ink } from '@/shared/types'
 import { BookUtils } from '@/shared/utils'
 import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
-import { AxiosResponse } from 'axios'
+import { ResponseData } from '@ink-spell/axios'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import InkCard from '../../InkCard'
@@ -13,7 +13,7 @@ interface BookShelfListProps {
   books: Ink[]
   setBooks: React.Dispatch<React.SetStateAction<Ink[]>>
   options: Ink[]
-  query: AxiosResponse<any, any> | undefined
+  query: ResponseData<any> | undefined
 }
 
 export function BookShelfList({ books, setBooks, options, query }: BookShelfListProps) {
@@ -28,7 +28,7 @@ export function BookShelfList({ books, setBooks, options, query }: BookShelfList
   } = useActionBookStore()
 
   const queryClient = useQueryClient()
-  const collectBookMd5 = query?.data.data.booksInfo.reduce(
+  const collectBookMd5 = query?.data.booksInfo.reduce(
     (acc: Array<string>, item: Book) => acc.concat(item.md5),
     []
   )

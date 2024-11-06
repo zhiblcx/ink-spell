@@ -1,4 +1,4 @@
-import imageLoading from '@/assets/images/image-loading.png'
+import { imageLoadingImg } from '@/assets/images'
 import { updateBookByBookIdMutation } from '@/features/book'
 import { useActionBookStore } from '@/shared/store'
 import { type Ink } from '@/shared/types'
@@ -17,7 +17,13 @@ interface InkCardProps {
   onClickCheckbox: () => void
 }
 
-export default function InkCard({ ink, customClassName, cancelFlag, onClickCheckbox, schedule = '无' }: InkCardProps) {
+export default function InkCard({
+  ink,
+  customClassName,
+  cancelFlag,
+  onClickCheckbox,
+  schedule = '无'
+}: InkCardProps) {
   const { t } = useTranslation(['COMMON', 'PROMPT', 'VALIDATION'])
   const { TextArea } = Input
   const [form] = Form.useForm()
@@ -73,12 +79,15 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
           ) : null}
 
           <div
-            className={clsx(book.name ? 'photo-visible' : '', 'photo h-[100%] w-[100%] overflow-hidden')}
+            className={clsx(
+              book.name ? 'photo-visible' : '',
+              'photo h-[100%] w-[100%] overflow-hidden'
+            )}
             onClick={() => BookUtils.redirectToBookPage(book)}
           >
             <img
               style={{
-                backgroundImage: `url(${imageLoading})`,
+                backgroundImage: `url(${imageLoadingImg})`,
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center'
@@ -92,7 +101,9 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
               <span> {book.name ? `${book.name}` : ''}</span>
             </Tooltip>
           </p>
-          <p className="roboto mt-[130px] text-sm">{book.author ? book.author : t('COMMON:no_author')}</p>
+          <p className="roboto mt-[130px] text-sm">
+            {book.author ? book.author : t('COMMON:no_author')}
+          </p>
           <p className="roboto text-sm">
             {book.protagonist
               ? `
@@ -101,7 +112,9 @@ export default function InkCard({ ink, customClassName, cancelFlag, onClickCheck
           </p>
           <p className="w-[80%] border-2 border-b-zinc-300"></p>
           <p className="roboto mt-2 line-clamp-3 w-[80%] overflow-hidden break-all text-sm">
-            {book.description === '' || book.description === null ? t('COMMON:no_description') : book.description}
+            {book.description === '' || book.description === null
+              ? t('COMMON:no_description')
+              : book.description}
           </p>
         </div>
       </Tooltip>

@@ -26,7 +26,7 @@ export default function Header() {
   const match = url.match(reg)
 
   const { data: myBookShelf } = selectMyBookShelfQuery()
-  let bookShelfId = match !== null ? match[0] : myBookShelf?.data.data[0].id
+  let bookShelfId = match !== null ? match[0] : myBookShelf?.data[0].id
 
   // TODO: remove undefined
   const { data: queryBook, isSuccess } = selectBookByBookShelfIdQuery(bookShelfId as string)
@@ -34,7 +34,7 @@ export default function Header() {
   useEffect(() => {
     if (isSuccess) {
       setOptionTotal(
-        queryBook.data.data.map((item: Book) => ({
+        queryBook.data.map((item: Book) => ({
           label: item.name,
           value: item.name
         }))
@@ -115,7 +115,7 @@ export default function Header() {
 
         <AvatarItems
           setOpenFlag={setOpenFlag}
-          avatar={query.data?.data.data.avatar}
+          avatar={query.data?.data.avatar}
         />
 
         <ImportBook bookShelfId={bookShelfId} />

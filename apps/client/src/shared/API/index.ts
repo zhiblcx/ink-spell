@@ -1,3 +1,2 @@
-export * from './axios'
-export * from './HttpRequest'
-export * from './request'
+
+export { httpRequest, type ResponseData } from "@ink-spell/axios"

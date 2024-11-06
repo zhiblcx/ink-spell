@@ -1,7 +1,10 @@
 export interface operateBookShelfType {
   operate: string
-  bookShelfInfo: object
+  bookShelfInfo: {
+    [key: string]: string | undefined | boolean | number
+  }
   api: string
+
 }
 
 export interface BookShelfType {
@@ -14,6 +17,7 @@ export interface BookShelfType {
   isPublic: boolean
   description: string
   userId: number
+  [key: string]: string | number | Date | boolean | undefined
 }
 
 export interface BookShelfDao extends BookShelfType {

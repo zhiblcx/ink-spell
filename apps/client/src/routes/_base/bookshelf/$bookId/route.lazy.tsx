@@ -44,7 +44,7 @@ export function Page() {
 
   useEffect(() => {
     if (isSuccess) {
-      setBooks(queryBook.data?.data)
+      setBooks(queryBook.data)
       updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
       if (uploadFileFlag) {
         queryClient.invalidateQueries({ queryKey: [QueryKeys.BOOKSHELF_BOOK_KEY] })
@@ -55,7 +55,7 @@ export function Page() {
       updateShowShelfFlag(true)
       updateCancelFlag(true)
     }
-  }, [queryBook?.data?.data, uploadFileFlag])
+  }, [queryBook?.data, uploadFileFlag])
 
   useEffect(() => {
     if (deleteShelfFlag) {

@@ -1,7 +1,4 @@
-import iconDark from '@/assets/images/icon-dark.png'
-import iconLight from '@/assets/images/icon-light.png'
-import logoDark from '@/assets/images/logo-dark.png'
-import logoLight from '@/assets/images/logo-light.png'
+import { iconDarkImg, iconLightImg, logoDarkImg, logoLightImg } from '@/assets/images'
 import { selectMyBookShelfQuery } from '@/features/bookshelf'
 import Navigation from '@/shared/components/Navigation'
 import Sortable, { SortableItem } from '@/shared/components/Sortable'
@@ -43,7 +40,7 @@ function Sidebar() {
 
   useEffect(() => {
     if (isSuccess) {
-      setBookShelfMenu(query?.data.data)
+      setBookShelfMenu(query?.data)
     }
   }, [query])
 
@@ -52,12 +49,12 @@ function Sidebar() {
       <>
         {menu === Menu.EXTEND ? (
           <img
-            src={theme === Theme.DARK ? iconLight : iconDark}
+            src={theme === Theme.DARK ? iconLightImg : iconDarkImg}
             className="w-[52px] scale-75"
           />
         ) : (
           <img
-            src={theme === Theme.DARK ? logoLight : logoDark}
+            src={theme === Theme.DARK ? logoLightImg : logoDarkImg}
             className="mt-3 w-[200px]"
           />
         )}
@@ -67,7 +64,10 @@ function Sidebar() {
 
   return (
     <div
-      className={clsx('mr-2 p-2 transition-all', menu === Menu.EXTEND ? 'min-[375px]:w-0 md:w-[60px]' : 'w-[220px]')}
+      className={clsx(
+        'mr-2 p-2 transition-all',
+        menu === Menu.EXTEND ? 'min-[375px]:w-0 md:w-[60px]' : 'w-[220px]'
+      )}
     >
       <Icon />
       <div className="scroll h-full min-[375px]:overflow-y-auto md:overflow-y-hidden md:hover:overflow-y-auto">
@@ -84,7 +84,10 @@ function Sidebar() {
         </ul>
 
         <div
-          className={clsx(menu == Menu.EXTEND ? 'hidden' : '', 'relative mb-1 flex w-[220px] items-center px-3 py-2')}
+          className={clsx(
+            menu == Menu.EXTEND ? 'hidden' : '',
+            'relative mb-1 flex w-[220px] items-center px-3 py-2'
+          )}
         >
           <div className="text-lg font-bold">{t('COMMON:my_bookshelf')}</div>
           <div
@@ -108,23 +111,24 @@ function Sidebar() {
                 setOriginItems={setBookShelfMenu}
               >
                 <ul className="mb-6 mt-2 space-y-2 overflow-hidden whitespace-nowrap transition-all">
-                  {bookShelfMenu.map((menu: { id: number; label: string; allFlag: boolean; position: number }) =>
-                    !menu.allFlag ? (
-                      <SortableItem
-                        item={menu}
-                        id={menu.id}
-                        key={menu.id}
-                        MoveItem={(props) => (
-                          <Navigation
-                            value={menu.label}
-                            label={`/bookshelf/${UrlUtils.encodeUrlById(menu.id.toString())}`}
-                            Icon={BookHeart}
-                            Move={Move}
-                            move={props.move}
-                          />
-                        )}
-                      ></SortableItem>
-                    ) : null
+                  {bookShelfMenu.map(
+                    (menu: { id: number; label: string; allFlag: boolean; position: number }) =>
+                      !menu.allFlag ? (
+                        <SortableItem
+                          item={menu}
+                          id={menu.id}
+                          key={menu.id}
+                          MoveItem={(props) => (
+                            <Navigation
+                              value={menu.label}
+                              label={`/bookshelf/${UrlUtils.encodeUrlById(menu.id.toString())}`}
+                              Icon={BookHeart}
+                              Move={Move}
+                              move={props.move}
+                            />
+                          )}
+                        ></SortableItem>
+                      ) : null
                   )}
                 </ul>
               </Sortable>

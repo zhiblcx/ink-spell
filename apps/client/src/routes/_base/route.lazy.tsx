@@ -1,7 +1,4 @@
-import Content from '@/features/layouts/BaseLayout/Content'
-import Footer from '@/features/layouts/BaseLayout/Footer'
-import Header from '@/features/layouts/BaseLayout/Header'
-import Sidebar from '@/features/layouts/BaseLayout/Sidebar'
+import { Content, Footer, Header, Sidebar } from '@/features/layouts/BaseLayout'
 
 export const Route = createLazyFileRoute('/_base')({
   component: () => (

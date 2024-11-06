@@ -57,7 +57,7 @@ export default function ChatRoom() {
     const result = data.map((item: MessageType) => {
       if (item.type === MessageEnum.MESSAGE) {
         item.type =
-          item.userId === query?.data.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
+          item.userId === query?.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
       }
       return item
     })
@@ -75,11 +75,11 @@ export default function ChatRoom() {
     if (isSuccess && !reconnect) {
       reconnect = true
       socket.open()
-      socket.emit('join', { name: query?.data.data.username, id: query?.data.data.id })
+      socket.emit('join', { name: query?.data.username, id: query?.data.id })
 
       socket.on('join', (data) => {
         setConnect(true)
-        if (query?.data.data.id !== data.userId) {
+        if (query?.data.id !== data.userId) {
           handleNewMessage(data)
         }
         socket.emit('getMessages')
@@ -109,14 +109,14 @@ export default function ChatRoom() {
 
   // 离开房间
   const leaveRoom = () => {
-    socket.emit('leave', { name: query?.data.data.username, id: query?.data.data.id })
+    socket.emit('leave', { name: query?.data.username, id: query?.data.id })
     socket.close()
   }
 
   // 处理新消息
   const handleNewMessage = (data: MessageType) => {
     data.type =
-      data.userId === query?.data.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
+      data.userId === query?.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
     if (chatContent.current) {
       const container = chatContent.current as HTMLElement
       if (
@@ -143,7 +143,7 @@ export default function ChatRoom() {
       message.error(t('PROMPT:no_blank_message'))
       return
     }
-    const newMessage = { message: messageValue, userId: query?.data.data.id }
+    const newMessage = { message: messageValue, userId: query?.data.id }
     socket.emit('newMessage', newMessage)
     setMessageValue('')
     handlerDisableButton()
