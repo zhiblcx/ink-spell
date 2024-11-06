@@ -5,13 +5,20 @@ import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { AnimatePresence } from 'framer-motion'
 
 interface SidebarActiveType {
+  bookId: number
   bookName: string
   currentChapter: number
   allChapter: Array<string>
   bookMark: Array<number>
 }
 
-function Sidebar({ bookName, currentChapter, allChapter = [], bookMark = [] }: SidebarActiveType) {
+function Sidebar({
+  bookId,
+  bookName,
+  currentChapter,
+  allChapter = [],
+  bookMark = []
+}: SidebarActiveType) {
   const router = useRouter()
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const { showDirectoryFlag } = useActionBookStore()
@@ -33,15 +40,14 @@ function Sidebar({ bookName, currentChapter, allChapter = [], bookMark = [] }: S
     const match = url.match(reg)
     if (match) {
       const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
-      // 如果一本书都没存
       try {
+        // 如果一本书都没存
         if (localBooks.length === 0) {
-          const localBook = new Map()
-          localBook.set(match[0], {
+          BookUtils.createBookById(parseInt(match[0]), {
             currentChapter: currentChapter + 1,
-            allChapter: allChapter.length
+            allChapter: allChapter.length,
+            page: null
           })
-          BookUtils.setBooks(JSON.stringify(Array.from(localBook)))
         } else {
           // 存了书
           const lastChapterIndex = localBooks.findIndex(
@@ -49,17 +55,16 @@ function Sidebar({ bookName, currentChapter, allChapter = [], bookMark = [] }: S
           )
           if (lastChapterIndex >= 0) {
             // 存了当前阅读的书
-            localBooks[lastChapterIndex][1].currentChapter = currentChapter + 1
-            BookUtils.setBooks(JSON.stringify(localBooks))
+            BookUtils.updateBooksById(lastChapterIndex, {
+              currentChapter: (currentChapter + 1).toString()
+            })
           } else {
             // 没存当前阅读的书
-            const localBook = new Map()
-            localBook.set(match[0], {
+            BookUtils.createBookById(parseInt(match[0]), {
               currentChapter: currentChapter + 1,
-              allChapter: allChapter.length
+              allChapter: allChapter.length,
+              page: null
             })
-            localBooks.push(...Array.from(localBook))
-            BookUtils.setBooks(JSON.stringify(localBooks))
           }
         }
       } catch (_) {
@@ -74,6 +79,7 @@ function Sidebar({ bookName, currentChapter, allChapter = [], bookMark = [] }: S
         <>
           {showDirectoryFlag && (
             <BookDirectory
+              bookId={bookId}
               bookMark={bookMark}
               bookName={bookName}
               currentChapter={currentChapter}
@@ -84,6 +90,7 @@ function Sidebar({ bookName, currentChapter, allChapter = [], bookMark = [] }: S
       ) : (
         showDirectoryFlag && (
           <BookDirectory
+            bookId={bookId}
             bookMark={bookMark}
             bookName={bookName}
             currentChapter={currentChapter}

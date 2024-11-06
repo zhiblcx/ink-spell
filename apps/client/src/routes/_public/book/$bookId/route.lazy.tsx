@@ -36,6 +36,7 @@ function Page() {
           className="flex h-screen w-screen overflow-hidden bg-white dark:bg-[#1f1f1f] dark:text-[#929493]"
         >
           <Sidebar
+            bookId={bookID}
             bookMark={bookMark?.data.bookmark}
             bookName={query?.data.bookName}
             allChapter={query?.data.chapter}

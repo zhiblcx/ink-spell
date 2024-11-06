@@ -52,6 +52,59 @@ export class BookUtils {
   }
 
   /**
+    * @example
+    * ```ts
+    *  BookUtils.createBookById(bookId,{ currentChapter, allChapter, page })
+    * ```
+    */
+  static createBookById(bookId: number,
+    { currentChapter, allChapter, page }:
+      { currentChapter: number, allChapter: number, page?: string | null }) {
+    const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
+
+    const localBook = new Map()
+    localBook.set(bookId, {
+      currentChapter: currentChapter + 1,
+      allChapter: allChapter,
+      page: page === undefined ? page : null
+    })
+
+    localBooks.push(...Array.from(localBook))
+    BookUtils.setBooks(JSON.stringify(localBooks))
+  }
+
+  /**
+   * @example
+   * ```ts
+   *  BookUtils.updateBooksById(bookId,{ currentChapter, allChapter, page})
+   * ```
+   */
+  static updateBooksById(bookId: number,
+    { currentChapter, allChapter, page }:
+      { currentChapter?: string, allChapter?: string, page?: string | null }) {
+    const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
+    const localBookIndex = localBooks.findIndex(
+      (item: Array<string>) => parseInt(item[0]) == bookId
+    )
+
+    if (localBookIndex != -1) {
+      if (currentChapter != undefined) {
+        localBooks[localBookIndex][1]['currentChapter'] = currentChapter
+      }
+
+      if (allChapter != undefined) {
+        localBooks[localBookIndex][1]['allChapter'] = allChapter
+      }
+
+      if (page !== undefined) {
+        localBooks[localBookIndex][1]['page'] = page
+      }
+
+      BookUtils.setBooks(JSON.stringify(localBooks))
+    }
+  }
+
+  /**
    * @example
    * ```ts
    * BookUtils.setSetup(JSON.stringify(Array.from(map)))

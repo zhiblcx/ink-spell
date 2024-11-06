@@ -21,6 +21,7 @@ interface SearchType {
 }
 
 interface ChapterLinkProps {
+  bookId: number
   content: string
   chapter: number
   chapterFlag: boolean
@@ -29,6 +30,7 @@ interface ChapterLinkProps {
 }
 
 function ChapterLink({
+  bookId,
   noContentText = '没有了',
   content,
   chapter,
@@ -50,6 +52,7 @@ function ChapterLink({
               replace: true
             })
             scrollToHeight()
+            BookUtils.updateBooksById(bookId, { page: null })
           }}
         >
           {content}
@@ -59,7 +62,7 @@ function ChapterLink({
   )
 }
 
-function Content({
+export default function Content({
   bookId,
   bookMark,
   currentContent = [],
@@ -74,6 +77,7 @@ function Content({
   const { chapter } = location.search as SearchType
   const encodeChapter = parseInt(UrlUtils.decodeUrlById(chapter.toString()))
   const { setup } = useSetUpStore()
+  const timerId = useRef<NodeJS.Timeout | null>(null)
   const bookTitle = {
     catalog: t('COMMON:catalog'),
     previous: t('COMMON:previous_chapter'),
@@ -87,21 +91,20 @@ function Content({
   })
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      // 当前的进度 = 距离上方的区域 / 可视区域 ( scrollTop  / offsetHeight ) 去尾
+    timerId.current = setInterval(() => {
       const page = Math.floor(
         Number(ref.current && (ref.current as HTMLElement).scrollTop) /
           Number(ref.current && (ref.current as HTMLElement).offsetHeight)
       )
-      const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
-      const localBookIndex = localBooks.findIndex(
-        (item: Array<string>) => parseInt(item[0]) === bookId
-      )
-      localBooks[localBookIndex][1]['page'] = page
-      BookUtils.setBooks(JSON.stringify(localBooks))
-    }, 8000)
-    return () => clearInterval(timer)
-  })
+      BookUtils.updateBooksById(bookId, { page: page === 0 ? null : page.toString() })
+    }, 3000)
+
+    return () => {
+      if (timerId.current) {
+        clearInterval(timerId.current)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     if (ref !== null && ref.current != null) {
@@ -117,7 +120,7 @@ function Content({
         scrollTo(-Infinity)
       }
     }
-  }, [currentContent])
+  }, [currentChapter])
 
   return (
     <motion.div
@@ -152,12 +155,12 @@ function Content({
       <ul className="my-5 flex justify-around text-xl font-bold">
         <li>
           <ChapterLink
+            bookId={bookId}
+            noContentText={t('no_more_chapters')}
             content={bookTitle.previous}
             chapter={encodeChapter - 1}
             chapterFlag={encodeChapter == 1}
-            scrollToHeight={() => {
-              scrollTo(-Infinity)
-            }}
+            scrollToHeight={() => scrollTo(-Infinity)}
           />
         </li>
         <li
@@ -170,12 +173,12 @@ function Content({
         </li>
         <li>
           <ChapterLink
+            bookId={bookId}
+            noContentText={t('no_more_chapters')}
             content={bookTitle.next}
             chapter={encodeChapter + 1}
             chapterFlag={encodeChapter == allChapterTotal}
-            scrollToHeight={() => {
-              scrollTo(-Infinity)
-            }}
+            scrollToHeight={() => scrollTo(-Infinity)}
           />
         </li>
       </ul>
@@ -189,5 +192,3 @@ function Content({
     </motion.div>
   )
 }
-
-export default Content

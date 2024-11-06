@@ -1,6 +1,7 @@
 import { DirectoryMode } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { useSetUpStore } from '@/shared/store/SetupStore'
+import { BookUtils } from '@/shared/utils'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
@@ -8,6 +9,7 @@ import useSmoothScroll from 'react-smooth-scroll-hook'
 import { DirectoryButtons } from './DirectoryButtons'
 
 interface SidebarActiveType {
+  bookId: number
   bookMark: Array<number>
   bookName: string
   currentChapter: number
@@ -16,6 +18,7 @@ interface SidebarActiveType {
 }
 
 export default function BookDirectory({
+  bookId,
   bookMark,
   bookName,
   currentChapter,
@@ -90,6 +93,7 @@ export default function BookDirectory({
                     search: { chapter: UrlUtils.encodeUrlById((index + 1).toString()) },
                     replace: true
                   })
+                  BookUtils.updateBooksById(bookId, { page: null })
                 }}
               >
                 {item}
@@ -114,6 +118,8 @@ export default function BookDirectory({
                       search: { chapter: UrlUtils.encodeUrlById(item[1].toString()) },
                       replace: true
                     })
+                    console.log('点击了')
+                    BookUtils.updateBooksById(bookId, { page: null })
                   }}
                 >
                   {item[0]}
