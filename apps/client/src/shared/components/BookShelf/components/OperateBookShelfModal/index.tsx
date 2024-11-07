@@ -1,9 +1,9 @@
 import { operateBookShelfMutation, updateBookShelfDetailMutation } from '@/features/bookshelf'
 import { QueryKeys } from '@/shared/enums'
-import { EditBookShelfOpenFlag } from '@/shared/enums/EditBookShelfOpenFlag'
 import { useActionBookStore } from '@/shared/store'
 import { BookShelfType } from '@/shared/types'
 import { RadioChangeEvent } from 'antd'
+import { UploadFile } from 'antd/lib'
 import { useTranslation } from 'react-i18next'
 import { OperateBookShelfModalProps } from './props'
 
@@ -16,10 +16,6 @@ export function OperateBookShelfModal({
   books,
   setBooks,
   currentBookShelf,
-  editBookShelfOpenFlag,
-  setEditBookShelfOpenFlag,
-  cover,
-  setCover,
   selectBookShelfValue,
   setSelectBookShelfValue,
   selectOptions
@@ -27,9 +23,15 @@ export function OperateBookShelfModal({
   const { t } = useTranslation(['COMMON', 'PROMPT', 'VALIDATION'])
   const { TextArea } = Input
   const [form] = Form.useForm()
-  const { bookToBookShelfFlag, updateBookToBookShelfFlag, updateModifyBookShelfFlag } =
-    useActionBookStore()
+  const {
+    bookToBookShelfFlag,
+    modifyBookShelfFlag,
+    updateBookToBookShelfFlag,
+    updateModifyBookShelfFlag
+  } = useActionBookStore()
   const [value, setValue] = useState(true)
+  const [editBookShelfOpenFlag, setEditBookShelfOpenFlag] = useState(false)
+  const [cover, setCover] = useState<UploadFile[]>([])
 
   const handleChange = (value: string) => {
     setSelectBookShelfValue(value)
@@ -96,40 +98,48 @@ export function OperateBookShelfModal({
     }
   }
 
-  // TODO: 添加书架与编辑书架有问题
-  // useEffect(() => {
-  //   // bookToBookShelfFlag 为 true 添加到其他书架
-  //   if (bookToBookShelfFlag) {
-  //     form.setFieldsValue({
-  //       bookShelfId: selectOptions[0],
-  //       bookShelfName: '',
-  //       bookShelfDescription: '',
-  //       status: true
-  //     })
-  //   } else {
-  //     // bookToBookShelfFlag 为 false 编辑该书架
-  //     if (currentBookShelf !== undefined) {
-  //       form.setFieldsValue({
-  //         bookShelfName: currentBookShelf.label,
-  //         bookShelfDescription: currentBookShelf.description,
-  //         status: currentBookShelf.isPublic
-  //       })
-  //     }
-  //   }
-  // }, [bookToBookShelfFlag, currentBookShelf])
+  useEffect(() => {
+    if (bookToBookShelfFlag || modifyBookShelfFlag) {
+      // 修改
+      if (modifyBookShelfFlag) {
+        setCover([
+          {
+            uid: currentBookShelf.id.toString(),
+            name: currentBookShelf.label,
+            status: 'done',
+            url: import.meta.env.VITE_SERVER_URL + currentBookShelf.cover
+          }
+        ])
+        form.setFieldsValue({
+          id: currentBookShelf.id,
+          bookShelfName: currentBookShelf.label,
+          status: currentBookShelf.isPublic,
+          bookShelfDescription: currentBookShelf.description ?? t('COMMON:no_description')
+        })
+      } else {
+        // 新增
+        setSelectBookShelfValue(selectOptions[0].value)
+        form.setFieldsValue({
+          bookShelfId: selectOptions[0].value,
+          status: false,
+          bookShelfName: '',
+          bookShelfDescription: ''
+        })
+        setCover([])
+      }
+      setEditBookShelfOpenFlag(true)
+    }
+  }, [bookToBookShelfFlag, modifyBookShelfFlag])
 
   return (
     <Modal
       title={bookToBookShelfFlag ? t('COMMON:add_to_bookshelf') : t('COMMON:edit_bookshelf_info')}
-      open={editBookShelfOpenFlag === EditBookShelfOpenFlag.INCREASE}
+      open={editBookShelfOpenFlag}
       onOk={() => {
         form.submit()
-        setEditBookShelfOpenFlag(EditBookShelfOpenFlag.MODIFY)
-        updateBookToBookShelfFlag(false)
-        updateModifyBookShelfFlag(false)
       }}
       onCancel={() => {
-        setEditBookShelfOpenFlag(EditBookShelfOpenFlag.MODIFY)
+        setEditBookShelfOpenFlag(false)
       }}
       afterClose={() => {
         updateBookToBookShelfFlag(false)

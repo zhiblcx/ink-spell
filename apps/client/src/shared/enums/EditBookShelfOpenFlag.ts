@@ -1,4 +1,4 @@
-export enum EditBookShelfOpenFlag {
+export enum EditBookShelfOpenEnums {
   INCREASE = 'increase',
   MODIFY = 'modify'
 }
