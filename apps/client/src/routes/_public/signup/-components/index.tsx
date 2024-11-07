@@ -1,6 +1,5 @@
 import { loginDarkImg, loginLightImg, logoLightImg } from '@/assets/images'
 import { signupMutation, SignupValue } from '@/features/auth'
-import EmailInput from '@/shared/components/EmailInput'
 import { APP_NAME } from '@/shared/constants/app'
 import { Theme } from '@/shared/enums'
 import { useThemeStore } from '@/shared/store'

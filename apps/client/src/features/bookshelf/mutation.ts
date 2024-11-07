@@ -18,18 +18,17 @@ export const deleteBookShelfMutation = (deleteId: string, queryClient: () => Pro
   })
 }
 
-export const updateBookShelfPositionMutation = (showMessage: (data: AxiosResponse) => void) => {
-  return useMutation({
+export const updateBookShelfPositionMutation = (showMessage: (data: AxiosResponse) => void) =>
+  useMutation({
     mutationFn: (data: BookShelfDao) => httpRequest.put<AxiosResponse>(`bookshelf/${data.id}`, data, { expectData: true }),
     onSuccess: (data: AxiosResponse) => {
       showMessage(data)
     },
     onError: handleAxiosError
   })
-}
 
-export const updateBookShelfDetailMutation = (queryClient: () => Promise<void>) => {
-  return useMutation({
+export const updateBookShelfDetailMutation = (queryClient: () => Promise<void>) =>
+  useMutation({
     mutationFn: (bookShelfData: BookShelfType) => httpRequest.put(`/bookshelf/${bookShelfData.id}`, bookShelfData),
     onSuccess: async (data) => {
       message.success(data.message)
@@ -37,19 +36,21 @@ export const updateBookShelfDetailMutation = (queryClient: () => Promise<void>) 
     },
     onError: handleAxiosError
   })
-}
 
 // 添加书架或者给书架添加书籍
 export const operateBookShelfMutation = (
   handlerUpdateBookShelf: (id: number) => void,
   bookShelfQueryClient: () => Promise<void>,
   bookShelfBookQueryClient: () => Promise<void>
-) => {
-  return useMutation({
+) =>
+  useMutation({
     mutationFn: (result: operateBookShelfType) => {
+      console.log(result)
       if (result.operate === 'add') {
+        console.log(result.bookShelfInfo, "add")
         return httpRequest.post(result.api, result.bookShelfInfo)
       } else {
+        console.log(result.bookShelfInfo, 'update')
         return httpRequest.put(result.api, result.bookShelfInfo)
       }
     },
@@ -70,10 +71,9 @@ export const operateBookShelfMutation = (
     },
     onError: handleAxiosError
   })
-}
 
-export const cancelCollectBookShelfMutation = (queryClient: () => Promise<void>) => {
-  return useMutation({
+export const cancelCollectBookShelfMutation = (queryClient: () => Promise<void>) =>
+  useMutation({
     mutationFn: (bookShelfId: number) => httpRequest.delete(`/collect/bookshelf/${bookShelfId}`),
     onSuccess: async (data) => {
       message.success(data.message)
@@ -81,10 +81,9 @@ export const cancelCollectBookShelfMutation = (queryClient: () => Promise<void>)
     },
     onError: handleAxiosError
   })
-}
 
-export const collectBookShelfMutation = (queryClient: () => Promise<void>) => {
-  return useMutation({
+export const collectBookShelfMutation = (queryClient: () => Promise<void>) =>
+  useMutation({
     mutationFn: (bookShelfId: number) => httpRequest.post(`/collect/bookshelf/${bookShelfId}`),
     onSuccess: async (data) => {
       message.success(data.message)
@@ -92,10 +91,9 @@ export const collectBookShelfMutation = (queryClient: () => Promise<void>) => {
     },
     onError: handleAxiosError
   })
-}
 
-export const downloadBookShelfNotesMutation = () => {
-  return useMutation({
+export const downloadBookShelfNotesMutation = () =>
+  useMutation({
     mutationFn: (bookShelfId: number) => httpRequest.get<AxiosResponse>(`/bookshelf/download/${bookShelfId}`, {}, { expectData: true }),
     onSuccess: (data) => {
       const fileName = data.headers['content-disposition'].split('"')[1]
@@ -108,4 +106,3 @@ export const downloadBookShelfNotesMutation = () => {
       window.URL.revokeObjectURL(url)
     }
   })
-}

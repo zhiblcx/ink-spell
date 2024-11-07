@@ -2,7 +2,6 @@ import {
   cancelCollectBookShelfMutation,
   selectUserCollectBookShelfQuery
 } from '@/features/bookshelf'
-import { BookShelfDetail, EmptyPage } from '@/shared/components'
 import { QueryKeys } from '@/shared/enums'
 import { BookShelfType } from '@/shared/types'
 import { useTranslation } from 'react-i18next'

@@ -1,4 +1,3 @@
-import BookContentSetUp from '@/shared/components/BookContentSetUp'
 import { useActionBookStore } from '@/shared/store'
 import { useSetUpStore } from '@/shared/store/SetupStore'
 import { BookUtils } from '@/shared/utils'

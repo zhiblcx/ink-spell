@@ -1,6 +1,6 @@
 import './index.scss'
 
-function GlobalPending() {
+export function GlobalPending() {
   return (
     <div className="flex h-screen w-screen items-center justify-center dark:bg-black">
       <div className="ghost">
@@ -32,5 +32,3 @@ function GlobalPending() {
     </div>
   )
 }
-
-export default GlobalPending

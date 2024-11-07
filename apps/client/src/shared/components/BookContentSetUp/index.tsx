@@ -12,7 +12,7 @@ interface BookContentSetUpType {
   allChapterTotal: number
 }
 
-export default function BookContentSetUp({
+export function BookContentSetUp({
   bookId,
   bookMark,
   encodeChapter,

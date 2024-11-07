@@ -1,6 +1,5 @@
 import { selectMyBookShelfQuery } from '@/features/bookshelf'
 import { selectOneselfInfoQuery } from '@/features/user'
-import { EmptyPage } from '@/shared/components'
 import { ALL_BOOK } from '@/shared/constants'
 import { AllSelectBookFlag, EditBookShelfOpenFlag } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
@@ -15,7 +14,7 @@ interface BookShelfPropsType {
   setBooks: React.Dispatch<React.SetStateAction<Ink[]>>
 }
 
-export default function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
+export function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) {
   const {
     allSelectBookFlag,
     bookToBookShelfFlag,

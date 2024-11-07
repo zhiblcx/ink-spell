@@ -5,7 +5,7 @@ import { MailOutlined } from '@ant-design/icons'
 import { FormInstance, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 
-export default function EmailInput({ form, email }: { form: FormInstance<SignupValue>; email?: string }) {
+export function EmailInput({ form, email }: { form: FormInstance<SignupValue>; email?: string }) {
   const { t } = useTranslation(['COMMON', 'PROMPT', 'VALIDATION'])
   const [sendVerificationCode, setSendVerificationCode] = useState(t('COMMON:send'))
   const { mutate: emailMutate } = sendRegisterEmailMutation()

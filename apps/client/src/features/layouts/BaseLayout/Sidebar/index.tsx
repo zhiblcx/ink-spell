@@ -1,7 +1,5 @@
 import { iconDarkImg, iconLightImg, logoDarkImg, logoLightImg } from '@/assets/images'
 import { selectMyBookShelfQuery } from '@/features/bookshelf'
-import Navigation from '@/shared/components/Navigation'
-import Sortable, { SortableItem } from '@/shared/components/Sortable'
 import { ALL_BOOK, CHAR_ROOM, MY_FRIEND } from '@/shared/constants'
 import { Menu, Theme } from '@/shared/enums'
 import { useMenuStore, useThemeStore } from '@/shared/store'

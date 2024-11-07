@@ -1,5 +1,3 @@
-import LanguageSelect from '@/shared/components/LanguageSelect'
-import ThemeToggle from '@/shared/components/ThemeToggle'
 import type { DropDownProps, MenuProps } from 'antd'
 import { Settings } from 'lucide-react'
 import { useTranslation } from 'react-i18next'

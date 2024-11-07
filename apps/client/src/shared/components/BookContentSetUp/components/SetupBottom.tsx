@@ -3,7 +3,6 @@ import { QueryKeys, Theme } from '@/shared/enums'
 import { useActionBookStore, useThemeStore } from '@/shared/store'
 import { BookmarkMinus, BookmarkPlus, List, LucideProps, Settings } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import ThemeToggle from '../../ThemeToggle'
 import { ClickSetupEnum } from '../enums/ClickSetupEnum'
 
 interface IconProps {

@@ -1,4 +1,5 @@
 import { antdResolver, tanstackQueryResolver, tanstackRouterResolver } from '@silver-wolf/auto-import'
+import { clientComponentResolver } from '@ink-spell/resolvers'
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
@@ -26,7 +27,7 @@ export default defineConfig(({ mode }) => {
       TanStackRouterVite(),
       AutoImport({
         imports: ['react'],
-        resolvers: [antdResolver(), tanstackQueryResolver(), tanstackRouterResolver()],
+        resolvers: [antdResolver(), tanstackQueryResolver(), tanstackRouterResolver(), clientComponentResolver()],
         dts: '@types/auto-imports.d.ts',
         eslintrc: {
           enabled: true

@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+ "target": "ES2016",
+  "module": "ESNext",
+  "moduleResolution": "Node",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "jsx": "react",
+    "lib": ["dom", "esnext"],
+  },
+  "include": ["src", "tsup.config.ts"]
+}

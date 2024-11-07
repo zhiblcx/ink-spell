@@ -14,7 +14,7 @@ interface NavigationProps {
   move?: SyntheticListenerMap | undefined
 }
 
-function Navigation(props: NavigationProps) {
+export function Navigation(props: NavigationProps) {
   const { Icon, value, label, Move = false, move } = props
   const [moveFlag, setMoveFlag] = useState(false)
 
@@ -61,5 +61,3 @@ function Navigation(props: NavigationProps) {
     </Link>
   )
 }
-
-export default Navigation

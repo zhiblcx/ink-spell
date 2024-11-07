@@ -1,6 +1,5 @@
 import { deleteBookShelfMutation } from '@/features/bookshelf'
 import { selectBookByBookShelfIdQuery } from '@/features/bookshelf/query'
-import BookShelf from '@/shared/components/BookShelf'
 import { AllSelectBookFlag, QueryKeys } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'

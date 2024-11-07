@@ -17,7 +17,7 @@ interface SidebarActiveType {
   showDirectoryFlag?: boolean
 }
 
-export default function BookDirectory({
+export function BookDirectory({
   bookId,
   bookMark,
   bookName,

@@ -1,6 +1,4 @@
 import { selectOneselfInfoQuery, updateUserInfoMutation } from '@/features/user'
-import EmailInput from '@/shared/components/EmailInput'
-import UploadPhoto from '@/shared/components/UploadPhoto'
 import { QueryKeys } from '@/shared/enums'
 import { VerifiedOutlined } from '@ant-design/icons'
 import { type UploadFile, Input } from 'antd'

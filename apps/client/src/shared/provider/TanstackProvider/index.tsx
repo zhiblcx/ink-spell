@@ -1,7 +1,5 @@
 import NotFound from '@/routes/404/route.lazy.tsx'
 import { routeTree } from '@/routeTree.gen'
-import ErrorPage from '@/shared/components/ErrorPage'
-import GlobalPending from '@/shared/components/GlobalPending'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 
 const router = createRouter({

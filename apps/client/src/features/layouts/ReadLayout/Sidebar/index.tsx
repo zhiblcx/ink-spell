@@ -1,4 +1,3 @@
-import BookDirectory from '@/shared/components/BookDirectory'
 import { useActionBookStore } from '@/shared/store'
 import { BookUtils } from '@/shared/utils'
 import { UrlUtils } from '@/shared/utils/UrlUtils'

@@ -5,7 +5,6 @@ import { useActionBookStore } from '@/shared/store'
 import { BookShelfType, Ink } from '@/shared/types'
 import { RadioChangeEvent, UploadFile } from 'antd'
 import { useTranslation } from 'react-i18next'
-import UploadPhoto from '../../UploadPhoto'
 
 interface formProps {
   bookShelfId: string

@@ -61,6 +61,19 @@
     "redirect": true,
     "useInfiniteQuery": true,
     "useQueryClient": true,
-    "createRootRoute": true
+    "createRootRoute": true,
+    "LanguageSelect": true,
+    "ThemeToggle": true,
+    "Navigation": true,
+    "Sortable": true,
+    "BookContentSetUp": true,
+    "BookDirectory": true,
+    "EmptyPage": true,
+    "PersonCard": true,
+    "BookShelf": true,
+    "ErrorPage": true,
+    "GlobalPending": true,
+    "EmailInput": true,
+    "UploadPhoto": true
   }
 }

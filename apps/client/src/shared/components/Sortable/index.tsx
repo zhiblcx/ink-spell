@@ -10,7 +10,12 @@ import {
   useSensors
 } from '@dnd-kit/core'
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers'
-import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy
+} from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { message } from 'antd'
 import lodash from 'lodash'
@@ -52,7 +57,7 @@ export function SortableItem({ item, MoveItem }: SortableItemProps) {
   )
 }
 
-function Sortable({ originItems, setOriginItems, children }: SortableProps) {
+export function Sortable({ originItems, setOriginItems, children }: SortableProps) {
   let sensors = useSensors()
   if (window.innerWidth >= 400) {
     sensors = useSensors(useSensor(PointerSensor))
@@ -108,5 +113,3 @@ function Sortable({ originItems, setOriginItems, children }: SortableProps) {
     }
   }
 }
-
-export default Sortable

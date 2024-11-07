@@ -11,7 +11,7 @@ interface UploadPhotoProps {
   api?: string
 }
 
-export default function UploadPhoto({
+export function UploadPhoto({
   fileName,
   setFileName,
   form,
@@ -31,7 +31,8 @@ export default function UploadPhoto({
     maxCount: 1,
     beforeUpload: async (file) => {
       return new Promise(async (resolve, reject) => {
-        const image = file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg'
+        const image =
+          file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg'
         if (!image) {
           reject()
         }

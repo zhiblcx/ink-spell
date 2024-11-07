@@ -1,0 +1,19 @@
+export const componentBuiltInApi = [
+  'BookContentSetUp',
+  'BookDirectory',
+  'BookShelf',
+  'BookShelfDetail',
+  'EmptyPage',
+  'EmailInput',
+  'ErrorPage',
+  'GlobalPending',
+  'InkCard',
+  'LanguageSelect',
+  'Navigation',
+  'PersonCard',
+  'Sortable',
+  'ThemeToggle',
+  'UploadBase64Photo',
+  'UploadPhoto',
+  'SortableItem'
+]

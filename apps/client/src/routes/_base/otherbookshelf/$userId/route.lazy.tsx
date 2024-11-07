@@ -4,7 +4,6 @@ import {
   selectUserCollectBookShelfByUserIdQuery,
   selectUserCollectBookShelfQuery
 } from '@/features/bookshelf'
-import { BookShelfDetail, EmptyPage } from '@/shared/components'
 import { QueryKeys } from '@/shared/enums'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useTranslation } from 'react-i18next'

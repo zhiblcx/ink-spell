@@ -1,5 +1,4 @@
 import { selectOneselfInfoQuery } from '@/features/user'
-import { EmptyPage, PersonCard } from '@/shared/components'
 import { CHAR_ROOM } from '@/shared/constants'
 import { Menu, MessageEnum } from '@/shared/enums'
 import { useMenuStore } from '@/shared/store'

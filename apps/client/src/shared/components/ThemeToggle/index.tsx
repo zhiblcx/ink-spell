@@ -2,7 +2,7 @@ import { Theme } from '@/shared/enums/Theme'
 import { useThemeStore } from '@/shared/store'
 import { MoonStar, Sun } from 'lucide-react'
 
-function ThemeToggle({ size = 24 }) {
+export function ThemeToggle({ size = 24 }) {
   const { theme, setTheme } = useThemeStore()
 
   // 如果当前页面是暗色，则切换为亮色；如果当前页面是亮色，则切换为暗色
@@ -42,5 +42,3 @@ function ThemeToggle({ size = 24 }) {
     </div>
   )
 }
-
-export default ThemeToggle
