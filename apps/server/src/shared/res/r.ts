@@ -6,7 +6,7 @@ export class R<T = any> {
   @ApiPropertyOptional({ description: '响应数据', type: () => Object })
   data?: T;
   @ApiPropertyOptional({ description: '响应码', example: '200' })
-  code?: 200;
+  code?: number;
 
   constructor(r?: R<T>) {
     if (r.message === undefined) {

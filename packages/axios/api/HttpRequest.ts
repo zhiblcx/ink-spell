@@ -53,16 +53,15 @@ export class HttpRequest {
       (res: AxiosResponse) => (!(res.config as CustomAxiosRequestConfig).expectData ? res.data : res),
       async (err) => {
         const { data, config } = err.response
-
         if (this.isRefreshing) {
           return new Promise((resolve) => {
             this.pendingQueue.push({ config, resolve })
           })
         }
-
         if (data.statusCode === 401 && !config.url.includes('refresh')) {
           this.isRefreshing = true
           const { code } = await this.refreshToken()
+          this.isRefreshing = false
           if (code === 200) {
             this.pendingQueue.forEach(({ config, resolve }) => {
               resolve(this.instance(config))
@@ -94,13 +93,15 @@ export class HttpRequest {
    * - 覆盖本地 token
    */
   async refreshToken() {
-    const res = await this.get(`/auth/refresh?refresh_token=${AuthUtils.getFreshToken}`)
-    const { access_token, refresh_token } = res.data as {
-      access_token: string
-      refresh_token: string
+    const res = await this.get(`/auth/refresh?refresh_token=${AuthUtils.getFreshToken()}`)
+    if (res.data != undefined) {
+      const { access_token, refresh_token } = res.data as {
+        access_token: string
+        refresh_token: string
+      }
+      AuthUtils.setAccessToken(access_token)
+      AuthUtils.setFreshToken(refresh_token)
     }
-    AuthUtils.setAccessToken(access_token)
-    AuthUtils.setFreshToken(refresh_token)
     return res
   }
 

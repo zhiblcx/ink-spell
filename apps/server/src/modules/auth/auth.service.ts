@@ -23,7 +23,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
     private readonly translation: TranslationService,
-  ) {}
+  ) { }
 
   async generateToken(payload: { userId: number; account: string }) {
     return {
@@ -45,7 +45,10 @@ export class AuthService {
         message: this.translation.t('prompt.refresh_successful'),
       });
     } catch (_) {
-      throw new UnauthorizedException(this.translation.t('auth.token_expired'));
+      return new R({
+        code: 401,
+        message: this.translation.t('auth.token_expired'),
+      });
     }
   }
 
