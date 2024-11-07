@@ -74,6 +74,7 @@
     "ErrorPage": true,
     "GlobalPending": true,
     "EmailInput": true,
-    "UploadPhoto": true
+    "UploadPhoto": true,
+    "SortableItem": true
   }
 }

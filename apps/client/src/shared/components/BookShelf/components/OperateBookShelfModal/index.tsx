@@ -2,29 +2,14 @@ import { operateBookShelfMutation, updateBookShelfDetailMutation } from '@/featu
 import { QueryKeys } from '@/shared/enums'
 import { EditBookShelfOpenFlag } from '@/shared/enums/EditBookShelfOpenFlag'
 import { useActionBookStore } from '@/shared/store'
-import { BookShelfType, Ink } from '@/shared/types'
-import { RadioChangeEvent, UploadFile } from 'antd'
+import { BookShelfType } from '@/shared/types'
+import { RadioChangeEvent } from 'antd'
 import { useTranslation } from 'react-i18next'
+import { OperateBookShelfModalProps } from './props'
 
 interface formProps {
   bookShelfId: string
   bookShelfName: string
-}
-
-interface OperateBookShelfModalProps {
-  books: Ink[]
-  setBooks: React.Dispatch<React.SetStateAction<Ink[]>>
-  currentBookShelf: BookShelfType
-  editBookShelfOpenFlag: EditBookShelfOpenFlag
-  setEditBookShelfOpenFlag: React.Dispatch<React.SetStateAction<EditBookShelfOpenFlag>>
-  cover: UploadFile<any>[]
-  setCover: React.Dispatch<React.SetStateAction<UploadFile<any>[]>>
-  selectBookShelfValue: string
-  setSelectBookShelfValue: React.Dispatch<React.SetStateAction<string>>
-  selectOptions: {
-    value: string
-    label: string
-  }[]
 }
 
 export function OperateBookShelfModal({
@@ -111,26 +96,27 @@ export function OperateBookShelfModal({
     }
   }
 
-  useEffect(() => {
-    // bookToBookShelfFlag 为 true 添加到其他书架
-    if (bookToBookShelfFlag) {
-      form.setFieldsValue({
-        bookShelfId: selectOptions[0],
-        bookShelfName: '',
-        bookShelfDescription: '',
-        status: true
-      })
-    } else {
-      // bookToBookShelfFlag 为 false 编辑该书架
-      if (currentBookShelf !== undefined) {
-        form.setFieldsValue({
-          bookShelfName: currentBookShelf.label,
-          bookShelfDescription: currentBookShelf.description,
-          status: currentBookShelf.isPublic
-        })
-      }
-    }
-  }, [bookToBookShelfFlag, currentBookShelf])
+  // TODO: 添加书架与编辑书架有问题
+  // useEffect(() => {
+  //   // bookToBookShelfFlag 为 true 添加到其他书架
+  //   if (bookToBookShelfFlag) {
+  //     form.setFieldsValue({
+  //       bookShelfId: selectOptions[0],
+  //       bookShelfName: '',
+  //       bookShelfDescription: '',
+  //       status: true
+  //     })
+  //   } else {
+  //     // bookToBookShelfFlag 为 false 编辑该书架
+  //     if (currentBookShelf !== undefined) {
+  //       form.setFieldsValue({
+  //         bookShelfName: currentBookShelf.label,
+  //         bookShelfDescription: currentBookShelf.description,
+  //         status: currentBookShelf.isPublic
+  //       })
+  //     }
+  //   }
+  // }, [bookToBookShelfFlag, currentBookShelf])
 
   return (
     <Modal

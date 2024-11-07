@@ -44,6 +44,7 @@ declare global {
   const Skeleton: typeof import('antd')['Skeleton']
   const Slider: typeof import('antd')['Slider']
   const Sortable: typeof import('@/shared/components')['Sortable']
+  const SortableItem: typeof import('@/shared/components')['SortableItem']
   const Tabs: typeof import('antd')['Tabs']
   const ThemeToggle: typeof import('@/shared/components')['ThemeToggle']
   const Tooltip: typeof import('antd')['Tooltip']

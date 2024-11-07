@@ -118,7 +118,6 @@ export function BookDirectory({
                       search: { chapter: UrlUtils.encodeUrlById(item[1].toString()) },
                       replace: true
                     })
-                    console.log('点击了')
                     BookUtils.updateBooksById(bookId, { page: null })
                   }}
                 >

@@ -152,7 +152,7 @@ export class HttpRequest {
     data?: Record<string, unknown>,
     config?: expectDataAxiosRequestConfig
   ): Promise<T> {
-    return this.instance.post(url, data, config)
+    return this.instance.put(url, data, config)
   }
 
   /**

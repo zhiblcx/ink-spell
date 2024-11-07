@@ -46,6 +46,7 @@ export const operateBookShelfMutation = (
   useMutation({
     mutationFn: (result: operateBookShelfType) => {
       console.log(result)
+
       if (result.operate === 'add') {
         console.log(result.bookShelfInfo, "add")
         return httpRequest.post(result.api, result.bookShelfInfo)
