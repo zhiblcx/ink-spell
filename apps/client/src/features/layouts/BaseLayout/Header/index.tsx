@@ -1,6 +1,5 @@
 import { selectBookByBookShelfIdQuery, selectMyBookShelfQuery } from '@/features/bookshelf'
 import { selectOneselfInfoQuery, updateUserPasswordMutation } from '@/features/user'
-import { Menu } from '@/shared/enums'
 import { useActionBookStore, useMenuStore } from '@/shared/store'
 import { Book } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils'
@@ -48,7 +47,7 @@ export default function Header() {
   function Icon(props: ReactNode) {
     return (
       <div onClick={props.onClick}>
-        {menu === Menu.EXTEND ? (
+        {menu === MenuEnum.EXTEND ? (
           <AlignLeft
             className="mr-2 cursor-pointer"
             size={30}
@@ -90,7 +89,7 @@ export default function Header() {
       <div className="flex items-center">
         <Icon
           onClick={() => {
-            setMenu(menu === Menu.EXTEND ? Menu.SHRINK : Menu.EXTEND)
+            setMenu(menu === MenuEnum.EXTEND ? MenuEnum.SHRINK : MenuEnum.EXTEND)
           }}
         />
         {showSearchReg.test(router.latestLocation.pathname) ? (

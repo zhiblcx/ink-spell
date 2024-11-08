@@ -1,5 +1,4 @@
 import { deleteBookMarkMutation, insertBookMarkMutation } from '@/features/book'
-import { QueryKeys, Theme } from '@/shared/enums'
 import { useActionBookStore, useThemeStore } from '@/shared/store'
 import { BookmarkMinus, BookmarkPlus, List, LucideProps, Settings } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -37,7 +36,7 @@ export function SetupBottom({
   const { theme } = useThemeStore()
   const queryClient = useQueryClient()
   const queryClientFunction = () =>
-    queryClient.invalidateQueries({ queryKey: [QueryKeys.BOOK_MARK_KEY] })
+    queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.BOOK_MARK_KEY] })
 
   const { mutate: collectBookMarkMutation } = insertBookMarkMutation(queryClientFunction)
   const { mutate: cancelCollectBookMarkMutation } = deleteBookMarkMutation(queryClientFunction)
@@ -68,7 +67,7 @@ export function SetupBottom({
       </li>
       <li className="flex cursor-pointer flex-col items-center space-y-1">
         <ThemeToggle size={28} />
-        <p>{theme === Theme.DARK ? t('COMMON:light_mode') : t('COMMON:dark_mode')} </p>
+        <p>{theme === ThemeEnum.DARK ? t('COMMON:light_mode') : t('COMMON:dark_mode')} </p>
       </li>
       <li
         className="flex cursor-pointer flex-col items-center space-y-1"

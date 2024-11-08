@@ -1,7 +1,6 @@
 import { selectMyBookShelfQuery } from '@/features/bookshelf'
 import { selectOneselfInfoQuery } from '@/features/user'
 import { ALL_BOOK } from '@/shared/constants'
-import { AllSelectBookFlag } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { BookShelfType, Ink } from '@/shared/types'
 import { useTranslation } from 'react-i18next'
@@ -31,14 +30,14 @@ export function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) 
   )[0]
 
   useEffect(() => {
-    if (allSelectBookFlag == AllSelectBookFlag.PARTIAL_SELECT_FLAG) {
+    if (allSelectBookFlag == AllSelectBookEnum.PARTIAL_SELECT_FLAG) {
       return
     }
-    if (allSelectBookFlag == AllSelectBookFlag.ALL_SELECT_FLAG) {
+    if (allSelectBookFlag == AllSelectBookEnum.ALL_SELECT_FLAG) {
       const currentBooks = Array.from(books)
       currentBooks.forEach((item: Ink) => (item.checked = false))
       setBooks(currentBooks)
-    } else if (allSelectBookFlag == AllSelectBookFlag.NOT_ALL_SELECT_FLAG) {
+    } else if (allSelectBookFlag == AllSelectBookEnum.NOT_ALL_SELECT_FLAG) {
       const currentBooks = Array.from(books)
       currentBooks.forEach((item: Ink) => (item.checked = true))
       setBooks(currentBooks)

@@ -1,6 +1,5 @@
 import { followUserByUserIdMutation, unfollowUserByFollowMutation } from '@/features/user'
 import { httpRequest } from '@/shared/API'
-import { PaginationParams } from '@/shared/enums/PaginationParams'
 import { User } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { message } from 'antd'
@@ -59,8 +58,8 @@ export default function MyFriend({
       )
       return {
         items: [],
-        page: PaginationParams.PAGE,
-        limit: PaginationParams.LIMIT
+        page: PaginationParamsEnum.PAGE,
+        limit: PaginationParamsEnum.LIMIT
       }
     }
   }
@@ -68,15 +67,15 @@ export default function MyFriend({
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPending } = useInfiniteQuery({
     queryKey: [type],
     queryFn: fetchProjects,
-    initialPageParam: { page: PaginationParams.PAGE, limit: PaginationParams.LIMIT },
+    initialPageParam: { page: PaginationParamsEnum.PAGE, limit: PaginationParamsEnum.LIMIT },
     getNextPageParam: (lastPage) => {
       if (
         (lastPage.items.length === 0 && lastPage.page === 1) ||
-        lastPage.items.length != PaginationParams.LIMIT
+        lastPage.items.length != PaginationParamsEnum.LIMIT
       ) {
         return undefined
       } else {
-        return { page: parseInt(lastPage.currentPage) + 1, limit: PaginationParams.LIMIT }
+        return { page: parseInt(lastPage.currentPage) + 1, limit: PaginationParamsEnum.LIMIT }
       }
     },
     select: (data) => ({

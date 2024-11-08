@@ -1,5 +1,4 @@
 import { selectOneselfInfoQuery, updateUserInfoMutation } from '@/features/user'
-import { QueryKeys } from '@/shared/enums'
 import { VerifiedOutlined } from '@ant-design/icons'
 import { type UploadFile, Input } from 'antd'
 import { useTranslation } from 'react-i18next'
@@ -15,7 +14,7 @@ export default function Profile() {
   const query = selectOneselfInfoQuery()
 
   const { mutate } = updateUserInfoMutation(
-    () => queryClient.invalidateQueries({ queryKey: [QueryKeys.USER_KEY] }),
+    () => queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.USER_KEY] }),
     setOpenFlag
   )
 

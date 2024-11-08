@@ -1,4 +1,4 @@
-export enum QueryKeys {
+export enum QueryKeysEnum {
   BOOK_KEY = 'book_key',
   BOOK_MARK_KEY = 'book_mark_key',
   BOOKSHELF_KEY = 'bookshelf_key',

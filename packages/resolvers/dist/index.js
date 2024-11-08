@@ -1,28 +1,2 @@
-'use strict'
-var e = [
-  'BookContentSetUp',
-  'BookDirectory',
-  'BookShelf',
-  'BookShelfDetail',
-  'EmptyPage',
-  'EmailInput',
-  'ErrorPage',
-  'GlobalPending',
-  'InkCard',
-  'LanguageSelect',
-  'Navigation',
-  'PersonCard',
-  'Sortable',
-  'ThemeToggle',
-  'UploadBase64Photo',
-  'UploadPhoto',
-  'SortableItem'
-]
-var n = () => ({
-  type: 'component',
-  resolve: (o) => {
-    if (e.includes(o)) return { from: '@/shared/components', name: o }
-  }
-})
-exports.clientComponentResolver = n //# sourceMappingURL=index.js.map
+'use strict';var o=["BookContentSetUp","BookDirectory","BookShelf","BookShelfDetail","EmptyPage","EmailInput","ErrorPage","GlobalPending","InkCard","LanguageSelect","Navigation","PersonCard","Sortable","ThemeToggle","UploadBase64Photo","UploadPhoto","SortableItem"];var m=()=>({type:"component",resolve:e=>{if(o.includes(e))return {from:"@/shared/components",name:e}}});var n=["AllSelectBookEnum","DirectoryModeEnum","EditBookShelfOpenFlagEnum","LanguageEnum","MenuEnum","MessageEnum","PaginationParamsEnum","QueryKeysEnum","ThemeEnum"];var l=()=>({type:"component",resolve:e=>{if(n.includes(e))return {from:"@/shared/enums",name:e}}});exports.clientComponentResolver=m;exports.clientEnumsResolver=l;//# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

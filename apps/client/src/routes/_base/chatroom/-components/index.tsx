@@ -1,6 +1,6 @@
 import { selectOneselfInfoQuery } from '@/features/user'
 import { CHAR_ROOM } from '@/shared/constants'
-import { Menu, MessageEnum } from '@/shared/enums'
+import { MenuEnum, MessageEnum } from '@/shared/enums'
 import { useMenuStore } from '@/shared/store'
 import { User } from '@/shared/types'
 import { VerticalAlignBottomOutlined } from '@ant-design/icons'
@@ -187,7 +187,7 @@ export default function ChatRoom() {
                 }}
                 className={clsx(
                   `scroll absolute mt-2 space-y-4 overflow-y-scroll ${styles.height}`,
-                  menu === Menu.EXTEND
+                  menu === MenuEnum.EXTEND
                     ? `min-[375px]:w-[92%] ${styles.width_extend} `
                     : `min-[375px]:min-w-[20%] ${styles.width_shrink}`
                 )}
@@ -268,7 +268,7 @@ export default function ChatRoom() {
               </ul>
               <div
                 className={clsx(
-                  menu === Menu.EXTEND ? '' : 'min-[375px]:hidden md:flex',
+                  menu === MenuEnum.EXTEND ? '' : 'min-[375px]:hidden md:flex',
                   'absolute bottom-8 flex items-center space-x-3 min-[375px]:min-w-[90%] md:min-w-[70%]'
                 )}
               >

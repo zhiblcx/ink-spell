@@ -4,7 +4,6 @@ import {
   selectUserCollectBookShelfByUserIdQuery,
   selectUserCollectBookShelfQuery
 } from '@/features/bookshelf'
-import { QueryKeys } from '@/shared/enums'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { useTranslation } from 'react-i18next'
 
@@ -34,12 +33,12 @@ export function Page() {
 
   // 收藏书架
   const { mutate: collectShelfMutate } = collectBookShelfMutation(() =>
-    queryClient.invalidateQueries({ queryKey: [QueryKeys.USER_COLLECT_KEY] })
+    queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.USER_COLLECT_KEY] })
   )
 
   // 取消收藏书架
   const { mutate: cancelCollectShelfMutate } = cancelCollectBookShelfMutation(() =>
-    queryClient.invalidateQueries({ queryKey: [QueryKeys.USER_COLLECT_KEY] })
+    queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.USER_COLLECT_KEY] })
   )
 
   return (

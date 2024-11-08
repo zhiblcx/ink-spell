@@ -1,5 +1,4 @@
 import { selectBookByBookShelfIdQuery, selectMyBookShelfQuery } from '@/features/bookshelf'
-import { AllSelectBookFlag, QueryKeys } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
 
@@ -21,9 +20,9 @@ export function Page() {
   const queryClient = useQueryClient()
   useEffect(() => {
     setBooks(queryBook?.data ?? [])
-    updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
+    updateAllSelectFlag(AllSelectBookEnum.PARTIAL_SELECT_FLAG)
     if (uploadFileFlag) {
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.BOOKSHELF_BOOK_KEY] })
+      queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.BOOKSHELF_BOOK_KEY] })
       updateUploadFileFlag(false)
     }
     updateIsOtherBookShelfFlag(false)

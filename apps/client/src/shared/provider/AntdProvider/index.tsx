@@ -1,4 +1,3 @@
-import { LanguageEnums, Theme } from '@/shared/enums'
 import { useLanguageStore } from '@/shared/store'
 import { useThemeStore } from '@/shared/store/ThemeStore'
 import { HappyProvider } from '@ant-design/happy-work-theme'
@@ -14,12 +13,12 @@ export default function AntdProvider(props: PropsWithChildren) {
   return (
     <ConfigProvider
       theme={{
-        algorithm: themeStore === Theme.DARK ? theme.darkAlgorithm : theme.defaultAlgorithm,
+        algorithm: themeStore === ThemeEnum.DARK ? theme.darkAlgorithm : theme.defaultAlgorithm,
         token: {
-          colorPrimary: themeStore === Theme.DARK ? '#4b4b4b' : '#4c5155'
+          colorPrimary: themeStore === ThemeEnum.DARK ? '#4b4b4b' : '#4c5155'
         }
       }}
-      locale={language === LanguageEnums.Chinese ? Chinese : English}
+      locale={language === LanguageEnum.Chinese ? Chinese : English}
     >
       <HappyProvider>{children}</HappyProvider>
     </ConfigProvider>

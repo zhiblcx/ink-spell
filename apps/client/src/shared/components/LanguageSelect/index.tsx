@@ -1,11 +1,10 @@
 import { LANGUAGE } from '@/shared/constants'
-import { LanguageEnums } from '@/shared/enums'
 import { useLanguageStore } from '@/shared/store'
 
 export function LanguageSelect() {
   const { language, setLanguage } = useLanguageStore()
-  const defaultLanguage = LANGUAGE.find((item) => item.value === language)?.label as LanguageEnums
-  const handleChange = (value: LanguageEnums) => {
+  const defaultLanguage = LANGUAGE.find((item) => item.value === language)?.label as LanguageEnum
+  const handleChange = (value: LanguageEnum) => {
     setLanguage(value)
   }
 

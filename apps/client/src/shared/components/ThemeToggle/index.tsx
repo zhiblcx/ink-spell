@@ -1,4 +1,3 @@
-import { Theme } from '@/shared/enums/Theme'
 import { useThemeStore } from '@/shared/store'
 import { MoonStar, Sun } from 'lucide-react'
 
@@ -6,10 +5,10 @@ export function ThemeToggle({ size = 24 }) {
   const { theme, setTheme } = useThemeStore()
 
   // 如果当前页面是暗色，则切换为亮色；如果当前页面是亮色，则切换为暗色
-  const willDark = theme === Theme.LIGHT
+  const willDark = theme === ThemeEnum.LIGHT
 
   function toggleTheme(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-    const currentTheme = theme === Theme.DARK ? Theme.LIGHT : Theme.DARK
+    const currentTheme = theme === ThemeEnum.DARK ? ThemeEnum.LIGHT : ThemeEnum.DARK
     if (!document.startViewTransition) {
       setTheme(currentTheme)
     } else {
@@ -38,7 +37,7 @@ export function ThemeToggle({ size = 24 }) {
 
   return (
     <div onClick={(event) => toggleTheme(event)}>
-      {theme === Theme.DARK ? <Sun size={size} /> : <MoonStar size={size} />}
+      {theme === ThemeEnum.DARK ? <Sun size={size} /> : <MoonStar size={size} />}
     </div>
   )
 }

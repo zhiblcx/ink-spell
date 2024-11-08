@@ -1,18 +1,17 @@
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
-
-import { Theme } from '@/shared/enums'
 import { ThemeUtils } from '@/shared/utils'
+import { ThemeEnum } from '@/shared/enums'
 
 type ThemeStore = {
-  theme: Theme
-  setTheme: (theme: Theme) => void
+  theme: ThemeEnum
+  setTheme: (theme: ThemeEnum) => void
 }
 
 export const useThemeStore = create<ThemeStore>()(
   subscribeWithSelector((set) => ({
-    theme: ThemeUtils.getTheme() as Theme,
-    setTheme: (theme: Theme) => {
+    theme: ThemeUtils.getTheme() as ThemeEnum,
+    setTheme: (theme: ThemeEnum) => {
       set({ theme })
       ThemeUtils.changeTheme(theme)
     }

@@ -1,4 +1,4 @@
-import { AllSelectBookFlag } from '@/shared/enums'
+import { AllSelectBookEnum } from '@/shared/enums'
 import { SetUp } from '@/shared/types'
 import { BookUtils } from '@/shared/utils'
 import { create } from 'zustand'
@@ -6,7 +6,7 @@ import { create } from 'zustand'
 type ActionBookStore = {
   bookToBookShelfFlag: boolean
   deleteBookFlag: boolean
-  allSelectBookFlag: AllSelectBookFlag
+  allSelectBookFlag: AllSelectBookEnum
   addShelfFlag: boolean
   cancelFlag: boolean
   showShelfFlag: boolean
@@ -19,7 +19,7 @@ type ActionBookStore = {
   showSetUpFlag: boolean
 
   updateDeleteBookFlag: (flag: boolean) => void
-  updateAllSelectFlag: (flag: AllSelectBookFlag) => void
+  updateAllSelectFlag: (flag: AllSelectBookEnum) => void
   updateAddShelfFlag: (flag: boolean) => void
   updateCancelFlag: (flag: boolean) => void
   updateShowShelfFlag: (flag: boolean) => void
@@ -35,7 +35,7 @@ type ActionBookStore = {
 
 export const useActionBookStore = create<ActionBookStore>()((set) => ({
   deleteBookFlag: false,
-  allSelectBookFlag: AllSelectBookFlag.NOT_ALL_SELECT_FLAG,
+  allSelectBookFlag: AllSelectBookEnum.NOT_ALL_SELECT_FLAG,
   addShelfFlag: false,
   cancelFlag: true,
   showShelfFlag: false,
@@ -52,7 +52,7 @@ export const useActionBookStore = create<ActionBookStore>()((set) => ({
     set({ deleteBookFlag: flag })
   },
 
-  updateAllSelectFlag: (flag: AllSelectBookFlag) => {
+  updateAllSelectFlag: (flag: AllSelectBookEnum) => {
     set({ allSelectBookFlag: flag })
   },
 

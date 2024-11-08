@@ -1,5 +1,4 @@
 import { operateBookShelfMutation, updateBookShelfDetailMutation } from '@/features/bookshelf'
-import { QueryKeys } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { BookShelfType } from '@/shared/types'
 import { RadioChangeEvent } from 'antd'
@@ -64,12 +63,12 @@ export function OperateBookShelfModal({
   const queryClient = useQueryClient()
   const { mutate: operateBookShelfMutate } = operateBookShelfMutation(
     handlerUpdateBookShelf,
-    () => queryClient.invalidateQueries({ queryKey: [QueryKeys.BOOKSHELF_KEY] }),
-    () => queryClient.invalidateQueries({ queryKey: [QueryKeys.BOOKSHELF_BOOK_KEY] })
+    () => queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.BOOKSHELF_KEY] }),
+    () => queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.BOOKSHELF_BOOK_KEY] })
   )
 
   const { mutate: updateBookShelfMutate } = updateBookShelfDetailMutation(() =>
-    queryClient.invalidateQueries({ queryKey: [QueryKeys.BOOKSHELF_KEY] })
+    queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.BOOKSHELF_KEY] })
   )
 
   const handlerFinish = (bookShelf: formProps, operate: number) => {

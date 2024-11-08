@@ -1,4 +1,3 @@
-import { AllSelectBookFlag, Menu } from '@/shared/enums'
 import { useActionBookStore, useMenuStore } from '@/shared/store'
 import clsx from 'clsx'
 import { CircleX } from 'lucide-react'
@@ -58,7 +57,7 @@ function Footer() {
         <ul
           className={clsx(
             'absolute bottom-4 flex space-x-3',
-            menu === Menu.EXTEND ? 'min-[375px]:flex' : 'min-[375px]:hidden',
+            menu === MenuEnum.EXTEND ? 'min-[375px]:flex' : 'min-[375px]:hidden',
             !showShelfFlag && cancelFlag ? 'md:hidden' : 'md:flex'
           )}
         >
@@ -104,13 +103,13 @@ function Footer() {
             className="cursor-pointer"
             onClick={() => {
               updateAllSelectFlag(
-                allSelectBookFlag == AllSelectBookFlag.NOT_ALL_SELECT_FLAG
-                  ? AllSelectBookFlag.ALL_SELECT_FLAG
-                  : AllSelectBookFlag.NOT_ALL_SELECT_FLAG
+                allSelectBookFlag == AllSelectBookEnum.NOT_ALL_SELECT_FLAG
+                  ? AllSelectBookEnum.ALL_SELECT_FLAG
+                  : AllSelectBookEnum.NOT_ALL_SELECT_FLAG
               )
             }}
           >
-            {allSelectBookFlag == AllSelectBookFlag.NOT_ALL_SELECT_FLAG
+            {allSelectBookFlag == AllSelectBookEnum.NOT_ALL_SELECT_FLAG
               ? t('COMMON:deselect_all')
               : t('COMMON:select_all')}
           </li>

@@ -1,5 +1,4 @@
 import type { Resolver } from 'unplugin-auto-import/types'
-
 import { componentBuiltInApi } from './preset'
 
 export const clientComponentResolver = (): Resolver => ({

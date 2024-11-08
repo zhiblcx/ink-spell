@@ -1,4 +1,4 @@
-import { Menu } from '../enums'
+import { MenuEnum } from '../enums'
 export class MenuUtils {
   static readonly #MENU_KEY = 'ink_spell_menu'
 
@@ -6,7 +6,7 @@ export class MenuUtils {
     return localStorage.getItem(this.#MENU_KEY)
   }
 
-  static setMenu(menu: Menu): void {
+  static setMenu(menu: MenuEnum): void {
     localStorage.setItem(this.#MENU_KEY, menu)
   }
 

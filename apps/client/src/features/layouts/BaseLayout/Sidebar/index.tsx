@@ -1,7 +1,6 @@
 import { iconDarkImg, iconLightImg, logoDarkImg, logoLightImg } from '@/assets/images'
 import { selectMyBookShelfQuery } from '@/features/bookshelf'
 import { ALL_BOOK, CHAR_ROOM, MY_FRIEND } from '@/shared/constants'
-import { Menu, Theme } from '@/shared/enums'
 import { useMenuStore, useThemeStore } from '@/shared/store'
 import { BookShelfType } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
@@ -45,14 +44,14 @@ function Sidebar() {
   function Icon() {
     return (
       <>
-        {menu === Menu.EXTEND ? (
+        {menu === MenuEnum.EXTEND ? (
           <img
-            src={theme === Theme.DARK ? iconLightImg : iconDarkImg}
+            src={theme === ThemeEnum.DARK ? iconLightImg : iconDarkImg}
             className="w-[52px] scale-75"
           />
         ) : (
           <img
-            src={theme === Theme.DARK ? logoLightImg : logoDarkImg}
+            src={theme === ThemeEnum.DARK ? logoLightImg : logoDarkImg}
             className="mt-3 w-[200px]"
           />
         )}
@@ -64,7 +63,7 @@ function Sidebar() {
     <div
       className={clsx(
         'mr-2 p-2 transition-all',
-        menu === Menu.EXTEND ? 'min-[375px]:w-0 md:w-[60px]' : 'w-[220px]'
+        menu === MenuEnum.EXTEND ? 'min-[375px]:w-0 md:w-[60px]' : 'w-[220px]'
       )}
     >
       <Icon />
@@ -83,7 +82,7 @@ function Sidebar() {
 
         <div
           className={clsx(
-            menu == Menu.EXTEND ? 'hidden' : '',
+            menu == MenuEnum.EXTEND ? 'hidden' : '',
             'relative mb-1 flex w-[220px] items-center px-3 py-2'
           )}
         >

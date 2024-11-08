@@ -1,4 +1,4 @@
-import { Theme } from '../enums'
+import { ThemeEnum } from '../enums'
 export class ThemeUtils {
   static readonly #THEME_KEY = 'ink_spell_theme'
 
@@ -6,7 +6,7 @@ export class ThemeUtils {
     return localStorage.getItem(this.#THEME_KEY)
   }
 
-  static setTheme(theme: Theme): void {
+  static setTheme(theme: ThemeEnum): void {
     localStorage.setItem(this.#THEME_KEY, theme)
   }
 
@@ -14,15 +14,15 @@ export class ThemeUtils {
     localStorage.removeItem(this.#THEME_KEY)
   }
 
-  static changeTheme(theme: Theme) {
-    if (theme === Theme.DARK || theme === Theme.LIGHT) {
+  static changeTheme(theme: ThemeEnum) {
+    if (theme === ThemeEnum.DARK || theme === ThemeEnum.LIGHT) {
       document.documentElement.setAttribute('data-theme', theme)
       ThemeUtils.setTheme(theme)
     }
-    if (theme === Theme.DARK) {
-      document.documentElement.classList.add(Theme.DARK)
-    } else if (theme === Theme.LIGHT) {
-      document.documentElement.classList.remove(Theme.DARK)
+    if (theme === ThemeEnum.DARK) {
+      document.documentElement.classList.add(ThemeEnum.DARK)
+    } else if (theme === ThemeEnum.LIGHT) {
+      document.documentElement.classList.remove(ThemeEnum.DARK)
     }
   }
 }

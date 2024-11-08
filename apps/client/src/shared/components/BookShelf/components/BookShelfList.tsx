@@ -1,5 +1,4 @@
 import { collectBookByBookIdMutation, deleteBookByBookIdMutation } from '@/features/book'
-import { AllSelectBookFlag, QueryKeys } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Book, Ink } from '@/shared/types'
 import { BookUtils } from '@/shared/utils'
@@ -33,14 +32,14 @@ export function BookShelfList({ books, setBooks, options, query }: BookShelfList
     []
   )
   const { mutate } = deleteBookByBookIdMutation(() =>
-    queryClient.invalidateQueries({ queryKey: [QueryKeys.BOOKSHELF_BOOK_KEY] })
+    queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.BOOKSHELF_BOOK_KEY] })
   )
 
   const { mutate: cancelCollectBookMutate } = deleteBookByBookIdMutation(() =>
-    queryClient.invalidateQueries({ queryKey: [QueryKeys.USER_KEY] })
+    queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.USER_KEY] })
   )
   const { mutate: collectBookMutate } = collectBookByBookIdMutation(() =>
-    queryClient.invalidateQueries({ queryKey: [QueryKeys.USER_KEY] })
+    queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.USER_KEY] })
   )
 
   useEffect(() => {
@@ -64,7 +63,7 @@ export function BookShelfList({ books, setBooks, options, query }: BookShelfList
       if (cancelFlag) {
         const currentBooks = Array.from(books)
         currentBooks.forEach((item: Ink) => (item.checked = false))
-        updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
+        updateAllSelectFlag(AllSelectBookEnum.PARTIAL_SELECT_FLAG)
         setBooks(currentBooks)
       }
     }
@@ -178,8 +177,8 @@ export function BookShelfList({ books, setBooks, options, query }: BookShelfList
                     // 判断用户是否是部分选择
                     const flag = currentBooks.some((item) => !item.checked)
                     !flag
-                      ? updateAllSelectFlag(AllSelectBookFlag.NOT_ALL_SELECT_FLAG)
-                      : updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
+                      ? updateAllSelectFlag(AllSelectBookEnum.NOT_ALL_SELECT_FLAG)
+                      : updateAllSelectFlag(AllSelectBookEnum.PARTIAL_SELECT_FLAG)
                   }}
                   ink={item}
                   schedule={schedule}

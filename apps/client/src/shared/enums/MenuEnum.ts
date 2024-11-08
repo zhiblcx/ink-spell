@@ -1,4 +1,4 @@
-export enum Menu {
+export enum MenuEnum {
   EXTEND = 'extend',
   SHRINK = 'shrink'
 }

@@ -1,4 +1,3 @@
-import { DirectoryMode } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { useSetUpStore } from '@/shared/store/SetupStore'
 import { BookUtils } from '@/shared/utils'
@@ -31,7 +30,7 @@ export function BookDirectory({
   const { setup, setSetUp } = useSetUpStore()
   const [open, setOpen] = useState(false)
   const [bookmark, setBookMark] = useState<Array<Array<string>>>([])
-  const [catalog, setCatalog] = useState(setup.directoryMode !== DirectoryMode.BOOK_MARK)
+  const [catalog, setCatalog] = useState(setup.directoryMode !== DirectoryModeEnum.BOOK_MARK)
   const { scrollTo } = useSmoothScroll({
     ref,
     speed: 200,

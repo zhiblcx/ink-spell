@@ -2,7 +2,6 @@ import {
   cancelCollectBookShelfMutation,
   selectUserCollectBookShelfQuery
 } from '@/features/bookshelf'
-import { QueryKeys } from '@/shared/enums'
 import { BookShelfType } from '@/shared/types'
 import { useTranslation } from 'react-i18next'
 
@@ -20,7 +19,7 @@ function Page() {
   const { data: userCollectQuery } = selectUserCollectBookShelfQuery()
   const queryClient = useQueryClient()
   const { mutate: cancelCollectShelfMutate } = cancelCollectBookShelfMutation(() =>
-    queryClient.invalidateQueries({ queryKey: [QueryKeys.USER_COLLECT_KEY] })
+    queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.USER_COLLECT_KEY] })
   )
 
   const bookShelfDetail = userCollectQuery?.data.reduce(

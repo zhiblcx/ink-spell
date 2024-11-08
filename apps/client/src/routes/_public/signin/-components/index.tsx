@@ -2,7 +2,6 @@ import { loginDarkImg, loginLightImg, logoLightImg } from '@/assets/images'
 import { signinMutation } from '@/features/auth'
 import { forgetPasswordByEmailMutation, sendResetPasswordEmailMutation } from '@/features/user'
 import { APP_NAME } from '@/shared/constants/app'
-import { Theme } from '@/shared/enums'
 import { useThemeStore } from '@/shared/store'
 import { AuthUtils } from '@/shared/utils'
 import { confirmPasswordRule } from '@/shared/utils/confirmPasswordRule'
@@ -67,7 +66,7 @@ export default function Signin() {
     <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden">
       <img
         className="absolute h-full w-full object-cover object-center"
-        src={theme === Theme.DARK ? loginDarkImg : loginLightImg}
+        src={theme === ThemeEnum.DARK ? loginDarkImg : loginLightImg}
       />
 
       <ConfigProvider

@@ -1,4 +1,3 @@
-import { DirectoryMode } from '@/shared/enums'
 import { SetUp } from '@/shared/types'
 import { BookMarked, BookText } from 'lucide-react'
 
@@ -9,14 +8,19 @@ interface DirectoryButtonsType {
   setSetUp: (setup: SetUp) => void
 }
 
-export const DirectoryButtons = ({ catalog, setup, setCatalog, setSetUp }: DirectoryButtonsType) => {
+export const DirectoryButtons = ({
+  catalog,
+  setup,
+  setCatalog,
+  setSetUp
+}: DirectoryButtonsType) => {
   const handleCatalogClick = () => {
-    setSetUp({ ...setup, directoryMode: DirectoryMode.CATALOG })
+    setSetUp({ ...setup, directoryMode: DirectoryModeEnum.CATALOG })
     setCatalog(true)
   }
 
   const handleBookMarkClick = () => {
-    setSetUp({ ...setup, directoryMode: DirectoryMode.BOOK_MARK })
+    setSetUp({ ...setup, directoryMode: DirectoryModeEnum.BOOK_MARK })
     setCatalog(false)
   }
 

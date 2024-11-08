@@ -1,7 +1,6 @@
 import { loginDarkImg, loginLightImg, logoLightImg } from '@/assets/images'
 import { signupMutation, SignupValue } from '@/features/auth'
 import { APP_NAME } from '@/shared/constants/app'
-import { Theme } from '@/shared/enums'
 import { useThemeStore } from '@/shared/store'
 import { confirmPasswordRule } from '@/shared/utils/confirmPasswordRule'
 import { EditOutlined, LockOutlined, UserOutlined, VerifiedOutlined } from '@ant-design/icons'
@@ -18,7 +17,7 @@ export default function Signup() {
     <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden">
       <img
         className="absolute h-full w-full object-cover object-center"
-        src={theme === Theme.DARK ? loginDarkImg : loginLightImg}
+        src={theme === ThemeEnum.DARK ? loginDarkImg : loginLightImg}
       />
 
       <ConfigProvider

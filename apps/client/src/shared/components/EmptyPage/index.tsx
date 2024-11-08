@@ -1,5 +1,4 @@
 import GoastSvg from '@/assets/SVG/GoastSvg'
-import { Theme } from '@/shared/enums'
 import { useThemeStore } from '@/shared/store'
 
 interface EmptyPageType {
@@ -16,7 +15,7 @@ export function EmptyPage(props: EmptyPageType) {
       subTitle={description}
       icon={
         <div className="flex justify-center">
-          <GoastSvg color={theme === Theme.DARK ? '#1f1f1f' : '#fff'} />
+          <GoastSvg color={theme === ThemeEnum.DARK ? '#1f1f1f' : '#fff'} />
         </div>
       }
     />

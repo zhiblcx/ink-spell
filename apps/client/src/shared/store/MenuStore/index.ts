@@ -1,18 +1,17 @@
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
-
-import { Menu } from '@/shared/enums'
+import { MenuEnum } from '@/shared/enums'
 import { MenuUtils } from '@/shared/utils'
 
 type MenuStore = {
-  menu: Menu
-  setMenu: (Menu: Menu) => void
+  menu: MenuEnum
+  setMenu: (Menu: MenuEnum) => void
 }
 
 export const useMenuStore = create<MenuStore>()(
   subscribeWithSelector((set) => ({
-    menu: MenuUtils.getMenu() as Menu,
-    setMenu: (menu: Menu) => {
+    menu: MenuUtils.getMenu() as MenuEnum,
+    setMenu: (menu: MenuEnum) => {
       set({ menu })
       MenuUtils.setMenu(menu)
     }

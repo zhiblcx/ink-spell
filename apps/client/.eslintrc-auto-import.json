@@ -75,6 +75,14 @@
     "GlobalPending": true,
     "EmailInput": true,
     "UploadPhoto": true,
-    "SortableItem": true
+    "SortableItem": true,
+    "QueryKeysEnum": true,
+    "MenuEnum": true,
+    "AllSelectBookEnum": true,
+    "ThemeEnum": true,
+    "BookShelfDetail": true,
+    "DirectoryModeEnum": true,
+    "LanguageEnum": true,
+    "PaginationParamsEnum": true
   }
 }

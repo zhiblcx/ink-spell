@@ -1,6 +1,5 @@
 import { deleteBookShelfMutation } from '@/features/bookshelf'
 import { selectBookByBookShelfIdQuery } from '@/features/bookshelf/query'
-import { AllSelectBookFlag, QueryKeys } from '@/shared/enums'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
@@ -38,15 +37,15 @@ export function Page() {
 
   const queryClient = useQueryClient()
   const { mutate } = deleteBookShelfMutation(params[0], () =>
-    queryClient.invalidateQueries({ queryKey: [QueryKeys.BOOKSHELF_KEY] })
+    queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.BOOKSHELF_KEY] })
   )
 
   useEffect(() => {
     if (isSuccess) {
       setBooks(queryBook.data)
-      updateAllSelectFlag(AllSelectBookFlag.PARTIAL_SELECT_FLAG)
+      updateAllSelectFlag(AllSelectBookEnum.PARTIAL_SELECT_FLAG)
       if (uploadFileFlag) {
-        queryClient.invalidateQueries({ queryKey: [QueryKeys.BOOKSHELF_BOOK_KEY] })
+        queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.BOOKSHELF_BOOK_KEY] })
         updateUploadFileFlag(false)
       }
     }
