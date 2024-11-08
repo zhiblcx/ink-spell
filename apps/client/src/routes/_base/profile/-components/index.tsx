@@ -1,7 +1,6 @@
 import { selectOneselfInfoQuery, updateUserInfoMutation } from '@/features/user'
 import { VerifiedOutlined } from '@ant-design/icons'
 import { type UploadFile, Input } from 'antd'
-import { useTranslation } from 'react-i18next'
 import styles from './styles.module.scss'
 
 export default function Profile() {

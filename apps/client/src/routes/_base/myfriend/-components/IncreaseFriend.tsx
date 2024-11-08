@@ -1,5 +1,4 @@
 import Search from 'antd/es/input/Search'
-import { useTranslation } from 'react-i18next'
 import MyFriend from '.'
 import { FollowEnum } from './FollowEnum'
 

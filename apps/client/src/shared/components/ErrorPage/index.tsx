@@ -1,5 +1,3 @@
-import { useTranslation } from 'react-i18next'
-
 export function ErrorPage() {
   const { t } = useTranslation(['COMMON', 'PROMPT'])
   return (

@@ -4,7 +4,6 @@ import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { cardLocation } from '@/shared/utils/waterfallLayout'
 import { FloatButton } from 'antd'
 import { motion } from 'framer-motion'
-import { useTranslation } from 'react-i18next'
 
 export const Route = createLazyFileRoute('/_base/bookshelf/show/$bookShelfId')({
   component: () => <Page />

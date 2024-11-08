@@ -7,7 +7,6 @@ import { UrlUtils } from '@/shared/utils/UrlUtils'
 import clsx from 'clsx'
 import { AnimatePresence, motion } from 'framer-motion'
 import { BookHeart, BookText, Bot, ChevronDown, ChevronRight, Move, Users } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 function Sidebar() {
   const { t } = useTranslation(['COMMON'])

@@ -4,7 +4,6 @@ import { User } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { message } from 'antd'
 import { AxiosError } from 'axios'
-import { useTranslation } from 'react-i18next'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { FollowEnum } from './FollowEnum'
 

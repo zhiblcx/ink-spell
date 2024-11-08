@@ -1,7 +1,6 @@
 import { deleteBookMarkMutation, insertBookMarkMutation } from '@/features/book'
 import { useActionBookStore, useThemeStore } from '@/shared/store'
 import { BookmarkMinus, BookmarkPlus, List, LucideProps, Settings } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 import { ClickSetupEnum } from '../enums/ClickSetupEnum'
 
 interface IconProps {

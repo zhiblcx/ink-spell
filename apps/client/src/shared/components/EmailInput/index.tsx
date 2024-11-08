@@ -3,7 +3,6 @@ import { sendRegisterEmailMutation } from '@/features/user'
 import startCountdown from '@/shared/utils/startCountdown'
 import { MailOutlined } from '@ant-design/icons'
 import { FormInstance, message } from 'antd'
-import { useTranslation } from 'react-i18next'
 
 export function EmailInput({ form, email }: { form: FormInstance<SignupValue>; email?: string }) {
   const { t } = useTranslation(['COMMON', 'PROMPT', 'VALIDATION'])

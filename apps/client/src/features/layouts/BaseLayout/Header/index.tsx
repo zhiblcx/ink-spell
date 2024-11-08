@@ -5,7 +5,6 @@ import { Book } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils'
 import { ReactNode } from '@tanstack/react-router'
 import { AlignLeft, AlignRight, RotateCw } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 import { AvatarItems, ImportBook, ResetPassword, SettingMenu } from './components'
 
 export default function Header() {

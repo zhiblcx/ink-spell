@@ -5,7 +5,6 @@ import { ResponseData } from '@ink-spell/axios'
 import { UseMutateFunction } from '@tanstack/react-query'
 import { FormInstance } from 'antd'
 import { AxiosError } from 'axios'
-import { useTranslation } from 'react-i18next'
 
 interface ResetPasswordType {
   form: FormInstance<any>

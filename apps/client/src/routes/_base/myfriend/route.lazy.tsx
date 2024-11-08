@@ -1,5 +1,4 @@
 import type { TabsProps } from 'antd'
-import { useTranslation } from 'react-i18next'
 import MyFriend from './-components'
 import { FollowEnum } from './-components/FollowEnum'
 import IncreaseFriend from './-components/IncreaseFriend'

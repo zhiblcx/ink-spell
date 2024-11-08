@@ -4,4 +4,6 @@ declare const clientComponentResolver: () => Resolver;
 
 declare const clientEnumsResolver: () => Resolver;
 
-export { clientComponentResolver, clientEnumsResolver };
+declare const clientI18nResolver: () => Resolver;
+
+export { clientComponentResolver, clientEnumsResolver, clientI18nResolver };

@@ -3,7 +3,6 @@ import { useSetUpStore } from '@/shared/store/SetupStore'
 import { BookUtils } from '@/shared/utils'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { motion } from 'framer-motion'
-import { useTranslation } from 'react-i18next'
 import useSmoothScroll from 'react-smooth-scroll-hook'
 import { backgroundStyleFunc } from './backgroundStyle'
 

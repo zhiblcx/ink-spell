@@ -1,7 +1,6 @@
 import { httpRequest, ResponseData } from '@/shared/API'
 import { AuthUtils } from '@/shared/utils'
 import { message } from 'antd'
-import { useTranslation } from 'react-i18next'
 import { handleAxiosError } from '../utils'
 import { SignInDao, SigninValue, SignUpDao } from './types'
 

@@ -6,7 +6,6 @@ import Meta from 'antd/es/card/Meta'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import { CircleX } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 interface BookShelfDetailType {
   bookshelf_detail: []

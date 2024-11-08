@@ -1,6 +1,5 @@
 import { followUserByUserIdMutation } from '@/features/user'
 import { User } from '@/shared/types'
-import { useTranslation } from 'react-i18next'
 import styles from './styles.module.scss'
 
 interface PersonCardType {

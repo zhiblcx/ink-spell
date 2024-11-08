@@ -83,6 +83,9 @@
     "BookShelfDetail": true,
     "DirectoryModeEnum": true,
     "LanguageEnum": true,
-    "PaginationParamsEnum": true
+    "PaginationParamsEnum": true,
+    "MessageEnum": true,
+    "useTranslation": true,
+    "initReactI18next": true
   }
 }

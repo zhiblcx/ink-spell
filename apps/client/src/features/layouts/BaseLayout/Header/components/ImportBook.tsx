@@ -3,7 +3,6 @@ import { useActionBookStore } from '@/shared/store'
 import { AuthUtils, Md5Utils } from '@/shared/utils'
 import { message, type UploadFile, type UploadProps } from 'antd'
 import { FileUp } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 interface FileWithMD5 extends File {
   md5?: string

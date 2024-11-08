@@ -1,7 +1,6 @@
 import { LOGOUT, MY_FAVORITES, PERSON_INFO } from '@/shared/constants'
 import { AuthUtils } from '@/shared/utils'
 import type { MenuProps } from 'antd'
-import { useTranslation } from 'react-i18next'
 
 interface AvatarItemsType {
   setOpenFlag: React.Dispatch<React.SetStateAction<boolean>>

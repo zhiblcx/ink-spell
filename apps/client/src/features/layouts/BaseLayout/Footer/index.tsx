@@ -1,7 +1,6 @@
 import { useActionBookStore, useMenuStore } from '@/shared/store'
 import clsx from 'clsx'
 import { CircleX } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 function Footer() {
   const { t } = useTranslation(['COMMON', 'PROMPT'])

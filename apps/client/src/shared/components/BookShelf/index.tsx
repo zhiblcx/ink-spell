@@ -3,7 +3,6 @@ import { selectOneselfInfoQuery } from '@/features/user'
 import { ALL_BOOK } from '@/shared/constants'
 import { useActionBookStore } from '@/shared/store'
 import { BookShelfType, Ink } from '@/shared/types'
-import { useTranslation } from 'react-i18next'
 import { BookShelfList, OperateBookShelfModal } from './components'
 
 interface BookShelfPropsType {

@@ -5,7 +5,6 @@ import {
   selectUserCollectBookShelfQuery
 } from '@/features/bookshelf'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { useTranslation } from 'react-i18next'
 
 export const Route = createLazyFileRoute('/_base/otherbookshelf/$userId')({
   component: () => <Page />

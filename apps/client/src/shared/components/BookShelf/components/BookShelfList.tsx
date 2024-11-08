@@ -5,7 +5,6 @@ import { BookUtils } from '@/shared/utils'
 import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
 import { ResponseData } from '@ink-spell/axios'
 import { motion } from 'framer-motion'
-import { useTranslation } from 'react-i18next'
 import InkCard from '../../InkCard'
 
 interface BookShelfListProps {

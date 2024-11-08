@@ -3,7 +3,6 @@ import {
   selectUserCollectBookShelfQuery
 } from '@/features/bookshelf'
 import { BookShelfType } from '@/shared/types'
-import { useTranslation } from 'react-i18next'
 
 export const Route = createLazyFileRoute('/_base/favorites')({
   component: () => <Page />

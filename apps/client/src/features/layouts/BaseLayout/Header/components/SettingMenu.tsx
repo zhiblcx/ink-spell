@@ -1,6 +1,5 @@
 import type { DropDownProps, MenuProps } from 'antd'
 import { Settings } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 export function SettingMenu() {
   const [open, setOpen] = useState(false)

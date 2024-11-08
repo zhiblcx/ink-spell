@@ -3,7 +3,6 @@ import { useActionBookStore } from '@/shared/store'
 import { BookShelfType } from '@/shared/types'
 import { RadioChangeEvent } from 'antd'
 import { UploadFile } from 'antd/lib'
-import { useTranslation } from 'react-i18next'
 import { OperateBookShelfModalProps } from './props'
 
 interface formProps {

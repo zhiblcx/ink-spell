@@ -6,7 +6,6 @@ import { BookUtils } from '@/shared/utils'
 import { type UploadFile, Input } from 'antd'
 import clsx from 'clsx'
 import { Pencil } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 import { UploadPhoto } from '../UploadPhoto'
 import './index.scss'
 interface InkCardProps {
