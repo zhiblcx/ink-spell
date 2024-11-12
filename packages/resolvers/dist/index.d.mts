@@ -6,4 +6,6 @@ declare const clientEnumsResolver: () => Resolver;
 
 declare const clientI18nResolver: () => Resolver;
 
-export { clientComponentResolver, clientEnumsResolver, clientI18nResolver };
+declare const adminIconsResolver: () => Resolver;
+
+export { adminIconsResolver, clientComponentResolver, clientEnumsResolver, clientI18nResolver };

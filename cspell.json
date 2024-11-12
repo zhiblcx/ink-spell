@@ -18,6 +18,9 @@
     "hoverable",
     "signin",
     "signup",
-    "unfollow"
+    "unfollow",
+    "unocss",
+    "pinia",
+    "mingcute"
   ]
 }
