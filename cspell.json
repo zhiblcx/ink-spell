@@ -21,6 +21,7 @@
     "unfollow",
     "unocss",
     "pinia",
-    "mingcute"
+    "mingcute",
+    "echarts"
   ]
 }
