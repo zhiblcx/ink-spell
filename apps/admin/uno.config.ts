@@ -2,6 +2,11 @@ import presetIcons from '@unocss/preset-icons'
 import { defineConfig, presetUno } from 'unocss'
 
 export default defineConfig({
+  theme: {
+    screen: {
+      sm: "375px",
+    }
+  },
   presets: [
     //当指定presets选项时，默认预设将被忽略,所以要加上 presetUno
     presetUno(),

@@ -10,3 +10,4 @@
 - [x] pinia
 - [x] Vue-Router
 - [x] tanstack Query
+- [x] echarts
