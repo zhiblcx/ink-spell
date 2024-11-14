@@ -6,6 +6,9 @@ export type echartsProps = {
   color?: string
   label?: boolean
   options?: Object,
+  downloadImg?: boolean,
+  name?: string
+  subtext?: string
 }
 
 

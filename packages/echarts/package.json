@@ -2,10 +2,14 @@
   "name": "@ink-spell/echarts",
   "version": "0.0.1",
   "description": "",
-  "main": "index.ts",
   "private": true,
   "scripts": {},
-  "keywords": [],
+  "keywords": [
+    "echarts"
+  ],
+  "exports": {
+    "./vue": "./vue.js"
+  },
   "author": "nicole",
   "license": "ISC",
   "dependencies": {
