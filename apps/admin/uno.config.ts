@@ -9,7 +9,7 @@ export default defineConfig({
   },
   presets: [
     //当指定presets选项时，默认预设将被忽略,所以要加上 presetUno
-    presetUno(),
+    presetUno({ dark: "class" }),
     presetIcons({
       collections: {
         // 导入图标

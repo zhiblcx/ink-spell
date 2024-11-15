@@ -1,7 +1,14 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ThemeEnum } from '@/shared/enums/ThemeEnum'
+import { useThemeStore } from '@/shared/store/useThemeStore'
+import { darkTheme } from 'naive-ui'
+const themeStore = useThemeStore()
+</script>
 
 <template>
-  <router-view />
+  <n-config-provider :theme="themeStore.theme === ThemeEnum.DARK ? darkTheme : null">
+    <router-view />
+  </n-config-provider>
 </template>
 
 <style scoped></style>
