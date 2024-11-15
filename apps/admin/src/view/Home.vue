@@ -1,5 +1,5 @@
 <script setup>
-import { EchartsBar } from '@ink-spell/echarts'
+import { EchartsBar } from '@ink-spell/echarts/vue'
 </script>
 
 <template>
@@ -12,6 +12,24 @@ import { EchartsBar } from '@ink-spell/echarts'
         <template #prefix>
           <n-icon>
             <div class="i-mingcute:user-3-line w-1em h-1em" />
+          </n-icon>
+        </template>
+        <n-number-animation
+          ref="numberAnimationInstRef"
+          :from="0"
+          :to="12039"
+        />
+      </n-statistic>
+    </n-card>
+
+    <n-card
+      title="书架数量"
+      hoverable
+    >
+      <n-statistic>
+        <template #prefix>
+          <n-icon>
+            <div class="i-mingcute:book-5-line w-1em h-1em"></div>
           </n-icon>
         </template>
         <n-number-animation
@@ -37,24 +55,6 @@ import { EchartsBar } from '@ink-spell/echarts'
           :from="0"
           :to="12039"
       /></n-statistic>
-    </n-card>
-
-    <n-card
-      title="书架数量"
-      hoverable
-    >
-      <n-statistic>
-        <template #prefix>
-          <n-icon>
-            <div class="i-mingcute:book-5-line w-1em h-1em"></div>
-          </n-icon>
-        </template>
-        <n-number-animation
-          ref="numberAnimationInstRef"
-          :from="0"
-          :to="12039"
-        />
-      </n-statistic>
     </n-card>
   </div>
 

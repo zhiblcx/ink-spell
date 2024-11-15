@@ -5,3 +5,10 @@ declare module '~icons/*'
   const def: DefineComponent
   export default def
 }
+
+declare module '*.vue' {
+  import { ComponentOptions } from 'vue'
+  const componentOptions: ComponentOptions
+  export default componentOptions
+}
+
