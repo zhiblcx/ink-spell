@@ -11,3 +11,4 @@
 - [x] Vue-Router
 - [x] tanstack Query
 - [x] echarts
+- [x] nprogress
