@@ -1,5 +1,6 @@
 import { createWebHashHistory, createRouter } from 'vue-router'
 import Layout from "@/features/layouts/index.vue"
+import nprogress from 'nprogress'
 
 
 const routes = [
@@ -7,10 +8,11 @@ const routes = [
   {
     path: '/',
     component: Layout,
-    children: [{
-      path: '',
-      component: () => import("@/view/Home.vue"),
-    }]
+    children: [
+      {
+        path: '',
+        component: () => import("@/view/Home.vue")
+      }]
   },
   {
     path: "/login",
@@ -23,10 +25,16 @@ const routes = [
   {
     path: '/user',
     component: Layout,
-    children: [{
-      path: 'manage',
-      component: () => import("@/view/UserManage.vue")
-    }]
+    children: [
+      {
+        path: 'info',
+        component: () => import("@/view/user-manage/UserInfo/index.vue")
+      },
+      {
+        path: 'dynamic',
+        component: () => import("@/view/user-manage/UserDynamic/index.vue")
+      }
+    ]
   },
   {
     path: '/bookshelf',
@@ -51,3 +59,11 @@ export const router = createRouter({
   routes,
 })
 
+router.beforeEach((to, from, next) => {
+  nprogress.start()
+  next()
+})
+
+router.afterEach(() => {
+  nprogress.done()
+})
