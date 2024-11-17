@@ -52,6 +52,12 @@ export class AuthUtils {
     localStorage.setItem(this.#REMEMBER_ACCOUNT_DATA, data)
   }
 
+  /**
+  * @example
+  * ```ts
+  * AuthUtils.clearRememberAccountData()
+  * ```
+  */
   static clearRememberAccountData(): void {
     localStorage.removeItem(this.#REMEMBER_ACCOUNT_DATA)
   }

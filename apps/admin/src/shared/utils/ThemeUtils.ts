@@ -33,4 +33,23 @@ export class ThemeUtils {
   static clearTheme() {
     localStorage.removeItem(this.#THEME_ADMIN_KEY)
   }
+
+  /**
+  * @example
+  * ```ts
+  * ThemeUtils.changeTheme()
+  * ```
+  */
+  static changeTheme(theme: ThemeEnum) {
+    if (theme === ThemeEnum.LIGHT) {
+      document.documentElement.classList.remove("dark")
+    }
+    if (theme === ThemeEnum.DARK) {
+      document.documentElement.classList.add("dark")
+    }
+    if (theme === ThemeEnum.DARK || theme == ThemeEnum.LIGHT) {
+      document.documentElement.setAttribute("data-theme", theme)
+      this.setTheme(theme)
+    }
+  }
 }

@@ -1,5 +1,7 @@
 <script setup>
+import { useChartsStore } from '@/shared/store/useChartsStore'
 import { EchartsBar } from '@ink-spell/echarts/vue'
+const chartsStore = useChartsStore()
 </script>
 
 <template>
@@ -70,6 +72,7 @@ import { EchartsBar } from '@ink-spell/echarts/vue'
       ]"
       label
       title="近一周的上传量"
+      :relyVariable="chartsStore.chartsRelyVariation"
     />
   </div>
 </template>

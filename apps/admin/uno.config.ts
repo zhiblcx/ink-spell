@@ -1,12 +1,14 @@
 import presetIcons from '@unocss/preset-icons'
-import { defineConfig, presetUno } from 'unocss'
+import { defineConfig, presetUno, PresetUnoTheme } from 'unocss'
 
 export default defineConfig({
-  theme: {
-    screen: {
-      sm: "375px",
+  extendTheme: (theme: PresetUnoTheme) => ({
+    ...theme,
+    breakpoints: {
+      ...theme.breakpoints,
+      ssm: "550px",
     }
-  },
+  }),
   presets: [
     //当指定presets选项时，默认预设将被忽略,所以要加上 presetUno
     presetUno({ dark: "class" }),
