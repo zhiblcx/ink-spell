@@ -1,0 +1,5 @@
+export { default as LoginBgPhoneImg } from './login_bg_phone.png'
+export { default as LoginBgImg } from './login_bg.jpg'
+export { default as LoginBgDarkImg } from './login-bg-dark.png'
+export { default as LogoDarkImg } from './logo-dark.png'
+export { default as LogoLightImg } from './logo-light.png'
