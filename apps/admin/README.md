@@ -12,3 +12,4 @@
 - [x] tanstack Query
 - [x] echarts
 - [x] nprogress
+- [x] vue-i18next

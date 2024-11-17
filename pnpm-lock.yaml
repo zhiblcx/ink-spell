@@ -47,6 +47,15 @@ importers:
       echarts:
         specifier: ^5.5.1
         version: 5.5.1
+      i18next:
+        specifier: ^23.16.4
+        version: 23.16.4
+      i18next-browser-languagedetector:
+        specifier: ^8.0.0
+        version: 8.0.0
+      i18next-vue:
+        specifier: ^5.0.0
+        version: 5.0.0(i18next@23.16.4)(vue@3.5.12(typescript@5.6.3))
       nprogress:
         specifier: ^0.2.0
         version: 0.2.0
@@ -65,6 +74,9 @@ importers:
       vue:
         specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
+      vue-i18next:
+        specifier: ^0.9.4
+        version: 0.9.4(i18next@23.16.4)(vue-params@0.9.4(vue@3.5.12(typescript@5.6.3)))(vue@3.5.12(typescript@5.6.3))
       vue-router:
         specifier: '4'
         version: 4.4.5(vue@3.5.12(typescript@5.6.3))
@@ -4058,6 +4070,15 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
+  i18next-browser-languagedetector@8.0.0:
+    resolution: {integrity: sha512-zhXdJXTTCoG39QsrOCiOabnWj2jecouOqbchu3EfhtSHxIB5Uugnm9JaizenOy39h7ne3+fLikIjeW88+rgszw==}
+
+  i18next-vue@5.0.0:
+    resolution: {integrity: sha512-8jlctdGSKws9fcFlGlFOQRKCQQdUTKSs4D9pbZ6iitpzHQzQSVTdeDPvrjxLomsTjLK65W+MUGW6cwavAMGo9w==}
+    peerDependencies:
+      i18next: '>=23'
+      vue: ^3.4.38
+
   i18next@23.16.4:
     resolution: {integrity: sha512-9NIYBVy9cs4wIqzurf7nLXPyf3R78xYbxExVqHLK9od3038rjpyOEzW+XB130kZ1N4PZ9inTtJ471CRJ4Ituyg==}
 
@@ -6627,6 +6648,18 @@ packages:
     resolution: {integrity: sha512-JdgRRUVrN0Y2GosA0M68DEbKlXMqJ7FQgsK8CjQD2vxvNSqAU6PZEpi4cfcTVtfM2GVOMjHo7GKKLbXxOBqDqA==}
     peerDependencies:
       vue: ^3.4.37
+
+  vue-i18next@0.9.4:
+    resolution: {integrity: sha512-dQ7ZQ5hpBYCyfnuXMzV895NQrjFIZi4CUl9gKyN9Yvb69i6SrLqWcJe2Jn+gPxuSG4HmIzr9pnqGIylRtjxaBQ==}
+    peerDependencies:
+      i18next: '*'
+      vue: '*'
+      vue-params: '*'
+
+  vue-params@0.9.4:
+    resolution: {integrity: sha512-FMNgs0yICvUhdzotMA4J9HKwoDrp8KTsislDOcWiWVjYFUhQ7Q637IBCkcAH6FwVIGet2UrAEgTDJqNw2CGzIw==}
+    peerDependencies:
+      vue: '*'
 
   vue-router@4.4.5:
     resolution: {integrity: sha512-4fKZygS8cH1yCyuabAXGUAsyi1b2/o/OKgu/RUb+znIYOxPRxdkytJEx+0wGcpBE1pX6vUgh5jwWOKRGvuA/7Q==}
@@ -10894,6 +10927,15 @@ snapshots:
 
   husky@9.1.6: {}
 
+  i18next-browser-languagedetector@8.0.0:
+    dependencies:
+      '@babel/runtime': 7.26.0
+
+  i18next-vue@5.0.0(i18next@23.16.4)(vue@3.5.12(typescript@5.6.3)):
+    dependencies:
+      i18next: 23.16.4
+      vue: 3.5.12(typescript@5.6.3)
+
   i18next@23.16.4:
     dependencies:
       '@babel/runtime': 7.26.0
@@ -13975,6 +14017,16 @@ snapshots:
       - supports-color
 
   vue-flow-layout@0.1.1(vue@3.5.12(typescript@5.6.3)):
+    dependencies:
+      vue: 3.5.12(typescript@5.6.3)
+
+  vue-i18next@0.9.4(i18next@23.16.4)(vue-params@0.9.4(vue@3.5.12(typescript@5.6.3)))(vue@3.5.12(typescript@5.6.3)):
+    dependencies:
+      i18next: 23.16.4
+      vue: 3.5.12(typescript@5.6.3)
+      vue-params: 0.9.4(vue@3.5.12(typescript@5.6.3))
+
+  vue-params@0.9.4(vue@3.5.12(typescript@5.6.3)):
     dependencies:
       vue: 3.5.12(typescript@5.6.3)
 
