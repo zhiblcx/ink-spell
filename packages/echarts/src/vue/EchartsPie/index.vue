@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import * as echarts from 'echarts'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
+import { DEFAULT_PIE_COLORS, DEFAULT_WIDTH } from '../../default'
 import { echartsProps } from '../../types'
 const options = defineProps<echartsProps>()
 const echartsDom = ref(null)
@@ -34,23 +35,24 @@ const option = {
       }
     }
   ],
-  color: options.color ?? [
-    '#5470c6',
-    '#91cc75',
-    '#fac858',
-    '#ee6666',
-    '#73c0de',
-    '#3ba272',
-    '#fc8452',
-    '#9a60b4',
-    '#ea7ccc'
-  ]
+  color: options.color ?? DEFAULT_PIE_COLORS
 }
 
 onMounted(() => {
   const myChart = echarts.init(echartsDom.value)
   myChart.setOption({ ...option, ...options.options })
   window.addEventListener('resize', () => myChartResize(myChart))
+
+  const unWatch = watch(
+    () => options.relyVariable,
+    () => {
+      if (options.relyVariable === undefined || options.relyVariable === null) {
+        unWatch()
+      } else {
+        myChartResize(myChart)
+      }
+    }
+  )
 })
 
 function myChartResize(myChart: echarts.ECharts) {
@@ -61,7 +63,6 @@ function myChartResize(myChart: echarts.ECharts) {
 <template>
   <div
     ref="echartsDom"
-    class="w-[100%]"
-    :style="{ height: options.height, width: options.width }"
+    :style="{ height: options.height, width: options.width ?? DEFAULT_WIDTH }"
   />
 </template>

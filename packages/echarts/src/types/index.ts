@@ -9,6 +9,7 @@ export type echartsProps = {
   downloadImg?: boolean,
   name?: string
   subtext?: string
+  relyVariable?: any
 }
 
 
