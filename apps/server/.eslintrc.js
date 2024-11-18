@@ -25,5 +25,6 @@ module.exports = {
       'error',
       { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
     ],
+    'prettier/prettier': 'off',
   },
 };

@@ -16,6 +16,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { TranslationService } from '../translation/translation.service';
 import { LoginDao } from './dto/login-auth.dto';
 import { RegisterDto } from './dto/register-auth.dto';
+import { OauthEnum } from '@/shared/enums/oauth.enum';
 
 @Injectable()
 export class AuthService {
@@ -70,7 +71,7 @@ export class AuthService {
     }
   }
 
-  async signUp(registerDao: RegisterDto) {
+  async signUp(registerDao: RegisterDto, oauth?: OauthEnum) {
     const {
       account,
       password,
@@ -110,7 +111,8 @@ export class AuthService {
           password: pass,
           username,
           email,
-          avatar: appConfig.DEFAULT_AVATAR,
+          avatar: registerDao.avatar ?? appConfig.DEFAULT_AVATAR,
+          oauth: oauth ?? OauthEnum.LOCAL,
           bookShelfs: {
             create: {
               label: ALL_BOOK,
@@ -133,16 +135,45 @@ export class AuthService {
   }
 
   async validateLogin(account: string, pass: string) {
-    const user = await this.prisma.user.findUnique({
+    const users = await this.prisma.user.findMany({
       where: { account, isDelete: false },
     });
 
-    if (user && (await compare(pass, user.password))) {
-      const { password: _, ...result } = user;
-      return result;
+    for (const user of users) {
+      if (await compare(pass, user.password)) {
+        const { password: _, ...result } = user;
+        return result;
+      }
     }
+
     throw new UnauthorizedException(
       this.translation.t('auth.incorrect_username_or_password'),
     );
+  }
+
+  async oauth(registerDao: RegisterDto, oauthMethod: OauthEnum) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        account_oauth: {
+          account: registerDao.account,
+          oauth: oauthMethod
+        },
+        isDelete: false
+      }
+    })
+
+    // 如果没有账号则进行注册
+    if (!user) {
+      return await this.signUp(registerDao, oauthMethod)
+    } else {
+      // 直接登录
+      return new R({
+        data: await this.generateToken({
+          userId: user.id,
+          account: user.account,
+        }),
+        message: this.translation.t('prompt.login_successful'),
+      });
+    }
   }
 }

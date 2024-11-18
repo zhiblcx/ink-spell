@@ -1,4 +1,5 @@
 import { I18nTranslations } from '@/i18n/i18n.generated';
+import { OauthEnum } from '@/shared/enums/oauth.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, Length } from 'class-validator';
 import { i18nValidationMessage as t } from 'nestjs-i18n';
@@ -17,4 +18,10 @@ export class ForgetPasswordEmailDto {
     description: '账号',
   })
   account: string;
+
+  @ApiProperty({
+    example: 'github',
+    description: '登录方式',
+  })
+  oauth: OauthEnum;
 }

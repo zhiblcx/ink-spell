@@ -15,7 +15,7 @@ export class UserService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly translation: TranslationService,
-  ) {}
+  ) { }
 
   async getProfileData(userId: number) {
     try {
@@ -236,12 +236,12 @@ export class UserService {
   }
 
   // 状态，内容，参数
-  async sendEmail(status, html, parameter) {
+  async sendEmail(status, html, parameter, oauth?) {
     // 0 忘记密码，1 注册邮箱
     try {
       if (!status) {
         const user = await this.prisma.user.findUnique({
-          where: { account: parameter },
+          where: { account_oauth: { account: parameter, oauth } },
           select: { email: true, account: true },
         });
 

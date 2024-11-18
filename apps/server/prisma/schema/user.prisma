@@ -1,7 +1,7 @@
 model User {
   id               Int                @id @default(autoincrement())
-  username         String             @unique
-  account          String             @unique
+  username         String
+  account          String
   password         String
   sex              String             @default("女")
   email            String?            @unique
@@ -9,6 +9,7 @@ model User {
   isDelete         Boolean            @default(false) @map("is_delete")
   Roles            Roles              @relation(fields: [rolesId], references: [id])
   rolesId          String             @default("user")
+  oauth            String             @default("local")
   bookShelfs       BookShelf[]
   books            Book[]
   Message          Message[]
@@ -17,4 +18,7 @@ model User {
   CollectBookShelf CollectBookShelf[]
   BookMark         BookMark[]
   readTimer        ReadTimer[]
+
+  @@unique([username, oauth])
+  @@unique([account, oauth])
 }

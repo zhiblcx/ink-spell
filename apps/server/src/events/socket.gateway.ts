@@ -1,7 +1,7 @@
 import { PrismaService } from '@/modules/prisma/prisma.service';
 import { TranslationService } from '@/modules/translation/translation.service';
 import { UserService } from '@/modules/user/user.service';
-import { MessageEnum } from '@/shared/enums/MessageEnum';
+import { MessageEnum } from '@/shared/enums/message.enum';
 import { BadRequestException } from '@nestjs/common';
 import {
   ConnectedSocket,
@@ -29,7 +29,7 @@ export class SocketGateway {
     private readonly prisma: PrismaService,
     private readonly userService: UserService,
     private readonly translation: TranslationService,
-  ) {}
+  ) { }
   @WebSocketServer()
   server: Server;
   roomId = '1';

@@ -41,7 +41,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly translation: TranslationService,
-  ) {}
+  ) { }
 
   @Get('profile')
   @ApiOperation({ summary: '获取个人信息' })
@@ -191,6 +191,7 @@ export class UserController {
       0,
       `[${appConfig.APP_NAME}]  ${this.translation.t('auth.forgot_password_request')} -- `,
       forgetPasswordEmailDto.account,
+      forgetPasswordEmailDto.oauth,
     );
     return new R({
       message: this.translation.t('prompt.send_successful'),
@@ -216,10 +217,10 @@ export class UserController {
   @ApiOperation({ summary: '重置用户密码' })
   @APIResponse(null, '重置成功')
   async resetPassword(@Param('userId') userId: number) {
-    await this.userService.resetPassword(userId, '123456');
+    await this.userService.resetPassword(userId, appConfig.DEFAULT_PASSWORD);
     return new R({
       message: this.translation.t('prompt.reset_successful'),
-      data: { password: '123456' },
+      data: { password: appConfig.DEFAULT_PASSWORD },
     });
   }
 }

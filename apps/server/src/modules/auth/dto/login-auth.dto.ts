@@ -1,4 +1,6 @@
+import { appConfig } from '@/config/AppConfig';
 import { I18nTranslations } from '@/i18n/i18n.generated';
+import { OauthEnum } from '@/shared/enums/oauth.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, Length, NotContains } from 'class-validator';
 import { i18nValidationMessage as t } from 'nestjs-i18n';
@@ -18,6 +20,18 @@ export class LoginDao {
   })
   account: string;
 
+  @ApiProperty({
+    example: '/static/cover/1723522466228.png',
+    description: '头像',
+  })
+  avatar?: string;
+
+  @ApiProperty({
+    example: 'github',
+    description: '登录方式',
+  })
+  oauth?: OauthEnum;
+
   @IsNotEmpty({
     message: t<I18n>('validation.password_cannot_be_empty'),
   })
@@ -31,7 +45,7 @@ export class LoginDao {
   })
   @IsString({ message: t<I18n>('validation.password_must_be_a_string') })
   @ApiProperty({
-    example: '123456',
+    example: appConfig.DEFAULT_PASSWORD,
     description: '密码',
   })
   password: string;
