@@ -151,6 +151,20 @@ export class AuthService {
     );
   }
 
+  // true 为存在 false 为不存在
+  async validateOauth(account: string, oauth: OauthEnum) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        account_oauth: {
+          account,
+          oauth
+        },
+        isDelete: false
+      }
+    })
+    return user !== null
+  }
+
   async oauth(registerDao: RegisterDto, oauthMethod: OauthEnum) {
     const user = await this.prisma.user.findUnique({
       where: {

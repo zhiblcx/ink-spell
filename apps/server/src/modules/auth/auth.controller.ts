@@ -1,6 +1,8 @@
 import { APIResponse } from '@/core/decorator/APIResponse';
 import { Public } from '@/core/decorator/auth.decorator';
 import {
+  BadGatewayException,
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -94,22 +96,24 @@ export class AuthController {
       // 密码默认 123456
 
       // 注册用户
-
-      // TODO:登录不需要下载头像
-      // 下载用户的头像
-      await axios({
-        method: "GET",
-        url: user.avatar_url,
-        responseType: 'arraybuffer',
-      }).then((response: AxiosResponse) => {
-        writeFile(imagePath, response.data, 'binary', function (err) {
-          if (err) {
-            console.log("下载失败", err);
-          } else {
-            console.log("下载成功");
-          }
-        });
-      })
+      const isDownloadAvatar = await this.authService.validateOauth(user.login, OauthEnum.GITHUB)
+      if (!isDownloadAvatar) {
+        // TODO:登录不需要下载头像
+        // 下载用户的头像
+        await axios({
+          method: "GET",
+          url: user.avatar_url,
+          responseType: 'arraybuffer',
+        }).then((response: AxiosResponse) => {
+          writeFile(imagePath, response.data, 'binary', function (err) {
+            if (err) {
+              console.log("下载失败", err);
+            } else {
+              console.log("下载成功");
+            }
+          });
+        })
+      }
 
       return await this.authService.oauth({
         account: user.login,
@@ -118,7 +122,7 @@ export class AuthController {
         avatar: imagePath.replace("public", "static"),
       }, OauthEnum.GITHUB)
     } catch (err) {
-      throw new UnauthorizedException('登录失败');
+      throw new BadGatewayException("连接超时")
     }
   }
 }
