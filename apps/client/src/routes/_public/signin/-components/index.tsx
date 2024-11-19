@@ -144,8 +144,8 @@ export default function Signin() {
                 className="w-[35px] cursor-pointer rounded-lg bg-white p-1 dark:bg-black"
                 onClick={() => {
                   window.open(
-                    `https://github.com/login/oauth/authorize?client_id=${import.meta.env.VITE_CLIENT_ID}&redirect_uri=http://101.200.12.97:6600/oauth`,
-                    '',
+                    `https://github.com/login/oauth/authorize?client_id=${import.meta.env.VITE_CLIENT_ID}&redirect_uri=http://127.0.0.1:6600/oauth`,
+                    '_blank',
                     'height=600, width=700'
                   )
                 }}

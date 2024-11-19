@@ -6,3 +6,4 @@ declare module 'i18next' {
     resources: typeof resources
   }
 }
+

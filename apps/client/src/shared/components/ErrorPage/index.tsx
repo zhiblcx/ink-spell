@@ -1,5 +1,6 @@
 export function ErrorPage() {
   const { t } = useTranslation(['COMMON', 'PROMPT'])
+
   return (
     <Result
       status="500"
