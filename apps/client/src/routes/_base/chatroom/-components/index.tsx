@@ -1,10 +1,11 @@
 import { selectOneselfInfoQuery } from '@/features/user'
 import { ChatEmojiAndPhoto } from '@/shared/components'
 import { CHAR_ROOM } from '@/shared/constants'
-import { useMenuStore } from '@/shared/store'
+import { useEmojiStore, useMenuStore } from '@/shared/store'
 import { User } from '@/shared/types'
 import { VerticalAlignBottomOutlined } from '@ant-design/icons'
-import { InputRef, message } from 'antd'
+import { message } from 'antd'
+import { TextAreaRef } from 'antd/es/input/TextArea'
 import clsx from 'clsx'
 import React from 'react'
 import useSmoothScroll from 'react-smooth-scroll-hook'
@@ -21,9 +22,9 @@ interface MessageType {
 
 export default function ChatRoom() {
   const { t } = useTranslation(['COMMON', 'VALIDATION', 'PROMPT'])
-  const inputRef = useRef<InputRef>(null)
-  const router = useRouter()
+  const inputRef = useRef<TextAreaRef>(null)
   const chatContent = useRef(null)
+  const location = useLocation()
   const [connect, setConnect] = useState(false)
   const [lookUser, setLookUser] = useState<User | null>(null)
   const [openFlag, setOpenFlag] = useState(false)
@@ -35,6 +36,7 @@ export default function ChatRoom() {
   const [count, setCount] = useState(0)
   const { TextArea } = Input
   const { menu } = useMenuStore()
+  const { clickEmoji } = useEmojiStore()
   const { data: query, isSuccess } = selectOneselfInfoQuery()
   const { scrollTo } = useSmoothScroll({
     ref: chatContent,
@@ -43,39 +45,32 @@ export default function ChatRoom() {
   })
   let reconnect = false
 
-  // 是否离开聊天室
   useEffect(() => {
-    if (router.latestLocation.pathname !== CHAR_ROOM.URL) {
-      leaveRoom()
-    }
-  }, [router.latestLocation.pathname])
-
-  function acquireMessage(data: MessageType[]) {
-    // 获取历史消息
-    const result = data.map((item: MessageType) => {
-      if (item.type === MessageEnum.MESSAGE) {
-        item.type =
-          item.userId === query?.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
+    if (clickEmoji) {
+      if (messageValue === undefined || messageValue === '') {
+        setMessageValue(clickEmoji)
+      } else {
+        // 此时输入框已有文字 selectionStart
+        // inputRef.current?.resizableTextArea?.textArea.selectionStart 此时光标下标
+        // 将 clickEmoji 插入到光标位置
+        const start = inputRef.current?.resizableTextArea?.textArea.selectionStart
+        const end = inputRef.current?.resizableTextArea?.textArea.selectionEnd
+        const value = messageValue.slice(0, start) + clickEmoji + messageValue.slice(end)
+        setMessageValue(value)
       }
-      return item
-    })
-
-    setMessages(() => [...(result as MessageType[])])
-    setLoading(false)
-
-    setTimeout(() => {
-      scrollTo(`#y-item-${result[result.length - 1].id}`)
-    }, 200)
-  }
+    }
+  }, [clickEmoji])
 
   // 初始化数据
   useEffect(() => {
     if (isSuccess && !reconnect) {
+      console.log('正在连接')
       reconnect = true
       socket.open()
       socket.emit('join', { name: query?.data.username, id: query?.data.id })
 
       socket.on('join', (data) => {
+        console.log('连接成功')
         setConnect(true)
         if (query?.data.id !== data.userId) {
           handleNewMessage(data)
@@ -105,8 +100,33 @@ export default function ChatRoom() {
     }
   }, [isSuccess])
 
+  useEffect(() => {
+    if (location.pathname !== CHAR_ROOM.URL) {
+      leaveRoom()
+    }
+  }, [location])
+
+  function acquireMessage(data: MessageType[]) {
+    // 获取历史消息
+    const result = data.map((item: MessageType) => {
+      if (item.type === MessageEnum.MESSAGE) {
+        item.type =
+          item.userId === query?.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
+      }
+      return item
+    })
+
+    setMessages(() => [...(result as MessageType[])])
+    setLoading(false)
+
+    setTimeout(() => {
+      scrollTo(`#y-item-${result[result.length - 1].id}`)
+    }, 200)
+  }
+
   // 离开房间
   const leaveRoom = () => {
+    console.log('离开了')
     socket.emit('leave', { name: query?.data.username, id: query?.data.id })
     socket.close()
   }
@@ -147,12 +167,12 @@ export default function ChatRoom() {
     handlerDisableButton()
   }
 
-  // 发送消息后禁用按钮，2秒后启用
+  // 发送消息后禁用按钮，1秒后启用
   const handlerDisableButton = () => {
     setDisableFlag(true)
     setTimeout(() => {
       setDisableFlag(false)
-    }, 2000)
+    }, 1000)
   }
 
   return (
@@ -252,6 +272,7 @@ export default function ChatRoom() {
                   )
                 })}
 
+                {/* 悬浮按钮 */}
                 <FloatButton
                   icon={<VerticalAlignBottomOutlined />}
                   className={clsx(
@@ -265,6 +286,7 @@ export default function ChatRoom() {
                   badge={{ count: count, overflowCount: 99 }}
                 />
               </ul>
+
               <div className="absolute bottom-8 min-[375px]:min-w-[90%] md:min-w-[70%]">
                 <ChatEmojiAndPhoto />
                 <div
@@ -275,9 +297,9 @@ export default function ChatRoom() {
                 >
                   <TextArea
                     value={messageValue}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                    onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
                       setMessageValue(e.target.value)
-                    }}
+                    }
                     ref={inputRef}
                     placeholder={t('VALIDATION:enter_message')}
                     showCount
