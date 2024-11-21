@@ -46,20 +46,20 @@ export default function ChatRoom() {
   let reconnect = false
 
   useEffect(() => {
-    if (clickEmoji) {
+    if (clickEmoji.emoji) {
       if (messageValue === undefined || messageValue === '') {
-        setMessageValue(clickEmoji)
+        setMessageValue(clickEmoji.emoji)
       } else {
         // 此时输入框已有文字 selectionStart
         // inputRef.current?.resizableTextArea?.textArea.selectionStart 此时光标下标
         // 将 clickEmoji 插入到光标位置
         const start = inputRef.current?.resizableTextArea?.textArea.selectionStart
         const end = inputRef.current?.resizableTextArea?.textArea.selectionEnd
-        const value = messageValue.slice(0, start) + clickEmoji + messageValue.slice(end)
+        const value = messageValue.slice(0, start) + clickEmoji.emoji + messageValue.slice(end)
         setMessageValue(value)
       }
     }
-  }, [clickEmoji])
+  }, [clickEmoji.timer])
 
   // 初始化数据
   useEffect(() => {
@@ -126,7 +126,7 @@ export default function ChatRoom() {
 
   // 离开房间
   const leaveRoom = () => {
-    console.log('离开了')
+    console.log('离开房间')
     socket.emit('leave', { name: query?.data.username, id: query?.data.id })
     socket.close()
   }

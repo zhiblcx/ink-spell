@@ -5,7 +5,7 @@ import { subscribeWithSelector } from "zustand/middleware";
 type EmojiStoreType = {
   emojis: string[],
   setEmojis: (emojis: string[]) => void,
-  clickEmoji: string | undefined,
+  clickEmoji: { emoji: string | undefined, timer: string | undefined },
 }
 
 export const useEmojiStore = create<EmojiStoreType>()(
@@ -14,9 +14,12 @@ export const useEmojiStore = create<EmojiStoreType>()(
     setEmojis: (emojis: string[]) => {
       // 去重，截取前两个
       const uniqueEmoji = Array.from(new Set(emojis)).slice(0, 20)
-      set({ emojis: uniqueEmoji, clickEmoji: uniqueEmoji[0] })
+      set({ emojis: uniqueEmoji, clickEmoji: { emoji: uniqueEmoji[0], timer: new Date().getTime().toString() } })
       EmojiUtils.setRecentlyEmoji(uniqueEmoji.join())
     },
-    clickEmoji: undefined,
+    clickEmoji: {
+      emoji: undefined,
+      timer: undefined
+    },
   }))
 )
