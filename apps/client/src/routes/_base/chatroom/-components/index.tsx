@@ -1,4 +1,5 @@
 import { selectOneselfInfoQuery } from '@/features/user'
+import { ChatEmojiAndPhoto } from '@/shared/components'
 import { CHAR_ROOM } from '@/shared/constants'
 import { useMenuStore } from '@/shared/store'
 import { User } from '@/shared/types'
@@ -264,31 +265,34 @@ export default function ChatRoom() {
                   badge={{ count: count, overflowCount: 99 }}
                 />
               </ul>
-              <div
-                className={clsx(
-                  menu === MenuEnum.EXTEND ? '' : 'min-[375px]:hidden md:flex',
-                  'absolute bottom-8 flex items-center space-x-3 min-[375px]:min-w-[90%] md:min-w-[70%]'
-                )}
-              >
-                <TextArea
-                  value={messageValue}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                    setMessageValue(e.target.value)
-                  }}
-                  ref={inputRef}
-                  placeholder={t('VALIDATION:enter_message')}
-                  showCount
-                  onPressEnter={sendMessage}
-                  maxLength={200}
-                  style={{ resize: 'none' }}
-                />
-                <Button
-                  onClick={sendMessage}
-                  disabled={disableFlag}
-                  className="min-[375px]:min-w-[70px]"
+              <div className="absolute bottom-8 min-[375px]:min-w-[90%] md:min-w-[70%]">
+                <ChatEmojiAndPhoto />
+                <div
+                  className={clsx(
+                    menu === MenuEnum.EXTEND ? '' : 'min-[375px]:hidden md:flex',
+                    'mt-3 flex items-center space-x-3'
+                  )}
                 >
-                  {t('COMMON:send')}
-                </Button>
+                  <TextArea
+                    value={messageValue}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                      setMessageValue(e.target.value)
+                    }}
+                    ref={inputRef}
+                    placeholder={t('VALIDATION:enter_message')}
+                    showCount
+                    onPressEnter={sendMessage}
+                    maxLength={200}
+                    style={{ resize: 'none' }}
+                  />
+                  <Button
+                    onClick={sendMessage}
+                    disabled={disableFlag}
+                    className="min-[375px]:min-w-[70px]"
+                  >
+                    {t('COMMON:send')}
+                  </Button>
+                </div>
               </div>
             </>
           )}

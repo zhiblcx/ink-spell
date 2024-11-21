@@ -2,7 +2,6 @@ import { APIResponse } from '@/core/decorator/APIResponse';
 import { Public } from '@/core/decorator/auth.decorator';
 import {
   BadGatewayException,
-  BadRequestException,
   Body,
   Controller,
   Get,
@@ -11,7 +10,6 @@ import {
   HttpStatus,
   Post,
   Query,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
@@ -98,7 +96,6 @@ export class AuthController {
       // 注册用户
       const isDownloadAvatar = await this.authService.validateOauth(user.login, OauthEnum.GITHUB)
       if (!isDownloadAvatar) {
-        // TODO:登录不需要下载头像
         // 下载用户的头像
         await axios({
           method: "GET",

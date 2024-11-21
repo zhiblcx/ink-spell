@@ -11,6 +11,7 @@ export const Route = createFileRoute('/$')({
           const { access_token, refresh_token } = result.data
           AuthUtils.setAccessToken(access_token)
           AuthUtils.setFreshToken(refresh_token)
+          // 通过 window.opener 打开的窗口的父窗口重新刷新
           window.opener.location.href = '/'
           window.close()
         } catch (_) {
