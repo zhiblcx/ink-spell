@@ -133,8 +133,10 @@ export default function ChatRoom() {
 
   // 处理新消息
   const handleNewMessage = (data: MessageType) => {
-    data.type =
-      data.userId === query?.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
+    if (data.type !== MessageEnum.JOIN) {
+      data.type =
+        data.userId === query?.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
+    }
     if (chatContent.current) {
       const container = chatContent.current as HTMLElement
       if (
@@ -149,6 +151,7 @@ export default function ChatRoom() {
           return [...prevMessages, data]
         })
       } else {
+        console.log(data)
         setMessages((prevMessages) => [...prevMessages, data])
         setCount((preCount) => preCount + 1)
       }
@@ -287,7 +290,7 @@ export default function ChatRoom() {
                 />
               </ul>
 
-              <div className="absolute bottom-8 min-[375px]:min-w-[90%] md:min-w-[70%]">
+              <div className="absolute bottom-8 pt-1 min-[375px]:min-w-[90%] md:min-w-[70%]">
                 <ChatEmojiAndPhoto />
                 <div
                   className={clsx(
