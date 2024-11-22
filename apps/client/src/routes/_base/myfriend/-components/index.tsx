@@ -1,7 +1,7 @@
 import { followUserByUserIdMutation, unfollowUserByFollowMutation } from '@/features/user'
 import { httpRequest } from '@/shared/API'
 import { User } from '@/shared/types'
-import { UrlUtils } from '@/shared/utils/UrlUtils'
+import { UrlUtils } from '@/shared/utils'
 import { message } from 'antd'
 import { AxiosError } from 'axios'
 import InfiniteScroll from 'react-infinite-scroll-component'

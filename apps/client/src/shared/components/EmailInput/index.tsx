@@ -1,6 +1,6 @@
 import { SignupValue } from '@/features/auth'
 import { sendRegisterEmailMutation } from '@/features/user'
-import startCountdown from '@/shared/utils/startCountdown'
+import { startCountdown } from '@/shared/utils'
 import { MailOutlined } from '@ant-design/icons'
 import { FormInstance, message } from 'antd'
 

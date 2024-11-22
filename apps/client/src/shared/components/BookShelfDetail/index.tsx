@@ -1,6 +1,5 @@
 import { BookShelfType } from '@/shared/types'
-import { UrlUtils } from '@/shared/utils/UrlUtils'
-import { cardLocation } from '@/shared/utils/waterfallLayout'
+import { cardLocation, UrlUtils } from '@/shared/utils'
 import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
 import Meta from 'antd/es/card/Meta'
 import clsx from 'clsx'

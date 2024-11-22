@@ -1,5 +1,4 @@
-import { AuthUtils } from '@/shared/utils'
-import { PhotoUtils } from '@/shared/utils/PhotoUtils'
+import { AuthUtils, PhotoUtils } from '@/shared/utils'
 import { FormInstance, UploadProps, type UploadFile } from 'antd'
 import ImgCrop from 'antd-img-crop'
 import { RcFile } from 'antd/es/upload'

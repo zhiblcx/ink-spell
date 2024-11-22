@@ -4,7 +4,7 @@ import {
   selectUserCollectBookShelfByUserIdQuery,
   selectUserCollectBookShelfQuery
 } from '@/features/bookshelf'
-import { UrlUtils } from '@/shared/utils/UrlUtils'
+import { UrlUtils } from '@/shared/utils'
 
 export const Route = createLazyFileRoute('/_base/otherbookshelf/$userId')({
   component: () => <Page />

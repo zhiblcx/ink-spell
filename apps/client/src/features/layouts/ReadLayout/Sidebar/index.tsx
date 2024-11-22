@@ -1,6 +1,5 @@
 import { useActionBookStore } from '@/shared/store'
-import { BookUtils } from '@/shared/utils'
-import { UrlUtils } from '@/shared/utils/UrlUtils'
+import { BookUtils, UrlUtils } from '@/shared/utils'
 import { AnimatePresence } from 'framer-motion'
 
 interface SidebarActiveType {

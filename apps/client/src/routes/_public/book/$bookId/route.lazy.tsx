@@ -1,7 +1,7 @@
 import { selectBookByBookIdQuery, showBookMarkQuery } from '@/features/book'
 import { Content, Sidebar } from '@/features/layouts/ReadLayout'
 import { useSetUpStore } from '@/shared/store/SetupStore'
-import { UrlUtils } from '@/shared/utils/UrlUtils'
+import { UrlUtils } from '@/shared/utils'
 
 interface BookChapterType {
   chapter: number

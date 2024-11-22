@@ -1,7 +1,6 @@
 import { useActionBookStore } from '@/shared/store'
 import { useSetUpStore } from '@/shared/store/SetupStore'
-import { BookUtils } from '@/shared/utils'
-import { UrlUtils } from '@/shared/utils/UrlUtils'
+import { BookUtils, UrlUtils } from '@/shared/utils'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import useSmoothScroll from 'react-smooth-scroll-hook'

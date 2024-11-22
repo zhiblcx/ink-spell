@@ -1,4 +1,4 @@
-import { EmojiUtils } from "@/shared/utils/EmojiUtils";
+import { EmojiUtils } from "@/shared/utils";
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 

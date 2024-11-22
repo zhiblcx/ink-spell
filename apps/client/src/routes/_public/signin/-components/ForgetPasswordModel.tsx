@@ -1,6 +1,5 @@
 import { forgetPasswordByEmailMutation, sendResetPasswordEmailMutation } from '@/features/user'
-import { confirmPasswordRule } from '@/shared/utils/confirmPasswordRule'
-import startCountdown from '@/shared/utils/startCountdown'
+import { confirmPasswordRule, startCountdown } from '@/shared/utils'
 import { LockOutlined, MailOutlined, UserOutlined, VerifiedOutlined } from '@ant-design/icons'
 import { Dispatch, SetStateAction } from 'react'
 

@@ -2,7 +2,7 @@ import { deleteBookShelfMutation } from '@/features/bookshelf'
 import { selectBookByBookShelfIdQuery } from '@/features/bookshelf/query'
 import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
-import { UrlUtils } from '@/shared/utils/UrlUtils'
+import { UrlUtils } from '@/shared/utils'
 import { useEffect, useState } from 'react'
 interface pageType {
   bookId: string
