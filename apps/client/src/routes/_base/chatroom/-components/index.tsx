@@ -3,6 +3,7 @@ import { ChatEmojiAndPhoto } from '@/shared/components'
 import { CHAR_ROOM } from '@/shared/constants'
 import { useEmojiStore, useMenuStore } from '@/shared/store'
 import { User } from '@/shared/types'
+import { TransformTimeUtils } from '@/shared/utils/TransformTimeUtils'
 import { VerticalAlignBottomOutlined } from '@ant-design/icons'
 import { message } from 'antd'
 import { TextAreaRef } from 'antd/es/input/TextArea'
@@ -18,12 +19,13 @@ interface MessageType {
   text: string
   user?: User
   type: string
+  createTimer: string
 }
 
 export default function ChatRoom() {
   const { t } = useTranslation(['COMMON', 'VALIDATION', 'PROMPT'])
   const inputRef = useRef<TextAreaRef>(null)
-  const chatContent = useRef(null)
+  const chatContent = useRef<HTMLUListElement>(null)
   const location = useLocation()
   const [connect, setConnect] = useState(false)
   const [lookUser, setLookUser] = useState<User | null>(null)
@@ -79,7 +81,7 @@ export default function ChatRoom() {
         socket.emit('getRoomUsers')
       })
 
-      socket.once('getMessages', (data) => {
+      socket.once('getMessages', (data: MessageType[]) => {
         acquireMessage(data)
       })
 
@@ -100,6 +102,7 @@ export default function ChatRoom() {
     }
   }, [isSuccess])
 
+  // 离开页面退出房间
   useEffect(() => {
     if (location.pathname !== CHAR_ROOM.URL) {
       leaveRoom()
@@ -117,11 +120,13 @@ export default function ChatRoom() {
     })
 
     setMessages(() => [...(result as MessageType[])])
-    setLoading(false)
 
+    setLoading(false)
     setTimeout(() => {
-      scrollTo(`#y-item-${result[result.length - 1].id}`)
-    }, 200)
+      if (chatContent.current) {
+        chatContent.current.scrollTop = chatContent.current.scrollHeight
+      }
+    })
   }
 
   // 离开房间
@@ -133,14 +138,15 @@ export default function ChatRoom() {
 
   // 处理新消息
   const handleNewMessage = (data: MessageType) => {
+    console.log(data)
     if (data.type !== MessageEnum.JOIN) {
       data.type =
         data.userId === query?.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
     }
     if (chatContent.current) {
-      const container = chatContent.current as HTMLElement
+      const container = chatContent.current
       if (
-        Math.ceil(container.scrollHeight) - Math.floor(container.scrollTop) <=
+        Math.ceil(container.scrollHeight) - 5 - Math.floor(container.scrollTop) <=
           Math.ceil(container.clientHeight) ||
         data.type === MessageEnum.MESSAGE_SELF
       ) {
@@ -151,7 +157,6 @@ export default function ChatRoom() {
           return [...prevMessages, data]
         })
       } else {
-        console.log(data)
         setMessages((prevMessages) => [...prevMessages, data])
         setCount((preCount) => preCount + 1)
       }
@@ -178,6 +183,16 @@ export default function ChatRoom() {
     }, 1000)
   }
 
+  function handleScrollBottom(scroll: React.UIEvent<HTMLUListElement, UIEvent>) {
+    const scrollElement = scroll.target as HTMLElement
+    const scrollTop = Math.ceil(scrollElement.scrollTop)
+    const scrollHeight = scrollElement.scrollHeight
+    const clientHeight = scrollElement.clientHeight
+    if (scrollHeight - scrollTop <= clientHeight) {
+      setCount(0)
+    }
+  }
+
   return (
     <>
       {loading ? (
@@ -199,14 +214,7 @@ export default function ChatRoom() {
             <>
               <ul
                 ref={chatContent}
-                onScroll={(scroll) => {
-                  const scrollTop = Math.ceil((scroll.target as HTMLElement).scrollTop)
-                  const scrollHeight = (scroll.target as HTMLElement).scrollHeight
-                  const clientHeight = (scroll.target as HTMLElement).clientHeight
-                  if (scrollHeight - scrollTop <= clientHeight) {
-                    setCount(0)
-                  }
-                }}
+                onScroll={(scroll) => handleScrollBottom(scroll)}
                 className={clsx(
                   `scroll absolute mt-2 space-y-4 overflow-y-scroll ${styles.height}`,
                   menu === MenuEnum.EXTEND
@@ -232,7 +240,12 @@ export default function ChatRoom() {
                             }}
                           />
                           <div className="ml-2 flex max-w-[80%] flex-col items-start">
-                            <span className="text-xs">{item.user?.username}</span>
+                            <div className="flex">
+                              <span className="mr-1 text-xs">{item.user?.username}</span>
+                              <span className="text-xs text-gray-400">
+                                {TransformTimeUtils.formatDateMDHM()}
+                              </span>
+                            </div>
                             <div className="break-all rounded-md bg-[#f5f5f5] p-2 dark:bg-[#262729]">
                               {item.text}
                             </div>
@@ -246,7 +259,12 @@ export default function ChatRoom() {
                           id={`y-item-${item.id}`}
                         >
                           <div className="mr-2 flex max-w-[80%] flex-col items-end overflow-hidden">
-                            <span className="text-xs">{item.user?.username}</span>
+                            <div className="flex">
+                              <span className="mr-1 text-xs text-gray-400">
+                                {TransformTimeUtils.formatDateMDHM()}
+                              </span>
+                              <span className="text-xs">{item.user?.username}</span>
+                            </div>
                             <div className="break-all rounded-md bg-[#89d961] p-2 dark:bg-[#262729]">
                               {item.text}
                             </div>

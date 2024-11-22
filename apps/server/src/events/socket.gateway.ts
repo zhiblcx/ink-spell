@@ -74,6 +74,7 @@ export class SocketGateway {
     msg.userId = userId;
     msg.user = await this.userService.getUserInfo(userId);
     msg.type = MessageEnum.MESSAGE;
+    msg.createTimer = new Date()
     this.allMessages.push({
       id: dayjs().valueOf(),
       ...msg,
@@ -117,6 +118,7 @@ export class SocketGateway {
           userId: id,
           text: `用户：${nextRequest.name}离开了聊天室`,
           type: MessageEnum.LEAVE,
+          createTimer: new Date()
         };
 
         this.allMessages.push(data);
@@ -185,8 +187,8 @@ export class SocketGateway {
           id: dayjs().valueOf(),
           userId: id,
           text: `用户：${nextRequest.name}加入了聊天室`,
-
           type: MessageEnum.JOIN,
+          createTimer: new Date()
         };
 
         this.allMessages.push(data);
@@ -203,7 +205,7 @@ export class SocketGateway {
         // 加入这个人
         this.currentUsers.add(id);
         if (this.currentUsers.size === 1) {
-          this.handleBatchMessages();
+          await this.handleBatchMessages();
           this.saveMessageTimer();
         }
         // 处理完一个请求后，从队列中移除并继续处理下一个请求
@@ -228,6 +230,7 @@ export class SocketGateway {
   // 获取消息
   @SubscribeMessage('getMessages')
   async handleGetMessages() {
+    console.log(this.allMessages)
     this.server.to(this.roomId).emit('getMessages', this.allMessages);
   }
 }
