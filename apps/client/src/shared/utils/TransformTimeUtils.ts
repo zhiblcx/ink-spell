@@ -1,4 +1,4 @@
-import dayjs from "dayjs"
+import dayjs, { OpUnitType, QUnitType } from "dayjs"
 
 export class TransformTimeUtils {
 
@@ -201,5 +201,21 @@ export class TransformTimeUtils {
   */
   static compareTimer(timer1 = new Date(), timer2 = new Date()) {
     return dayjs(timer1).isBefore(dayjs(timer2))
+  }
+
+  /**
+  * @param {Date} timer1 - 第一个时间戳，默认为当前时间
+  * @param {Date} timer2 - 第二个时间戳，默认为当前时间
+  * @param {QUnitType | OpUnitType} - 比较单位，默认为'minute'
+  * @returns {boolean} - 返回指定单位中两个日期时间之间的差异
+  * @example
+  * ```ts
+  * TransformTimeUtils.compareTimerMinute()
+  * ```
+  */
+  // 比较两个时间的分钟数
+  static compareTimerMinute(timer1 = new Date(), timer2 = new Date(), unit?: QUnitType | OpUnitType) {
+    if (timer1 < timer2) [timer1, timer2] = [timer2, timer1]
+    return dayjs(timer1).diff(dayjs(timer2), unit ?? 'minute')
   }
 }
