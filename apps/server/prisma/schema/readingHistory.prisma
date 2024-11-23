@@ -1,0 +1,10 @@
+model readingHistory {
+  id        Int       @id @default(autoincrement())
+  bookId    Int       @map("book_id")
+  userId    Int       @map("user_id")
+  startTime DateTime  @default(now()) @map("start_time")
+  endTime   DateTime? @map("end_time")
+  readTime  Int?      @map("read_time")
+  book      Book      @relation(fields: [bookId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+}
