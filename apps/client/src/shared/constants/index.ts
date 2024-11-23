@@ -13,9 +13,17 @@ export const MY_FAVORITES = {
   label: "my_favorites"
 }
 
+export const RECENTLY_READ = {
+  label: "recently_read"
+}
+
 export const LOGOUT = {
   URL: '/signin',
   label: 'logout'
+}
+
+export const RESET_PASSWORD = {
+  label: "reset_password"
 }
 
 export const ALL_BOOK = {

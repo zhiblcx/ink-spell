@@ -23,6 +23,8 @@
     "pinia",
     "mingcute",
     "echarts",
-    "nprogress"
+    "nprogress",
+    "vite",
+    "autoincrement"
   ]
 }

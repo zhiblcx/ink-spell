@@ -1,6 +1,13 @@
-import { LOGOUT, MY_FAVORITES, PERSON_INFO } from '@/shared/constants'
+import {
+  LOGOUT,
+  MY_FAVORITES,
+  PERSON_INFO,
+  RECENTLY_READ,
+  RESET_PASSWORD
+} from '@/shared/constants'
 import { AuthUtils } from '@/shared/utils'
 import type { MenuProps } from 'antd'
+import { RecentlyRead } from './RecentlyRead'
 
 interface AvatarItemsType {
   setOpenFlag: React.Dispatch<React.SetStateAction<boolean>>
@@ -10,9 +17,10 @@ interface AvatarItemsType {
 export function AvatarItems({ setOpenFlag, avatar }: AvatarItemsType) {
   const navigate = useNavigate()
   const { t } = useTranslation(['AUTH', 'COMMON'])
+  const [open, setOpen] = useState(false)
   const items: MenuProps['items'] = [
     {
-      key: 1,
+      key: PERSON_INFO.label,
       label: (
         <div onClick={() => navigate({ to: PERSON_INFO.URL })}>
           {t('COMMON:profile', { context: PERSON_INFO.label })}
@@ -20,7 +28,7 @@ export function AvatarItems({ setOpenFlag, avatar }: AvatarItemsType) {
       )
     },
     {
-      key: 2,
+      key: MY_FAVORITES.label,
       label: (
         <div onClick={() => navigate({ to: MY_FAVORITES.URL })}>
           {t('COMMON:profile', { context: MY_FAVORITES.label })}
@@ -28,11 +36,23 @@ export function AvatarItems({ setOpenFlag, avatar }: AvatarItemsType) {
       )
     },
     {
-      key: 3,
-      label: <div onClick={() => setOpenFlag(true)}>{t('AUTH:profile_reset_password')}</div>
+      key: RECENTLY_READ.label,
+      label: (
+        <div onClick={() => setOpen(true)}>
+          {t('COMMON:profile', { context: RECENTLY_READ.label })}
+        </div>
+      )
     },
     {
-      key: 4,
+      key: RESET_PASSWORD.label,
+      label: (
+        <div onClick={() => setOpenFlag(true)}>
+          {t('AUTH:profile', { context: RESET_PASSWORD.label })}
+        </div>
+      )
+    },
+    {
+      key: LOGOUT.label,
       label: (
         <div
           onClick={() => {
@@ -46,15 +66,23 @@ export function AvatarItems({ setOpenFlag, avatar }: AvatarItemsType) {
       )
     }
   ]
+
   return (
-    <Dropdown
-      menu={{ items }}
-      placement="bottomLeft"
-    >
-      <Avatar
-        src={import.meta.env.VITE_SERVER_URL + avatar}
-        size={34}
+    <>
+      <Dropdown
+        menu={{ items }}
+        placement="bottomLeft"
+      >
+        <Avatar
+          src={import.meta.env.VITE_SERVER_URL + avatar}
+          size={34}
+        />
+      </Dropdown>
+
+      <RecentlyRead
+        open={open}
+        setOpen={setOpen}
       />
-    </Dropdown>
+    </>
   )
 }
