@@ -10,7 +10,7 @@ import { BookContentDto } from './dto/book-content.dto';
 
 @Injectable()
 export class BookService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
   async uploadFile(req, file, md5, bookShelfId) {
     const encoding = detectFileEncoding(file.path);
     const filePath = file.path.replace(/\\/g, '/').replace('public', '/static');
@@ -142,10 +142,17 @@ export class BookService {
     });
   }
 
-  async showBookContent(bookID) {
+  async showBookContent(userId, bookId) {
     const currentBook = await this.prisma.book.findUnique({
-      where: { id: Number(bookID), isDelete: false },
+      where: { id: Number(bookId), isDelete: false },
     });
+
+    await this.prisma.readingHistory.create({
+      data: {
+        userId, bookId
+      }
+    })
+
     const fileName = currentBook.bookFile.replace(/static/, 'public');
     const content =
       (await readFileContent(fileName, currentBook.encoding)) || {};

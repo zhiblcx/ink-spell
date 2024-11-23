@@ -21,6 +21,7 @@ import { TranslationModule } from './modules/translation/translation.module';
 import { defaultLang } from './modules/translation/translation.service';
 import { UserModule } from './modules/user/user.module';
 import { UserService } from './modules/user/user.service';
+import { ReadHistoryModule } from './read-history/read-history.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { UserService } from './modules/user/user.service';
     AuthModule,
     PrismaModule,
     TranslationModule,
+    ReadHistoryModule,
   ],
   providers: [
     { provide: APP_PIPE, useClass: I18nValidationPipe },
@@ -60,4 +62,4 @@ import { UserService } from './modules/user/user.service';
     UserService,
   ],
 })
-export class AppModule {}
+export class AppModule { }
