@@ -7,5 +7,6 @@ export enum QueryKeysEnum {
   USER_BOOKSHELF_KEY = 'user-bookshelf_key',
   MESSAGE_KEY = 'messages_key',
   USER_KEY = 'user_key',
-  USER_ID_KEY = 'user_id_key'
+  USER_ID_KEY = 'user_id_key',
+  READ_HISTORY = "read_history"
 }
