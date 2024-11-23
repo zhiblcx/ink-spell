@@ -23,6 +23,9 @@
 - [x] myFriend
 - [x] Forgot Password via Email
 - [x] Internationalization
+- [x] Dark Mode
+- [x] emoji
+- [x] github login
 
 ## design sketch
 
