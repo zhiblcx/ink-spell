@@ -50,7 +50,7 @@ export function BookShelf({ bookShelfId, books, setBooks }: BookShelfPropsType) 
           if (item.label === ALL_BOOK.label) {
             selectOptions.push({
               value: item.id.toString(),
-              label: t('COMMON:all_book')
+              label: t('COMMON:sidebar', { context: ALL_BOOK.label })
             })
           } else {
             selectOptions.push({

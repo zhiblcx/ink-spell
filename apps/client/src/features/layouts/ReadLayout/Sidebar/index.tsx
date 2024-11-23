@@ -49,7 +49,7 @@ function Sidebar({
         } else {
           // 存了书
           const lastChapterIndex = localBooks.findIndex(
-            (item: Array<string>) => item[0] === match[0]
+            (item: Array<string>) => item[0] == match[0]
           )
           if (lastChapterIndex >= 0) {
             // 存了当前阅读的书
