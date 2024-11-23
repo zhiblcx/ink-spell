@@ -4,26 +4,31 @@ export const LANGUAGE = [
 ]
 
 export const PERSON_INFO = {
-  URL: '/profile'
+  URL: '/profile',
+  label: "person_info"
 }
 
 export const MY_FAVORITES = {
-  URL: '/favorites'
+  URL: '/favorites',
+  label: "my_favorites"
 }
 
 export const LOGOUT = {
-  URL: '/signin'
+  URL: '/signin',
+  label: 'logout'
 }
 
 export const ALL_BOOK = {
-  label: '全部图书',
-  URL: '/'
+  URL: '/',
+  label: 'all_book',
 }
 
 export const MY_FRIEND = {
-  URL: '/myfriend'
+  URL: '/myfriend',
+  label: 'my_friend'
 }
 
 export const CHAR_ROOM = {
-  URL: '/chatroom'
+  URL: '/chatroom',
+  label: 'char_room'
 }

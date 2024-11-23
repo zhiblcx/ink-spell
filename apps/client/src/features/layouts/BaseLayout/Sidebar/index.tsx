@@ -19,17 +19,17 @@ function Sidebar() {
   const menuList = [
     {
       label: ALL_BOOK.URL,
-      value: t('COMMON:all_book'),
+      value: t('COMMON:sidebar', { context: ALL_BOOK.label }),
       Icon: BookText
     },
     {
       label: MY_FRIEND.URL,
-      value: t('COMMON:my_friend'),
+      value: t('COMMON:sidebar', { context: MY_FRIEND.label }),
       Icon: Users
     },
     {
       label: CHAR_ROOM.URL,
-      value: t('COMMON:char_room'),
+      value: t('COMMON:sidebar', { context: CHAR_ROOM.label }),
       Icon: Bot
     }
   ]
