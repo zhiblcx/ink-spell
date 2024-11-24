@@ -14,7 +14,6 @@ model Book {
   User           User?            @relation(fields: [userId], references: [id])
   userId         Int?             @map("user_id")
   bookMark       BookMark[]
-  readTimer      ReadTimer[]
   readingHistory readingHistory[]
 
   @@unique([md5, userId])
