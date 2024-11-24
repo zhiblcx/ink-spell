@@ -1,4 +1,5 @@
 import { collectBookByBookIdMutation, deleteBookByBookIdMutation } from '@/features/book'
+import { insertReadHistoryMutation } from '@/features/read-history'
 import { useActionBookStore } from '@/shared/store'
 import { Book, Ink } from '@/shared/types'
 import { BookUtils } from '@/shared/utils'
@@ -30,6 +31,9 @@ export function BookShelfList({ books, setBooks, options, query }: BookShelfList
     (acc: Array<string>, item: Book) => acc.concat(item.md5),
     []
   )
+
+  const { mutate: createReadHistoryMutate } = insertReadHistoryMutation()
+
   const { mutate } = deleteBookByBookIdMutation(() =>
     queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.BOOKSHELF_BOOK_KEY] })
   )
@@ -107,7 +111,10 @@ export function BookShelfList({ books, setBooks, options, query }: BookShelfList
                     ),
                     <EllipsisOutlined
                       key="ellipsis"
-                      onClick={() => BookUtils.redirectToBookPage(item)}
+                      onClick={() => {
+                        createReadHistoryMutate(item.id)
+                        BookUtils.redirectToBookPage(item)
+                      }}
                     />
                   ]}
                   className="cursor-default overflow-hidden"

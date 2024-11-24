@@ -1,5 +1,6 @@
 import { imageLoadingImg } from '@/assets/images'
 import { updateBookByBookIdMutation } from '@/features/book'
+import { insertReadHistoryMutation } from '@/features/read-history'
 import { useActionBookStore } from '@/shared/store'
 import { type Ink } from '@/shared/types'
 import { BookUtils } from '@/shared/utils'
@@ -39,6 +40,7 @@ export default function InkCard({
   ])
 
   const { mutate } = updateBookByBookIdMutation(setBook)
+  const { mutate: createReadHistoryMutate } = insertReadHistoryMutation()
 
   useEffect(() => {
     const [role1, role2] = book.protagonist?.split('|') || ['', '']
@@ -82,7 +84,10 @@ export default function InkCard({
               book.name ? 'photo-visible' : '',
               'photo h-[100%] w-[100%] overflow-hidden'
             )}
-            onClick={() => BookUtils.redirectToBookPage(book)}
+            onClick={() => {
+              createReadHistoryMutate(book.id)
+              BookUtils.redirectToBookPage(book)
+            }}
           >
             <img
               style={{

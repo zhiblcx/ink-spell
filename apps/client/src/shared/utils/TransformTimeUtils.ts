@@ -100,6 +100,19 @@ export class TransformTimeUtils {
   }
 
   /**
+ * @param {Date} [timer = new Date()] - 可选参数 表示要格式化的时间戳，默认为当前时间
+ * @param {string} [format = 'YYYY-MM-DD HH:mm'] - 可选参数 表示要格式化的时间格式，默认为'YYYY-MM-DD HH:mm:ss'
+ * @return {string} 按照指定格式格式化的日期时间字符串
+ * @example
+ * ```ts
+ * TransformTimeUtils.formatDateYMDHM()
+ * ```
+ */
+  static formatDateYMDHM(timer = new Date(), format = 'YYYY-MM-DD HH:mm') {
+    return dayjs(timer).format(format)
+  }
+
+  /**
   * @param {Date} [timer = new Date()] - 可选参数 表示要格式化的时间戳，默认为当前时间
   * @param {string} [format = 'MM-DD HH:mm'] - 可选参数 表示要格式化的时间格式，默认为'MM-DD HH:mm'
   * @return {string} 按照指定格式格式化的日期时间字符串

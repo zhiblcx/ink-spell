@@ -1,5 +1,6 @@
 import { selectBookByBookIdQuery, showBookMarkQuery } from '@/features/book'
 import { Content, Sidebar } from '@/features/layouts/ReadLayout'
+import { updateReadHistoryMutation } from '@/features/read-history'
 import { useSetUpStore } from '@/shared/store/SetupStore'
 import { UrlUtils } from '@/shared/utils'
 
@@ -18,6 +19,8 @@ function Page() {
   const { setup } = useSetUpStore()
   const { data: query, isLoading } = selectBookByBookIdQuery(bookID)
   const { data: bookMark } = showBookMarkQuery(bookID)
+  const { mutate } = updateReadHistoryMutation()
+  window.addEventListener('beforeunload', () => mutate(bookID))
   return (
     <>
       {isLoading ? (

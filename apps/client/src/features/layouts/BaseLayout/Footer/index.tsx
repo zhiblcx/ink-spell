@@ -129,9 +129,7 @@ function Footer() {
               </li>
               <li
                 className="cursor-pointer"
-                onClick={() => {
-                  window.open(`/bookshelf/show/${bookShelfId}`, '_blank')
-                }}
+                onClick={() => window.open(`/bookshelf/show/${bookShelfId}`, '_blank')}
               >
                 {t('COMMON:view_notes')}
               </li>

@@ -138,7 +138,6 @@ export default function ChatRoom() {
 
   // 处理新消息
   const handleNewMessage = (data: MessageType) => {
-    console.log(data)
     if (data.type !== MessageEnum.JOIN) {
       data.type =
         data.userId === query?.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER

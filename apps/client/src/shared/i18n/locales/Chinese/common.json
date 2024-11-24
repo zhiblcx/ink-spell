@@ -81,5 +81,8 @@
   "manage": "管理",
   "edit_personal_information": "编辑个人信息",
   "personal_information": "个人信息",
-  "no_more_chapters": "没有了"
+  "no_more_chapters": "没有了",
+  "schedule": "进度",
+  "last_reading": "最近阅读",
+  "no_reading_history": "暂无阅读记录"
 }
