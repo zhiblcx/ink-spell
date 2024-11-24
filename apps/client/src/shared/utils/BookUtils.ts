@@ -52,6 +52,9 @@ export class BookUtils {
   }
 
   /**
+    * 创建阅读书籍信息
+    * @param {number} bookId - 书籍的唯一标识符。
+    * @param {{ currentChapter: number, allChapter: number, page?: string | null }} options - 包含书籍信息的对象。
     * @example
     * ```ts
     *  BookUtils.createBookById(bookId,{ currentChapter, allChapter, page })
@@ -74,6 +77,9 @@ export class BookUtils {
   }
 
   /**
+   * 更新阅读书籍信息
+   * @param {number} bookId - 书籍的唯一标识符。
+   * @param {{ currentChapter: number, allChapter: number, page?: string | null }} options - 包含书籍信息的对象。
    * @example
    * ```ts
    *  BookUtils.updateBooksById(bookId,{ currentChapter, allChapter, page})
@@ -155,8 +161,8 @@ export class BookUtils {
   }
 
   /**
-   *
-   * @param book
+   * 打开相对应的书籍页面
+   * @param {Ink} book - 书籍信息
    * @example
    * ```ts
    * BookUtils.redirectToBookPage(book)
@@ -175,5 +181,21 @@ export class BookUtils {
       `/book/${UrlUtils.encodeUrlById(book.id.toString())}?chapter=${chapter != -1 ? UrlUtils.encodeUrlById(chapter.toString()) : UrlUtils.encodeUrlById('1')}`,
       '_blank'
     )
+  }
+
+  /**
+  * 获取书籍的阅读进度
+  * @param {number} id - 书籍的唯一标识符。
+  * @example
+  * ```ts
+  * BookUtils.acquireBookSchedule(id)
+  * ```
+  */
+  static acquireBookSchedule(id: number) {
+    const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
+    const history = localBooks.find((i: Array<number>) => i[0] == id)
+    return history
+      ? ((history[1].currentChapter / history[1].allChapter) * 100).toFixed(1) + '%'
+      : '0.0%'
   }
 }

@@ -154,12 +154,7 @@ export function BookShelfList({ books, setBooks, options, query }: BookShelfList
           .filter((book) => options.some((option) => option.id === book.id))
           .reverse()
           .map((item: Ink) => {
-            const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
-            const index = localBooks.find((i: Array<string>) => i[0] == item.id.toString())
-            const schedule = index
-              ? ((index[1].currentChapter / index[1].allChapter) * 100).toFixed(1) + '%'
-              : '0.0%'
-
+            const schedule = BookUtils.acquireBookSchedule(item.id)
             return (
               <li key={item.id}>
                 <InkCard
