@@ -16,22 +16,57 @@ export class ReadHistoryService {
         startTime: 'desc'
       },
       distinct: ['userId', 'bookId'],
-      take: 100
+      take: 100,
+      include: {
+        book: true
+      }
     })
   }
 
-  async updateReadHistory(readHistoryId: number) {
+
+  async updateReadHistory(userId: number, bookId: number) {
     const data = await this.prisma.readingHistory.findUnique({
-      where: { id: readHistoryId }
+      where: {
+        bookId_userId: {
+          bookId, userId
+        }
+      }
     })
     data.endTime = new Date()
 
     return await this.prisma.readingHistory.update({
-      where: { id: readHistoryId },
+      where: {
+        bookId_userId: {
+          bookId, userId
+        }
+      },
       data: {
         endTime: data.endTime,
-        readTime: TransformTimeUtils.compareTimerMinute(data.startTime, data.endTime)
+        readTime: Number(TransformTimeUtils.compareTimerMinute(data.startTime, data.endTime)) + data.readTime
       }
     })
+  }
+
+  async createReadHistory(userId: number, bookId: number) {
+    const history = await this.prisma.readingHistory.findUnique({
+      where: { bookId_userId: { bookId, userId } }
+    })
+
+    // 如果有记录的
+    if (history) {
+      await this.prisma.readingHistory.update({
+        where: { id: history.id },
+        data: {
+          startTime: new Date()
+        }
+      })
+    } else {
+      // 如果没有记录
+      await this.prisma.readingHistory.create({
+        data: {
+          userId, bookId
+        }
+      })
+    }
   }
 }

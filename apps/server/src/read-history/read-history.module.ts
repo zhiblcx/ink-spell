@@ -5,5 +5,6 @@ import { ReadHistoryController } from './read-history.controller';
 @Module({
   controllers: [ReadHistoryController],
   providers: [ReadHistoryService],
+  exports: [ReadHistoryService]
 })
-export class ReadHistoryModule {}
+export class ReadHistoryModule { }

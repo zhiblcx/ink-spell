@@ -147,10 +147,10 @@ export class BookController {
   @ApiOperation({ summary: '查看书籍' })
   @HttpCode(HttpStatus.OK)
   @APIResponse(BookContentVo, '获取成功')
-  async showBookContent(@Request() req, @Param('bookID') bookID: number) {
+  async showBookContent(@Param('bookID') bookID: number) {
     return new R({
       message: this.translation.t('prompt.acquire_successful'),
-      data: await this.bookService.showBookContent(req.user.userId, Number(bookID)),
+      data: await this.bookService.showBookContent(Number(bookID)),
     });
   }
 

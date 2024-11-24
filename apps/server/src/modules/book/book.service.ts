@@ -7,10 +7,14 @@ import { Injectable } from '@nestjs/common';
 import * as path from 'node:path';
 import { PrismaService } from '../prisma/prisma.service';
 import { BookContentDto } from './dto/book-content.dto';
+import { ReadHistoryService } from '@/read-history/read-history.service';
 
 @Injectable()
 export class BookService {
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    private readHistoryService: ReadHistoryService
+  ) { }
   async uploadFile(req, file, md5, bookShelfId) {
     const encoding = detectFileEncoding(file.path);
     const filePath = file.path.replace(/\\/g, '/').replace('public', '/static');
@@ -142,16 +146,12 @@ export class BookService {
     });
   }
 
-  async showBookContent(userId, bookId) {
+  async showBookContent(bookId) {
     const currentBook = await this.prisma.book.findUnique({
       where: { id: Number(bookId), isDelete: false },
     });
 
-    await this.prisma.readingHistory.create({
-      data: {
-        userId, bookId
-      }
-    })
+
 
     const fileName = currentBook.bookFile.replace(/static/, 'public');
     const content =
