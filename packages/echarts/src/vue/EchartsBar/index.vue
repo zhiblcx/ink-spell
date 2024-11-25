@@ -50,7 +50,7 @@ const option = {
 
 onMounted(() => {
   initChart()
-  window.addEventListener('resize', () => myChartResize())
+  window.addEventListener('resize', () => handleResize())
 
   const unWatch = watch(
     () => options.relyVariable,
@@ -58,7 +58,7 @@ onMounted(() => {
       if (options.relyVariable === undefined || options.relyVariable === null) {
         unWatch()
       } else {
-        myChartResize()
+        handleResize()
       }
     }
   )
