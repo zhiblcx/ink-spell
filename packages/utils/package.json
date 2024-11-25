@@ -1,0 +1,23 @@
+{
+  "name": "@ink-spell/utils",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.mjs",
+  "private": "true",
+  "scripts": {
+    "build": "tsup"
+  },
+  "keywords": [
+    "ink-spell",
+    "utils"
+  ],
+  "author": "nicole",
+  "license": "ISC",
+  "dependencies": {
+    "dayjs": "^1.11.12"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5"
+  }
+}
