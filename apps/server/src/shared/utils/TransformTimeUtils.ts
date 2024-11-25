@@ -213,9 +213,42 @@ export class TransformTimeUtils {
   * TransformTimeUtils.compareTimerMinute()
   * ```
   */
-  // 比较两个时间的分钟数
+  // 比较两个时间
   static compareTimerMinute(timer1 = new Date(), timer2 = new Date(), unit?: dayjs.OpUnitType | dayjs.OpUnitType) {
     if (timer1 < timer2) [timer1, timer2] = [timer2, timer1]
     return dayjs(timer1).diff(dayjs(timer2), unit ?? 'minute')
+  }
+
+
+  /**
+  * @description 获取当前时间之前日期
+  * @param {number} n - 要获取的时间单位数量
+  * @param {Date} timer - 可选参数 表示要格式化的时间戳，默认为当前时间
+  * @param {dayjs.ManipulateType} [unit] - 要获取的时间单位，默认为'day'
+  * @param {string} [format] - 要返回的时间格式，默认为'YYYY-MM-DD'
+  * @returns {string} - 返回当前时间单位之前的指定日期时间字符串
+  * @example
+  * ```ts
+  * TransformTimeUtils.getUnitsBefore(2)
+  * ```
+  */
+  static getUnitsBefore(n: number, timer = new Date(), unit?: dayjs.ManipulateType, format = 'YYYY-MM-DD') {
+    return dayjs(timer).subtract(n, unit ?? 'day').format(format)
+  }
+
+  /**
+  * @description 获取当前时间之后日期
+  * @param {number} n - 要获取的时间单位数量
+  * @param {Date} timer - 可选参数 表示要格式化的时间戳，默认为当前时间
+  * @param {dayjs.ManipulateType} [unit] - 要获取的时间单位，默认为'day'
+  * @param {string} [format] - 要返回的时间格式，默认为'YYYY-MM-DD'
+  * @returns {string} - 返回当前时间单位之前的指定日期时间字符串
+  * @example
+  * ```ts
+  * TransformTimeUtils.getUnitsAfter(2)
+  * ```
+  */
+  static getUnitsAfter(n: number, timer = new Date(), unit?: dayjs.ManipulateType, format = 'YYYY-MM-DD') {
+    return dayjs(timer).add(n, unit ?? 'day').format(format)
   }
 }

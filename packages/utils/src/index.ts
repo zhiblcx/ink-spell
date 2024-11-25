@@ -1,1 +1,1 @@
-export { TransformTimeUtils } from './TransformTimeUtils'
+export * from './TransformTimeUtils'

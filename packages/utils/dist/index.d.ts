@@ -76,6 +76,16 @@ declare class TransformTimeUtils {
     static formatDateYMDHMS(timer?: Date, format?: string): string;
     /**
     * @param {Date} [timer = new Date()] - 可选参数 表示要格式化的时间戳，默认为当前时间
+    * @param {string} [format = 'YYYY-MM-DD HH:mm'] - 可选参数 表示要格式化的时间格式，默认为'YYYY-MM-DD HH:mm:ss'
+    * @return {string} 按照指定格式格式化的日期时间字符串
+    * @example
+    * ```ts
+    * TransformTimeUtils.formatDateYMDHM()
+    * ```
+    */
+    static formatDateYMDHM(timer?: Date, format?: string): string;
+    /**
+    * @param {Date} [timer = new Date()] - 可选参数 表示要格式化的时间戳，默认为当前时间
     * @param {string} [format = 'MM-DD HH:mm'] - 可选参数 表示要格式化的时间格式，默认为'MM-DD HH:mm'
     * @return {string} 按照指定格式格式化的日期时间字符串
     * @example
@@ -165,6 +175,30 @@ declare class TransformTimeUtils {
     * ```
     */
     static compareTimerMinute(timer1?: Date, timer2?: Date, unit?: dayjs.OpUnitType | dayjs.OpUnitType): number;
+    /**
+    * @description 获取当前时间之前日期
+    * @param {number} n - 要获取的时间单位数量
+    * @param {dayjs.ManipulateType} [unit] - 要获取的时间单位，默认为'day'
+    * @param {string} [format] - 要返回的时间格式，默认为'YYYY-MM-DD'
+    * @returns {string} - 返回当前时间单位之前的指定日期时间字符串
+    * @example
+    * ```ts
+    * TransformTimeUtils.getUnitsBefore(2)
+    * ```
+    */
+    static getUnitsBefore(n: number, unit?: dayjs.ManipulateType, format?: string): string;
+    /**
+    * @description 获取当前时间之后日期
+    * @param {number} n - 要获取的时间单位数量
+    * @param {dayjs.ManipulateType} [unit] - 要获取的时间单位，默认为'day'
+    * @param {string} [format] - 要返回的时间格式，默认为'YYYY-MM-DD'
+    * @returns {string} - 返回当前时间单位之前的指定日期时间字符串
+    * @example
+    * ```ts
+    * TransformTimeUtils.getUnitsAfter(2)
+    * ```
+    */
+    static getUnitsAfter(n: number, unit?: dayjs.ManipulateType, format?: string): string;
 }
 
 export { TransformTimeUtils };
