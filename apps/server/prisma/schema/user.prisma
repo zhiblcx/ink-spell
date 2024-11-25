@@ -17,7 +17,7 @@ model User {
   following        Follow[]           @relation("UserFollowing")
   CollectBookShelf CollectBookShelf[]
   BookMark         BookMark[]
-  readingHistory   readingHistory[]
+  readingHistory   ReadingHistory[]
 
   @@unique([username, oauth])
   @@unique([account, oauth])

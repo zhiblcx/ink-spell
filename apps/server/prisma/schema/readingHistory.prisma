@@ -1,4 +1,4 @@
-model readingHistory {
+model ReadingHistory {
   id        Int       @id @default(autoincrement())
   bookId    Int       @map("book_id")
   userId    Int       @map("user_id")
