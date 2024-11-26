@@ -33,6 +33,7 @@ import { EmailVo } from './vo/email.vo';
 import { MessageVo } from './vo/message.vo';
 import { UserInfoVo } from './vo/user.info.vo';
 import { UserVo } from './vo/user.vo';
+import { AllUserVo } from './vo/all.user.vo';
 
 @Controller('user')
 @ApiTags('用户管理')
@@ -155,7 +156,7 @@ export class UserController {
     });
   }
 
-  @Get('/user/all')
+  @Get('/all')
   @ApiOperation({ summary: '获取所有用户' })
   @APIResponse([UserVo], '获取成功', true)
   async getAllUser() {
@@ -221,6 +222,40 @@ export class UserController {
     return new R({
       message: this.translation.t('prompt.reset_successful'),
       data: { password: appConfig.DEFAULT_PASSWORD },
+    });
+  }
+
+  @Roles(Role.Admin)
+  @Get('/all/info')
+  @ApiOperation({ summary: '获取所有用户信息' })
+  @ApiQuery({
+    name: 'page',
+    type: Number,
+    example: 1,
+    description: '页码',
+  })
+  @ApiQuery({
+    name: 'limit',
+    type: Number,
+    example: 10,
+    description: '查询的条目',
+  })
+  @APIResponse([AllUserVo], '查询成功', true)
+  async getAllUserInfo(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return new R({
+      message: this.translation.t('prompt.acquire_successful'),
+      data: new E({
+        items: await this.userService.getAllUserInfo(
+          Number(page),
+          Number(limit),
+        ),
+        totalPages: await this.userService.getAllUserInfoCount(limit),
+        currentPage: Number(page),
+        itemsPerPage: Number(limit),
+      }),
     });
   }
 }

@@ -189,18 +189,13 @@ export class UserService {
         isDelete: false,
       },
       include: {
-        books: {
-          where: {
-            isDelete: false,
-          },
-        },
-        followers: {
-          where: { isDelete: false },
-          select: { id: true },
-        },
-        following: {
-          where: { isDelete: false },
-          select: { id: true },
+        _count: {
+          select: {
+            followers: { where: { isDelete: false } },
+            following: { where: { isDelete: false } },
+            bookShelfs: { where: { isDelete: false } },
+            books: { where: { isDelete: false } }
+          }
         },
       },
       skip: (page - 1) * limit,
@@ -211,13 +206,11 @@ export class UserService {
         this.translation.t('validation.no_matching_user_found'),
       );
     } else {
-      const result = users.map((user) => ({
+      return users.map((user) => ({
         ...user,
-        books: user.books.length,
-        followers: user.followers.length,
-        following: user.following.length,
+        _count: undefined,
+        ...user._count,
       }));
-      return result;
     }
   }
 
@@ -301,5 +294,49 @@ export class UserService {
       where: { id: parseInt(userId) },
       data: { password: pass },
     });
+  }
+
+  async getAllUserInfo(page, limit) {
+    const users = await this.prisma.user.findMany({
+      where: {
+        isDelete: false,
+      },
+      include: {
+        readingHistory: {
+          select: {
+            readTime: true
+          }
+        },
+        _count: {
+          select: {
+            followers: { where: { isDelete: false } },
+            following: { where: { isDelete: false } },
+            bookShelfs: { where: { isDelete: false } },
+            books: { where: { isDelete: false } }
+          }
+        },
+      },
+      skip: (page - 1) * limit,
+      take: parseInt(limit),
+    });
+    return users.map(user => ({
+      ...user,
+      password: undefined,
+      _count: undefined,
+      isDelete: undefined,
+      rolesId: undefined,
+      oauth: undefined,
+      readingHistory: undefined,
+      ...user._count,
+      readTime: user.readingHistory.reduce((sum, history) => sum + history.readTime, 0)
+    }))
+  }
+
+  async getAllUserInfoCount(limit) {
+    return Math.ceil(await this.prisma.user.count({
+      where: {
+        isDelete: false,
+      }
+    }) / limit)
   }
 }

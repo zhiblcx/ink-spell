@@ -16,7 +16,7 @@ export class CreateBookShelfVo {
   label: string;
 
   @ApiProperty({
-    example: '2024-07-30 14:38:00',
+    example: '2024-07-30',
     description: '创建的日期',
   })
   @Transform(({ value }) =>

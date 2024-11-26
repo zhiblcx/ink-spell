@@ -1,5 +1,7 @@
 import { BookInfoVo } from '@/modules/book/vo/book.info.vo';
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
+import dayjs from 'dayjs';
 
 export class UserInfoVo {
   @ApiProperty({ example: 1, description: 'ID' })
@@ -23,6 +25,12 @@ export class UserInfoVo {
 
   @ApiProperty({ example: '/static/images/avatar.png', description: '头像' })
   avatar: string;
+
+  @ApiProperty({ example: "2024/11/26", description: "最近离线时间" })
+  @Transform(({ value }) =>
+    dayjs(value).isValid() ? dayjs(value).format('YYYY-MM-DD') : null,
+  )
+  offlineTime: string
 
   @ApiProperty({ example: 200, description: '上传的书籍的数量' })
   books: number;
