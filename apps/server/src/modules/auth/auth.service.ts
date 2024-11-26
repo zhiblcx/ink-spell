@@ -26,7 +26,7 @@ export class AuthService {
     private readonly translation: TranslationService,
   ) { }
 
-  async generateToken(payload: { userId: number; account: string }) {
+  async generateToken(payload: { userId: number; account: string, roles: string }) {
     return {
       access_token: await this.jwtService.signAsync(payload, {
         expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
@@ -39,10 +39,10 @@ export class AuthService {
 
   async refreshToken(refreshToken: string) {
     try {
-      const { userId, account } =
+      const { userId, account, roles } =
         await this.jwtService.verifyAsync(refreshToken);
       return new R({
-        data: await this.generateToken({ userId, account }),
+        data: await this.generateToken({ userId, account, roles }),
         message: this.translation.t('prompt.refresh_successful'),
       });
     } catch (_) {
@@ -61,6 +61,7 @@ export class AuthService {
         data: await this.generateToken({
           userId: user.id,
           account: user.account,
+          roles: user.rolesId
         }),
         message: this.translation.t('prompt.login_successful'),
       });
@@ -128,6 +129,7 @@ export class AuthService {
         data: await this.generateToken({
           userId: currentUser.id,
           account: currentUser.account,
+          roles: currentUser.rolesId
         }),
         message: this.translation.t('prompt.login_successful'),
       });
@@ -185,6 +187,7 @@ export class AuthService {
         data: await this.generateToken({
           userId: user.id,
           account: user.account,
+          roles: user.rolesId
         }),
         message: this.translation.t('prompt.login_successful'),
       });

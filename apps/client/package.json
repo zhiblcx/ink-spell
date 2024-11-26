@@ -21,6 +21,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@ink-spell/axios": "workspace:^",
     "@ink-spell/resolvers": "workspace:^",
+    "@ink-spell/utils": "workspace:^",
     "@tanstack/react-query": "^5.51.15",
     "@tanstack/react-router": "^1.45.0",
     "@types/bcryptjs": "^2.4.6",
