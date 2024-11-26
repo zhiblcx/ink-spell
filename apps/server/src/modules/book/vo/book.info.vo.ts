@@ -49,6 +49,6 @@ export class BookInfoVo {
   encoding: string;
 
   @IsNotEmpty({ message: 'isDelete不能为空' })
-  @ApiProperty({ example: true, description: '文件是否删除' })
+  @ApiProperty({ example: false, description: '文件是否删除' })
   isDelete: boolean;
 }

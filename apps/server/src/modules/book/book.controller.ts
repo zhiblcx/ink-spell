@@ -24,6 +24,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiOperation,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { MultipleStorage } from 'src/config/MultipleStorage';
@@ -38,6 +39,10 @@ import { BookInfoVo } from './vo/book.info.vo';
 import { CoverVo } from './vo/cover.vo';
 import { FileVo } from './vo/file.vo';
 import { Md5Vo } from './vo/md5.vo';
+import { Roles } from '@/core/decorator/roles.decorator';
+import { Role } from '@/shared/enums/role.enum';
+import { E } from '@/shared/res/e';
+import { AllBookInfoVo } from './vo/all-book-info.vo';
 
 @Controller('book')
 @ApiTags('书籍管理')
@@ -117,7 +122,7 @@ export class BookController {
   async collectBook(@Request() req, @Param('bookID') bookID: number) {
     return new R({
       message: this.translation.t('prompt.collection_successful'),
-      data: await this.bookService.collectBook(req.user.userId, bookID),
+      data: await this.bookService.collectBook(Number(req.user.userId), Number(bookID)),
     });
   }
 
@@ -169,5 +174,40 @@ export class BookController {
         bookContentDto,
       ),
     });
+  }
+
+
+  @Roles(Role.Admin)
+  @Get('/all/info')
+  @ApiOperation({ summary: '获取所有书籍信息' })
+  @ApiQuery({
+    name: 'page',
+    type: Number,
+    example: 1,
+    description: '页码',
+  })
+  @ApiQuery({
+    name: 'limit',
+    type: Number,
+    example: 10,
+    description: '查询的条目',
+  })
+  @APIResponse([AllBookInfoVo], '查询成功', true)
+  async getAllBookInfo(
+    @Query("page") page: number,
+    @Query("limit") limit: number
+  ) {
+    return new R({
+      message: this.translation.t("prompt.acquire_successful"),
+      data: new E({
+        items: await this.bookService.getAllBookInfo(
+          Number(page),
+          Number(limit),
+        ),
+        totalPages: await this.bookService.getAllBookInfoCount(limit),
+        currentPage: Number(page),
+        itemsPerPage: Number(limit),
+      })
+    })
   }
 }

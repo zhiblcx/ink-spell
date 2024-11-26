@@ -7,13 +7,11 @@ import { Injectable } from '@nestjs/common';
 import * as path from 'node:path';
 import { PrismaService } from '../prisma/prisma.service';
 import { BookContentDto } from './dto/book-content.dto';
-import { ReadHistoryService } from '@/read-history/read-history.service';
 
 @Injectable()
 export class BookService {
   constructor(
     private prisma: PrismaService,
-    private readHistoryService: ReadHistoryService
   ) { }
   async uploadFile(req, file, md5, bookShelfId) {
     const encoding = detectFileEncoding(file.path);
@@ -37,11 +35,11 @@ export class BookService {
     }
   }
 
-  async collectBook(userId, bookId) {
+  async collectBook(userId: number, bookId: number) {
     // 找到该书籍
     const { id: _, ...book } = await this.prisma.book.findUnique({
       where: {
-        id: parseInt(bookId),
+        id: bookId
       },
     });
 
@@ -172,5 +170,39 @@ export class BookService {
       },
       where: { id: Number(bookID) },
     });
+  }
+
+  async getAllBookInfo(page: number, limit: number) {
+    return await this.prisma.book.findMany({
+      where: { isDelete: false },
+      include: {
+        User: {
+          select: {
+            id: true,
+            username: true,
+            account: true,
+            email: true,
+            avatar: true
+          }
+        },
+        BookShelf: {
+          select: {
+            id: true,
+            label: true,
+            cover: true,
+            description: true,
+            isPublic: true
+          }
+        }
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    })
+  }
+
+  async getAllBookInfoCount(limit: number) {
+    return Math.ceil(await this.prisma.book.count({
+      where: { isDelete: false }
+    }) / limit)
   }
 }
