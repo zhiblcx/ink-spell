@@ -1,6 +1,7 @@
 import { PrismaService } from '@/modules/prisma/prisma.service';
-import { TransformTimeUtils } from '@/shared/utils/TransformTimeUtils';
+import { TransformTimeUtils } from '@ink-spell/utils'
 import { Injectable } from '@nestjs/common';
+
 
 @Injectable()
 export class ReadHistoryService {
