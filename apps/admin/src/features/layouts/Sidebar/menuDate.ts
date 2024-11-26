@@ -18,18 +18,8 @@ export const menuOptions = [
   },
   {
     label: '用户管理',
-    key: '',
+    key: '/user/manage',
     icon: renderIcon(MingcuteUser3Line),
-    children: [
-      {
-        label: '用户信息',
-        key: '/user/info'
-      },
-      {
-        label: '用户动态',
-        key: '/user/dynamic'
-      }
-    ]
   },
   {
     label: '书架管理',
