@@ -1,14 +1,12 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
- "target": "ES2016",
-  "module": "ESNext",
+  "baseUrl": ".",
+  "target": "ES2016",
+  "module": "commonjs",
   "moduleResolution": "Node",
-    "paths": {
-      "@/*": ["src/*"]
-    },
-    "jsx": "react",
-    "lib": ["dom", "esnext"],
+   // 用于控制是否启用ES模块和CommonJS模块之间的互操作性。
+   "esModuleInterop": true,
   },
+  "outDir": "dist",
   "include": ["src", "tsup.config.ts"]
 }

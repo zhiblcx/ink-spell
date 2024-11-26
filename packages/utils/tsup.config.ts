@@ -9,6 +9,6 @@ export default defineConfig((options) => ({
   dts: true,
   skipNodeModulesBundle: true,
   outDir: 'dist',
-  format: ['cjs', 'esm'],
+  format: ["cjs", "esm"],
   minify: !options.watch
 }))

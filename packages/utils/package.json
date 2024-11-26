@@ -3,20 +3,20 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
-  "main": "dist/index.cjs",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "dist/index.d.ts",
-  "module": "dist/index.cjs",
   "scripts": {
     "build": "tsup"
   },
   "devDependencies": {
+    "dayjs": "^1.11.13",
     "typescript": "~5.6.2"
   },
   "dependencies": {
-    "dayjs": "^1.11.12",
     "tsup": "^8.3.5"
   },
   "files": [
-    "dist"
+    "dist/"
   ]
 }
