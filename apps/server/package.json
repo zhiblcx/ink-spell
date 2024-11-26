@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "一个收藏的魔法网站的后端",
   "author": "nicole",
-  "private": true,
   "license": "UNLICENSED",
+  "private": true,
   "scripts": {
     "set:env": "dotenv -e .env.local -e .env.example",
     "build": "nest build",
@@ -28,6 +28,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@ink-spell/utils": "workspace:^",
     "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/axios": "^3.1.2",
     "@nestjs/common": "^10.4.6",

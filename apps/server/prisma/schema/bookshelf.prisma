@@ -1,7 +1,7 @@
 model BookShelf {
   id               Int                @id @default(autoincrement())
   label            String
-  createTimer      DateTime           @map("create_timer")
+  createTimer      DateTime           @default(now()) @map("create_timer")
   userId           Int                @map("user_id")
   user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   allFlag          Boolean            @map("all_flag")

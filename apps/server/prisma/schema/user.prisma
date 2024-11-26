@@ -10,6 +10,7 @@ model User {
   Roles            Roles              @relation(fields: [rolesId], references: [id])
   rolesId          String             @default("user")
   oauth            String             @default("local")
+  offlineTime      DateTime?          @map("offline_time")
   bookShelfs       BookShelf[]
   books            Book[]
   Message          Message[]
