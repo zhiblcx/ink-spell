@@ -1,6 +1,7 @@
 import { getReadHistoryQuery } from '@/features/read-history'
 import { ReadHistoryVo } from '@/features/read-history/types'
-import { BookUtils, TransformTimeUtils } from '@/shared/utils'
+import { BookUtils } from '@/shared/utils'
+import { TransformTimeUtils } from '@ink-spell/utils'
 import React, { Dispatch, SetStateAction } from 'react'
 
 interface RecentlyReadProps {
