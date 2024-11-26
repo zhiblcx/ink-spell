@@ -19,17 +19,25 @@ const routes = [
     component: () => import("@/view/Login.vue")
   },
   {
+    path: "/403",
+    component: () => import("@/view/result/403.vue")
+  },
+  {
+    path: "/404",
+    component: () => import("@/view/result/404.vue")
+  },
+  {
+    path: "/500",
+    component: () => import("@/view/result/500.vue")
+  },
+  {
     path: '/user',
     component: Layout,
     children: [
       {
-        path: 'info',
-        component: () => import("@/view/user-manage/UserInfo/index.vue")
+        path: 'manage',
+        component: () => import("@/view/UserManage.vue")
       },
-      {
-        path: 'dynamic',
-        component: () => import("@/view/user-manage/UserDynamic/index.vue")
-      }
     ]
   },
   {
