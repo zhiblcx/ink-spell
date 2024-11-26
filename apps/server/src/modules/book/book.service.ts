@@ -176,7 +176,7 @@ export class BookService {
     return await this.prisma.book.findMany({
       where: { isDelete: false },
       include: {
-        User: {
+        user: {
           select: {
             id: true,
             username: true,
@@ -185,7 +185,7 @@ export class BookService {
             avatar: true
           }
         },
-        BookShelf: {
+        bookShelf: {
           select: {
             id: true,
             label: true,

@@ -11,7 +11,7 @@ export class AllBookInfoVo extends BookInfoVo {
       "avatar": "/static/cover/1730468606152.jpg"
     }, description: "用户信息描述"
   })
-  User: UserInfoType;
+  user: UserInfoType;
 
   @ApiProperty({
     example: {
@@ -22,7 +22,7 @@ export class AllBookInfoVo extends BookInfoVo {
       "isPublic": false
     }, description: "书架信息描述"
   })
-  BookShelf: BookShelfInfoType
+  bookShelf: BookShelfInfoType
 }
 
 export interface UserInfoType {

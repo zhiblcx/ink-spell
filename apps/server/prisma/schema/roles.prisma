@@ -1,5 +1,5 @@
 model Roles {
   id   String @unique
   name String @unique
-  User User[]
+  user User[]
 }

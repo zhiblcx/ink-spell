@@ -7,4 +7,4 @@ import { BookshelfService } from './bookshelf.service';
   controllers: [BookshelfController],
   providers: [BookshelfService],
 })
-export class BookshelfModule {}
+export class BookshelfModule { }

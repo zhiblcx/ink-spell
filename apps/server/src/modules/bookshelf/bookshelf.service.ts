@@ -8,7 +8,7 @@ export class BookshelfService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly translation: TranslationService,
-  ) {}
+  ) { }
   async createBookShelf(req, createBookshelfDto) {
     const currentBookShelf = await this.prisma.bookShelf.findFirst({
       where: {
@@ -86,5 +86,52 @@ export class BookshelfService {
       },
       where: { id: parseInt(bookShelfId) },
     });
+  }
+
+  async getAllBookInfo(page: number, limit: number) {
+    const bookShelfs = await this.prisma.bookShelf.findMany({
+      where: { isDelete: false },
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+            account: true,
+            email: true,
+            avatar: true
+          }
+        },
+        _count: {
+          select: {
+            collectBookShelf: {
+              where: {
+                isDelete: false
+              }
+            },
+            books: {
+              where: {
+                isDelete: false
+              }
+            }
+          }
+        }
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    return bookShelfs.map(bookshelf => ({
+      ...bookshelf,
+      _count: undefined,
+      collectBookShelfPeople: bookshelf._count.collectBookShelf,
+      bookCount: bookshelf._count.books,
+    }))
+
+  }
+
+  async getAllBookInfoCount(limit: number) {
+    return Math.ceil(await this.prisma.bookShelf.count({
+      where: { isDelete: false }
+    }) / limit)
   }
 }

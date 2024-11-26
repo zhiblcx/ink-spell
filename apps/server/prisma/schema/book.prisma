@@ -7,12 +7,12 @@ model Book {
   author         String?
   bookFile       String           @map("book_file")
   bookShelfId    Int?             @map("book_shelf_id")
-  BookShelf      BookShelf?       @relation(fields: [bookShelfId], references: [id], onDelete: Cascade)
+  bookShelf      BookShelf?       @relation(fields: [bookShelfId], references: [id], onDelete: Cascade)
   md5            String
   encoding       String
   createTimer    DateTime         @default(now()) @map("create_timer")
   isDelete       Boolean          @default(false) @map("is_delete")
-  User           User?            @relation(fields: [userId], references: [id])
+  user           User?            @relation(fields: [userId], references: [id])
   userId         Int?             @map("user_id")
   bookMark       BookMark[]
   readingHistory ReadingHistory[]

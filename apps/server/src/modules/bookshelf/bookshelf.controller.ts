@@ -12,16 +12,21 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Request,
   Res,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import * as fs from 'node:fs';
 import { TranslationService } from '../translation/translation.service';
 import { BookshelfService } from './bookshelf.service';
 import { CreateBookshelfDto } from './dto/create-bookshelf.dto';
 import { BookShelfInfoVo } from './vo/bookshelf.info.vo';
 import { CreateBookShelfVo } from './vo/create-bookshelf.vo';
+import { Roles } from '@/core/decorator/roles.decorator';
+import { Role } from '@/shared/enums/role.enum';
+import { E } from '@/shared/res/e';
+import { AllBookShelfInfoVo } from './vo/all-bookshelf-info.vo';
 
 @Controller('bookshelf')
 @ApiTags('书架管理')
@@ -30,7 +35,7 @@ export class BookshelfController {
   constructor(
     private readonly bookshelfService: BookshelfService,
     private readonly translation: TranslationService,
-  ) {}
+  ) { }
 
   @Post()
   @ApiOperation({ summary: '新增书架' })
@@ -138,5 +143,39 @@ export class BookshelfController {
         updateBookshelfDto,
       ),
     });
+  }
+
+  @Roles(Role.Admin)
+  @Get("/all/info")
+  @ApiOperation({ summary: "获取所有书架信息" })
+  @ApiQuery({
+    name: "page",
+    type: Number,
+    example: 1,
+    description: "页码"
+  })
+  @ApiQuery({
+    name: "limit",
+    type: Number,
+    example: 10,
+    description: "查询的条目"
+  })
+  @APIResponse([AllBookShelfInfoVo], '查询成功', true)
+  async getAllBookInfo(
+    @Query("page") page: number,
+    @Query("limit") limit: number
+  ) {
+    return new R({
+      message: this.translation.t("prompt.acquire_successful"),
+      data: new E({
+        items: await this.bookshelfService.getAllBookInfo(
+          Number(page),
+          Number(limit),
+        ),
+        totalPages: await this.bookshelfService.getAllBookInfoCount(limit),
+        currentPage: Number(page),
+        itemsPerPage: Number(limit),
+      })
+    })
   }
 }

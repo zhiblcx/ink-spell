@@ -11,5 +11,5 @@ model BookShelf {
   cover            String
   description      String             @default("暂无描述")
   books            Book[]
-  CollectBookShelf CollectBookShelf[]
+  collectBookShelf CollectBookShelf[]
 }
