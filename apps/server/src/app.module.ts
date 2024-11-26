@@ -21,7 +21,8 @@ import { TranslationModule } from './modules/translation/translation.module';
 import { defaultLang } from './modules/translation/translation.service';
 import { UserModule } from './modules/user/user.module';
 import { UserService } from './modules/user/user.service';
-import { ReadHistoryModule } from './read-history/read-history.module';
+import { ReadHistoryModule } from './modules/read-history/read-history.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { ReadHistoryModule } from './read-history/read-history.module';
     PrismaModule,
     TranslationModule,
     ReadHistoryModule,
+    AdminModule
   ],
   providers: [
     { provide: APP_PIPE, useClass: I18nValidationPipe },
