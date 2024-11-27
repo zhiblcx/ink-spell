@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@iconify-json/mdi": "^1.2.1",
-    "@ink-spell/echarts": "workspace:^",
+    "@ink-spell/axios": "workspace:^",
+    "@ink-spell/echarts-vue": "workspace:^",
     "@ink-spell/resolvers": "workspace:^",
+    "@tanstack/vue-query": "^5.61.3",
     "@types/nprogress": "^0.2.3",
     "axios": "^1.7.2",
     "clsx": "^2.1.1",

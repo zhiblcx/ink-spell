@@ -3,6 +3,7 @@ import naive from 'naive-ui'
 import { router } from "@/routes"
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { VueQueryPlugin } from '@tanstack/vue-query'
 import "@/assets/styles/index.scss"
 import 'nprogress/nprogress.css'
 import 'virtual:uno.css'
@@ -13,4 +14,5 @@ const pinia = createPinia()
 app.use(pinia)
 app.use(naive)
 app.use(router)
+app.use(VueQueryPlugin)
 app.mount('#app')

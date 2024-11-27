@@ -7,7 +7,9 @@ const themeStore = useThemeStore()
 
 <template>
   <n-config-provider :theme="themeStore.theme === ThemeEnum.DARK ? darkTheme : null">
-    <router-view />
+    <n-message-provider>
+      <router-view />
+    </n-message-provider>
   </n-config-provider>
 </template>
 
