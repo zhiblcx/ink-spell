@@ -81,7 +81,13 @@ function updateChartOptions(newOptions: echarts.EChartsOption) {
     chartInstance.value.setOption(
       {
         ...option,
-        series: { ...option.series, data: options.data.map((item) => item.value) }
+        series: {
+          ...option.series,
+          data: options.data.map((item) => ({
+            name: item.label,
+            value: item.value
+          }))
+        }
       },
       { lazyUpdate: true }
     )

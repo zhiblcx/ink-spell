@@ -1,19 +1,20 @@
 {
-  "name": "@ink-spell/echarts",
+  "name": "@ink-spell/echarts-vue",
   "version": "0.0.1",
   "description": "",
   "private": true,
-  "scripts": {},
+  "main": "src/vue/index.ts",
+  "scripts": {
+    "build": "tsup"
+  },
   "keywords": [
     "echarts"
   ],
-  "exports": {
-    "./vue": "./vue.js"
-  },
   "author": "nicole",
   "license": "ISC",
   "dependencies": {
     "echarts": "^5.5.1",
+    "tsup": "^8.3.5",
     "vue": "^3.5.12"
   }
 }
