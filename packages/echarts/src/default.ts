@@ -1,5 +1,3 @@
-import { watch } from "vue"
-
 export const DEFAULT_COLOR = '#2fa968'
 export const DEFAULT_PIE_COLORS = ['#5470c6',
   '#91cc75',

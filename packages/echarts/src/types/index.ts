@@ -1,6 +1,7 @@
 export type echartsProps = {
   height: string,
   data: Array<chartsDataProps>,
+  dark?: boolean,
   width?: string,
   title?: string,
   color?: string
