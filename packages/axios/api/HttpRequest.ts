@@ -23,13 +23,20 @@ interface expectDataAxiosRequestConfig extends AxiosRequestConfig {
 export class HttpRequest {
   instance: AxiosInstance
 
+  // 认证失败跳转登录页面
+  loginURL = "/signin"
+
   // 刷新令牌的标识
   isRefreshing = false
 
   // 等待请求队列
   pendingQueue: PendingTask[] = []
 
-  constructor(baseURL = '/api') {
+  constructor(baseURL = '/api', loginURL?: string) {
+    if (loginURL) {
+      this.loginURL = loginURL
+    }
+
     this.instance = axios.create({
       baseURL,
       timeout: 5 * 1000
@@ -82,7 +89,7 @@ export class HttpRequest {
    * - 跳转到登录页
    */
   handleUnauthorized() {
-    window.location.href = '/signin'
+    window.location.href = this.loginURL
     AuthUtils.clearAccessToken()
     AuthUtils.clearFreshToken()
   }
