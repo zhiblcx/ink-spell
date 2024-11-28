@@ -234,10 +234,10 @@ declare class TransformTimeUtils {
     */
     static getSpecificTimeInFuture({ n, unit, hour, minute, second }: {
         n: number;
-        unit: dayjs.ManipulateType;
+        unit?: dayjs.ManipulateType;
         hour: number;
-        minute: number;
-        second: number;
+        minute?: number;
+        second?: number;
     }): dayjs.Dayjs;
     /**
     * @description 获取过去特定天数的特定时间
@@ -254,10 +254,10 @@ declare class TransformTimeUtils {
     */
     static getSpecificTimeInPass({ n, unit, hour, minute, second }: {
         n: number;
-        unit: dayjs.ManipulateType;
+        unit?: dayjs.ManipulateType;
         hour: number;
-        minute: number;
-        second: number;
+        minute?: number;
+        second?: number;
     }): dayjs.Dayjs;
 }
 

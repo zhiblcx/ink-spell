@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { TransformTimeUtils } from '@/shared/utils/TransformTimeUtils';
+import { TransformTimeUtils } from '@ink-spell/utils';
 
 @Injectable()
 export class AdminService {

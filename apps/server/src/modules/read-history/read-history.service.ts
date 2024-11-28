@@ -1,5 +1,5 @@
 import { PrismaService } from '@/modules/prisma/prisma.service';
-import { TransformTimeUtils } from '@ink-spell/utils'
+import { TransformTimeUtils } from '@ink-spell/utils';
 import { Injectable } from '@nestjs/common';
 
 
@@ -43,7 +43,7 @@ export class ReadHistoryService {
       },
       data: {
         endTime: data.endTime,
-        readTime: Number(TransformTimeUtils.compareTimerMinute(data.startTime, data.endTime)) + data.readTime
+        readTime: Number(TransformTimeUtils.compareTimerDiff(data.startTime, data.endTime)) + data.readTime
       }
     })
   }

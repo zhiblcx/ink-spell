@@ -297,7 +297,7 @@ export class TransformTimeUtils {
   * ```
   */
   static getSpecificTimeInFuture({ n, unit = 'day', hour, minute = 0, second = 0 }: {
-    n: number; unit: dayjs.ManipulateType; hour: number; minute: number; second: number
+    n: number; unit?: dayjs.ManipulateType; hour: number; minute?: number; second?: number
   }): dayjs.Dayjs {
     return dayjs().add(n, unit).hour(hour).minute(minute).second(second)
   }
@@ -316,7 +316,7 @@ export class TransformTimeUtils {
   * ```
   */
   static getSpecificTimeInPass({ n, unit = 'day', hour, minute = 0, second = 0 }: {
-    n: number; unit: dayjs.ManipulateType; hour: number; minute: number; second: number
+    n: number; unit?: dayjs.ManipulateType; hour: number; minute?: number; second?: number
   }): dayjs.Dayjs {
     return dayjs().subtract(n, unit).hour(hour).minute(minute).second(second)
   }
