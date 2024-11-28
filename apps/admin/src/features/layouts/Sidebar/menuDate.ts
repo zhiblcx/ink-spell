@@ -1,34 +1,28 @@
-import MingcuteBook2Line from '~icons/mingcute/book-2-line'
-import MingcuteBook5Line from '~icons/mingcute/book-5-line'
-import MingcuteHome3Line from '~icons/mingcute/home-3-line'
-import MingcuteUser3Line from '~icons/mingcute/user-3-line'
-import { NIcon } from 'naive-ui'
-import type { Component } from 'vue'
-import { h } from 'vue'
 
-function renderIcon(icon: Component) {
-  return () => h(NIcon, null, { default: () => h(icon) })
-}
+import { HomeIcon, UserIcon, BookshelfIcon, BookIcon } from '@/assets/icons'
+import { renderIcon } from '@/shared/utils/renderIcon'
+
+
 
 export const menuOptions = [
   {
     label: '首页',
     key: '/',
-    icon: renderIcon(MingcuteHome3Line)
+    icon: renderIcon(HomeIcon)
   },
   {
     label: '用户管理',
     key: '/user/manage',
-    icon: renderIcon(MingcuteUser3Line),
+    icon: renderIcon(UserIcon),
   },
   {
     label: '书架管理',
     key: '/bookshelf/manage',
-    icon: renderIcon(MingcuteBook5Line)
+    icon: renderIcon(BookshelfIcon)
   },
   {
     label: '书籍管理',
     key: '/book/manage',
-    icon: renderIcon(MingcuteBook2Line)
+    icon: renderIcon(BookIcon)
   }
 ]

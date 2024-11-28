@@ -49,7 +49,6 @@ export class ThemeUtils {
     }
     if (theme === ThemeEnum.DARK || theme == ThemeEnum.LIGHT) {
       document.documentElement.setAttribute("data-theme", theme)
-      this.setTheme(theme)
     }
   }
 }

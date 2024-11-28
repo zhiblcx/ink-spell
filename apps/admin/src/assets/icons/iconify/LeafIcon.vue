@@ -5,7 +5,7 @@ const { width, height } = defineProps<IconProps>()
 
 <template>
   <div
-    class="i-mingcute:sunflower-line w-2em h-2em"
+    class="i-mingcute:leaf-2-line w-1em h-1em"
     :style="{
       width,
       height

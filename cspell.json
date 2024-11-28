@@ -25,6 +25,7 @@
     "echarts",
     "nprogress",
     "vite",
-    "autoincrement"
+    "autoincrement",
+    "iconify"
   ]
 }

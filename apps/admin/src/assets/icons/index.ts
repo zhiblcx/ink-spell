@@ -1,9 +1,11 @@
+export { default as BlingIcon } from './iconify/BlingIcon.vue';
 export { default as BookIcon } from './iconify/BookIcon.vue';
 export { default as BookshelfIcon } from './iconify/BookshelfIcon.vue';
 export { default as DeleteIcon } from './iconify/DeleteIcon.vue';
 export { default as ExitIcon } from './iconify/ExitIcon.vue';
 export { default as FullScreenIcon } from './iconify/FullScreenIcon.vue';
 export { default as HomeIcon } from './iconify/HomeIcon.vue';
+export { default as LeafIcon } from './iconify/LeafIcon.vue';
 export { default as MoonIcon } from './iconify/MoonIcon.vue';
 export { default as SettingIcon } from './iconify/SettingIcon.vue';
 export { default as SumIcon } from './iconify/SumIcon.vue';

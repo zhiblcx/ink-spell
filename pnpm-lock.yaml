@@ -38,6 +38,9 @@ importers:
       '@ink-spell/resolvers':
         specifier: workspace:^
         version: link:../../packages/resolvers
+      '@ink-spell/utils':
+        specifier: workspace:^
+        version: link:../../packages/utils
       '@tanstack/vue-query':
         specifier: ^5.61.3
         version: 5.61.3(vue@3.5.12(typescript@5.6.3))
@@ -50,6 +53,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
       echarts:
         specifier: ^5.5.1
         version: 5.5.1
