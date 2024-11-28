@@ -1,4 +1,4 @@
-export type DarkModeIconProps = {
+export type IconProps = {
   width?: string,
   height?: string
 }

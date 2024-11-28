@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { DarkModeIconProps } from './types'
-const { width, height } = defineProps<DarkModeIconProps>()
+import { IconProps } from '../types'
+const { width, height } = defineProps<IconProps>()
 </script>
 
 <template>
