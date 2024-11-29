@@ -1,33 +1,13 @@
 <script setup lang="ts">
-import { ExitIcon, UserIcon } from '@/assets/icons'
 import LogoDarkImg from '@/assets/images/logo-dark.png'
 import LogoLightImg from '@/assets/images/logo-light.png'
+import { FullScreenButton, LanguageToggle } from '@/shared/components'
 import ThemeToggle from '@/shared/components/ThemeToggle/index.vue'
 import { ThemeEnum } from '@/shared/enums/ThemeEnum'
 import { useThemeStore } from '@/shared/store/useThemeStore'
-import { NIcon } from 'naive-ui'
+import { Avatar } from './components'
 
 const themeStore = useThemeStore()
-const options = [
-  {
-    label: '个人资料',
-    key: 'profile',
-    icon: renderIcon(UserIcon)
-  },
-  {
-    label: '退出登录',
-    key: 'logout',
-    icon: renderIcon(ExitIcon)
-  }
-]
-
-function renderIcon(icon: Component) {
-  return () => {
-    return h(NIcon, null, {
-      default: () => h(icon)
-    })
-  }
-}
 </script>
 
 <template>
@@ -39,15 +19,11 @@ function renderIcon(icon: Component) {
       :src="themeStore.currentTheme === ThemeEnum.DARK ? LogoLightImg : LogoDarkImg"
       class="w-[200px]"
     />
-    <div class="flex">
-      <n-dropdown :options="options">
-        <n-avatar
-          round
-          size="small"
-          src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-        />
-      </n-dropdown>
+    <div class="flex space-x-3">
+      <FullScreenButton />
+      <LanguageToggle />
       <ThemeToggle />
+      <Avatar />
     </div>
   </n-layout-header>
 </template>

@@ -5,7 +5,7 @@ const { width, height } = defineProps<IconProps>()
 
 <template>
   <div
-    class="i-mingcute:translate-2-ai-line w-1em h-1em"
+    class="i-mingcute:translate-2-ai-line w-2em h-2em"
     :style="{
       width,
       height

@@ -7,7 +7,7 @@ import { App } from 'vue';
 i18next
   .use(LanguageDetector)
   .init({
-    fallbackLng: 'Chinese',
+    fallbackLng: 'zh-CN',
     resources: localeTransitions
   });
 

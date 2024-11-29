@@ -5,7 +5,7 @@ import { ThemeEnum } from '@/shared/enums/ThemeEnum'
 import { useThemeStore } from '@/shared/store/useThemeStore'
 import { useTranslation } from 'i18next-vue'
 import { FormInst } from 'naive-ui'
-const { t } = useTranslation('AUTH')
+const { t } = useTranslation(['AUTH', 'COMMON', 'VALIDATION'])
 
 const themeStore = useThemeStore()
 const formRef = ref<FormInst | null>(null)
@@ -27,7 +27,6 @@ function handleLogin(e: MouseEvent) {
 </script>
 
 <template>
-  <span>{{ t('account') }}</span>
   <div class="gradient relative flex h-screen w-screen items-center justify-center">
     <img
       :src="themeStore.theme === ThemeEnum.DARK ? LoginBgDarkImg : LoginBgImg"
@@ -50,20 +49,20 @@ function handleLogin(e: MouseEvent) {
           :src="themeStore.theme === ThemeEnum.DARK ? LogoLightImg : LogoDarkImg"
           class="w-[200px]"
         />
-        <div class="my-5">欢迎来到 {{ APP_NAME }} 后台登录👊</div>
+        <div class="my-6">{{ t('COMMON:welcome_message', { APP_NAME: APP_NAME }) }}</div>
         <n-form-item
           path="account"
-          label="账号"
+          :label="t('account')"
           require-mark-placement="left"
           :rule="{
             required: true,
-            message: '请输入账号',
+            message: t('VALIDATION:prompt_account'),
             trigger: ['input', 'blur']
           }"
         >
           <n-input
             style="width: 200px"
-            placeholder="请输入账号"
+            :placeholder="t('VALIDATION:input_account')"
             class="w-[200px]"
             v-model:value="formValue.account"
           />
@@ -71,11 +70,11 @@ function handleLogin(e: MouseEvent) {
 
         <n-form-item
           path="password"
-          label="密码"
+          :label="t('AUTH:password')"
           require-mark-placement="left"
           :rule="{
             required: true,
-            message: '请输入密码',
+            message: t('VALIDATION:prompt_password'),
             trigger: ['input', 'blur']
           }"
         >
@@ -83,7 +82,7 @@ function handleLogin(e: MouseEvent) {
             style="width: 200px"
             type="password"
             show-password-on="click"
-            placeholder="请输入密码"
+            :placeholder="t('VALIDATION:input_password')"
             v-model:value="formValue.password"
           />
         </n-form-item>
@@ -93,7 +92,7 @@ function handleLogin(e: MouseEvent) {
           class="mt-2 w-[50%]"
           @click="handleLogin"
         >
-          登录
+          {{ t('login') }}
         </n-button>
       </n-form>
     </div>

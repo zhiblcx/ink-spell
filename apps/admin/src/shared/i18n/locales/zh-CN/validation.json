@@ -1,0 +1,8 @@
+{
+  "prompt_account": "亲，你还未输入账号",
+  "input_account": "请输入账号",
+  "prompt_password": "亲，你还未输入密码",
+  "input_password": "请输入密码",
+  "search_username": "请输入要搜索的用户名",
+  "search_keywords": "请输入要搜索的关键字"
+}
