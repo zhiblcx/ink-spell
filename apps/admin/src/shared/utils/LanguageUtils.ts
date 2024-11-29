@@ -1,7 +1,7 @@
 import { LanguageEnum } from "../enums/LanguageEnum"
 
 export class LanguageUtils {
-  static readonly #INK_SPELL_ADMIN_LANGUAGE_KEY = "ink_spell_admin_language_key"
+  static readonly #LANGUAGE_KEY = 'ink_spell_language'
 
   /**
   * @example
@@ -9,18 +9,18 @@ export class LanguageUtils {
   * LanguageUtils.getLanguage() // => string | null
   * ```
   */
-  static getLanguage() {
-    localStorage.getItem(this.#INK_SPELL_ADMIN_LANGUAGE_KEY)
+  static getLanguage(): string | null {
+    return localStorage.getItem(this.#LANGUAGE_KEY)
   }
 
   /**
   * @example
   * ```ts
-  * LanguageUtils.setLanguage("English")
+  * LanguageUtils.setLanguage("en-US")
   * ```
   */
   static setLanguage(language: LanguageEnum) {
-    localStorage.setItem(this.#INK_SPELL_ADMIN_LANGUAGE_KEY, language)
+    localStorage.setItem(this.#LANGUAGE_KEY, language)
   }
 
   /**
@@ -30,6 +30,6 @@ export class LanguageUtils {
   * ```
   */
   static clearLanguage() {
-    localStorage.removeItem(this.#INK_SPELL_ADMIN_LANGUAGE_KEY)
+    localStorage.removeItem(this.#LANGUAGE_KEY)
   }
 }
