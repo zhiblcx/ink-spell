@@ -1,6 +1,6 @@
 import App from '@/App.vue'
 import naive from 'naive-ui'
-import { router } from "@/routes"
+import { router, afterEach, beforeEach } from "@/routes"
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { VueQueryPlugin } from '@tanstack/vue-query'
@@ -14,5 +14,9 @@ const pinia = createPinia()
 app.use(pinia)
 app.use(naive)
 app.use(router)
+
+router.beforeEach(beforeEach)
+router.afterEach(afterEach)
+
 app.use(VueQueryPlugin)
 app.mount('#app')
