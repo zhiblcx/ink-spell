@@ -5,7 +5,7 @@ const { width, height } = defineProps<IconProps>()
 
 <template>
   <div
-    class="i-mingcute:fullscreen-line w-2em h-2em"
+    class="i-mingcute:fullscreen-exit-line w-2em h-2em"
     :style="{
       width,
       height

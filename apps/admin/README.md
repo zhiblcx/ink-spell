@@ -1,7 +1,6 @@
 ## Tech Stack
 
-- [x] axios
-- [x] Vue
+- [x] Vue3
 - [x] Vite
 - [x] TypeScript
 - [x] Naive UI, a Vue 3-based UI library
@@ -13,3 +12,5 @@
 - [x] echarts
 - [x] nprogress
 - [x] vue-i18next
+- [x] be-full
+- [x] axios

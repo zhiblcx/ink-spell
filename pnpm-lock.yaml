@@ -50,6 +50,9 @@ importers:
       axios:
         specifier: ^1.7.2
         version: 1.7.7
+      be-full:
+        specifier: ^0.1.4
+        version: 0.1.4
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -2974,6 +2977,9 @@ packages:
 
   bcryptjs@2.4.3:
     resolution: {integrity: sha512-V/Hy/X9Vt7f3BbPJEi8BdVFMByHi+jNXrYkW3huaybV/kQ0KJg0Y6PkEMbn+zeT+i+SiKZ/HMqJGIIt4LZDqNQ==}
+
+  be-full@0.1.4:
+    resolution: {integrity: sha512-Nj3yBvk8rxhBhDv6YROxP9ynTA5H0l9lMjU+XqEAY4rTLJ68l2+n0geWCoeTqAxhOFedtbmYCpxFzMxMA8CnUg==}
 
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
@@ -9621,6 +9627,8 @@ snapshots:
       - supports-color
 
   bcryptjs@2.4.3: {}
+
+  be-full@0.1.4: {}
 
   binary-extensions@2.3.0: {}
 
