@@ -20,5 +20,6 @@
   "email_not_filled": "邮箱未填写",
   "add_friend_username": "请输入要添加好友的用户名",
   "fill_in_completely": "请填写完整",
-  "enter_valid_email": "请输入正确的邮箱"
+  "enter_valid_email": "请输入正确的邮箱",
+  "password_mismatch": "两次密码输入不一致"
 }
