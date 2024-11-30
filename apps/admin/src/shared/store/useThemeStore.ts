@@ -12,7 +12,7 @@ export const useThemeStore = defineStore('theme', () => {
   const currentTheme = ref(ThemeEnum.LIGHT)
   let timer: NodeJS.Timeout | null = null
   const startTime = "6:00"
-  const endTime = "20:48"
+  const endTime = "19:00"
 
   function changeTheme(state: ThemeEnum) {
     if (state === ThemeEnum.SYSTEM) {
@@ -21,7 +21,7 @@ export const useThemeStore = defineStore('theme', () => {
       ThemeUtils.changeTheme(state)
       currentTheme.value = state
     }
-    ThemeUtils.setTheme(state)
+    ThemeUtils.setTheme(currentTheme.value)
     theme.value = state
   }
 
@@ -55,7 +55,7 @@ export const useThemeStore = defineStore('theme', () => {
     let greeting = () => window.$message.success("星星点点，夜深了，愿你有个好梦", {
       icon: renderIcon(BlingIcon)
     })
-    // 如果当前时间在 startTime(包括) - endTime(不包括) 之间，则设置下一个时间点 06:00:00 为白天模式
+    // 如果当前时间在 startTime(包括) - endTime(不包括) 之间，则设置下一个时间点 startTime 为白天模式
     const {
       currentHour, currentMinute,
       startTimeHour, startTimeMinute,

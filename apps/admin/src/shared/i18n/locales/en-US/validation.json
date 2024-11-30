@@ -4,5 +4,8 @@
   "prompt_password": "No password entered",
   "input_password": "Enter password",
   "search_username": "enter search username",
-  "search_keywords": "enter search keywords"
+  "search_keywords": "enter search keywords",
+  "password_mismatch": "The passwords you entered do not match",
+  "please_input": "please input {{ value }}",
+  "must_be_length_characters_long": "{{ value }} must be {{ length }} characters long"
 }

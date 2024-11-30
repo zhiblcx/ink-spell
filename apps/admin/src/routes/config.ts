@@ -9,45 +9,30 @@ import {
   PATH_INTERNAL_SERVER_ERROR,
   PATH_USER_MANAGE,
   PATH_BOOKSHELF_MANAGE,
-  PATH_BOOK_MANAGE
+  PATH_BOOK_MANAGE,
 } from "@/shared/constants/router-path"
 
 const routes = [
   { path: PATH_HOME, redirect: PATH_ROOT },
   {
-    path: PATH_ROOT,
-    component: Layout,
-    children: [
-      {
-        path: '',
-        component: () => import("@/view/Home.vue")
-      }]
-  },
-  {
     path: PATH_LOGIN,
     component: () => import("@/view/Login.vue")
   },
   {
-    path: PATH_FORBIDDEN,
-    component: () => import("@/view/result/403.vue")
-  },
-  {
-    path: PATH_NOT_FOUND,
-    component: () => import("@/view/result/404.vue")
-  },
-  {
-    path: PATH_INTERNAL_SERVER_ERROR,
-    component: () => import("@/view/result/500.vue")
+    path: PATH_ROOT,
+    component: Layout,
+    children: [{
+      path: '',
+      component: () => import("@/view/Home.vue")
+    }]
   },
   {
     path: PATH_USER_MANAGE,
     component: Layout,
-    children: [
-      {
-        path: '',
-        component: () => import("@/view/UserManage.vue")
-      },
-    ]
+    children: [{
+      path: '',
+      component: () => import("@/view/UserManage.vue")
+    }]
   },
   {
     path: PATH_BOOKSHELF_MANAGE,
@@ -66,8 +51,16 @@ const routes = [
     }]
   },
   {
+    path: PATH_FORBIDDEN,
+    component: () => import("@/view/result/403.vue")
+  },
+  {
     path: PATH_NOT_FOUND,
     component: () => import("@/view/result/404.vue")
+  },
+  {
+    path: PATH_INTERNAL_SERVER_ERROR,
+    component: () => import("@/view/result/500.vue")
   },
   {
     path: '/:pathMatch(.*)*',

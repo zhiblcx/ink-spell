@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { LoginBgDarkImg, LoginBgImg, LogoDarkImg, LogoLightImg } from '@/assets/images'
+import { loginMutation } from '@/features/auth/mutation'
 import { APP_NAME } from '@/shared/constants/app.ts'
 import { ThemeEnum } from '@/shared/enums/ThemeEnum'
 import { useThemeStore } from '@/shared/store/useThemeStore'
 import { useTranslation } from 'i18next-vue'
 import { FormInst } from 'naive-ui'
-const { t } = useTranslation(['AUTH', 'COMMON', 'VALIDATION'])
 
 const themeStore = useThemeStore()
 const formRef = ref<FormInst | null>(null)
+const { t } = useTranslation(['AUTH', 'COMMON', 'VALIDATION'])
+const { mutate: loginMutate } = loginMutation()
 const formValue = ref({
   account: '',
   password: ''
@@ -18,9 +20,7 @@ function handleLogin(e: MouseEvent) {
   e.preventDefault()
   formRef.value?.validate((errors) => {
     if (!errors) {
-      console.log('登录')
-    } else {
-      console.log(errors)
+      loginMutate({ ...formValue.value })
     }
   })
 }
@@ -29,7 +29,7 @@ function handleLogin(e: MouseEvent) {
 <template>
   <div class="gradient relative flex h-screen w-screen items-center justify-center">
     <img
-      :src="themeStore.theme === ThemeEnum.DARK ? LoginBgDarkImg : LoginBgImg"
+      :src="themeStore.currentTheme === ThemeEnum.DARK ? LoginBgDarkImg : LoginBgImg"
       class="absolute h-[85vh] w-[70vw] rounded-xl object-cover object-center"
     />
     <img
@@ -46,7 +46,7 @@ function handleLogin(e: MouseEvent) {
         class="ssm:absolute ssm:right-4 ssm:w-[30vw] ssm:bg-transparent ssm:h-[90%] flex h-[60%] flex-col items-center justify-center rounded-lg bg-white p-6 dark:bg-[#18181c]"
       >
         <img
-          :src="themeStore.theme === ThemeEnum.DARK ? LogoLightImg : LogoDarkImg"
+          :src="themeStore.currentTheme === ThemeEnum.DARK ? LogoLightImg : LogoDarkImg"
           class="w-[200px]"
         />
         <div class="my-6">{{ t('COMMON:welcome_message', { APP_NAME: APP_NAME }) }}</div>

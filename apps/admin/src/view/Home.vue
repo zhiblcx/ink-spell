@@ -1,13 +1,16 @@
 <script setup>
+import { selectDashBoardStateQuery } from '@/features/home/query'
 import { ThemeEnum } from '@/shared/enums/ThemeEnum'
 import { useChartsStore } from '@/shared/store/useChartsStore'
 import { useThemeStore } from '@/shared/store/useThemeStore'
 import { EchartsBar, EchartsPie } from '@ink-spell/echarts-vue'
 import { useTranslation } from 'i18next-vue'
 import { useMessage } from 'naive-ui'
+
 const chartsStore = useChartsStore()
 const themeStore = useThemeStore()
 const message = useMessage()
+const { data: dashboardStateQuery, isPending } = selectDashBoardStateQuery()
 const { t } = useTranslation(['COMMON'])
 
 const data = ref([
@@ -17,16 +20,6 @@ const data = ref([
   { label: '四星', value: 200 },
   { label: '五星', value: 111 }
 ])
-
-function handlerData() {
-  data.value = [
-    { label: '一星', value: 11 },
-    { label: '两星', value: 20 },
-    { label: '三星', value: 50 },
-    { label: '四星', value: 80 },
-    { label: '五星', value: 111 }
-  ]
-}
 </script>
 
 <template>
@@ -44,7 +37,7 @@ function handlerData() {
         <n-number-animation
           ref="numberAnimationInstRef"
           :from="0"
-          :to="12039"
+          :to="dashboardStateQuery?.data.userNumber"
         />
       </n-statistic>
     </n-card>
@@ -62,7 +55,7 @@ function handlerData() {
         <n-number-animation
           ref="numberAnimationInstRef"
           :from="0"
-          :to="12039"
+          :to="dashboardStateQuery?.data.bookshelfNumber"
         />
       </n-statistic>
     </n-card>
@@ -80,8 +73,9 @@ function handlerData() {
         <n-number-animation
           ref="numberAnimationInstRef"
           :from="0"
-          :to="12039"
-      /></n-statistic>
+          :to="dashboardStateQuery?.data.bookNumber"
+        />
+      </n-statistic>
     </n-card>
   </div>
 
@@ -89,31 +83,27 @@ function handlerData() {
     <n-card>
       <EchartsBar
         height="400px"
-        :data="[
-          { label: 'Mon', value: 222 },
-          { label: 'Tue', value: 200 },
-          { label: 'Wed', value: 150 },
-          { label: 'www', value: 200 },
-          { label: 'www', value: 111 },
-          { label: 'www', value: 200 },
-          { label: 'www', value: 111 }
-        ]"
-        :dark="themeStore.currentTheme == ThemeEnum.DARK"
-        label
         :title="t('COMMON:books_uploaded_in_last_seven_days')"
+        :dark="themeStore.currentTheme == ThemeEnum.DARK"
+        :data="
+          dashboardStateQuery?.data?.bookNumberList?.map((data) => ({
+            label: data.time,
+            value: data.bookNumber
+          })) ?? []
+        "
         :relyVariable="chartsStore.chartsRelyVariation"
+        label
       />
     </n-card>
     <n-card class="mt-4 md:ml-4 md:mt-0 md:w-[50%]">
       <EchartsPie
         height="400px"
         :title="t('COMMON:user_satisfaction')"
-        label
         :dark="themeStore.currentTheme == ThemeEnum.DARK"
         :data="data"
         :relyVariable="chartsStore.chartsRelyVariation"
+        label
       />
-      <button @click="handlerData">切换数据</button>
     </n-card>
   </div>
 </template>

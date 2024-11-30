@@ -2,6 +2,7 @@ import i18next from "i18next"
 import { AxiosError } from 'axios'
 import { useRouter } from "vue-router"
 import { PATH_FORBIDDEN, PATH_INTERNAL_SERVER_ERROR } from "@/shared/constants/router-path"
+import { router } from "@/routes"
 
 export const handleAxiosError = (result: AxiosError) => {
   const router = useRouter()
@@ -22,4 +23,14 @@ export const handleAxiosError = (result: AxiosError) => {
       }
     }
   }
+}
+
+
+export const handleRetryDelay = (_: number, error: AxiosError): number => {
+  if (error.status === 403) {
+    router.push(PATH_FORBIDDEN)
+  } else if (error.status === 500) {
+    router.push(PATH_INTERNAL_SERVER_ERROR)
+  }
+  return 2000
 }

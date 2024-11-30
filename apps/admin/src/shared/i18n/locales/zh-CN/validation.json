@@ -4,5 +4,8 @@
   "prompt_password": "亲，你还未输入密码",
   "input_password": "请输入密码",
   "search_username": "请输入要搜索的用户名",
-  "search_keywords": "请输入要搜索的关键字"
+  "search_keywords": "请输入要搜索的关键字",
+  "password_mismatch": "两次密码输入不一致",
+  "please_input": "请输入{{ value }}",
+  "must_be_length_characters_long": "{{value}} 长度为 {{length}} 位"
 }
