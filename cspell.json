@@ -26,6 +26,7 @@
     "nprogress",
     "vite",
     "autoincrement",
-    "iconify"
+    "iconify",
+    "axios"
   ]
 }

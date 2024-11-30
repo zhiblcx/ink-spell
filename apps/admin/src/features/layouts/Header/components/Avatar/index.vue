@@ -1,29 +1,36 @@
 <script setup lang="ts">
-import ExitIcon from '@/assets/icons/iconify/ExitIcon.vue'
-import UserIcon from '@/assets/icons/iconify/UserIcon.vue'
-import { PATH_LOGIN } from '@/shared/constants/router-path'
+import { EditIcon, ExitIcon } from '@/assets/icons'
+import { selectOneselfInfoQuery } from '@/features/user/select'
+import { SERVER_URL } from '@/shared/constants/app'
 import { useLanguageStore } from '@/shared/store/useLanguageStore'
+import { logoutUtils } from '@/shared/utils/logoutUtils'
 import { renderIcon } from '@/shared/utils/renderIcon'
 import { useTranslation } from 'i18next-vue'
-import { useRouter } from 'vue-router'
+import { UpdatePasswordModal } from '..'
 
-const router = useRouter()
 const languageStore = useLanguageStore()
-const { t } = useTranslation(['AUTH', 'COMMON'])
 const options = ref()
+const { t } = useTranslation(['AUTH', 'COMMON'])
+const { data: oneselfInfo } = selectOneselfInfoQuery()
+const showModal = ref(false)
+
+const keys = {
+  change_password: 'change_password',
+  logout: 'logout'
+}
 
 watch(
   () => languageStore.language,
   () => {
     options.value = [
       {
-        label: t('COMMON:personal_profile'),
-        key: 'profile',
-        icon: renderIcon(UserIcon)
+        label: t('COMMON:change_password'),
+        key: keys.change_password,
+        icon: renderIcon(EditIcon)
       },
       {
         label: t('AUTH:logout'),
-        key: 'logout',
+        key: keys.logout,
         icon: renderIcon(ExitIcon)
       }
     ]
@@ -33,11 +40,11 @@ watch(
 
 function handlerSelect(key: string) {
   switch (key) {
-    case 'profile':
-      router.push('/profile')
+    case keys.change_password:
+      showModal.value = true
       break
-    case 'logout':
-      router.push(PATH_LOGIN)
+    case keys.logout:
+      logoutUtils()
   }
 }
 </script>
@@ -50,9 +57,9 @@ function handlerSelect(key: string) {
     <n-avatar
       round
       size="small"
-      src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+      :src="SERVER_URL + oneselfInfo?.data.avatar"
     />
   </n-dropdown>
-</template>
 
-<style scoped></style>
+  <UpdatePasswordModal v-model="showModal" />
+</template>
