@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ThemeEnum } from '@/shared/enums/ThemeEnum'
-import { useThemeStore } from '@/shared/store/useThemeStore'
-import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
-import { ConfigProviderProps, createDiscreteApi, darkTheme } from 'naive-ui'
+import { useLanguageStore, useThemeStore } from '@/shared/store'
+import { ConfigProviderProps, createDiscreteApi, darkTheme, dateZhCN, zhCN } from 'naive-ui'
 import { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider'
+import { LanguageEnum } from './shared/enums/LanguageEnum'
 
 declare global {
   interface Window {
@@ -12,6 +12,7 @@ declare global {
 }
 
 const themeStore = useThemeStore()
+const languageStore = useLanguageStore()
 const configProviderPropsRef = computed<ConfigProviderProps>(() => ({
   theme: themeStore.currentTheme === ThemeEnum.DARK ? darkTheme : null
 }))
@@ -22,12 +23,16 @@ window.$message = message
 </script>
 
 <template>
-  <n-config-provider :theme="themeStore.currentTheme === ThemeEnum.DARK ? darkTheme : null">
+  <n-config-provider
+    :theme="themeStore.currentTheme === ThemeEnum.DARK ? darkTheme : null"
+    :locale="languageStore.language === LanguageEnum.ENGLISH ? null : zhCN"
+    :date-locale="languageStore.language === LanguageEnum.ENGLISH ? null : dateZhCN"
+  >
     <n-message-provider>
       <n-dialog-provider>
         <n-modal-provider>
+          <!-- <VueQueryDevtools /> -->
           <router-view />
-          <VueQueryDevtools />
         </n-modal-provider>
       </n-dialog-provider>
     </n-message-provider>
