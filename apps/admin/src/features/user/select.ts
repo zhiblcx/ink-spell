@@ -1,7 +1,6 @@
 import { QueryKeysEnum } from "@/shared/enums/QueryKeysEnum"
 import { httpRequest } from "@/shared/API"
-import { useQuery } from "@tanstack/vue-query"
-
+import { useQuery, keepPreviousData } from '@tanstack/vue-query'
 
 export const selectOneselfInfoQuery = () =>
   useQuery({
@@ -10,9 +9,10 @@ export const selectOneselfInfoQuery = () =>
   })
 
 
-export const selectAllUserInfoQuery = () =>
+export const selectAllUserInfoQuery = (page: Ref<number>, limit: Ref<number>) =>
   useQuery({
-    queryKey: [QueryKeysEnum.ALL_USER_KEY],
-    queryFn: () => httpRequest.get("/user/all/info")
+    queryKey: [QueryKeysEnum.ALL_USER_KEY, page, limit],
+    queryFn: () => httpRequest.get(`/user/all/info?page=${page.value}&limit=${limit.value}`),
+    placeholderData: keepPreviousData
   })
 
