@@ -1,9 +1,10 @@
 import { httpRequest } from "@/shared/API";
 import { QueryKeysEnum } from "@/shared/enums/QueryKeysEnum";
-import { useQuery } from "@tanstack/vue-query";
+import { keepPreviousData, useQuery } from "@tanstack/vue-query";
 
-export const selectAllBookshelfQuery = () =>
+export const selectAllBookshelfQuery = (page: Ref<number>, limit: Ref<number>) =>
   useQuery({
-    queryKey: [QueryKeysEnum.ALL_BOOKSHELF_KEY],
-    queryFn: () => httpRequest.get("/bookshelf/all/info")
+    queryKey: [QueryKeysEnum.ALL_BOOKSHELF_KEY, page, limit],
+    queryFn: () => httpRequest.get(`/bookshelf/all/info?page=${page.value}&limit=${limit.value}`),
+    placeholderData: keepPreviousData
   })
