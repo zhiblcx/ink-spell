@@ -36,7 +36,7 @@ export class BookshelfService {
           })) + 1,
         description:
           createBookshelfDto.bookShelfDescription == ''
-            ? this.translation.t('prompt.no_description')
+            ? null
             : createBookshelfDto.bookShelfDescription,
       },
     });

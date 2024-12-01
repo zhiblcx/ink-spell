@@ -296,7 +296,7 @@ export class UserService {
     });
   }
 
-  async getAllUserInfo(page, limit) {
+  async getAllUserInfo(page: number, limit: number) {
     const users = await this.prisma.user.findMany({
       where: {
         isDelete: false,
@@ -317,7 +317,7 @@ export class UserService {
         },
       },
       skip: (page - 1) * limit,
-      take: parseInt(limit),
+      take: limit
     });
     return users.map(user => ({
       ...user,
