@@ -36,5 +36,13 @@
   "change_password": "修改密码",
   "old_password": "旧密码",
   "new_password": "新密码",
-  "confirm_password": "确认密码"
+  "confirm_password": "确认密码",
+  "public": "公开",
+  "private": "私有",
+  "cover": "封面",
+  "show": "查看",
+  "author": "作者",
+  "not_available": "暂无",
+  "change": "修改",
+  "download": "下载"
 }

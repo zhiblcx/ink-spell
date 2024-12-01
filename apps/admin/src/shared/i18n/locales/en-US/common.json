@@ -36,5 +36,13 @@
   "change_password": "change password",
   "old_password": "old password",
   "new_password": "new password",
-  "confirm_password": "confirm password"
+  "confirm_password": "confirm password",
+  "public": "public",
+  "private": "private",
+  "cover": "cover",
+  "show": "show",
+  "author": "author",
+  "not_available": "not available",
+  "change": "change",
+  "download": "download"
 }
