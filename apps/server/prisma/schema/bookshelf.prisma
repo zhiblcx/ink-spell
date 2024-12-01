@@ -9,7 +9,7 @@ model BookShelf {
   position         Int
   isPublic         Boolean            @default(false) @map("is_public") // 书架的状态
   cover            String
-  description      String             @default("暂无描述")
+  description      String?
   books            Book[]
   collectBookShelf CollectBookShelf[]
 }
