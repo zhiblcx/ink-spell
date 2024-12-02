@@ -24,5 +24,6 @@
   "bookshelf_name_must_be_a_string": "bookshelf name must be a string",
   "avatar_must_be_a_string": "avatar must be a string",
   "code_must_be_number": "code_must_be_number ^_^",
-  "email_format_invalid": "The email format seems to be incorrect, could you please check it again?"
+  "email_format_invalid": "The email format seems to be incorrect, could you please check it again?",
+  "download_successful": "download successful"
 }

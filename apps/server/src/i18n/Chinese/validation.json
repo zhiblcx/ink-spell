@@ -24,5 +24,6 @@
   "bookshelf_name_must_be_a_string": "书架名称必须为字符串",
   "avatar_must_be_a_string": "头像必须为字符串",
   "code_must_be_number": "请输入数字形式的验证码^_^",
-  "email_format_invalid": "邮箱格式好像有点不对，可以再检查一下吗？"
+  "email_format_invalid": "邮箱格式好像有点不对，可以再检查一下吗？",
+  "download_successful": "下载成功"
 }

@@ -172,6 +172,13 @@ export class BookService {
     });
   }
 
+  async downloadBook(bookId: number) {
+    const book = await this.prisma.book.findUnique({
+      where: { id: bookId, isDelete: false },
+    });
+    return book.bookFile.split('/')[3];
+  }
+
   async getAllBookInfo(page: number, limit: number) {
     return await this.prisma.book.findMany({
       where: { isDelete: false },

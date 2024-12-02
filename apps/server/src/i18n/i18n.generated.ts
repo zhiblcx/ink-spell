@@ -67,6 +67,7 @@ export type I18nTranslations = {
         "avatar_must_be_a_string": string;
         "code_must_be_number": string;
         "email_format_invalid": string;
+        "download_successful": string;
         "username_cannot_be_empty": string;
     };
 };

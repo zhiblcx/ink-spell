@@ -14,6 +14,7 @@ import {
   Put,
   Query,
   Request,
+  Res,
   UploadedFile,
   UseInterceptors,
   UsePipes,
@@ -176,6 +177,15 @@ export class BookController {
     });
   }
 
+  @Get("/download/:bookID")
+  @ApiOperation({ summary: '下载书籍' })
+  @HttpCode(HttpStatus.OK)
+  @APIResponse(null, '下载成功')
+  async downloadBook(@Param('bookID') bookID: number, @Res() res,) {
+    const fileName = await this.bookService.downloadBook(Number(bookID))
+    const suffix = '.txt'
+    res.download(appConfig.BOOK_FILE_URL + '\\' + fileName, new Date().valueOf() + suffix)
+  }
 
   @Roles(Role.Admin)
   @Get('/all/info')
