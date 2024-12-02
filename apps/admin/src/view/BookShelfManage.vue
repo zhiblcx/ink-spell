@@ -1,11 +1,68 @@
 <script setup lang="ts">
+import { selectAllBookshelfQuery } from '@/features/bookshelf'
+import { BookshelfDataVo } from '@/features/bookshelf/types'
+import { DataTablePagination } from '@/shared/components'
+import { PaginationParams, SERVER_URL } from '@/shared/constants'
 import { useTranslation } from 'i18next-vue'
+import { DataTableColumn, NAvatar, NButton } from 'naive-ui'
 
 const { t } = useTranslation(['COMMON', 'VALIDATION'])
-const selectOptions = ref([
+const selectOptions = computed(() => [
   { label: t('COMMON:bookshelf_name'), value: '书架名' },
   { label: t('COMMON:username'), value: '用户名' }
 ])
+
+const page = ref(PaginationParams.DEFAULT_PAGE)
+const pageSize = ref(PaginationParams.DEFAULT_PAGESIZE)
+const columns = computed(
+  (): Array<DataTableColumn> => [
+    {
+      title: t('COMMON:username'),
+      key: 'username'
+    },
+    {
+      title: t('COMMON:cover'),
+      key: 'cover',
+      align: 'center',
+      render: (bookshelf) => h(NAvatar, { src: bookshelf.cover as string, size: 40 })
+    },
+    {
+      title: t('COMMON:bookshelf_status'),
+      key: 'bookshelf_status'
+    },
+    {
+      title: t('COMMON:books_count'),
+      key: 'books_count'
+    },
+    {
+      title: t('COMMON:collected_users'),
+      key: 'collected_users'
+    },
+    {
+      title: t('COMMON:bookshelf_details'),
+      key: 'bookshelf_details'
+    },
+    {
+      title: t('COMMON:actions'),
+      key: 'actions',
+      width: '200px',
+      render: () => h(NButton, { style: { marginRight: '10px' }, type: 'error' }, { default: () => t('COMMON:delete') })
+    }
+  ]
+)
+const data = computed(() =>
+  allBookshelfData?.value?.data.items.map((data: BookshelfDataVo) => ({
+    username: data.user.username,
+    bookshelf_name: data.label,
+    books_count: data.bookCount,
+    bookshelf_status: data.isPublic ? t('COMMON:public') : t('COMMON:private'),
+    collected_users: data.collectBookShelfPeople,
+    bookshelf_details: data.description ?? t('COMMON:not_available'),
+    cover: SERVER_URL + data.cover
+  }))
+)
+
+const { data: allBookshelfData } = selectAllBookshelfQuery(page, pageSize)
 </script>
 
 <template>
@@ -22,33 +79,11 @@ const selectOptions = ref([
     <n-button type="primary"> {{ t('COMMON:search') }} </n-button>
   </n-input-group>
 
-  <n-table
-    :bordered="false"
-    :single-line="false"
-  >
-    <thead>
-      <tr>
-        <th>{{ t('COMMON:username') }}</th>
-        <th>{{ t('COMMON:bookshelf_name') }}</th>
-        <th>{{ t('COMMON:bookshelf_status') }}</th>
-        <th>{{ t('COMMON:books_count') }}</th>
-        <th>{{ t('COMMON:collected_users') }}</th>
-        <th>{{ t('COMMON:bookshelf_details') }}</th>
-        <th>{{ t('COMMON:actions') }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>放弃</td>
-        <td>1529088692@qq.com</td>
-        <td>22</td>
-        <td>33</td>
-        <td>1h</td>
-        <td>33</td>
-        <td>删除</td>
-      </tr>
-    </tbody>
-  </n-table>
+  <DataTablePagination
+    :columns="columns"
+    :data="data"
+    :page-count="allBookshelfData?.data.totalPages"
+    v-model:page="page"
+    v-model:page-size="pageSize"
+  />
 </template>
-
-<style scoped></style>
