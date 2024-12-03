@@ -1,10 +1,23 @@
 <script setup lang="ts">
-import { downloadBookByIdMutation, selectAllBookQuery } from '@/features/book'
+import { deleteBookByIdMutation, downloadBookByIdMutation, selectAllBookQuery } from '@/features/book'
 import { BookDataVo } from '@/features/book/types'
-import { DataTablePagination } from '@/shared/components'
+import { DataTablePagination, PopconfirmDelete } from '@/shared/components'
 import { PaginationParams, SERVER_URL } from '@/shared/constants'
 import { useTranslation } from 'i18next-vue'
 import { DataTableColumn, NAvatar, NButton } from 'naive-ui'
+import { InternalRowData } from 'naive-ui/es/data-table/src/interface'
+
+interface BookManageDataType {
+  id: number
+  username: string
+  book_name: string
+  belonging_bookshelf: string
+  cover: string
+  book_introduction: string
+  author: string
+  bookshelf_details: string
+  [x: string]: unknown
+}
 
 const { t } = useTranslation(['COMMON', 'VALIDATION'])
 const selectOptions = computed(() => [
@@ -59,19 +72,32 @@ const columns = computed(
       title: t('COMMON:actions'),
       key: 'actions',
       width: '200px',
-      render: () => {
-        const deleteButton = h(NButton, { type: 'error' }, { default: () => t('COMMON:delete') })
-        const updateButton = h(
-          NButton,
-          { style: { marginRight: '10px' }, type: 'primary' },
-          { default: () => t('COMMON:change') }
-        )
-        return [updateButton, deleteButton]
-      }
+      render: updateAndDeleteButton
     }
   ]
 )
+
 const { mutate: downloadMutate } = downloadBookByIdMutation()
+const { mutate: deleteMutate } = deleteBookByIdMutation(page.value, pageSize.value)
+
+const updateAndDeleteButton = (book: BookManageDataType | InternalRowData) => {
+  const updateButton = h(
+    NButton,
+    {
+      style: { marginRight: '10px' },
+      type: 'primary',
+      onClick: () => {
+        console.log('update')
+      }
+    },
+    { default: () => t('COMMON:change') }
+  )
+
+  const deleteButton = h(PopconfirmDelete, { onConfirm: () => deleteMutate(book.id as number) })
+
+  return [updateButton, deleteButton]
+}
+
 const { data: allBookData } = selectAllBookQuery(page, pageSize)
 
 const processedData = computed(() =>

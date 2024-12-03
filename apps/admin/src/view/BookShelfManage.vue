@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { selectAllBookshelfQuery } from '@/features/bookshelf'
+import { deleteBookShelfByIdMutation, selectAllBookshelfQuery } from '@/features/bookshelf'
 import { BookshelfDataVo } from '@/features/bookshelf/types'
-import { DataTablePagination } from '@/shared/components'
+import { DataTablePagination, PopconfirmDelete } from '@/shared/components'
 import { PaginationParams, SERVER_URL } from '@/shared/constants'
 import { useTranslation } from 'i18next-vue'
 import { DataTableColumn, NAvatar, NButton } from 'naive-ui'
+import { InternalRowData } from 'naive-ui/es/data-table/src/interface'
 
 const { t } = useTranslation(['COMMON', 'VALIDATION'])
 const selectOptions = computed(() => [
@@ -46,23 +47,33 @@ const columns = computed(
       title: t('COMMON:actions'),
       key: 'actions',
       width: '200px',
-      render: () => h(NButton, { style: { marginRight: '10px' }, type: 'error' }, { default: () => t('COMMON:delete') })
+      render: deleteBookshelf
     }
   ]
 )
+
 const data = computed(() =>
   allBookshelfData?.value?.data.items.map((data: BookshelfDataVo) => ({
+    id: data.id,
     username: data.user.username,
     bookshelf_name: data.label,
     books_count: data.bookCount,
     bookshelf_status: data.isPublic ? t('COMMON:public') : t('COMMON:private'),
     collected_users: data.collectBookShelfPeople,
     bookshelf_details: data.description ?? t('COMMON:not_available'),
-    cover: SERVER_URL + data.cover
+    cover: SERVER_URL + data.cover,
+    disabled: data.allFlag
   }))
 )
 
 const { data: allBookshelfData } = selectAllBookshelfQuery(page, pageSize)
+const { mutate: deleteBookshelfMutate } = deleteBookShelfByIdMutation(page.value, pageSize.value)
+
+const deleteBookshelf = (bookshelf: InternalRowData) =>
+  h(PopconfirmDelete, {
+    disabled: bookshelf.disabled as boolean,
+    onConfirm: () => deleteBookshelfMutate(bookshelf.id as number)
+  })
 </script>
 
 <template>

@@ -1,11 +1,16 @@
 <script setup lang="ts">
+import { deleteUserByIdMutation, resetUserPasswordMutation } from '@/features/user'
 import { selectAllUserInfoQuery } from '@/features/user/select'
 import { UserDataVo } from '@/features/user/types'
-import { DataTablePagination } from '@/shared/components'
+import { DataTablePagination, PopconfirmDelete } from '@/shared/components'
 import { PaginationParams } from '@/shared/constants'
 import { SERVER_URL } from '@/shared/constants/app'
 import { useTranslation } from 'i18next-vue'
 import { DataTableColumn, NAvatar, NButton } from 'naive-ui'
+import { InternalRowData } from 'naive-ui/es/data-table/src/interface'
+
+const page = ref(PaginationParams.DEFAULT_PAGE)
+const pageSize = ref(PaginationParams.DEFAULT_PAGESIZE)
 
 const { t } = useTranslation(['AUTH', 'COMMON', 'VALIDATION'])
 const columns = computed(
@@ -57,17 +62,10 @@ const columns = computed(
       title: t('COMMON:actions'),
       key: 'actions',
       width: '200px',
-      render: () => {
-        const deleteButton = () => h(NButton, { type: 'error' }, { default: () => t('COMMON:delete') })
-        const resetButton = () =>
-          h(NButton, { style: { marginRight: '10px' }, type: 'warning' }, { default: () => t('AUTH:reset_password') })
-        return [resetButton(), deleteButton()]
-      }
+      render: actions
     }
   ]
 )
-const page = ref(PaginationParams.DEFAULT_PAGE)
-const pageSize = ref(PaginationParams.DEFAULT_PAGESIZE)
 const data = computed(() =>
   allUserInfoData?.value?.data.items.map((user: UserDataVo) => ({
     ...user,
@@ -78,8 +76,21 @@ const data = computed(() =>
     offlineTime: user.offlineTime === null ? t('AUTH:never_logged_in') : user.offlineTime
   }))
 )
-
 const { data: allUserInfoData } = selectAllUserInfoQuery(page, pageSize)
+const { mutate: deleteUserMutate } = deleteUserByIdMutation(page.value, pageSize.value)
+const { mutate: resetUserPasswordMutate } = resetUserPasswordMutation()
+
+const actions = (user: InternalRowData) => {
+  const resetButton = h(PopconfirmDelete, {
+    content: t('COMMON:reset'),
+    type: 'warning',
+    style: { marginRight: '10px' },
+    onConfirm: () => resetUserPasswordMutate(user.id as number)
+  })
+  const deleteButton = h(PopconfirmDelete, { onConfirm: () => deleteUserMutate(user.id as number) })
+
+  return [resetButton, deleteButton]
+}
 </script>
 
 <template>
