@@ -68,19 +68,10 @@ const columns = computed(
   ]
 )
 
-const data = computed(() =>
-  allUserInfoData?.value?.data.items.map((user: UserDataVo) => ({
-    ...user,
-    avatar: SERVER_URL + user.avatar,
-    bookshelf_count: user.bookShelfs,
-    books_count: user.books,
-    reading_total_duration: user.offlineTime === null ? 0 : user.offlineTime,
-    offlineTime: user.offlineTime === null ? t('AUTH:never_logged_in') : user.offlineTime
-  }))
-)
-const searchData = ref([])
+const data = computed(() => processUserData(allUserInfoData?.value?.data.items))
+const searchData = ref<any>([])
 
-const userInfoByUsernameQuery = selectUserInfoByUsernameQuery(search, page, pageSize)
+const { data: userInfoSearchData, ...userInfoByUsernameQuery } = selectUserInfoByUsernameQuery(search, page, pageSize)
 const { data: allUserInfoData } = selectAllUserInfoQuery(page, pageSize)
 const { mutate: deleteUserMutate } = deleteUserByIdMutation(page.value, pageSize.value)
 const { mutate: resetUserPasswordMutate } = resetUserPasswordMutation()
@@ -99,16 +90,21 @@ const actions = (user: InternalRowData) => {
 
 const handlerSearch = async () => {
   if (search.value.trim() != '') {
-    searchData.value = (await userInfoByUsernameQuery?.refetch()).data?.data.items.map((user: UserDataVo) => ({
-      ...user,
-      avatar: SERVER_URL + user.avatar,
-      bookshelf_count: user.bookShelfs,
-      books_count: user.books,
-      reading_total_duration: user.offlineTime === null ? 0 : user.offlineTime,
-      offlineTime: user.offlineTime === null ? t('AUTH:never_logged_in') : user.offlineTime
-    }))
+    await userInfoByUsernameQuery?.refetch()
+    searchData.value = processUserData(userInfoSearchData?.value?.data?.items)
+    page.value = 1
   }
 }
+
+const processUserData = (users: UserDataVo[]) =>
+  users.map((user: UserDataVo) => ({
+    ...user,
+    avatar: SERVER_URL + user.avatar,
+    bookshelf_count: user.bookShelfs,
+    books_count: user.books,
+    reading_total_duration: user.offlineTime === null ? 0 : user.offlineTime,
+    offlineTime: user.offlineTime === null ? t('AUTH:never_logged_in') : user.offlineTime
+  }))
 </script>
 
 <template>
@@ -129,7 +125,7 @@ const handlerSearch = async () => {
   <DataTablePagination
     :columns="columns"
     :data="searchData.length === 0 ? data : searchData"
-    :page-count="allUserInfoData?.data.totalPages"
+    :page-count="searchData.length === 0 ? allUserInfoData?.data.totalPages : userInfoSearchData?.data.totalPages"
     v-model:page="page"
     v-model:page-size="pageSize"
   />

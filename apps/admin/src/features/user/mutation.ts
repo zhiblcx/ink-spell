@@ -36,8 +36,8 @@ export const updatePasswordMutation = (showModal: ModelRef<unknown, string, unkn
 export const resetUserPasswordMutation = () => useMutation({
   mutationFn: (userId: number) => httpRequest.put(`${BASE_USER_API}/reset/password/${userId}`),
   onSuccess: (data) => {
-    window.$message.success(data.message as string)
-    window.$message.success("密码为" + data.data.password as string)
+    const message = (data.message as string) + '：' + data.data.password
+    window.$message.success(message)
   },
   onError: handleAxiosError
 })
