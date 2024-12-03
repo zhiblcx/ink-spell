@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { deleteBookShelfByIdMutation, selectAllBookshelfQuery } from '@/features/bookshelf'
+import { deleteBookShelfByIdMutation, selectAllBookshelfQuery, selectBookshelfSearchQuery } from '@/features/bookshelf'
 import { BookshelfDataVo } from '@/features/bookshelf/types'
 import { DataTablePagination, PopconfirmDelete } from '@/shared/components'
 import { PaginationParams, SERVER_URL } from '@/shared/constants'
@@ -9,10 +9,9 @@ import { InternalRowData } from 'naive-ui/es/data-table/src/interface'
 
 const { t } = useTranslation(['COMMON', 'VALIDATION'])
 const selectOptions = computed(() => [
-  { label: t('COMMON:bookshelf_name'), value: '书架名' },
-  { label: t('COMMON:username'), value: '用户名' }
+  { label: t('COMMON:bookshelf_name'), value: 'bookshelfName' },
+  { label: t('COMMON:username'), value: 'username' }
 ])
-
 const page = ref(PaginationParams.DEFAULT_PAGE)
 const pageSize = ref(PaginationParams.DEFAULT_PAGESIZE)
 const columns = computed(
@@ -52,8 +51,27 @@ const columns = computed(
   ]
 )
 
-const data = computed(() =>
-  allBookshelfData?.value?.data.items.map((data: BookshelfDataVo) => ({
+const data = computed(() => processData(allBookshelfData?.value?.data.items))
+const search = ref<string>('')
+const select = ref(selectOptions.value[0].value)
+const searchData = ref<any>([])
+const { data: allBookshelfData } = selectAllBookshelfQuery(page, pageSize)
+const { mutate: deleteBookshelfMutate } = deleteBookShelfByIdMutation(page.value, pageSize.value)
+const { data: selectBookshelfSearchData, refetch: selectBookshelfSearchRefetch } = selectBookshelfSearchQuery(
+  page,
+  pageSize,
+  select,
+  search
+)
+
+const deleteBookshelf = (bookshelf: InternalRowData) =>
+  h(PopconfirmDelete, {
+    disabled: bookshelf.disabled as boolean,
+    onConfirm: () => deleteBookshelfMutate(bookshelf.id as number)
+  })
+
+const processData = (bookshelfs: BookshelfDataVo[]) =>
+  bookshelfs?.map((data: BookshelfDataVo) => ({
     id: data.id,
     username: data.user.username,
     bookshelf_name: data.label,
@@ -64,16 +82,15 @@ const data = computed(() =>
     cover: SERVER_URL + data.cover,
     disabled: data.allFlag
   }))
-)
 
-const { data: allBookshelfData } = selectAllBookshelfQuery(page, pageSize)
-const { mutate: deleteBookshelfMutate } = deleteBookShelfByIdMutation(page.value, pageSize.value)
-
-const deleteBookshelf = (bookshelf: InternalRowData) =>
-  h(PopconfirmDelete, {
-    disabled: bookshelf.disabled as boolean,
-    onConfirm: () => deleteBookshelfMutate(bookshelf.id as number)
-  })
+const handlerSelect = (value: string) => (select.value = value)
+const handlerSearch = async () => {
+  if (search.value.trim() != '') {
+    await selectBookshelfSearchRefetch()
+    searchData.value = processData(selectBookshelfSearchData?.value?.data.items)
+    page.value = 1
+  }
+}
 </script>
 
 <template>
@@ -82,18 +99,27 @@ const deleteBookshelf = (bookshelf: InternalRowData) =>
       :style="{ width: '120px' }"
       :options="selectOptions"
       :placeholder="selectOptions[0].label"
+      @update:value="handlerSelect"
     />
     <n-input
       :style="{ width: '200px' }"
       :placeholder="t('VALIDATION:search_keywords')"
+      v-model:value="search"
     />
-    <n-button type="primary"> {{ t('COMMON:search') }} </n-button>
+    <n-button
+      type="primary"
+      @click="handlerSearch"
+    >
+      {{ t('COMMON:search') }}
+    </n-button>
   </n-input-group>
 
   <DataTablePagination
     :columns="columns"
-    :data="data"
-    :page-count="allBookshelfData?.data.totalPages"
+    :data="searchData.length === 0 ? data : searchData"
+    :page-count="
+      searchData.length === 0 ? allBookshelfData?.data.totalPages : selectBookshelfSearchData?.data.totalPages
+    "
     v-model:page="page"
     v-model:page-size="pageSize"
   />
