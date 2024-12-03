@@ -14,3 +14,4 @@ export { default as SumIcon } from './iconify/SumIcon.vue';
 export { default as SunFlowerIcon } from './iconify/SunFlowerIcon.vue';
 export { default as TranslateIcon } from './iconify/TranslateIcon.vue';
 export { default as UserIcon } from './iconify/UserIcon.vue';
+export { default as WarningIcon } from './iconify/WarningIcon.vue'
