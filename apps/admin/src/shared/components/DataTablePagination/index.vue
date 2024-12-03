@@ -1,22 +1,21 @@
 <script setup lang="ts">
 import { PaginationParams } from '@/shared/constants'
-import { PaginationType } from '@/shared/types'
 import { DataTableColumn } from 'naive-ui'
 
 interface DataTablePaginationType {
   columns: Array<DataTableColumn>
-  data: []
-  pageCount: number
+  data: [] | undefined
+  pageCount: number | undefined
 }
 
 const props = defineProps<DataTablePaginationType>()
 const page = defineModel<number>('page', { required: true })
 const pageSize = defineModel<number>('pageSize', { required: true })
 
-const pagination = ref<PaginationType>({
+const pagination = computed(() => ({
   page: page.value,
   pageSize: pageSize.value,
-  pageCount: props.pageCount,
+  pageCount: props.pageCount ?? PaginationParams.DEFAULT_PAGECOUNT,
   pageSizes: PaginationParams.DEFAULT_PAGESIZES,
   showSizePicker: true,
   onChange: (currentPage: number) => {
@@ -27,7 +26,7 @@ const pagination = ref<PaginationType>({
     pageSize.value = currentPageSize
     pagination.value.pageSize = currentPageSize
   }
-})
+}))
 </script>
 
 <template>
@@ -40,6 +39,6 @@ const pagination = ref<PaginationType>({
     :max-height="420"
     striped
     remote
-    :data="props.data"
+    :data="props.data ?? []"
   />
 </template>
