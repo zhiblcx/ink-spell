@@ -16,7 +16,6 @@ export default defineConfig(({ mode }) => {
       port: parseInt(VITE_BASE_API_PORT) || DEFAULT_PORT,
       proxy: {
         [VITE_BASE_API_PREFIX]: {
-          ws: true,
           target: VITE_SERVER_URL,
           changeOrigin: true
           // rewrite: path => path.replace(RegExp('^api', ''))
