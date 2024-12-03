@@ -21,7 +21,7 @@ export const useThemeStore = defineStore('theme', () => {
       ThemeUtils.changeTheme(state)
       currentTheme.value = state
     }
-    ThemeUtils.setTheme(currentTheme.value)
+    ThemeUtils.setTheme(state)
     theme.value = state
   }
 
