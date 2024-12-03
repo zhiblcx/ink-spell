@@ -27,6 +27,7 @@ import { Roles } from '@/core/decorator/roles.decorator';
 import { Role } from '@/shared/enums/role.enum';
 import { E } from '@/shared/res/e';
 import { AllBookShelfInfoVo } from './vo/all-bookshelf-info.vo';
+import { bookshelfNameQuery, limitQuery, pageQuery, usernameQuery } from '@/shared/constants/pagination'
 
 @Controller('bookshelf')
 @ApiTags('书架管理')
@@ -148,22 +149,16 @@ export class BookshelfController {
   @Roles(Role.Admin)
   @Get("/all/info")
   @ApiOperation({ summary: "获取所有书架信息" })
-  @ApiQuery({
-    name: "page",
-    type: Number,
-    example: 1,
-    description: "页码"
-  })
-  @ApiQuery({
-    name: "limit",
-    type: Number,
-    example: 10,
-    description: "查询的条目"
-  })
+  @ApiQuery(usernameQuery)
+  @ApiQuery(bookshelfNameQuery)
+  @ApiQuery(pageQuery)
+  @ApiQuery(limitQuery)
   @APIResponse([AllBookShelfInfoVo], '查询成功', true)
   async getAllBookInfo(
     @Query("page") page: number,
-    @Query("limit") limit: number
+    @Query("limit") limit: number,
+    @Query("username") username?: string,
+    @Query("bookshelfName") bookshelfName?: string,
   ) {
     return new R({
       message: this.translation.t("prompt.acquire_successful"),
@@ -171,6 +166,8 @@ export class BookshelfController {
         items: await this.bookshelfService.getAllBookInfo(
           Number(page),
           Number(limit),
+          username,
+          bookshelfName
         ),
         totalPages: await this.bookshelfService.getAllBookInfoCount(limit),
         currentPage: Number(page),

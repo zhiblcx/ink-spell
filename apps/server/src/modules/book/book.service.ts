@@ -179,9 +179,21 @@ export class BookService {
     return book.bookFile.split('/')[3];
   }
 
-  async getAllBookInfo(page: number, limit: number) {
+  async getAllBookInfo(page: number, limit: number, username: string | undefined, bookshelfName: string | undefined) {
     return await this.prisma.book.findMany({
-      where: { isDelete: false },
+      where: {
+        user: {
+          username: {
+            contains: username ?? ''
+          },
+        },
+        bookShelf: {
+          label: {
+            contains: bookshelfName ?? ''
+          }
+        },
+        isDelete: false
+      },
       include: {
         user: {
           select: {

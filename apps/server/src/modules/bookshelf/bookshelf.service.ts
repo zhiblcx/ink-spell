@@ -88,9 +88,19 @@ export class BookshelfService {
     });
   }
 
-  async getAllBookInfo(page: number, limit: number) {
+  async getAllBookInfo(page: number, limit: number, username: string | undefined, bookshelfName: string | undefined) {
     const bookShelfs = await this.prisma.bookShelf.findMany({
-      where: { isDelete: false },
+      where: {
+        label: {
+          contains: bookshelfName ?? '',
+        },
+        user: {
+          username: {
+            contains: username ?? '',
+          }
+        },
+        isDelete: false
+      },
       include: {
         user: {
           select: {

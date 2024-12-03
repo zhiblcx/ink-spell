@@ -34,6 +34,7 @@ import { MessageVo } from './vo/message.vo';
 import { UserInfoVo } from './vo/user.info.vo';
 import { UserVo } from './vo/user.vo';
 import { AllUserVo } from './vo/all.user.vo';
+import { limitQuery, pageQuery } from '@/shared/constants/pagination';
 
 @Controller('user')
 @ApiTags('用户管理')
@@ -65,18 +66,8 @@ export class UserController {
 
   @Get('/username/:username')
   @ApiOperation({ summary: '通过用户名获取用户列表' })
-  @ApiQuery({
-    name: 'page',
-    type: Number,
-    example: 1,
-    description: '页码',
-  })
-  @ApiQuery({
-    name: 'limit',
-    type: Number,
-    example: 10,
-    description: '查询的条目',
-  })
+  @ApiQuery(pageQuery)
+  @ApiQuery(limitQuery)
   @APIResponse([UserVo], '查询成功', true)
   async getUserInfoByUsername(
     @Param('username') username: string,
@@ -228,18 +219,8 @@ export class UserController {
   @Roles(Role.Admin)
   @Get('/all/info')
   @ApiOperation({ summary: '获取所有用户信息' })
-  @ApiQuery({
-    name: 'page',
-    type: Number,
-    example: 1,
-    description: '页码',
-  })
-  @ApiQuery({
-    name: 'limit',
-    type: Number,
-    example: 10,
-    description: '查询的条目',
-  })
+  @ApiQuery(pageQuery)
+  @ApiQuery(limitQuery)
   @APIResponse([AllUserVo], '查询成功', true)
   async getAllUserInfo(
     @Query('page') page: number,

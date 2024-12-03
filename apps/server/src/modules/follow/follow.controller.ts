@@ -20,6 +20,7 @@ import {
 import { TranslationService } from '../translation/translation.service';
 import { FollowService } from './follow.service';
 import { FollowVo } from './vo/follow.vo';
+import { limitQuery, pageQuery } from '@/shared/constants/pagination';
 
 @Controller('follow')
 @ApiTags('关注管理')
@@ -28,22 +29,12 @@ export class FollowController {
   constructor(
     private readonly followService: FollowService,
     private readonly translation: TranslationService,
-  ) {}
+  ) { }
   @Get('/follower')
   @ApiOperation({ summary: '获取关注列表' })
   @HttpCode(HttpStatus.OK)
-  @ApiQuery({
-    name: 'page',
-    type: Number,
-    example: 1,
-    description: '页码',
-  })
-  @ApiQuery({
-    name: 'limit',
-    type: Number,
-    example: 10,
-    description: '查询的条目',
-  })
+  @ApiQuery(pageQuery)
+  @ApiQuery(limitQuery)
   @APIResponse([FollowVo], '获取成功', true)
   async getFollower(
     @Request() req,
@@ -56,18 +47,8 @@ export class FollowController {
   @Get('/following')
   @ApiOperation({ summary: '获取粉丝列表' })
   @HttpCode(HttpStatus.OK)
-  @ApiQuery({
-    name: 'page',
-    type: Number,
-    example: 1,
-    description: '页码',
-  })
-  @ApiQuery({
-    name: 'limit',
-    type: Number,
-    example: 10,
-    description: '查询的条目',
-  })
+  @ApiQuery(pageQuery)
+  @ApiQuery(limitQuery)
   @APIResponse([FollowVo], '获取成功', true)
   async getFollowing(
     @Request() req,
