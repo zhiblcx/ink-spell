@@ -74,7 +74,7 @@ const columns = computed(
   ]
 )
 
-const { data: allBookData } = selectAllBookQuery(page, pageSize)
+const { data: allBookData, isPending } = selectAllBookQuery(page, pageSize)
 const { data: bookSearchData, ...bookSearchQuery } = selectBookByUsernameAndBookshelfNameQuery(
   page,
   pageSize,
@@ -91,7 +91,7 @@ const updateAndDeleteButton = (book: InternalRowData) => {
       style: { marginRight: '10px' },
       type: 'primary',
       onClick: () => {
-        console.log('update')
+        window.$message.warning('暂不支持')
       }
     },
     { default: () => t('COMMON:change') }
@@ -116,7 +116,7 @@ const handlerSearch = async () => {
 
 // 定义一个函数来处理书籍数据的转换
 const processBookData = (books: BookDataVo[]) =>
-  books.map((book: BookDataVo) => ({
+  books?.map((book: BookDataVo) => ({
     id: book.id,
     username: book.user.username,
     book_name: book.name,
@@ -129,31 +129,39 @@ const processBookData = (books: BookDataVo[]) =>
 </script>
 
 <template>
-  <n-input-group class="mb-4">
-    <n-select
-      :style="{ width: '120px' }"
-      :options="selectOptions"
-      :placeholder="selectOptions[0].label"
-      @update:value="handlerSelect"
-    />
-    <n-input
-      :style="{ width: '200px' }"
-      :placeholder="t('VALIDATION:search_keywords')"
-      v-model:value="search"
-    />
-    <n-button
-      type="primary"
-      @click="handlerSearch"
-    >
-      {{ t('COMMON:search') }}
-    </n-button>
-  </n-input-group>
-
-  <DataTablePagination
-    :columns="columns"
-    :data="searchData.length === 0 ? data : searchData"
-    :page-count="searchData.length === 0 ? allBookData?.data.totalPages : bookSearchData?.data.totalPages"
-    v-model:page="page"
-    v-model:page-size="pageSize"
+  <n-skeleton
+    text
+    :repeat="5"
+    v-if="isPending"
   />
+
+  <div v-else>
+    <n-input-group class="mb-4">
+      <n-select
+        :style="{ width: '120px' }"
+        :options="selectOptions"
+        :placeholder="selectOptions[0].label"
+        @update:value="handlerSelect"
+      />
+      <n-input
+        :style="{ width: '200px' }"
+        :placeholder="t('VALIDATION:search_keywords')"
+        v-model:value="search"
+      />
+      <n-button
+        type="primary"
+        @click="handlerSearch"
+      >
+        {{ t('COMMON:search') }}
+      </n-button>
+    </n-input-group>
+
+    <DataTablePagination
+      :columns="columns"
+      :data="searchData.length === 0 ? data : searchData"
+      :page-count="searchData.length === 0 ? allBookData?.data.totalPages : bookSearchData?.data.totalPages"
+      v-model:page="page"
+      v-model:page-size="pageSize"
+    />
+  </div>
 </template>

@@ -55,7 +55,7 @@ const data = computed(() => processData(allBookshelfData?.value?.data.items))
 const search = ref<string>('')
 const select = ref(selectOptions.value[0].value)
 const searchData = ref<any>([])
-const { data: allBookshelfData } = selectAllBookshelfQuery(page, pageSize)
+const { data: allBookshelfData, isPending } = selectAllBookshelfQuery(page, pageSize)
 const { mutate: deleteBookshelfMutate } = deleteBookShelfByIdMutation(page.value, pageSize.value)
 const { data: selectBookshelfSearchData, refetch: selectBookshelfSearchRefetch } = selectBookshelfSearchQuery(
   page,
@@ -94,33 +94,40 @@ const handlerSearch = async () => {
 </script>
 
 <template>
-  <n-input-group class="mb-4">
-    <n-select
-      :style="{ width: '120px' }"
-      :options="selectOptions"
-      :placeholder="selectOptions[0].label"
-      @update:value="handlerSelect"
-    />
-    <n-input
-      :style="{ width: '200px' }"
-      :placeholder="t('VALIDATION:search_keywords')"
-      v-model:value="search"
-    />
-    <n-button
-      type="primary"
-      @click="handlerSearch"
-    >
-      {{ t('COMMON:search') }}
-    </n-button>
-  </n-input-group>
-
-  <DataTablePagination
-    :columns="columns"
-    :data="searchData.length === 0 ? data : searchData"
-    :page-count="
-      searchData.length === 0 ? allBookshelfData?.data.totalPages : selectBookshelfSearchData?.data.totalPages
-    "
-    v-model:page="page"
-    v-model:page-size="pageSize"
+  <n-skeleton
+    text
+    :repeat="5"
+    v-if="isPending"
   />
+  <div v-else>
+    <n-input-group class="mb-4">
+      <n-select
+        :style="{ width: '120px' }"
+        :options="selectOptions"
+        :placeholder="selectOptions[0].label"
+        @update:value="handlerSelect"
+      />
+      <n-input
+        :style="{ width: '200px' }"
+        :placeholder="t('VALIDATION:search_keywords')"
+        v-model:value="search"
+      />
+      <n-button
+        type="primary"
+        @click="handlerSearch"
+      >
+        {{ t('COMMON:search') }}
+      </n-button>
+    </n-input-group>
+
+    <DataTablePagination
+      :columns="columns"
+      :data="searchData.length === 0 ? data : searchData"
+      :page-count="
+        searchData.length === 0 ? allBookshelfData?.data.totalPages : selectBookshelfSearchData?.data.totalPages
+      "
+      v-model:page="page"
+      v-model:page-size="pageSize"
+    />
+  </div>
 </template>
