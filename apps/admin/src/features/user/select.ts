@@ -16,3 +16,10 @@ export const selectAllUserInfoQuery = (page: Ref<number>, limit: Ref<number>) =>
     placeholderData: keepPreviousData
   })
 
+export const selectUserInfoByUsernameQuery = (username: Ref<string>, page: Ref<number>, limit: Ref<number>) =>
+  useQuery({
+    queryKey: [QueryKeysEnum.ALL_USER_KEY, username, page, limit],
+    queryFn: () => httpRequest.get(`/user/username/${username.value}?page=${page.value}&limit=${limit.value}`),
+    placeholderData: keepPreviousData,
+    enabled: false,
+  })

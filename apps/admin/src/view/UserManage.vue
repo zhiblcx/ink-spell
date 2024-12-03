@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { deleteUserByIdMutation, resetUserPasswordMutation } from '@/features/user'
-import { selectAllUserInfoQuery } from '@/features/user/select'
+import { selectAllUserInfoQuery, selectUserInfoByUsernameQuery } from '@/features/user/select'
 import { UserDataVo } from '@/features/user/types'
 import { DataTablePagination, PopconfirmDelete } from '@/shared/components'
 import { PaginationParams } from '@/shared/constants'
@@ -11,6 +11,7 @@ import { InternalRowData } from 'naive-ui/es/data-table/src/interface'
 
 const page = ref(PaginationParams.DEFAULT_PAGE)
 const pageSize = ref(PaginationParams.DEFAULT_PAGESIZE)
+const search = ref<string>('')
 
 const { t } = useTranslation(['AUTH', 'COMMON', 'VALIDATION'])
 const columns = computed(
@@ -66,6 +67,7 @@ const columns = computed(
     }
   ]
 )
+
 const data = computed(() =>
   allUserInfoData?.value?.data.items.map((user: UserDataVo) => ({
     ...user,
@@ -76,6 +78,9 @@ const data = computed(() =>
     offlineTime: user.offlineTime === null ? t('AUTH:never_logged_in') : user.offlineTime
   }))
 )
+const searchData = ref([])
+
+const userInfoByUsernameQuery = selectUserInfoByUsernameQuery(search, page, pageSize)
 const { data: allUserInfoData } = selectAllUserInfoQuery(page, pageSize)
 const { mutate: deleteUserMutate } = deleteUserByIdMutation(page.value, pageSize.value)
 const { mutate: resetUserPasswordMutate } = resetUserPasswordMutation()
@@ -91,6 +96,19 @@ const actions = (user: InternalRowData) => {
 
   return [resetButton, deleteButton]
 }
+
+const handlerSearch = async () => {
+  if (search.value.trim() != '') {
+    searchData.value = (await userInfoByUsernameQuery?.refetch()).data?.data.items.map((user: UserDataVo) => ({
+      ...user,
+      avatar: SERVER_URL + user.avatar,
+      bookshelf_count: user.bookShelfs,
+      books_count: user.books,
+      reading_total_duration: user.offlineTime === null ? 0 : user.offlineTime,
+      offlineTime: user.offlineTime === null ? t('AUTH:never_logged_in') : user.offlineTime
+    }))
+  }
+}
 </script>
 
 <template>
@@ -98,13 +116,19 @@ const actions = (user: InternalRowData) => {
     <n-input
       :style="{ width: '200px' }"
       :placeholder="t('search_username')"
+      v-model:value="search"
     />
-    <n-button type="primary"> {{ t('COMMON:search') }} </n-button>
+    <n-button
+      type="primary"
+      @click="handlerSearch"
+    >
+      {{ t('COMMON:search') }}
+    </n-button>
   </n-input-group>
 
   <DataTablePagination
     :columns="columns"
-    :data="data"
+    :data="searchData.length === 0 ? data : searchData"
     :page-count="allUserInfoData?.data.totalPages"
     v-model:page="page"
     v-model:page-size="pageSize"
