@@ -35,7 +35,7 @@ export class ReadHistoryService {
     })
     data.endTime = new Date()
 
-    return await this.prisma.readingHistory.update({
+    const result = await this.prisma.readingHistory.update({
       where: {
         bookId_userId: {
           bookId, userId
@@ -46,6 +46,19 @@ export class ReadHistoryService {
         readTime: Number(TransformTimeUtils.compareTimerDiff(data.startTime, data.endTime)) + data.readTime
       }
     })
+
+    await this.prisma.readingHistory.update({
+      where: {
+        bookId_userId: {
+          bookId, userId
+        }
+      },
+      data: {
+        startTime: new Date(),
+      }
+    })
+
+    return result
   }
 
   async createReadHistory(userId: number, bookId: number) {
@@ -58,7 +71,8 @@ export class ReadHistoryService {
       await this.prisma.readingHistory.update({
         where: { id: history.id },
         data: {
-          startTime: new Date()
+          startTime: new Date(),
+          endTime: null
         }
       })
     } else {

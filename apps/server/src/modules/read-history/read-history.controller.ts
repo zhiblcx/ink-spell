@@ -26,6 +26,17 @@ export class ReadHistoryController {
     })
   }
 
+  @Get(":userId")
+  @ApiOperation({ summary: "获取指定用户的阅读历史" })
+  @HttpCode(HttpStatus.OK)
+  @APIResponse([ReadHistoryVo], "获取成功")
+  async getReadHistoryByUserId(@Param("userId") userId: number) {
+    return new R({
+      message: this.translation.t("prompt.acquire_successful"),
+      data: await this.readHistoryService.getReadHistory(Number(userId))
+    })
+  }
+
   @Post(":bookId")
   @ApiOperation({ summary: "添加阅读历史" })
   @HttpCode(HttpStatus.OK)
