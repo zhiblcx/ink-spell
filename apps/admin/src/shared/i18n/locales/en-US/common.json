@@ -44,5 +44,8 @@
   "author": "author",
   "not_available": "not available",
   "change": "change",
-  "download": "download"
+  "download": "download",
+  "cancel": "cancel",
+  "confirm": "confirm",
+  "reset": "reset"
 }

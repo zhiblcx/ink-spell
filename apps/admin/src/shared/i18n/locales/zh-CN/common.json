@@ -44,5 +44,9 @@
   "author": "作者",
   "not_available": "暂无",
   "change": "修改",
-  "download": "下载"
+  "download": "下载",
+  "deleted_successfully": "删除成功",
+  "cancel": "取消",
+  "confirm": "确定",
+  "reset": "重置"
 }

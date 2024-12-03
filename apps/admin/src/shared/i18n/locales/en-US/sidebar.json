@@ -2,5 +2,6 @@
   "home": "Home",
   "user_management": "User Management",
   "bookshelf_management": "Bookshelf Management",
-  "book_management": "Book Management"
+  "book_management": "Book Management",
+  "deleted_successfully": "deleted successfully"
 }
