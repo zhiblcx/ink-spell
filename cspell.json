@@ -27,6 +27,7 @@
     "vite",
     "autoincrement",
     "iconify",
-    "axios"
+    "axios",
+    "popconfirm"
   ]
 }
