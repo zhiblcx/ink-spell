@@ -124,7 +124,7 @@ export function BookDirectory({
               </li>
             ))}
       </ul>
-      <div className={`h-[${bottomHeight}px]`} />
+      <div style={{ height: `${bottomHeight}px` }} />
     </motion.div>
   )
 
@@ -142,7 +142,7 @@ export function BookDirectory({
             />
           </div>
         ) : null}
-        {directoryContent(130)}
+        {directoryContent(140)}
       </div>
     </>
   ) : (
