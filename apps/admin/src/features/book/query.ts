@@ -18,3 +18,11 @@ export const selectBookByUsernameAndBookshelfNameQuery = (page: Ref<number>, lim
     placeholderData: keepPreviousData,
     enabled: false
   })
+
+
+export const selectReadHistoryByUserIdQuery = (userId: Ref<number>) =>
+  useQuery({
+    queryKey: [QueryKeysEnum.READ_HISTORY_KEY, userId],
+    queryFn: () => httpRequest.get(`/read-history/${userId.value}`),
+    enabled: false
+  })

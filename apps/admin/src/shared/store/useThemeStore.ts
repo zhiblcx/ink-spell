@@ -18,9 +18,9 @@ export const useThemeStore = defineStore('theme', () => {
     if (state === ThemeEnum.SYSTEM) {
       currentTheme.value = syncThemeBasedOnTime()
     } else {
-      ThemeUtils.changeTheme(state)
       currentTheme.value = state
     }
+    ThemeUtils.changeTheme(currentTheme.value)
     ThemeUtils.setTheme(state)
     theme.value = state
   }

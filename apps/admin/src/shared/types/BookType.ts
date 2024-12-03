@@ -9,5 +9,6 @@ export type BookType = {
   bookShelfId: number
   md5: string
   encoding: string
-  isDelete: boolean
+  isDelete: boolean,
+  createTimer?: Date
 }

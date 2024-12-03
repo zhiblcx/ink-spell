@@ -2,7 +2,7 @@
 import { deleteUserByIdMutation, resetUserPasswordMutation } from '@/features/user'
 import { selectAllUserInfoQuery, selectUserInfoByUsernameQuery } from '@/features/user/select'
 import { UserDataVo } from '@/features/user/types'
-import { DataTablePagination, PopconfirmDelete } from '@/shared/components'
+import { DataTablePagination, PopconfirmDelete, ReadHistoryModal } from '@/shared/components'
 import { PaginationParams } from '@/shared/constants'
 import { SERVER_URL } from '@/shared/constants/app'
 import { useTranslation } from 'i18next-vue'
@@ -12,7 +12,8 @@ import { InternalRowData } from 'naive-ui/es/data-table/src/interface'
 const page = ref(PaginationParams.DEFAULT_PAGE)
 const pageSize = ref(PaginationParams.DEFAULT_PAGESIZE)
 const search = ref<string>('')
-
+const showModal = ref(false)
+const selectUserId = ref<number>(-1)
 const { t } = useTranslation(['AUTH', 'COMMON', 'VALIDATION'])
 const columns = computed(
   (): Array<DataTableColumn> => [
@@ -57,7 +58,19 @@ const columns = computed(
     {
       title: t('COMMON:recently_read_books'),
       key: 'recently_read_books',
-      render: () => h(NButton, { type: 'primary' }, { default: () => t('COMMON:show') })
+      render: (user) =>
+        h(
+          NButton,
+          {
+            type: 'primary',
+            text: true,
+            onClick: () => {
+              showModal.value = true
+              selectUserId.value = user.id as number
+            }
+          },
+          { default: () => t('COMMON:show') }
+        )
     },
     {
       title: t('COMMON:actions'),
@@ -72,7 +85,7 @@ const data = computed(() => processUserData(allUserInfoData?.value?.data.items))
 const searchData = ref<any>([])
 
 const { data: userInfoSearchData, ...userInfoByUsernameQuery } = selectUserInfoByUsernameQuery(search, page, pageSize)
-const { data: allUserInfoData } = selectAllUserInfoQuery(page, pageSize)
+const { data: allUserInfoData, isPending } = selectAllUserInfoQuery(page, pageSize)
 const { mutate: deleteUserMutate } = deleteUserByIdMutation(page.value, pageSize.value)
 const { mutate: resetUserPasswordMutate } = resetUserPasswordMutation()
 
@@ -108,25 +121,37 @@ const processUserData = (users: UserDataVo[]) =>
 </script>
 
 <template>
-  <n-input-group class="mb-4">
-    <n-input
-      :style="{ width: '200px' }"
-      :placeholder="t('search_username')"
-      v-model:value="search"
-    />
-    <n-button
-      type="primary"
-      @click="handlerSearch"
-    >
-      {{ t('COMMON:search') }}
-    </n-button>
-  </n-input-group>
-
-  <DataTablePagination
-    :columns="columns"
-    :data="searchData.length === 0 ? data : searchData"
-    :page-count="searchData.length === 0 ? allUserInfoData?.data.totalPages : userInfoSearchData?.data.totalPages"
-    v-model:page="page"
-    v-model:page-size="pageSize"
+  <n-skeleton
+    text
+    :repeat="5"
+    v-if="isPending"
   />
+
+  <div v-else>
+    <ReadHistoryModal
+      v-model="showModal"
+      :user-id="selectUserId"
+    />
+    <n-input-group class="mb-4">
+      <n-input
+        :style="{ width: '200px' }"
+        :placeholder="t('search_username')"
+        v-model:value="search"
+      />
+      <n-button
+        type="primary"
+        @click="handlerSearch"
+      >
+        {{ t('COMMON:search') }}
+      </n-button>
+    </n-input-group>
+
+    <DataTablePagination
+      :columns="columns"
+      :data="searchData.length === 0 ? data : searchData"
+      :page-count="searchData.length === 0 ? allUserInfoData?.data.totalPages : userInfoSearchData?.data.totalPages"
+      v-model:page="page"
+      v-model:page-size="pageSize"
+    />
+  </div>
 </template>
