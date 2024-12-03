@@ -97,7 +97,7 @@ const handlerSearch = async () => {
 }
 
 const processUserData = (users: UserDataVo[]) =>
-  users.map((user: UserDataVo) => ({
+  users?.map((user: UserDataVo) => ({
     ...user,
     avatar: SERVER_URL + user.avatar,
     bookshelf_count: user.bookShelfs,

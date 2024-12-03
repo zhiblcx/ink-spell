@@ -7,7 +7,7 @@ import { AuthUtils } from '@ink-spell/axios'
 import { RouteLocationNormalizedGeneric } from 'vue-router'
 
 export const beforeEach = ((to: RouteLocationNormalizedGeneric) => {
-  nprogress.start()
+  window.$loading.start()
   // 如果没有登录，则跳转到登录页面
   if (to.path !== PATH_LOGIN && AuthUtils.getAccessToken() === null) {
     return { path: PATH_LOGIN }
@@ -20,5 +20,5 @@ export const beforeEach = ((to: RouteLocationNormalizedGeneric) => {
 })
 
 export const afterEach = (() => {
-  nprogress.done()
+  window.$loading.finish()
 })

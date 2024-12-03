@@ -10,7 +10,6 @@
 - [x] Vue-Router
 - [x] tanstack Query
 - [x] echarts
-- [x] nprogress
 - [x] vue-i18next
 - [x] be-full
 - [x] axios
