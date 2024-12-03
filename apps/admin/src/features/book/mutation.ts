@@ -1,18 +1,21 @@
 import { httpRequest } from "@/shared/API";
-import { useMutation } from "@tanstack/vue-query";
+import { useMutation, useQueryClient } from "@tanstack/vue-query";
 import { handleAxiosError } from "../utils";
 import { AxiosResponse } from "axios";
+import { QueryKeysEnum } from "@/shared/enums/QueryKeysEnum";
 
 const BASE_BOOK_API = '/book'
-
-export const deleteBookByIdMutation = () =>
-  useMutation({
+export const deleteBookByIdMutation = (page: number, limit: number) => {
+  const queryClient = useQueryClient()
+  return useMutation({
     mutationFn: (bookID: number) => httpRequest.delete(`${BASE_BOOK_API}/${bookID}`),
-    onSuccess: () => {
-      window.$message.success('Book deleted successfully')
+    onSuccess: (data) => {
+      window.$message.success(data.message as string)
+      queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.ALL_BOOK_KEY, page, limit] })
     },
     onError: handleAxiosError
   })
+}
 
 export const downloadBookByIdMutation = () =>
   useMutation({
