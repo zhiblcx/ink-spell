@@ -47,5 +47,6 @@
   "download": "download",
   "cancel": "cancel",
   "confirm": "confirm",
-  "reset": "reset"
+  "reset": "reset",
+  "upload_timer": "upload timer"
 }

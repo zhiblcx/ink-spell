@@ -3,5 +3,6 @@ export enum QueryKeysEnum {
   ALL_BOOKSHELF_KEY = 'all_bookshelf_key',
   USER_KEY = 'user_key',
   ALL_USER_KEY = 'all_user_key',
-  DASHBOARD_STATE = "dashboard_state"
+  DASHBOARD_STATE = "dashboard_state",
+  READ_HISTORY_KEY = "read_history_key",
 }
