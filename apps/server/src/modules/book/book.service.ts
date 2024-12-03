@@ -219,9 +219,21 @@ export class BookService {
     })
   }
 
-  async getAllBookInfoCount(limit: number) {
+  async getAllBookInfoCount(limit: number, username: string | undefined, bookshelfName: string | undefined) {
     return Math.ceil(await this.prisma.book.count({
-      where: { isDelete: false }
+      where: {
+        user: {
+          username: {
+            contains: username ?? ''
+          },
+        },
+        bookShelf: {
+          label: {
+            contains: bookshelfName ?? ''
+          }
+        },
+        isDelete: false
+      }
     }) / limit)
   }
 }

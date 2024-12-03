@@ -169,7 +169,8 @@ export class BookshelfController {
           username,
           bookshelfName
         ),
-        totalPages: await this.bookshelfService.getAllBookInfoCount(limit),
+        totalPages: await this.bookshelfService.getAllBookInfoCount(limit, username,
+          bookshelfName),
         currentPage: Number(page),
         itemsPerPage: Number(limit),
       })
