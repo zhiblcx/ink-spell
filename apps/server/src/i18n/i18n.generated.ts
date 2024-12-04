@@ -39,6 +39,7 @@ export type I18nTranslations = {
         "no_main_character": string;
         "no_description": string;
         "server_error": string;
+        "rate_successful": string;
     };
     "validation": {
         "already_collected_bookshelf": string;

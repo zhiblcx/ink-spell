@@ -11,6 +11,7 @@ model User {
   rolesId          String             @default("user")
   oauth            String             @default("local")
   offlineTime      DateTime?          @map("offline_time")
+  systemScore      Int?               @map("system_score")
   bookShelfs       BookShelf[]
   books            Book[]
   message          Message[]
