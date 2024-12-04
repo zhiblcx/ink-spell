@@ -1,4 +1,4 @@
-import nprogress from 'nprogress'
+
 import {
   PATH_ROOT,
   PATH_LOGIN,

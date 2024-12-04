@@ -27,6 +27,10 @@ const columns = computed(
       render: (bookshelf) => h(NAvatar, { src: bookshelf.cover as string, size: 40 })
     },
     {
+      title: t('COMMON:bookshelf_name'),
+      key: 'bookshelf_name'
+    },
+    {
       title: t('COMMON:bookshelf_status'),
       key: 'bookshelf_status'
     },
