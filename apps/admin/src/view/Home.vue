@@ -11,7 +11,7 @@ const chartsStore = useChartsStore()
 const themeStore = useThemeStore()
 const message = useMessage()
 const { data: dashboardStateQuery, isPending } = selectDashBoardStateQuery()
-const { t } = useTranslation(['COMMON'])
+const { t } = useTranslation(['COMMON', 'PROMPT'])
 
 const data = ref([
   { label: '一星', value: 222 },
@@ -20,6 +20,20 @@ const data = ref([
   { label: '四星', value: 200 },
   { label: '五星', value: 111 }
 ])
+
+const echartsBarData = computed(() =>
+  dashboardStateQuery?.value?.data?.bookNumberList?.map((data) => ({
+    label: data.time,
+    value: data.bookNumber
+  }))
+)
+
+const echartsPieData = computed(() =>
+  dashboardStateQuery?.value?.data?.rateMap?.map((data) => ({
+    label: t(`star.${data[0] - 1}`),
+    value: data[1]
+  }))
+)
 </script>
 
 <template>
@@ -95,12 +109,7 @@ const data = ref([
           height="400px"
           :title="t('COMMON:books_uploaded_in_last_seven_days')"
           :dark="themeStore.currentTheme == ThemeEnum.DARK"
-          :data="
-            dashboardStateQuery?.data?.bookNumberList?.map((data) => ({
-              label: data.time,
-              value: data.bookNumber
-            })) ?? []
-          "
+          :data="echartsBarData ?? []"
           :relyVariable="chartsStore.chartsRelyVariation"
           label
         />
@@ -110,7 +119,7 @@ const data = ref([
           height="400px"
           :title="t('COMMON:user_satisfaction')"
           :dark="themeStore.currentTheme == ThemeEnum.DARK"
-          :data="data"
+          :data="echartsPieData ?? []"
           :relyVariable="chartsStore.chartsRelyVariation"
           label
         />
