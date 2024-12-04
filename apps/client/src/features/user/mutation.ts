@@ -86,3 +86,13 @@ export const forgetPasswordByEmailMutation = (callback: () => void) =>
     },
     onError: handleAxiosError
   })
+
+
+export const systemRateMutation = () =>
+  useMutation({
+    mutationFn: (rate: number) => httpRequest.put(`/user/rate?rate=${rate}`),
+    onSuccess: async (data) => {
+      message.success(data.message)
+    },
+    onError: handleAxiosError
+  })

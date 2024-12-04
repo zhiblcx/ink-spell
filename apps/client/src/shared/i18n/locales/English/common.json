@@ -82,10 +82,11 @@
   "last_reading": "last reading",
   "no_reading_history": "no reading history",
   "rate": {
-    "awful": "awful",
-    "poor": "poor",
-    "average": "average",
+    "terrible": "terrible",
+    "bad": "bad",
+    "normal": "normal",
     "good": "good",
-    "excellent": "excellent"
-  }
+    "wonderful": "wonderful"
+  },
+  "system_rating": "system rating"
 }

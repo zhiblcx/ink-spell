@@ -25,7 +25,7 @@ export function ResetPassword({ form, openFlag, setOpenFlag, mutate }: ResetPass
         form.submit()
         setOpenFlag(false)
       }}
-      title={t('AUTH:reset_password')}
+      title={t('AUTH:profile_reset_password')}
       open={openFlag}
       okText={t('COMMON:save')}
       cancelText={t('COMMON:cancel')}

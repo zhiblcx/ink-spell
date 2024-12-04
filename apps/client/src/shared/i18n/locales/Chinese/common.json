@@ -86,10 +86,11 @@
   "last_reading": "最近阅读",
   "no_reading_history": "暂无阅读记录",
   "rate": {
-    "awful": "糟糕",
-    "poor": "差",
-    "average": "一般",
+    "terrible": "糟糕",
+    "bad": "差",
+    "normal": "一般",
     "good": "好",
-    "excellent": "非常好"
-  }
+    "wonderful": "非常好"
+  },
+  "system_rating": "系统评分"
 }

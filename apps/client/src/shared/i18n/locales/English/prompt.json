@@ -25,5 +25,7 @@
   "confirm_unfavorite_bookshelf": "Are you sure you want to unfavorite this bookshelf?",
   "bookshelf_no_longer_top_choice": "Does this bookshelf no longer seem to be your top choice?",
   "no_bookshelf_collected": "You haven't collected any bookshelves yet! Come and collect your favorite bookshelves now!",
-  "page_not_found": "Sorry, the page you visited does not exist"
+  "page_not_found": "Sorry, the page you visited does not exist",
+  "are_you_satisfied_with_app": "Are you satisfied with {{APP_NAME}}?",
+  "thank_you_for_rating": "Thank you for your rating and support💖"
 }

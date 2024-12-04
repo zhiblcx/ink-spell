@@ -47,6 +47,7 @@ declare global {
   const QueryClientProvider: typeof import('@tanstack/react-query')['QueryClientProvider']
   const QueryKeysEnum: typeof import('@/shared/enums')['QueryKeysEnum']
   const Radio: typeof import('antd')['Radio']
+  const Rate: typeof import('antd')['Rate']
   const Result: typeof import('antd')['Result']
   const Select: typeof import('antd')['Select']
   const Skeleton: typeof import('antd')['Skeleton']

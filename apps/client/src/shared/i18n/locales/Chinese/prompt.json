@@ -25,5 +25,7 @@
   "confirm_unfavorite_bookshelf": "确定要取消收藏这个书架吗？",
   "bookshelf_no_longer_top_choice": "这个书架看起来不再是您的首选了吗？",
   "no_bookshelf_collected": "您还没有收藏任何书架呢！快来收藏您喜欢的书架吧！",
-  "page_not_found": "抱歉，您访问的页面不存在。"
+  "page_not_found": "抱歉，您访问的页面不存在。",
+  "are_you_satisfied_with_app": "你对 {{APP_NAME}} 满意吗？",
+  "thank_you_for_rating": "你已经评分了，感谢支持💖"
 }

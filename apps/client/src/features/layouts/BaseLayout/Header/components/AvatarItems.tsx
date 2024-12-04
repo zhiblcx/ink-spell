@@ -8,6 +8,7 @@ import {
 import { AuthUtils } from '@/shared/utils'
 import type { MenuProps } from 'antd'
 import { RecentlyRead } from './RecentlyRead'
+import SystemRate from './SystemRate'
 
 interface AvatarItemsType {
   setOpenFlag: React.Dispatch<React.SetStateAction<boolean>>
@@ -18,6 +19,7 @@ export function AvatarItems({ setOpenFlag, avatar }: AvatarItemsType) {
   const navigate = useNavigate()
   const { t } = useTranslation(['AUTH', 'COMMON'])
   const [open, setOpen] = useState(false)
+  const [rateOpen, setRateOpen] = useState(false)
   const items: MenuProps['items'] = [
     {
       key: PERSON_INFO.label,
@@ -52,6 +54,10 @@ export function AvatarItems({ setOpenFlag, avatar }: AvatarItemsType) {
       )
     },
     {
+      key: 'rate',
+      label: <div onClick={() => setRateOpen(true)}>{t('COMMON:system_rating')}</div>
+    },
+    {
       key: LOGOUT.label,
       label: (
         <div
@@ -82,6 +88,11 @@ export function AvatarItems({ setOpenFlag, avatar }: AvatarItemsType) {
       <RecentlyRead
         open={open}
         setOpen={setOpen}
+      />
+
+      <SystemRate
+        open={rateOpen}
+        setOpen={setRateOpen}
       />
     </>
   )

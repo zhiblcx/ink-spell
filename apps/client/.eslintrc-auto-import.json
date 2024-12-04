@@ -86,6 +86,7 @@
     "PaginationParamsEnum": true,
     "MessageEnum": true,
     "useTranslation": true,
-    "initReactI18next": true
+    "initReactI18next": true,
+    "Rate": true
   }
 }
