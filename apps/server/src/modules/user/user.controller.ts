@@ -19,6 +19,7 @@ import {
   ApiBearerAuth,
   ApiOperation,
   ApiQuery,
+  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateBookShelfVo } from '../bookshelf/vo/create-bookshelf.vo';
@@ -200,6 +201,21 @@ export class UserController {
     await this.userService.updateForgetPassword(email, code, password);
     return new R({
       message: this.translation.t('prompt.update_successful'),
+    });
+  }
+
+  @Put('/rate')
+  @ApiOperation({ summary: '系统评分' })
+  @ApiQuery({
+    type: Number,
+    name: 'rate',
+    description: '评分，1-5分',
+  })
+  @APIResponse(UserVo, '评分成功')
+  async systemRate(@Request() req, @Query("rate") rate: number) {
+    return new R({
+      message: this.translation.t('prompt.rate_successful'),
+      data: await this.userService.systemRate(Number(req.user.userId), Number(rate))
     });
   }
 

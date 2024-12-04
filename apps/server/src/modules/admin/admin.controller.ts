@@ -20,7 +20,7 @@ export class AdminController {
   // 获取用户数量，书籍数量，书架数量，近七天书籍上传量
   @Roles(Role.Admin)
   @Get("dashboard-state")
-  @ApiOperation({ summary: "获取用户数量，书籍数量，书架数量，近七天书籍上传量" })
+  @ApiOperation({ summary: "获取用户数量，书籍数量，书架数量，近七天书籍上传量，系统评分" })
   @HttpCode(HttpStatus.OK)
   @APIResponse(DashboardStateVo, '获取成功')
   async getDashboardState() {

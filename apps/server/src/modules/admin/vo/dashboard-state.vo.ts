@@ -24,4 +24,10 @@ export class DashboardStateVo {
     description: "近七天上传的书籍数量"
   })
   bookNumberList: { time: string, bookNumber: number }[]
+
+  @ApiProperty({
+    example: [[1, 2], [2, 2], [3, 2], [4, 2], [5, 3]],
+    description: "系统评分"
+  })
+  rateMap: Array<Array<number>>
 }

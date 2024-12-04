@@ -31,4 +31,10 @@ export class UserVo {
 
   @ApiProperty({ example: 199, description: '粉丝的人数' })
   following: number;
+
+  @ApiProperty({ example: '2024-11-25 05:20:36.162', description: '最近一次上线时间' })
+  offlineTime: Date
+
+  @ApiProperty({ example: '1', description: "系统评分" })
+  systemScore: number
 }

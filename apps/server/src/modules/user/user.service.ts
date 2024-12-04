@@ -296,6 +296,13 @@ export class UserService {
     });
   }
 
+  async systemRate(userId: number, rate: number) {
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: { systemScore: rate },
+    })
+  }
+
   async getAllUserInfo(page: number, limit: number) {
     const users = await this.prisma.user.findMany({
       where: {

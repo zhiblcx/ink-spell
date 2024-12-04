@@ -20,6 +20,25 @@ export class AdminService {
       where: { isDelete: false }
     })
 
+    const rateArray = await this.prisma.user.findMany({
+      where: {
+        systemScore: {
+          not: null
+        }
+      },
+      select: {
+        systemScore: true
+      }
+    })
+
+    const rateMap = new Map([[1, 0], [2, 0], [3, 0], [4, 0], [5, 0]])
+
+    rateArray.forEach(item => {
+      if (rateMap.has(item.systemScore)) {
+        rateMap.set(item.systemScore, rateMap.get(item.systemScore) + 1)
+      }
+    })
+
     // 存储每天上传的书籍量
     const bookNumberList: { time: string, bookNumber: number }[] = []
 
@@ -39,7 +58,8 @@ export class AdminService {
       userNumber,
       bookNumber,
       bookshelfNumber,
-      bookNumberList
+      bookNumberList,
+      rateMap: Array.from(rateMap)
     }
   }
 
