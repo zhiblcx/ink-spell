@@ -1,7 +1,7 @@
 interface SvgType {
   color: string
 }
-export default function GoastSvg(props: SvgType) {
+export function GhostSvg(props: SvgType) {
   const { color } = props
   return (
     <svg
