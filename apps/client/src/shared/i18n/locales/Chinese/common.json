@@ -84,5 +84,12 @@
   "no_more_chapters": "没有了",
   "schedule": "进度",
   "last_reading": "最近阅读",
-  "no_reading_history": "暂无阅读记录"
+  "no_reading_history": "暂无阅读记录",
+  "rate": {
+    "awful": "糟糕",
+    "poor": "差",
+    "average": "一般",
+    "good": "好",
+    "excellent": "非常好"
+  }
 }

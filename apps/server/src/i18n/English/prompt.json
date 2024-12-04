@@ -17,5 +17,6 @@
   "no_author": "No author available",
   "no_main_character": "No main character available",
   "no_description": "No description available",
-  "server_error": "server error"
+  "server_error": "server error",
+  "rate_successful": "rate successful"
 }
