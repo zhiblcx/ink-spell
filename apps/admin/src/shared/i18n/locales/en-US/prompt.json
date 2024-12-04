@@ -1,3 +1,10 @@
 {
-  "confirm_operate": "Are you sure you want to continue?"
+  "confirm_operate": "Are you sure you want to continue?",
+  "star": [
+    "one star",
+    "two star",
+    "three star",
+    "four star",
+    "five star"
+  ]
 }
