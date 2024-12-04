@@ -27,6 +27,10 @@ export class AuthService {
   ) { }
 
   async generateToken(payload: { userId: number; account: string, roles: string }) {
+    await this.prisma.user.update({
+      where: { id: payload.userId },
+      data: { offlineTime: new Date() }
+    })
     return {
       access_token: await this.jwtService.signAsync(payload, {
         expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
