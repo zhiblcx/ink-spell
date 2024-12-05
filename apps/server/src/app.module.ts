@@ -23,6 +23,7 @@ import { UserModule } from './modules/user/user.module';
 import { UserService } from './modules/user/user.service';
 import { ReadHistoryModule } from './modules/read-history/read-history.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { TagModule } from './modules/tag/tag.module';
 
 @Module({
   imports: [
@@ -55,7 +56,8 @@ import { AdminModule } from './modules/admin/admin.module';
     PrismaModule,
     TranslationModule,
     ReadHistoryModule,
-    AdminModule
+    AdminModule,
+    TagModule
   ],
   providers: [
     { provide: APP_PIPE, useClass: I18nValidationPipe },

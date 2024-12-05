@@ -90,7 +90,7 @@ export class AuthService {
     if (user) {
       if (user.account === account) {
         throw new UnprocessableEntityException(
-          this.translation.t('auth.username_exists'),
+          this.translation.t("auth.account_exists"),
         );
       }
       if (user.username === username) {
