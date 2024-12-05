@@ -1,0 +1,10 @@
+model Tag {
+  id           Int         @id @default(autoincrement())
+  nameChinese  String      @map("name_chinese")
+  nameEnglish  String      @map("name_english")
+  createTimer  DateTime    @default(now()) @map("create_timer")
+  isDelete     Boolean     @default(false) @map("is_delete")
+  useFrequency BookShelf[]
+
+  @@unique([nameChinese, nameEnglish])
+}

@@ -12,4 +12,5 @@ model BookShelf {
   description      String?
   books            Book[]
   collectBookShelf CollectBookShelf[]
+  Tag              Tag[]
 }

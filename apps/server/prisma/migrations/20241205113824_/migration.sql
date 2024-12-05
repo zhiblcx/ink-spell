@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Tag" ALTER COLUMN "create_timer" SET DEFAULT CURRENT_TIMESTAMP;
