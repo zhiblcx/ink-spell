@@ -2,7 +2,6 @@ import { appConfig } from '@/config/AppConfig';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { TranslationService } from '../translation/translation.service';
-
 @Injectable()
 export class BookshelfService {
   constructor(
@@ -64,6 +63,9 @@ export class BookshelfService {
       orderBy: {
         position: 'asc',
       },
+      include: {
+        tags: true
+      }
     });
   }
 
@@ -74,6 +76,13 @@ export class BookshelfService {
   }
 
   async updateBookShelf(bookShelfId, updateBookshelfDto) {
+    const tags = []
+    for (let i = 0; i < updateBookshelfDto.tags?.length; i++) {
+      const tag = await this.prisma.tag.findUnique({
+        where: { id: updateBookshelfDto.tags[i] }
+      })
+      tags.push(tag)
+    }
     await this.prisma.bookShelf.update({
       data: {
         label: updateBookshelfDto.bookShelfName,
@@ -83,6 +92,9 @@ export class BookshelfService {
           appConfig.DEFAULT_BOOK_SHELF_COVER,
         isPublic: updateBookshelfDto.status,
         description: updateBookshelfDto.bookShelfDescription,
+        tags: {
+          set: tags ?? null
+        }
       },
       where: { id: parseInt(bookShelfId) },
     });
@@ -111,6 +123,7 @@ export class BookshelfService {
             avatar: true
           }
         },
+        tags: true,
         _count: {
           select: {
             collectBookShelf: {

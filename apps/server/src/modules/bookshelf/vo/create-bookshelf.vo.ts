@@ -1,3 +1,4 @@
+import { TagVo } from '@/modules/tag/vo/tag.vo';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import * as dayjs from 'dayjs';
@@ -61,6 +62,21 @@ export class CreateBookShelfVo {
     description: '书架描述',
   })
   bookShelfDescription?: string;
+
+  // 书架的标签
+  @ApiProperty({
+    example: [
+      {
+        "id": 19,
+        "nameChinese": "历史",
+        "nameEnglish": "History",
+        "createTimer": "2024-12-06T01:00:26.066Z",
+        "isDelete": false
+      },
+    ],
+    description: "书架的标签"
+  })
+  tags?: TagVo
 
   constructor(createBookShelfVo: CreateBookShelfVo) {
     Object.assign(this, createBookShelfVo);

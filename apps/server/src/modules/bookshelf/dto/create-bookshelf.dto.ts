@@ -40,4 +40,11 @@ export class CreateBookshelfDto {
     description: '书架描述',
   })
   bookShelfDescription?: string;
+
+  // 书架标签
+  @ApiProperty({
+    example: [12, 13, 14],
+    description: "书架标签"
+  })
+  tags?: Array<number> | number
 }
