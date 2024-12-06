@@ -20,4 +20,9 @@ export class TagVo {
   )
   createTime: string
 
+  @ApiProperty({ example: { useFrequency: 0, description: "书架使用频率" }, description: "书架信息" })
+  _count: {
+    useFrequency: number
+  }
+
 }

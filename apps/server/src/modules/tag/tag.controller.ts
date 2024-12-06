@@ -22,22 +22,35 @@ export class TagController {
   @Get()
   @ApiOperation({ summary: "获取所有标签" })
   @HttpCode(HttpStatus.OK)
-  @ApiQuery(pageQuery)
-  @ApiQuery(limitQuery)
+  @ApiQuery({
+    ...pageQuery,
+    required: false
+  })
+  @ApiQuery({
+    ...limitQuery,
+    required: false
+  })
   @ApiQuery(nameEnglishQuery)
   @ApiQuery(nameChineseQuery)
   @APIResponse([TagVo], "获取成功", true)
-  async getTags(@Query("page") page: number, @Query("limit") limit: number, @Query('nameChinese') nameChinese?: string, @Query('nameEnglish') nameEnglish?: string) {
-
-    return new R({
-      message: this.translation.t('prompt.added_successfully'),
-      data: new E({
-        items: await this.tagService.getTags(Number(page), Number(limit), nameChinese, nameEnglish),
-        currentPage: page,
-        itemsPerPage: limit,
-        totalPages: await this.tagService.getTotalPages(Number(limit), nameChinese, nameEnglish)
+  async getTags(@Query("page") page?: number, @Query("limit") limit?: number, @Query('nameChinese') nameChinese?: string, @Query('nameEnglish') nameEnglish?: string) {
+    if (page === undefined || limit === undefined) {
+      return new R({
+        message: this.translation.t("prompt.acquire_successful"),
+        data: await this.tagService.getTags()
       })
-    })
+    }
+    else {
+      return new R({
+        message: this.translation.t("prompt.acquire_successful"),
+        data: new E({
+          items: await this.tagService.getTags(Number(page), Number(limit), nameChinese, nameEnglish),
+          currentPage: page,
+          itemsPerPage: limit,
+          totalPages: await this.tagService.getTotalPages(Number(limit), nameChinese, nameEnglish)
+        })
+      })
+    }
   }
 
   @Post()
@@ -69,7 +82,7 @@ export class TagController {
   async deleteTag(@Param('tagId') tagId: number) {
     return new R({
       message: this.translation.t("prompt.deleted_successfully"),
-      data: await this.tagService.deleteTag(tagId)
+      data: await this.tagService.deleteTag(Number(tagId))
     })
   }
 

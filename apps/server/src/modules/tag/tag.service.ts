@@ -10,20 +10,45 @@ export class TagService {
     private readonly transaction: TranslationService
   ) { }
 
-  async getTags(page: number, limit: number, nameChinese: string | undefined, nameEnglish: string | undefined) {
-    return await this.prisma.tag.findMany({
-      where: {
-        nameChinese: {
-          contains: nameChinese ?? '',
+  async getTags(page?: number, limit?: number, nameChinese?: string, nameEnglish?: string) {
+    if (page === undefined || limit === undefined) {
+      return await this.prisma.tag.findMany({
+        where: {
+          isDelete: false
         },
-        nameEnglish: {
-          contains: nameEnglish ?? '',
+        orderBy: {
+          createTimer: "desc"
+        }
+      })
+    } else {
+      return await this.prisma.tag.findMany({
+        where: {
+          nameChinese: {
+            contains: nameChinese ?? '',
+          },
+          nameEnglish: {
+            contains: nameEnglish ?? '',
+          },
+          isDelete: false,
         },
-        isDelete: false
-      },
-      skip: (page - 1) * limit,
-      take: limit,
-    });
+        include: {
+          _count: {
+            select: {
+              useFrequency: {
+                where: {
+                  isDelete: false
+                }
+              }
+            }
+          }
+        },
+        orderBy: {
+          createTimer: "desc"
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+      });
+    }
   }
 
   async getTotalPages(limit: number, nameChinese: string | undefined, nameEnglish: string | undefined) {
@@ -49,7 +74,7 @@ export class TagService {
         },
       }
     })
-    if (currentTag !== null) {
+    if (currentTag === null) {
       return await this.prisma.tag.create({
         data: {
           nameChinese: tag.nameChinese,
@@ -60,7 +85,7 @@ export class TagService {
       // 如果删除了
       return await this.prisma.tag.update({
         where: { id: currentTag.id, },
-        data: { isDelete: true, createTimer: new Date() }
+        data: { isDelete: false, createTimer: new Date() }
       })
     } else {
       // 没有删除，返回已有
