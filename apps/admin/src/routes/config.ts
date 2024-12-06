@@ -10,6 +10,7 @@ import {
   PATH_USER_MANAGE,
   PATH_BOOKSHELF_MANAGE,
   PATH_BOOK_MANAGE,
+  PATH_TAG_MANAGE,
 } from "@/shared/constants/router-path"
 
 const routes = [
@@ -21,34 +22,27 @@ const routes = [
   {
     path: PATH_ROOT,
     component: Layout,
-    children: [{
-      path: '',
-      component: () => import("@/view/Home.vue")
-    }]
+    children: [{ path: '', component: () => import("@/view/Home.vue") }]
   },
   {
     path: PATH_USER_MANAGE,
     component: Layout,
-    children: [{
-      path: '',
-      component: () => import("@/view/UserManage.vue")
-    }]
+    children: [{ path: '', component: () => import("@/view/UserManage.vue") }]
   },
   {
     path: PATH_BOOKSHELF_MANAGE,
     component: Layout,
-    children: [{
-      path: "",
-      component: () => import("@/view/BookShelfManage.vue")
-    }]
+    children: [{ path: "", component: () => import("@/view/BookShelfManage.vue") }]
   },
   {
     path: PATH_BOOK_MANAGE,
     component: Layout,
-    children: [{
-      path: "",
-      component: () => import("@/view/BookManage.vue")
-    }]
+    children: [{ path: "", component: () => import("@/view/BookManage.vue") }]
+  },
+  {
+    path: PATH_TAG_MANAGE,
+    component: Layout,
+    children: [{ path: "", component: () => import("@/view/TagManage.vue") }]
   },
   {
     path: PATH_FORBIDDEN,

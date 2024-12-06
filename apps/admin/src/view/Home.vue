@@ -13,14 +13,6 @@ const message = useMessage()
 const { data: dashboardStateQuery, isPending } = selectDashBoardStateQuery()
 const { t } = useTranslation(['COMMON', 'PROMPT'])
 
-const data = ref([
-  { label: '一星', value: 222 },
-  { label: '两星', value: 200 },
-  { label: '三星', value: 150 },
-  { label: '四星', value: 200 },
-  { label: '五星', value: 111 }
-])
-
 const echartsBarData = computed(() =>
   dashboardStateQuery?.value?.data?.bookNumberList?.map((data) => ({
     label: data.time,

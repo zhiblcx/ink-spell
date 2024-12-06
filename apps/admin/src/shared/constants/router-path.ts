@@ -7,3 +7,4 @@ export const PATH_INTERNAL_SERVER_ERROR = "/500"
 export const PATH_USER_MANAGE = '/user/manage'
 export const PATH_BOOKSHELF_MANAGE = '/bookshelf/manage'
 export const PATH_BOOK_MANAGE = '/book/manage'
+export const PATH_TAG_MANAGE = '/tag/manage'

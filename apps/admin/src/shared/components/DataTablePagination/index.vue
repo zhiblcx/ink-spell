@@ -31,12 +31,11 @@ const pagination = computed(() => ({
 
 <template>
   <n-data-table
-    class="h-[70vh]"
     :columns="props.columns"
     :bordered="false"
     :single-line="false"
     :pagination="pagination"
-    :max-height="420"
+    :max-height="495"
     striped
     remote
     :data="props.data ?? []"

@@ -5,7 +5,6 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import "@/assets/styles/index.scss"
-import 'nprogress/nprogress.css'
 import 'virtual:uno.css'
 import i18n from "@/shared/i18n/config"
 

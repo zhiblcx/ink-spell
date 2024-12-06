@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { BookIcon, BookshelfIcon, HomeIcon, UserIcon } from '@/assets/icons'
+import { BookIcon, BookshelfIcon, HomeIcon, TagIcon, UserIcon } from '@/assets/icons'
 import { useChartsStore } from '@/shared/store/useChartsStore'
 import { useLanguageStore } from '@/shared/store/useLanguageStore'
 import { renderIcon } from '@/shared/utils/renderIcon'
 import { useTranslation } from 'i18next-vue'
 import { useRoute, useRouter } from 'vue-router'
-const { t } = useTranslation('SIDEBAR')
+const { t } = useTranslation(['SIDEBAR'])
 const chartsStore = useChartsStore()
 const collapsed = ref(false)
 const currentMenu = ref()
@@ -33,6 +33,11 @@ watch(
         label: t('bookshelf_management'),
         key: '/bookshelf/manage',
         icon: renderIcon(BookshelfIcon)
+      },
+      {
+        label: t('SIDEBAR:tag_management'),
+        key: '/tag/manage',
+        icon: renderIcon(TagIcon)
       },
       {
         label: t('book_management'),

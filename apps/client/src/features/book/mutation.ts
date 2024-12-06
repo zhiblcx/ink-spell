@@ -29,7 +29,7 @@ export const updateBookByBookIdMutation = (setBook: (value: React.SetStateAction
     mutationFn: (book: Book) => httpRequest.put(`/book/${book.id}`, book),
     onSuccess: (result) => {
       setBook({ ...result.data })
-      message.success('修改成功')
+      message.success(result.message)
     },
     onError: handleAxiosError
   })
