@@ -92,5 +92,6 @@
     "good": "好",
     "wonderful": "非常好"
   },
-  "system_rating": "系统评分"
+  "system_rating": "系统评分",
+  "bookshelf_tag": "书架标签"
 }

@@ -88,5 +88,6 @@
     "good": "good",
     "wonderful": "wonderful"
   },
-  "system_rating": "system rating"
+  "system_rating": "system rating",
+  "bookshelf_tag": "bookshelf tag"
 }
