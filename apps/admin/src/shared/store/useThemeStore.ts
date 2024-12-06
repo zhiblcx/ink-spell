@@ -6,6 +6,7 @@ import dayjs from 'dayjs'
 import { renderIcon } from '../utils/renderIcon'
 import LeafIcon from '@/assets/icons/iconify/LeafIcon.vue'
 import BlingIcon from '@/assets/icons/iconify/BlingIcon.vue'
+import { useTranslation } from 'i18next-vue'
 
 export const useThemeStore = defineStore('theme', () => {
   const theme = ref<ThemeEnum>(ThemeUtils.getTheme() as ThemeEnum ?? ThemeEnum.LIGHT)
@@ -13,6 +14,7 @@ export const useThemeStore = defineStore('theme', () => {
   let timer: NodeJS.Timeout | null = null
   const startTime = "6:00"
   const endTime = "19:00"
+  const { t } = useTranslation('PROMPT')
 
   function changeTheme(state: ThemeEnum) {
     if (state === ThemeEnum.SYSTEM) {
@@ -52,7 +54,7 @@ export const useThemeStore = defineStore('theme', () => {
   function setupTimer() {
     // 当前时间
     let nextCheckTime = 0
-    let greeting = () => window.$message.success("星星点点，夜深了，愿你有个好梦", {
+    let greeting = () => window.$message.success(t("greeting_night"), {
       icon: renderIcon(BlingIcon)
     })
     // 如果当前时间在 startTime(包括) - endTime(不包括) 之间，则设置下一个时间点 startTime 为白天模式
@@ -67,7 +69,7 @@ export const useThemeStore = defineStore('theme', () => {
       (currentHour === endTimeHour && currentMinute >= endTimeMinute)) {
       const tomorrow = TransformTimeUtils.getSpecificTimeInFuture({ n: 1, hour: startTimeHour, minute: startTimeMinute })
       nextCheckTime = TransformTimeUtils.compareTimerDiff(dayjs(tomorrow), dayjs(), 'second')
-      greeting = () => window.$message.success("早安！新的一天开始了，愿你充满活力", {
+      greeting = () => window.$message.success(t('greeting_morning'), {
         icon: renderIcon(LeafIcon)
       })
     } else {
@@ -111,17 +113,4 @@ export const useThemeStore = defineStore('theme', () => {
   return { theme, changeTheme, currentTheme }
 })
 
-
-// 跟随系统主题
-// function syncWithSystemTheme() {
-//   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-//   const systemTheme = prefersDark ? ThemeEnum.DARK : ThemeEnum.LIGHT;
-//   changeTheme(systemTheme);
-// }
-
-// // 监听系统主题变化
-// window
-//   .matchMedia("(prefers-color-scheme: dark)").addEventListener('change', (_) => {
-//     syncWithSystemTheme()
-//   });
 

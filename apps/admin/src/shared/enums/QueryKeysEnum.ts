@@ -5,4 +5,5 @@ export enum QueryKeysEnum {
   ALL_USER_KEY = 'all_user_key',
   DASHBOARD_STATE = "dashboard_state",
   READ_HISTORY_KEY = "read_history_key",
+  ALL_TAG = "all_tag"
 }
