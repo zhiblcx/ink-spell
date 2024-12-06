@@ -2,8 +2,6 @@
   "bookshelf_number": "number of bookshelves",
   "book_number": "Number of Books",
   "register_user_number": "Number of Registered Users",
-  "greeting_morning": "Good morning! A new day has begun, may you be full of energy.",
-  "greeting_night": "The stars are twinkling, the night is deep, may you have sweet dreams.",
   "day_mode": "Day Mode",
   "night_mode": "Night Mode",
   "follow_system": "Follow System",
@@ -48,5 +46,11 @@
   "cancel": "cancel",
   "confirm": "confirm",
   "reset": "reset",
-  "upload_timer": "upload timer"
+  "upload_timer": "upload timer",
+  "chinese_name": "chinese name",
+  "english_name": "english name",
+  "shelf_frequency": "shelf frequency",
+  "add": "add",
+  "add_tag": "add tag",
+  "tag": "tag"
 }

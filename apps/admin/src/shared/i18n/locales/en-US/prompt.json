@@ -6,5 +6,7 @@
     "three star",
     "four star",
     "five star"
-  ]
+  ],
+  "greeting_morning": "Good morning! A new day has begun, may you be full of energy.",
+  "greeting_night": "The stars are twinkling, the night is deep, may you have sweet dreams."
 }
