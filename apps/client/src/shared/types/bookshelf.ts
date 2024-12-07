@@ -1,3 +1,5 @@
+import { TagType } from "./tag"
+
 export type BookShelfType = {
   id: number
   label: string
@@ -7,5 +9,6 @@ export type BookShelfType = {
   cover: string
   isPublic: boolean
   description: string
-  userId: number
+  userId: number,
+  tags?: Array<TagType>
 }

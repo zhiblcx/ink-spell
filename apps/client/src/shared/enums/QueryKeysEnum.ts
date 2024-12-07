@@ -8,5 +8,6 @@ export enum QueryKeysEnum {
   MESSAGE_KEY = 'messages_key',
   USER_KEY = 'user_key',
   USER_ID_KEY = 'user_id_key',
-  READ_HISTORY = "read_history"
+  READ_HISTORY = "read_history",
+  ALL_TAG = "all_tag"
 }

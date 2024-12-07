@@ -1,8 +1,9 @@
 import { operateBookShelfMutation, updateBookShelfDetailMutation } from '@/features/bookshelf'
-import { useActionBookStore } from '@/shared/store'
-import { BookShelfType } from '@/shared/types'
+import { useActionBookStore, useLanguageStore } from '@/shared/store'
+import { BookShelfType, TagType } from '@/shared/types'
 import { RadioChangeEvent } from 'antd'
 import { UploadFile } from 'antd/lib'
+import SelectTag from '../SelectTag'
 import { OperateBookShelfModalProps } from './props'
 
 interface formProps {
@@ -30,6 +31,7 @@ export function OperateBookShelfModal({
   const [value, setValue] = useState(true)
   const [editBookShelfOpenFlag, setEditBookShelfOpenFlag] = useState(false)
   const [cover, setCover] = useState<UploadFile[]>([])
+  const languageStore = useLanguageStore()
 
   const handleChange = (value: string) => {
     setSelectBookShelfValue(value)
@@ -108,6 +110,15 @@ export function OperateBookShelfModal({
             url: import.meta.env.VITE_SERVER_URL + currentBookShelf.cover
           }
         ])
+        console.log(
+          currentBookShelf.tags?.map((tag) => ({
+            value: (tag as TagType)?.id,
+            label:
+              languageStore.language === LanguageEnum.Chinese
+                ? (tag as TagType)?.nameChinese
+                : (tag as TagType)?.nameChinese
+          }))
+        )
         form.setFieldsValue({
           id: currentBookShelf.id,
           bookShelfName: currentBookShelf.label,
@@ -135,6 +146,7 @@ export function OperateBookShelfModal({
       open={editBookShelfOpenFlag}
       onOk={() => {
         form.submit()
+        setEditBookShelfOpenFlag(false)
       }}
       onCancel={() => {
         setEditBookShelfOpenFlag(false)
@@ -179,6 +191,17 @@ export function OperateBookShelfModal({
 
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
+              label={t('COMMON:bookshelf_tag')}
+              name="tags"
+            >
+              <SelectTag
+                form={form}
+                tags={currentBookShelf?.tags}
+              />
+            </Form.Item>
+
+            <Form.Item
+              className="min-[375px]:w-[200px] md:w-[250px]"
               label={t('COMMON:bookshelf_status')}
               name="status"
             >
@@ -190,6 +213,7 @@ export function OperateBookShelfModal({
                 <Radio value={true}>{t('COMMON:public')}</Radio>
               </Radio.Group>
             </Form.Item>
+
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
               label={t('COMMON:bookshelf_cover')}
@@ -202,6 +226,7 @@ export function OperateBookShelfModal({
                 setFileName={setCover}
               />
             </Form.Item>
+
             <Form.Item
               className="min-[375px]:w-[200px] md:w-[250px]"
               label={t('COMMON:bookshelf_description')}
