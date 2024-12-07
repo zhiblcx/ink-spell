@@ -10,6 +10,7 @@
   "retry_in_seconds": "retry in {{seconds}} seconds",
   "no_email_entered": "Hi there, you haven't entered an email address yet.",
   "search_book_name": "enter book title to search",
+  "search_bookshelf_name": "enter bookshelf title to search",
   "upload_successful": "upload successful",
   "upload_failed": "upload failed",
   "no_duplicate_uploads": "No duplicate uploads",

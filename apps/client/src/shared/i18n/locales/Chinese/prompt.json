@@ -10,6 +10,7 @@
   "retry_in_seconds": "{{seconds}}秒后重试",
   "no_email_entered": "亲，你还没有输入邮箱",
   "search_book_name": "请输入要搜索的书名",
+  "search_bookshelf_name": "请输入要搜索的书架名",
   "upload_successful": "上传成功",
   "upload_failed": "上传失败",
   "no_duplicate_uploads": "请勿重复上传",
