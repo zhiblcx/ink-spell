@@ -28,6 +28,7 @@
     "autoincrement",
     "iconify",
     "axios",
-    "popconfirm"
+    "popconfirm",
+    "bookshelfs"
   ]
 }
