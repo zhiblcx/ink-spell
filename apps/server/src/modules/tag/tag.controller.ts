@@ -9,6 +9,8 @@ import { TagDto } from './dto/tag.dto';
 import { E } from '@/shared/res/e';
 import { limitQuery, pageQuery } from '@/shared/constants/pagination';
 import { nameChineseQuery, nameEnglishQuery } from '@/shared/constants/tagQuery';
+import { Roles } from '@/core/decorator/roles.decorator';
+import { Role } from '@/shared/enums/role.enum';
 
 @Controller('tag')
 @ApiTags("标签管理")
@@ -33,7 +35,12 @@ export class TagController {
   @ApiQuery(nameEnglishQuery)
   @ApiQuery(nameChineseQuery)
   @APIResponse([TagVo], "获取成功", true)
-  async getTags(@Query("page") page?: number, @Query("limit") limit?: number, @Query('nameChinese') nameChinese?: string, @Query('nameEnglish') nameEnglish?: string) {
+  async getTags(
+    @Query("page") page?: number,
+    @Query("limit") limit?: number,
+    @Query('nameChinese') nameChinese?: string,
+    @Query('nameEnglish') nameEnglish?: string
+  ) {
     if (page === undefined || limit === undefined) {
       return new R({
         message: this.translation.t("prompt.acquire_successful"),
@@ -53,6 +60,7 @@ export class TagController {
     }
   }
 
+  @Roles(Role.Admin)
   @Post()
   @ApiOperation({ summary: "添加标签" })
   @HttpCode(HttpStatus.OK)
@@ -64,6 +72,7 @@ export class TagController {
     })
   }
 
+  @Roles(Role.Admin)
   @Put(":tagId")
   @ApiOperation({ summary: "更新标签" })
   @HttpCode(HttpStatus.OK)
@@ -75,6 +84,7 @@ export class TagController {
     })
   }
 
+  @Roles(Role.Admin)
   @Delete(":tagId")
   @ApiOperation({ summary: "删除标签" })
   @HttpCode(HttpStatus.OK)

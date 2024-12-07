@@ -13,3 +13,29 @@ export const nameEnglishQuery = {
   name: "nameEnglish",
   required: false
 }
+
+export const nameChineseArrayQuery = {
+  type: Array<string>,
+  example: "['重生']",
+  description: "中文标签",
+  name: "nameChinese",
+  required: false
+}
+
+
+export const nameEnglishArrayQuery = {
+  type: Array<string>,
+  example: "['time loop']",
+  description: "英文标签",
+  name: "nameEnglish",
+  required: false
+}
+
+
+export const bookshelfNameQuery = {
+  type: String,
+  example: "重生那些事",
+  description: "书架名",
+  name: "bookshelfName",
+  required: false
+}

@@ -28,6 +28,7 @@ import { Role } from '@/shared/enums/role.enum';
 import { E } from '@/shared/res/e';
 import { AllBookShelfInfoVo } from './vo/all-bookshelf-info.vo';
 import { bookshelfNameQuery, limitQuery, pageQuery, usernameQuery } from '@/shared/constants/pagination'
+import { nameChineseArrayQuery, nameEnglishArrayQuery, } from '@/shared/constants/tagQuery';
 
 @Controller('bookshelf')
 @ApiTags('书架管理')
@@ -83,6 +84,46 @@ export class BookshelfController {
       data: await this.bookshelfService.acquireBookShelf(req.user.userId),
     });
   }
+
+
+  @Get("/public")
+  @ApiOperation({ summary: '查询以及搜索公开书架' })
+  @HttpCode(HttpStatus.OK)
+  @ApiQuery(pageQuery)
+  @ApiQuery(limitQuery)
+  @ApiQuery(bookshelfNameQuery)
+  @ApiQuery(nameEnglishArrayQuery)
+  @ApiQuery(nameChineseArrayQuery)
+  @APIResponse([CreateBookShelfVo], '获取成功')
+  async acquirePublicBookShelf(
+    @Query("page") page: number,
+    @Query("limit") limit: number,
+    @Query('bookshelfName') bookshelfName?: string,
+    @Query('nameChineseArrayQuery') nameChineseArrayQuery?: Array<string>,
+    @Query('nameEnglishArrayQuery') nameEnglishArrayQuery?: Array<string>
+  ) {
+    return new R({
+      message: this.translation.t('prompt.acquire_successful'),
+      data: new E({
+        items: await this.bookshelfService.acquirePublicBookShelf(
+          Number(page),
+          Number(limit),
+          bookshelfName,
+          nameChineseArrayQuery,
+          nameEnglishArrayQuery
+        ),
+        currentPage: Number(page),
+        itemsPerPage: Number(limit),
+        totalPages: await this.bookshelfService.getPublicBookShelfCount(
+          limit,
+          bookshelfName,
+          nameChineseArrayQuery,
+          nameEnglishArrayQuery
+        )
+      })
+    });
+  }
+
 
   @Get('/download/:bookShelfId')
   @ApiOperation({ summary: '下载书架书籍笔记' })
