@@ -1,12 +1,21 @@
 import { iconDarkImg, iconLightImg, logoDarkImg, logoLightImg } from '@/assets/images'
 import { selectMyBookShelfQuery } from '@/features/bookshelf'
-import { ALL_BOOK, CHAR_ROOM, MY_FRIEND } from '@/shared/constants'
+import { ALL_BOOK, BOOK_STORE, CHAR_ROOM, MY_FRIEND } from '@/shared/constants'
 import { useMenuStore, useThemeStore } from '@/shared/store'
 import { BookShelfType } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils'
 import clsx from 'clsx'
 import { AnimatePresence, motion } from 'framer-motion'
-import { BookHeart, BookText, Bot, ChevronDown, ChevronRight, Move, Users } from 'lucide-react'
+import {
+  BookHeart,
+  BookText,
+  Bot,
+  ChevronDown,
+  ChevronRight,
+  LibraryBig,
+  Move,
+  Users
+} from 'lucide-react'
 
 function Sidebar() {
   const { t } = useTranslation(['COMMON'])
@@ -21,6 +30,11 @@ function Sidebar() {
       label: ALL_BOOK.URL,
       value: t('COMMON:sidebar', { context: ALL_BOOK.label }),
       Icon: BookText
+    },
+    {
+      label: BOOK_STORE.URL,
+      value: t('COMMON:sidebar', { context: BOOK_STORE.label }),
+      Icon: LibraryBig
     },
     {
       label: MY_FRIEND.URL,

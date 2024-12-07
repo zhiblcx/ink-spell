@@ -87,6 +87,9 @@
     "MessageEnum": true,
     "useTranslation": true,
     "initReactI18next": true,
-    "Rate": true
+    "Rate": true,
+    "Tag": true,
+    "Table": true,
+    "Space": true
   }
 }

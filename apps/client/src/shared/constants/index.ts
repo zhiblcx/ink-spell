@@ -31,6 +31,11 @@ export const ALL_BOOK = {
   label: 'all_book',
 }
 
+export const BOOK_STORE = {
+  URL: '/bookstore',
+  label: 'book_store'
+}
+
 export const MY_FRIEND = {
   URL: '/myfriend',
   label: 'my_friend'

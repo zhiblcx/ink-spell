@@ -5,12 +5,12 @@ import { Ink } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils'
 import { useEffect, useState } from 'react'
 interface pageType {
-  bookId: string
+  bookshelfId: string
 }
 
 export function Page() {
-  const { bookId }: pageType = Route.useParams()
-  const url = UrlUtils.decodeUrlById(bookId)
+  const { bookshelfId }: pageType = Route.useParams()
+  const url = UrlUtils.decodeUrlById(bookshelfId)
   const params = url.split('?')
 
   const [books, setBooks] = useState([] as Ink[])
@@ -31,7 +31,7 @@ export function Page() {
     } else {
       updateIsOtherBookShelfFlag(false)
     }
-  }, [bookId])
+  }, [bookshelfId])
 
   const { data: queryBook, isSuccess } = selectBookByBookShelfIdQuery(params[0])
 
@@ -45,7 +45,9 @@ export function Page() {
       setBooks(queryBook.data)
       updateAllSelectFlag(AllSelectBookEnum.PARTIAL_SELECT_FLAG)
       if (uploadFileFlag) {
-        queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.BOOKSHELF_BOOK_KEY] })
+        queryClient.invalidateQueries({
+          queryKey: [QueryKeysEnum.BOOKSHELF_BOOK_KEY]
+        })
         updateUploadFileFlag(false)
       }
     }
@@ -71,6 +73,6 @@ export function Page() {
   )
 }
 
-export const Route = createLazyFileRoute('/_base/bookshelf/$bookId')({
+export const Route = createLazyFileRoute('/_base/bookshelf/$bookshelfId')({
   component: () => <Page />
 })

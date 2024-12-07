@@ -23,3 +23,24 @@ export const selectUserCollectBookShelfByUserIdQuery = (userId: string) =>
     queryKey: [QueryKeysEnum.USER_BOOKSHELF_KEY, userId],
     queryFn: () => httpRequest.get(`/user/bookshelf/${userId}`)
   })
+
+export const selectPublicBookShelfQuery = (
+  page: number,
+  limit: number,
+  select?: string,
+  value?: Array<string>,
+  bookshelfName?: string
+) => {
+  let path = `&${select}=${value}&bookshelfName=${bookshelfName}`
+  if (select === undefined && bookshelfName === undefined) {
+    path = ''
+  } else if (select === undefined) {
+    path = `&bookshelfName=${bookshelfName}`
+  } else if (bookshelfName === undefined) {
+    path = `&${select}=${value}`
+  }
+  return useQuery({
+    queryKey: [QueryKeysEnum.BOOKSHELF_KEY, page, limit, select, value, bookshelfName],
+    queryFn: () => httpRequest.get(`/bookshelf/public/?page=${page}&limit=${limit}${path}`)
+  })
+}

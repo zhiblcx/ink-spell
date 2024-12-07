@@ -42,7 +42,7 @@ export function Page() {
 
   return (
     <>
-      {query.data?.data.data.length === 0 ? (
+      {query.data?.data.length === 0 ? (
         <EmptyPage name={t('PROMPT:invite_to_share_bookshelf')} />
       ) : (
         <BookShelfDetail

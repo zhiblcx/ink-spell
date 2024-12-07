@@ -27,12 +27,13 @@ const BaseProfileRouteLazyImport = createFileRoute('/_base/profile')()
 const BaseMyfriendRouteLazyImport = createFileRoute('/_base/myfriend')()
 const BaseFavoritesRouteLazyImport = createFileRoute('/_base/favorites')()
 const BaseChatroomRouteLazyImport = createFileRoute('/_base/chatroom')()
+const BaseBookstoreRouteLazyImport = createFileRoute('/_base/bookstore')()
 const BaseIndexRouteLazyImport = createFileRoute('/_base/')()
 const BaseOtherbookshelfUserIdRouteLazyImport = createFileRoute(
   '/_base/otherbookshelf/$userId',
 )()
-const BaseBookshelfBookIdRouteLazyImport = createFileRoute(
-  '/_base/bookshelf/$bookId',
+const BaseBookshelfBookshelfIdRouteLazyImport = createFileRoute(
+  '/_base/bookshelf/$bookshelfId',
 )()
 const BaseBookshelfShowBookShelfIdRouteLazyImport = createFileRoute(
   '/_base/bookshelf/show/$bookShelfId',
@@ -110,6 +111,14 @@ const BaseChatroomRouteLazyRoute = BaseChatroomRouteLazyImport.update({
   import('./routes/_base/chatroom/route.lazy').then((d) => d.Route),
 )
 
+const BaseBookstoreRouteLazyRoute = BaseBookstoreRouteLazyImport.update({
+  id: '/bookstore',
+  path: '/bookstore',
+  getParentRoute: () => BaseRouteRoute,
+} as any).lazy(() =>
+  import('./routes/_base/bookstore/route.lazy').then((d) => d.Route),
+)
+
 const BaseIndexRouteLazyRoute = BaseIndexRouteLazyImport.update({
   id: '/',
   path: '/',
@@ -129,13 +138,15 @@ const BaseOtherbookshelfUserIdRouteLazyRoute =
     ),
   )
 
-const BaseBookshelfBookIdRouteLazyRoute =
-  BaseBookshelfBookIdRouteLazyImport.update({
-    id: '/bookshelf/$bookId',
-    path: '/bookshelf/$bookId',
+const BaseBookshelfBookshelfIdRouteLazyRoute =
+  BaseBookshelfBookshelfIdRouteLazyImport.update({
+    id: '/bookshelf/$bookshelfId',
+    path: '/bookshelf/$bookshelfId',
     getParentRoute: () => BaseRouteRoute,
   } as any).lazy(() =>
-    import('./routes/_base/bookshelf/$bookId/route.lazy').then((d) => d.Route),
+    import('./routes/_base/bookshelf/$bookshelfId/route.lazy').then(
+      (d) => d.Route,
+    ),
   )
 
 const PublicBookBookIdRouteRoute = PublicBookBookIdRouteImport.update({
@@ -196,6 +207,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BaseIndexRouteLazyImport
       parentRoute: typeof BaseRouteImport
     }
+    '/_base/bookstore': {
+      id: '/_base/bookstore'
+      path: '/bookstore'
+      fullPath: '/bookstore'
+      preLoaderRoute: typeof BaseBookstoreRouteLazyImport
+      parentRoute: typeof BaseRouteImport
+    }
     '/_base/chatroom': {
       id: '/_base/chatroom'
       path: '/chatroom'
@@ -245,11 +263,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicBookBookIdRouteImport
       parentRoute: typeof PublicRouteImport
     }
-    '/_base/bookshelf/$bookId': {
-      id: '/_base/bookshelf/$bookId'
-      path: '/bookshelf/$bookId'
-      fullPath: '/bookshelf/$bookId'
-      preLoaderRoute: typeof BaseBookshelfBookIdRouteLazyImport
+    '/_base/bookshelf/$bookshelfId': {
+      id: '/_base/bookshelf/$bookshelfId'
+      path: '/bookshelf/$bookshelfId'
+      fullPath: '/bookshelf/$bookshelfId'
+      preLoaderRoute: typeof BaseBookshelfBookshelfIdRouteLazyImport
       parentRoute: typeof BaseRouteImport
     }
     '/_base/otherbookshelf/$userId': {
@@ -273,22 +291,25 @@ declare module '@tanstack/react-router' {
 
 interface BaseRouteRouteChildren {
   BaseIndexRouteLazyRoute: typeof BaseIndexRouteLazyRoute
+  BaseBookstoreRouteLazyRoute: typeof BaseBookstoreRouteLazyRoute
   BaseChatroomRouteLazyRoute: typeof BaseChatroomRouteLazyRoute
   BaseFavoritesRouteLazyRoute: typeof BaseFavoritesRouteLazyRoute
   BaseMyfriendRouteLazyRoute: typeof BaseMyfriendRouteLazyRoute
   BaseProfileRouteLazyRoute: typeof BaseProfileRouteLazyRoute
-  BaseBookshelfBookIdRouteLazyRoute: typeof BaseBookshelfBookIdRouteLazyRoute
+  BaseBookshelfBookshelfIdRouteLazyRoute: typeof BaseBookshelfBookshelfIdRouteLazyRoute
   BaseOtherbookshelfUserIdRouteLazyRoute: typeof BaseOtherbookshelfUserIdRouteLazyRoute
   BaseBookshelfShowBookShelfIdRouteLazyRoute: typeof BaseBookshelfShowBookShelfIdRouteLazyRoute
 }
 
 const BaseRouteRouteChildren: BaseRouteRouteChildren = {
   BaseIndexRouteLazyRoute: BaseIndexRouteLazyRoute,
+  BaseBookstoreRouteLazyRoute: BaseBookstoreRouteLazyRoute,
   BaseChatroomRouteLazyRoute: BaseChatroomRouteLazyRoute,
   BaseFavoritesRouteLazyRoute: BaseFavoritesRouteLazyRoute,
   BaseMyfriendRouteLazyRoute: BaseMyfriendRouteLazyRoute,
   BaseProfileRouteLazyRoute: BaseProfileRouteLazyRoute,
-  BaseBookshelfBookIdRouteLazyRoute: BaseBookshelfBookIdRouteLazyRoute,
+  BaseBookshelfBookshelfIdRouteLazyRoute:
+    BaseBookshelfBookshelfIdRouteLazyRoute,
   BaseOtherbookshelfUserIdRouteLazyRoute:
     BaseOtherbookshelfUserIdRouteLazyRoute,
   BaseBookshelfShowBookShelfIdRouteLazyRoute:
@@ -320,6 +341,7 @@ export interface FileRoutesByFullPath {
   '': typeof PublicRouteRouteWithChildren
   '/404': typeof R404RouteLazyRoute
   '/': typeof BaseIndexRouteLazyRoute
+  '/bookstore': typeof BaseBookstoreRouteLazyRoute
   '/chatroom': typeof BaseChatroomRouteLazyRoute
   '/favorites': typeof BaseFavoritesRouteLazyRoute
   '/myfriend': typeof BaseMyfriendRouteLazyRoute
@@ -327,7 +349,7 @@ export interface FileRoutesByFullPath {
   '/signin': typeof PublicSigninRouteLazyRoute
   '/signup': typeof PublicSignupRouteLazyRoute
   '/book/$bookId': typeof PublicBookBookIdRouteRoute
-  '/bookshelf/$bookId': typeof BaseBookshelfBookIdRouteLazyRoute
+  '/bookshelf/$bookshelfId': typeof BaseBookshelfBookshelfIdRouteLazyRoute
   '/otherbookshelf/$userId': typeof BaseOtherbookshelfUserIdRouteLazyRoute
   '/bookshelf/show/$bookShelfId': typeof BaseBookshelfShowBookShelfIdRouteLazyRoute
 }
@@ -337,6 +359,7 @@ export interface FileRoutesByTo {
   '': typeof PublicRouteRouteWithChildren
   '/404': typeof R404RouteLazyRoute
   '/': typeof BaseIndexRouteLazyRoute
+  '/bookstore': typeof BaseBookstoreRouteLazyRoute
   '/chatroom': typeof BaseChatroomRouteLazyRoute
   '/favorites': typeof BaseFavoritesRouteLazyRoute
   '/myfriend': typeof BaseMyfriendRouteLazyRoute
@@ -344,7 +367,7 @@ export interface FileRoutesByTo {
   '/signin': typeof PublicSigninRouteLazyRoute
   '/signup': typeof PublicSignupRouteLazyRoute
   '/book/$bookId': typeof PublicBookBookIdRouteRoute
-  '/bookshelf/$bookId': typeof BaseBookshelfBookIdRouteLazyRoute
+  '/bookshelf/$bookshelfId': typeof BaseBookshelfBookshelfIdRouteLazyRoute
   '/otherbookshelf/$userId': typeof BaseOtherbookshelfUserIdRouteLazyRoute
   '/bookshelf/show/$bookShelfId': typeof BaseBookshelfShowBookShelfIdRouteLazyRoute
 }
@@ -356,6 +379,7 @@ export interface FileRoutesById {
   '/_public': typeof PublicRouteRouteWithChildren
   '/404': typeof R404RouteLazyRoute
   '/_base/': typeof BaseIndexRouteLazyRoute
+  '/_base/bookstore': typeof BaseBookstoreRouteLazyRoute
   '/_base/chatroom': typeof BaseChatroomRouteLazyRoute
   '/_base/favorites': typeof BaseFavoritesRouteLazyRoute
   '/_base/myfriend': typeof BaseMyfriendRouteLazyRoute
@@ -363,7 +387,7 @@ export interface FileRoutesById {
   '/_public/signin': typeof PublicSigninRouteLazyRoute
   '/_public/signup': typeof PublicSignupRouteLazyRoute
   '/_public/book/$bookId': typeof PublicBookBookIdRouteRoute
-  '/_base/bookshelf/$bookId': typeof BaseBookshelfBookIdRouteLazyRoute
+  '/_base/bookshelf/$bookshelfId': typeof BaseBookshelfBookshelfIdRouteLazyRoute
   '/_base/otherbookshelf/$userId': typeof BaseOtherbookshelfUserIdRouteLazyRoute
   '/_base/bookshelf/show/$bookShelfId': typeof BaseBookshelfShowBookShelfIdRouteLazyRoute
 }
@@ -375,6 +399,7 @@ export interface FileRouteTypes {
     | ''
     | '/404'
     | '/'
+    | '/bookstore'
     | '/chatroom'
     | '/favorites'
     | '/myfriend'
@@ -382,7 +407,7 @@ export interface FileRouteTypes {
     | '/signin'
     | '/signup'
     | '/book/$bookId'
-    | '/bookshelf/$bookId'
+    | '/bookshelf/$bookshelfId'
     | '/otherbookshelf/$userId'
     | '/bookshelf/show/$bookShelfId'
   fileRoutesByTo: FileRoutesByTo
@@ -391,6 +416,7 @@ export interface FileRouteTypes {
     | ''
     | '/404'
     | '/'
+    | '/bookstore'
     | '/chatroom'
     | '/favorites'
     | '/myfriend'
@@ -398,7 +424,7 @@ export interface FileRouteTypes {
     | '/signin'
     | '/signup'
     | '/book/$bookId'
-    | '/bookshelf/$bookId'
+    | '/bookshelf/$bookshelfId'
     | '/otherbookshelf/$userId'
     | '/bookshelf/show/$bookShelfId'
   id:
@@ -408,6 +434,7 @@ export interface FileRouteTypes {
     | '/_public'
     | '/404'
     | '/_base/'
+    | '/_base/bookstore'
     | '/_base/chatroom'
     | '/_base/favorites'
     | '/_base/myfriend'
@@ -415,7 +442,7 @@ export interface FileRouteTypes {
     | '/_public/signin'
     | '/_public/signup'
     | '/_public/book/$bookId'
-    | '/_base/bookshelf/$bookId'
+    | '/_base/bookshelf/$bookshelfId'
     | '/_base/otherbookshelf/$userId'
     | '/_base/bookshelf/show/$bookShelfId'
   fileRoutesById: FileRoutesById
@@ -458,11 +485,12 @@ export const routeTree = rootRoute
       "filePath": "_base/route.tsx",
       "children": [
         "/_base/",
+        "/_base/bookstore",
         "/_base/chatroom",
         "/_base/favorites",
         "/_base/myfriend",
         "/_base/profile",
-        "/_base/bookshelf/$bookId",
+        "/_base/bookshelf/$bookshelfId",
         "/_base/otherbookshelf/$userId",
         "/_base/bookshelf/show/$bookShelfId"
       ]
@@ -480,6 +508,10 @@ export const routeTree = rootRoute
     },
     "/_base/": {
       "filePath": "_base/index/route.lazy.tsx",
+      "parent": "/_base"
+    },
+    "/_base/bookstore": {
+      "filePath": "_base/bookstore/route.lazy.tsx",
       "parent": "/_base"
     },
     "/_base/chatroom": {
@@ -510,8 +542,8 @@ export const routeTree = rootRoute
       "filePath": "_public/book/$bookId/route.tsx",
       "parent": "/_public"
     },
-    "/_base/bookshelf/$bookId": {
-      "filePath": "_base/bookshelf/$bookId/route.lazy.tsx",
+    "/_base/bookshelf/$bookshelfId": {
+      "filePath": "_base/bookshelf/$bookshelfId/route.lazy.tsx",
       "parent": "/_base"
     },
     "/_base/otherbookshelf/$userId": {
