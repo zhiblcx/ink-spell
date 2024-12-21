@@ -117,10 +117,10 @@ export class BookshelfService {
     return await this.prisma.bookShelf.findMany({
       where: {
         label: { contains: bookshelfName },
-        tags: {
+        tags: (nameChinese === undefined && nameEnglish === undefined) ? {} : {
           some: {
-            nameChinese: nameChinese && { in: nameChinese },
-            nameEnglish: nameEnglish && { in: nameEnglish }
+            nameChinese: { in: nameChinese },
+            nameEnglish: { in: nameEnglish },
           }
         },
         isDelete: false,
@@ -141,10 +141,10 @@ export class BookshelfService {
     return Math.ceil(await this.prisma.bookShelf.count({
       where: {
         label: { contains: bookshelfName },
-        tags: {
+        tags: (nameChinese === undefined && nameEnglish === undefined) ? {} : {
           some: {
             nameChinese: { in: nameChinese },
-            nameEnglish: { in: nameEnglish }
+            nameEnglish: { in: nameEnglish },
           }
         },
         isDelete: false,

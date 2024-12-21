@@ -99,8 +99,8 @@ export class BookshelfController {
     @Query("page") page: number,
     @Query("limit") limit: number,
     @Query('bookshelfName') bookshelfName?: string,
-    @Query('nameChineseArrayQuery') nameChineseArrayQuery?: Array<string>,
-    @Query('nameEnglishArrayQuery') nameEnglishArrayQuery?: Array<string>
+    @Query('nameChinese') nameChineseArrayQuery?: Array<string>,
+    @Query('nameEnglish') nameEnglishArrayQuery?: Array<string>
   ) {
     return new R({
       message: this.translation.t('prompt.acquire_successful'),

@@ -115,11 +115,15 @@ function RouteComponent() {
     {
       title: t('COMMON:bookshelf_name'),
       dataIndex: 'bookshelf_name',
+      width: 200,
+      ellipsis: true,
       ...getColumnSearchProps('bookshelf_name')
     },
     {
       title: t('AUTH:username'),
       dataIndex: 'username',
+      width: 200,
+      ellipsis: true,
       render: (text, { userId }) => (
         <a
           onClick={() => {
@@ -134,6 +138,7 @@ function RouteComponent() {
     {
       title: t('COMMON:bookshelf_tag'),
       dataIndex: 'tags',
+      width: 300,
       filters: allTagQuery?.data.map((tag: TagType) => ({
         text: languageStore.language === LanguageEnum.Chinese ? tag.nameChinese : tag.nameEnglish,
         value: languageStore.language === LanguageEnum.Chinese ? tag.nameChinese : tag.nameEnglish
@@ -161,7 +166,9 @@ function RouteComponent() {
     },
     {
       title: t('COMMON:bookshelf_description'),
-      dataIndex: 'bookshelf_description'
+      dataIndex: 'bookshelf_description',
+      ellipsis: true,
+      width: 400
     }
   ]
 
@@ -215,10 +222,12 @@ function RouteComponent() {
   return (
     <>
       <Table<DataType>
+        className="max-h-[50%] max-w-[90%]"
         columns={columns}
         dataSource={data}
         loading={isLoading}
         onChange={handleTableChange}
+        scroll={{ y: 700, x: 400 }}
         pagination={{
           current: tableParams.pagination.page,
           onChange: onChange,
