@@ -31,6 +31,7 @@ const pagination = computed(() => ({
 
 <template>
   <n-data-table
+    size="small"
     :columns="props.columns"
     :bordered="false"
     :single-line="false"
@@ -38,6 +39,7 @@ const pagination = computed(() => ({
     :max-height="495"
     striped
     remote
+    :scroll-x="1800"
     :data="props.data ?? []"
   />
 </template>
