@@ -39,7 +39,7 @@ const pagination = computed(() => ({
     :max-height="495"
     striped
     remote
-    :scroll-x="1800"
+    :scroll-x="1400"
     :data="props.data ?? []"
   />
 </template>
