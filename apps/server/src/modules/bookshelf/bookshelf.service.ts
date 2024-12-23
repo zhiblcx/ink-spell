@@ -1,10 +1,12 @@
 import { appConfig } from '@/config/AppConfig';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { TranslationService } from '../translation/translation.service';
 @Injectable()
 export class BookshelfService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly translation: TranslationService
   ) { }
   async createBookShelf(req, createBookshelfDto) {
     const currentBookShelf = await this.prisma.bookShelf.findFirst({

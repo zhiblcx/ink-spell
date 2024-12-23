@@ -91,7 +91,7 @@ const bookshelfTag = (bookshelf: InternalRowData, index: number) => {
         style: {
           marginRight: '3px'
         },
-        color: { color: DEFAULT_TAG_COLORS[(index + i) % DEFAULT_TAG_COLORS.length], textColor: 'white' },
+        color: { color: DEFAULT_TAG_COLORS[(index + 2 * i) % DEFAULT_TAG_COLORS.length], textColor: 'white' },
         bordered: false
       },
       { default: () => (languageStore.language === LanguageEnum.CHINESE ? tag.nameChinese : tag.nameEnglish) }
