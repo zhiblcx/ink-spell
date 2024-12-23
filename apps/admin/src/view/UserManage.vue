@@ -5,6 +5,7 @@ import { UserDataVo } from '@/features/user/types'
 import { DataTablePagination, PopconfirmDelete, ReadHistoryModal } from '@/shared/components'
 import { PaginationParams } from '@/shared/constants'
 import { SERVER_URL } from '@/shared/constants/app'
+import { TransformTimeUtils } from '@ink-spell/utils'
 import { useTranslation } from 'i18next-vue'
 import { DataTableColumn, NAvatar, NButton } from 'naive-ui'
 import { InternalRowData } from 'naive-ui/es/data-table/src/interface'
@@ -115,8 +116,11 @@ const processUserData = (users: UserDataVo[]) =>
     avatar: SERVER_URL + user.avatar,
     bookshelf_count: user.bookShelfs,
     books_count: user.books,
-    reading_total_duration: user.offlineTime === null ? 0 : user.offlineTime,
-    offlineTime: user.offlineTime === null ? t('AUTH:never_logged_in') : user.offlineTime
+    reading_total_duration: user.offlineTime === null ? 0 : user.readTime,
+    offlineTime:
+      user.offlineTime === null
+        ? t('AUTH:never_logged_in')
+        : TransformTimeUtils.formatDateYMDHMS(new Date(user.offlineTime as string))
   }))
 </script>
 
