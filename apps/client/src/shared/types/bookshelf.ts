@@ -10,5 +10,5 @@ export type BookShelfType = {
   isPublic: boolean
   description: string
   userId: number,
-  tags?: Array<TagType>
+  tags?: Array<TagType> | Array<number>
 }

@@ -1,5 +1,5 @@
 import { updateBookShelfPositionMutation } from '@/features/bookshelf'
-import { BookShelfType } from '@/shared/types'
+import { BookShelfType, TagType } from '@/shared/types'
 import {
   closestCenter,
   DndContext,
@@ -77,7 +77,17 @@ export function Sortable({ originItems, setOriginItems, children }: SortableProp
         return
       } else {
         item.position = index + 1
-        mutate({ ...item, bookShelfName: item.label })
+        const tags: number[] = []
+        if (item?.tags) {
+          for (let i = 0; i < item?.tags?.length; i++) {
+            tags.push((item?.tags[i] as TagType).id)
+          }
+        }
+        mutate({
+          ...item,
+          tags: tags,
+          bookShelfName: item.label
+        })
       }
     })
   }, 3000)

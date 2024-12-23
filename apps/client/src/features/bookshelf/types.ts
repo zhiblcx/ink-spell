@@ -28,5 +28,5 @@ export interface BookShelfDao extends BookShelfType {
 
 export interface PublicBookshelfDao extends BookShelfType {
   user: User,
-  tags: Array<TagType>
+  tags: Array<TagType> | Array<number>
 }
