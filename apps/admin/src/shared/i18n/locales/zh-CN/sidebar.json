@@ -3,5 +3,7 @@
   "user_management": "用户管理",
   "bookshelf_management": "书架管理",
   "book_management": "书籍管理",
-  "tag_management": "标签管理"
+  "tag_management": "标签管理",
+  "feedback_management": "反馈管理",
+  "announcement_management": "公告管理"
 }

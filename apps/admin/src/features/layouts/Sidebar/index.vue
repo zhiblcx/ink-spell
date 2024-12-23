@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BookIcon, BookshelfIcon, HomeIcon, TagIcon, UserIcon } from '@/assets/icons'
+import { AnnouncementIcon, BookIcon, BookshelfIcon, FeedbackIcon, HomeIcon, TagIcon, UserIcon } from '@/assets/icons'
 import { useChartsStore } from '@/shared/store/useChartsStore'
 import { useLanguageStore } from '@/shared/store/useLanguageStore'
 import { renderIcon } from '@/shared/utils/renderIcon'
@@ -25,6 +25,11 @@ watch(
         icon: renderIcon(HomeIcon)
       },
       {
+        label: t('SIDEBAR:announcement_management'),
+        key: '/announcement/manage',
+        icon: renderIcon(AnnouncementIcon)
+      },
+      {
         label: t('user_management'),
         key: '/user/manage',
         icon: renderIcon(UserIcon)
@@ -43,6 +48,11 @@ watch(
         label: t('book_management'),
         key: '/book/manage',
         icon: renderIcon(BookIcon)
+      },
+      {
+        label: t('SIDEBAR:feedback_management'),
+        key: '/feedback/manage',
+        icon: renderIcon(FeedbackIcon)
       }
     ]
   },

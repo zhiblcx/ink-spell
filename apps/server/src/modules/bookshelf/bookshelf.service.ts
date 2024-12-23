@@ -2,6 +2,7 @@ import { appConfig } from '@/config/AppConfig';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { TranslationService } from '../translation/translation.service';
+import { isDataURI } from 'class-validator';
 @Injectable()
 export class BookshelfService {
   constructor(
@@ -76,7 +77,13 @@ export class BookshelfService {
       orderBy: {
         position: 'asc',
       },
-      include: { tags: true }
+      include: {
+        tags: {
+          where: {
+            isDelete: false
+          }
+        }
+      }
     });
   }
 
@@ -123,12 +130,18 @@ export class BookshelfService {
           some: {
             nameChinese: { in: nameChinese },
             nameEnglish: { in: nameEnglish },
-          }
+          },
         },
         isDelete: false,
         isPublic: true
       },
-      include: { tags: true, user: true },
+      include: {
+        tags: {
+          where: {
+            isDelete: false
+          }
+        }, user: true
+      },
       skip: (page - 1) * limit,
       take: limit,
     })
@@ -166,7 +179,11 @@ export class BookshelfService {
         user: {
           select: { id: true, username: true, account: true, email: true, avatar: true }
         },
-        tags: true,
+        tags: {
+          where: {
+            isDelete: false
+          }
+        },
         _count: {
           select: {
             collectBookShelf: {

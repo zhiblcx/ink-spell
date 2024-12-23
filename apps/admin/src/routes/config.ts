@@ -11,6 +11,8 @@ import {
   PATH_BOOKSHELF_MANAGE,
   PATH_BOOK_MANAGE,
   PATH_TAG_MANAGE,
+  PATH_FEEDBACK_MANAGE,
+  PATH_ANNOUNCEMENT_MANAGE,
 } from "@/shared/constants/router-path"
 
 const routes = [
@@ -23,6 +25,11 @@ const routes = [
     path: PATH_ROOT,
     component: Layout,
     children: [{ path: '', component: () => import("@/view/Home.vue") }]
+  },
+  {
+    path: PATH_ANNOUNCEMENT_MANAGE,
+    component: Layout,
+    children: [{ path: '', component: () => import("@/view/AnnouncementManage.vue") }]
   },
   {
     path: PATH_USER_MANAGE,
@@ -43,6 +50,11 @@ const routes = [
     path: PATH_TAG_MANAGE,
     component: Layout,
     children: [{ path: "", component: () => import("@/view/TagManage.vue") }]
+  },
+  {
+    path: PATH_FEEDBACK_MANAGE,
+    component: Layout,
+    children: [{ path: "", component: () => import("@/view/FeedbackManage.vue") }]
   },
   {
     path: PATH_FORBIDDEN,

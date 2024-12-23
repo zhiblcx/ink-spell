@@ -3,5 +3,7 @@
   "user_management": "User Management",
   "bookshelf_management": "Bookshelf Management",
   "book_management": "Book Management",
-  "tag_management": "Tag Management"
+  "tag_management": "Tag Management",
+  "feedback_management": "Feedback Management",
+  "announcement_management": "Announcement Management"
 }

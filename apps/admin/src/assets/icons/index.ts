@@ -16,3 +16,5 @@ export { default as TagIcon } from './iconify/TagIcon.vue'
 export { default as TranslateIcon } from './iconify/TranslateIcon.vue';
 export { default as UserIcon } from './iconify/UserIcon.vue';
 export { default as WarningIcon } from './iconify/WarningIcon.vue'
+export { default as AnnouncementIcon } from './iconify/AnnouncementIcon.vue'
+export { default as FeedbackIcon } from './iconify/FeedbackIcon.vue'
