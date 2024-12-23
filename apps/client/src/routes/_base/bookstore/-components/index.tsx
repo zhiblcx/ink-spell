@@ -25,6 +25,8 @@ export function BookStoreTable() {
   })
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchedColumn] = useState('')
+  const router = useRouter()
+  const { data: allTagQuery } = getAllTagQuery()
   const { data: publicBookshelfQuery, isLoading } = selectPublicBookShelfQuery(
     tableParams.pagination.page,
     tableParams.pagination.limit,
@@ -32,11 +34,8 @@ export function BookStoreTable() {
     tableParams.pagination.value,
     tableParams.pagination.bookshelfName
   )
-  const { data: allTagQuery } = getAllTagQuery()
-  const router = useRouter()
 
-  const onChange: PaginationProps['onChange'] = (page) =>
-    setTableParams({ pagination: { ...tableParams.pagination, page } })
+  const onChange: PaginationProps['onChange'] = (page) => (tableParams.pagination.page = page)
 
   const handleSearch = (
     selectedKeys: string[],
@@ -214,10 +213,14 @@ export function BookStoreTable() {
         loading={isLoading}
         onChange={handleTableChange}
         scroll={{ x: '100%', y: 100 * 5 }}
+        size="middle"
         pagination={{
-          current: tableParams.pagination.page,
           onChange: onChange,
-          total: publicBookshelfQuery?.data?.totalPages,
+          defaultCurrent: tableParams.pagination.page,
+          position: ['none', 'bottomCenter'],
+          hideOnSinglePage: true,
+          showQuickJumper: true,
+          total: publicBookshelfQuery?.data?.totalPages * tableParams.pagination.limit,
           defaultPageSize: tableParams.pagination.limit
         }}
       />
