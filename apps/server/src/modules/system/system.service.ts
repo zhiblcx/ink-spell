@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { SystemAnnouncementDto } from './dto/system.announcement.dto';
 import { SystemFeedbackDto } from './dto/system.feedback.dto';
+import { SystemConstant } from '../../../../client/src/shared/constants/system';
+import { Role } from '@/shared/enums/role.enum';
 
 @Injectable()
 export class SystemService {
@@ -11,7 +13,7 @@ export class SystemService {
       where: {
         userId: userId,
         isDelete: false,
-        type: 2
+        type: SystemConstant.type.USER_ANNOUNCEMENT
       },
       orderBy: {
         createTimer: "desc"
@@ -22,7 +24,7 @@ export class SystemService {
   async getSystemAnnouncement(page: number, limit: number) {
     return await this.prisma.system.findMany({
       where: {
-        type: 1,
+        type: SystemConstant.type.ANNOUNCEMENT,
         isDelete: false
       },
       orderBy: {
@@ -36,7 +38,7 @@ export class SystemService {
   async getSystemFeedback(page: number, limit: number) {
     return await this.prisma.system.findMany({
       where: {
-        type: 0,
+        type: SystemConstant.type.FEEDBACK,
         isDelete: false
       },
       orderBy: {
@@ -51,20 +53,20 @@ export class SystemService {
     const result = await this.prisma.system.create({
       data: {
         text: systemAnnouncementDto.text,
-        type: 1,
+        type: SystemConstant.type.ANNOUNCEMENT,
         userId: id
       }
     })
     const users = await this.prisma.user.findMany({
       where: {
-        rolesId: 'user',
+        rolesId: Role.User,
         isDelete: false
       }
     })
 
     const systemAnnouncements = users.map(user => ({
       text: systemAnnouncementDto.text,
-      type: 2,
+      type: SystemConstant.type.USER_ANNOUNCEMENT,
       userId: user.id
     }));
     await await this.prisma.system.createMany({ data: systemAnnouncements })
@@ -74,7 +76,7 @@ export class SystemService {
   async getSystemAnnouncementTotalPage(currentLimit: number) {
     return Math.ceil(await this.prisma.system.count({
       where: {
-        type: 1,
+        type: SystemConstant.type.ANNOUNCEMENT,
         isDelete: false
       }
     }) / currentLimit)
@@ -84,8 +86,17 @@ export class SystemService {
     return await this.prisma.system.create({
       data: {
         text: systemFeedbackDto.text,
-        type: 0,
+        type: SystemConstant.type.FEEDBACK,
         userId: id
+      }
+    })
+  }
+
+  async putSystemAnnouncementRead(id: number) {
+    return await this.prisma.system.update({
+      where: { id },
+      data: {
+        status: SystemConstant.status.READ
       }
     })
   }
@@ -93,7 +104,7 @@ export class SystemService {
   async getSystemFeedbackTotalPage(currentLimit: number) {
     return Math.ceil(await this.prisma.system.count({
       where: {
-        type: 0,
+        type: SystemConstant.type.FEEDBACK,
         isDelete: false
       }
     }) / currentLimit)

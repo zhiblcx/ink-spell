@@ -9,5 +9,6 @@ export enum QueryKeysEnum {
   USER_KEY = 'user_key',
   USER_ID_KEY = 'user_id_key',
   READ_HISTORY = "read_history",
-  ALL_TAG = "all_tag"
+  ALL_TAG = "all_tag",
+  SYSTEM = "system"
 }

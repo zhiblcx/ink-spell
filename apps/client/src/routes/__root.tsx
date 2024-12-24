@@ -1,3 +1,6 @@
+import { updateAnnouncementUserMutation } from '@/features/system/mutation'
+import { getAnnouncementUserQuery } from '@/features/system/query'
+import { SystemConstant } from '@/shared/constants/system'
 import { notification } from 'antd'
 
 export const Route = createRootRoute({
@@ -10,6 +13,10 @@ export const Route = createRootRoute({
 })
 export function Page() {
   const [api, contextHolder] = notification.useNotification()
+  const { t } = useTranslation(['COMMON'])
+  const { data: announcementUserData, isLoading } = getAnnouncementUserQuery()
+  const { mutate: updateAnnouncementUserMutate } = updateAnnouncementUserMutation()
+
   const openNotification = () => {
     const key = `open${Date.now()}`
     const btn = (
@@ -19,22 +26,26 @@ export function Page() {
           size="small"
           onClick={() => api.destroy(key)}
         >
-          知道了
+          {t('COMMON:knew')}
         </Button>
       </Space>
     )
     api.open({
-      message: '公告',
-      description: '早上好',
+      message: t('COMMON:announcement'),
+      description: announcementUserData?.data.text,
       btn,
       key,
       onClose: () => {
-        console.log('知道了')
+        updateAnnouncementUserMutate(announcementUserData?.data.id)
       }
     })
   }
 
-  setTimeout(() => openNotification(), 0)
+  useEffect(() => {
+    if (!isLoading && announcementUserData?.data.status != SystemConstant.status.READ) {
+      openNotification()
+    }
+  }, [isLoading])
 
   return <>{contextHolder}</>
 }

@@ -103,6 +103,17 @@ export class SystemController {
     })
   }
 
+  @Put("/announcement/read/:id")
+  @ApiOperation({ summary: '用户公告改为已读' })
+  @HttpCode(HttpStatus.OK)
+  @APIResponse(SystemAnnouncementVo, '修改成功')
+  async putSystemAnnouncementRead(@Param('id') id: number) {
+    return new R({
+      message: null,
+      data: await this.systemService.putSystemAnnouncementRead(Number(id)),
+    })
+  }
+
   @Roles(Role.Admin)
   @Put('/announcement/:id')
   @ApiOperation({ summary: '修改公告信息' })
