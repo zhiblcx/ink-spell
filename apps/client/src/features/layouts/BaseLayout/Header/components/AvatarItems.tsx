@@ -22,6 +22,10 @@ export function AvatarItems({ setOpenFlag, avatar }: AvatarItemsType) {
   const [rateOpen, setRateOpen] = useState(false)
   const items: MenuProps['items'] = [
     {
+      key: 'announcement',
+      label: <div onClick={() => setRateOpen(true)}>{t('COMMON:system_rating')}</div>
+    },
+    {
       key: PERSON_INFO.label,
       label: (
         <div onClick={() => navigate({ to: PERSON_INFO.URL })}>

@@ -22,12 +22,23 @@ export class SystemController {
     private readonly translation: TranslationService
   ) { }
 
+  @Get('/announcement/user')
+  @ApiOperation({ summary: "获取通知公告" })
+  @HttpCode(HttpStatus.OK)
+  @APIResponse(SystemAnnouncementVo, '获取成功')
+  async getNotifyAnnouncement(@Request() req) {
+    return new R({
+      message: this.translation.t('prompt.acquire_successful'),
+      data: await this.systemService.getNotifyAnnouncement(Number(req.user.userId))
+    })
+  }
+
   @Get("/announcement")
   @ApiOperation({ summary: '获取公告信息' })
   @HttpCode(HttpStatus.OK)
   @ApiQuery(pageQuery)
   @ApiQuery(limitQuery)
-  @APIResponse(null, '获取成功', true)
+  @APIResponse([SystemAnnouncementVo], '获取成功', true)
   async getSystemAnnouncement(
     @Query('page') page: number,
     @Query('limit') limit: number,
@@ -51,7 +62,7 @@ export class SystemController {
   @HttpCode(HttpStatus.OK)
   @ApiQuery(pageQuery)
   @ApiQuery(limitQuery)
-  @APIResponse(null, '获取成功', true)
+  @APIResponse([SystemAnnouncementVo], '获取成功', true)
   async getSystemFeedback(
     @Query('page') page: number,
     @Query('limit') limit: number,
@@ -73,7 +84,7 @@ export class SystemController {
   @Post("/announcement")
   @ApiOperation({ summary: '提交公告信息' })
   @HttpCode(HttpStatus.OK)
-  @APIResponse(SystemAnnouncementVo, '提交成功', true)
+  @APIResponse(SystemAnnouncementVo, '提交成功')
   async postSystemAnnouncement(@Request() req, @Body() systemAnnouncementDto: SystemAnnouncementDto) {
     return new R({
       message: this.translation.t('prompt.submit_successfully'),
@@ -84,7 +95,7 @@ export class SystemController {
   @Post("/feedback")
   @ApiOperation({ summary: '提交反馈信息' })
   @HttpCode(HttpStatus.OK)
-  @APIResponse(SystemFeedbackVo, '提交成功', true)
+  @APIResponse(SystemFeedbackVo, '提交成功')
   async postSystemFeedback(@Request() req, @Body() systemFeedbackDto: SystemFeedbackDto) {
     return new R({
       message: this.translation.t('prompt.submit_successfully'),
@@ -96,7 +107,7 @@ export class SystemController {
   @Put('/announcement/:id')
   @ApiOperation({ summary: '修改公告信息' })
   @HttpCode(HttpStatus.OK)
-  @APIResponse(null, '修改成功', true)
+  @APIResponse(null, '修改成功')
   async putSystemAnnouncement(@Param('id') id: number, @Body() systemAnnouncementDto: SystemAnnouncementDto) {
     return new R({
       message: this.translation.t('prompt.submit_successfully'),
@@ -108,7 +119,7 @@ export class SystemController {
   @Delete('/announcement/:id')
   @ApiOperation({ summary: '删除公告或反馈信息' })
   @HttpCode(HttpStatus.OK)
-  @APIResponse(null, '删除成功', true)
+  @APIResponse(null, '删除成功')
   async deleteSystemAnnouncementAndFeedback(@Param('id') id: number) {
     return new R({
       message: this.translation.t('prompt.submit_successfully'),

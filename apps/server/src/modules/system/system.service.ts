@@ -6,8 +6,21 @@ import { SystemFeedbackDto } from './dto/system.feedback.dto';
 @Injectable()
 export class SystemService {
   constructor(private readonly prisma: PrismaService) { }
+  async getNotifyAnnouncement(userId: number) {
+    return await this.prisma.system.findFirst({
+      where: {
+        userId: userId,
+        isDelete: false,
+        type: 2
+      },
+      orderBy: {
+        createTimer: "desc"
+      }
+    })
+  }
+
   async getSystemAnnouncement(page: number, limit: number) {
-    return this.prisma.system.findMany({
+    return await this.prisma.system.findMany({
       where: {
         type: 1,
         isDelete: false
@@ -21,7 +34,7 @@ export class SystemService {
   }
 
   async getSystemFeedback(page: number, limit: number) {
-    return this.prisma.system.findMany({
+    return await this.prisma.system.findMany({
       where: {
         type: 0,
         isDelete: false
@@ -35,13 +48,27 @@ export class SystemService {
   }
 
   async postSystemAnnouncement(id: number, systemAnnouncementDto: SystemAnnouncementDto) {
-    return await this.prisma.system.create({
+    const result = await this.prisma.system.create({
       data: {
         text: systemAnnouncementDto.text,
         type: 1,
         userId: id
       }
     })
+    const users = await this.prisma.user.findMany({
+      where: {
+        rolesId: 'user',
+        isDelete: false
+      }
+    })
+
+    const systemAnnouncements = users.map(user => ({
+      text: systemAnnouncementDto.text,
+      type: 2,
+      userId: user.id
+    }));
+    await await this.prisma.system.createMany({ data: systemAnnouncements })
+    return result
   }
 
   async getSystemAnnouncementTotalPage(currentLimit: number) {

@@ -18,6 +18,7 @@ export function Page() {
   const { data: queryBook, isLoading } = selectBookByBookShelfIdQuery(bookShelfId)
 
   const queryClient = useQueryClient()
+
   useEffect(() => {
     setBooks(queryBook?.data ?? [])
     updateAllSelectFlag(AllSelectBookEnum.PARTIAL_SELECT_FLAG)
