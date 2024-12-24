@@ -20,6 +20,7 @@ model User {
   collectBookShelf CollectBookShelf[]
   bookMark         BookMark[]
   readingHistory   ReadingHistory[]
+  system           System[]
 
   @@unique([username, oauth])
   @@unique([account, oauth])

@@ -1,0 +1,10 @@
+model System {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  User        User     @relation(fields: [userId], references: [id])
+  type        Int //  2 用户公告(发送) 1 公告  0 反馈
+  status      Int      @default(0) // 1 已读  0 未读
+  text        String
+  createTimer DateTime @default(now()) @map("create_timer")
+  isDelete    Boolean  @default(false) @map("is_delete")
+}
