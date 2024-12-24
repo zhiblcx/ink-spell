@@ -60,6 +60,7 @@ export const APIResponse = <T extends Type<any>>(
   const resProps = {
     type: 'object',
     properties: {
+      code: { type: 'string', default: 200 },
       message: { type: 'string', default: msg },
       data: prop,
     },

@@ -24,6 +24,7 @@ import { UserService } from './modules/user/user.service';
 import { ReadHistoryModule } from './modules/read-history/read-history.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { TagModule } from './modules/tag/tag.module';
+import { SystemModule } from './modules/system/system.module';
 
 @Module({
   imports: [
@@ -57,7 +58,8 @@ import { TagModule } from './modules/tag/tag.module';
     TranslationModule,
     ReadHistoryModule,
     AdminModule,
-    TagModule
+    TagModule,
+    SystemModule
   ],
   providers: [
     { provide: APP_PIPE, useClass: I18nValidationPipe },

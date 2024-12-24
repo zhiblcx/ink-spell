@@ -28,6 +28,7 @@ export type I18nTranslations = {
         "deleted_successfully": string;
         "collection_successful": string;
         "cancellation_successful": string;
+        "submit_successfully": string;
         "followed_successfully": string;
         "reset_successful": string;
         "update_successful": string;
