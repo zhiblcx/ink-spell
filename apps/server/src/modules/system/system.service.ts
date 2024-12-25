@@ -1,13 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { SystemAnnouncementDto } from './dto/system.announcement.dto';
 import { SystemFeedbackDto } from './dto/system.feedback.dto';
 import { Role } from '@/shared/enums/role.enum';
 import { SystemConstant } from '@/shared/constants/system';
+import { TransformTimeUtils } from '@ink-spell/utils';
+import { TranslationService } from '../translation/translation.service';
 
 @Injectable()
 export class SystemService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly translation: TranslationService
+  ) { }
   async getNotifyAnnouncement(userId: number) {
     return await this.prisma.system.findFirst({
       where: {
@@ -83,13 +88,30 @@ export class SystemService {
   }
 
   async postSystemFeedback(id: number, systemFeedbackDto: SystemFeedbackDto) {
-    return await this.prisma.system.create({
+
+    const feedback = await this.prisma.system.findFirst({
+      where: {
+        type: SystemConstant.type.FEEDBACK,
+        text: systemFeedbackDto.text,
+        userId: id
+      }
+    })
+
+    if (feedback != null) {
+      if (TransformTimeUtils.formatDateYMD(feedback.createTimer) === TransformTimeUtils.formatDateYMD()) {
+        throw new UnprocessableEntityException(this.translation.t("prompt.already_feedback_today"))
+      }
+    }
+
+    const result = await this.prisma.system.create({
       data: {
         text: systemFeedbackDto.text,
         type: SystemConstant.type.FEEDBACK,
         userId: id
       }
     })
+
+    return result
   }
 
   async putSystemAnnouncementRead(id: number) {

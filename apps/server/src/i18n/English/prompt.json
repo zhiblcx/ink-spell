@@ -19,5 +19,6 @@
   "no_main_character": "No main character available",
   "no_description": "No description available",
   "server_error": "server error",
-  "rate_successful": "rate successful"
+  "rate_successful": "rate successful",
+  "already_feedback_today": "Already given feedback today"
 }

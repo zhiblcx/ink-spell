@@ -28,5 +28,6 @@
   "no_bookshelf_collected": "您还没有收藏任何书架呢！快来收藏您喜欢的书架吧！",
   "page_not_found": "抱歉，您访问的页面不存在。",
   "are_you_satisfied_with_app": "你对 {{APP_NAME}} 满意吗？",
-  "thank_you_for_rating": "你已经评分了，感谢支持💖"
+  "thank_you_for_rating": "你已经评分了，感谢支持💖",
+  "do_you_have_suggestions_for": "你对 {{APP_NAME}} 有什么建议吗？"
 }

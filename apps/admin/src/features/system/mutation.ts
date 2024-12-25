@@ -33,7 +33,7 @@ export const deleteAnnouncementMutation = () => {
     mutationFn: (id: number) => httpRequest.delete(`system/announcement/${id}`),
     onSuccess: (data) => {
       window.$message.success(data.message as string)
-      queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.ANNOUNCEMENT] })
+      queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.ANNOUNCEMENT, QueryKeysEnum.FEEDBACK] })
     },
     onError: handleAxiosError
   })

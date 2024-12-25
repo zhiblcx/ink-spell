@@ -24,7 +24,7 @@ const rateSvg = (value: number) => {
   }
 }
 
-export default function SystemRate({ open, setOpen }: SystemRateProps) {
+export function SystemRate({ open, setOpen }: SystemRateProps) {
   const [value, setValue] = useState(3)
   const { t } = useTranslation(['COMMON', 'PROMPT'])
   const { data: oneselfInfoData } = selectOneselfInfoQuery()

@@ -19,5 +19,6 @@
   "no_main_character": "暂无主角",
   "no_description": "暂无描述",
   "server_error": "服务器错误",
-  "rate_successful": "评分成功"
+  "rate_successful": "评分成功",
+  "already_feedback_today": "今天已经反馈了哦"
 }
