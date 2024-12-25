@@ -4,7 +4,7 @@ import { DataTableColumn } from 'naive-ui'
 
 interface DataTablePaginationType {
   columns: Array<DataTableColumn>
-  data: [] | undefined
+  data: any[] | undefined
   pageCount: number | undefined
 }
 

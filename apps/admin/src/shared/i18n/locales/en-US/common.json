@@ -52,5 +52,7 @@
   "shelf_frequency": "shelf frequency",
   "add": "add",
   "add_tag": "add tag",
-  "tag": "tag"
+  "tag": " tag",
+  "announcement": " announcement",
+  "announcement_text": "announcement text"
 }

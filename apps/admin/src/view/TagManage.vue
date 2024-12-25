@@ -83,9 +83,9 @@ const handleAdd = () => {
 
 <template>
   <n-skeleton
+    v-if="isPending"
     text
     :repeat="5"
-    v-if="isPending"
   />
 
   <div v-else>

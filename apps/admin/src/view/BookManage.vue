@@ -16,6 +16,7 @@ const selectOptions = computed(() => [
   { label: t('COMMON:bookshelf_name'), value: 'bookshelfName' },
   { label: t('COMMON:username'), value: 'username' }
 ])
+
 const { t } = useTranslation(['COMMON', 'VALIDATION'])
 const page = ref(PaginationParams.DEFAULT_PAGE)
 const pageSize = ref(PaginationParams.DEFAULT_PAGESIZE)

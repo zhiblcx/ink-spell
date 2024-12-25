@@ -52,5 +52,7 @@
   "shelf_frequency": "书架使用频率",
   "add": "添加",
   "add_tag": "添加标签",
-  "tag": "标签"
+  "tag": "标签",
+  "announcement": "公告",
+  "announcement_text": "公告内容"
 }

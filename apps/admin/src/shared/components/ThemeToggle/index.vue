@@ -53,5 +53,3 @@ function changeLanguage(key: ThemeEnum) {
     <SunFlowerIcon v-if="themeStore.theme === ThemeEnum.SYSTEM" />
   </n-dropdown>
 </template>
-
-<style scoped></style>

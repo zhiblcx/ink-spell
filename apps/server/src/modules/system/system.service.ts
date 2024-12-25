@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { SystemAnnouncementDto } from './dto/system.announcement.dto';
 import { SystemFeedbackDto } from './dto/system.feedback.dto';
-import { SystemConstant } from '../../../../client/src/shared/constants/system';
 import { Role } from '@/shared/enums/role.enum';
+import { SystemConstant } from '@/shared/constants/system';
 
 @Injectable()
 export class SystemService {

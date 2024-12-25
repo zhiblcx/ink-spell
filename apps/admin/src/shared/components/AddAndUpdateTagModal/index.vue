@@ -8,10 +8,12 @@ const { state } = defineProps<{ state: stateEnum }>()
 const selectTag = defineModel<TagVo>('selectTag')
 const showModal = defineModel()
 const { t } = useTranslation(['COMMON', 'VALIDATION'])
+
 const modelRef = ref<ModelType>({
   nameChinese: selectTag?.value?.nameChinese ?? null,
   nameEnglish: selectTag?.value?.nameEnglish ?? null
 })
+
 const formRef = ref<FormInst | null>(null)
 
 watch(showModal, () => {
@@ -74,10 +76,10 @@ const handleAdd = (e: MouseEvent) => {
 <template>
   <n-modal
     v-model:show="showModal"
-    class="custom-card w-[25%]"
+    class="custom-card w-[80%] md:w-[25%]"
     preset="card"
     :title="(state === stateEnum.add ? t('COMMON:add') : t('COMMON:change')) + t('COMMON:tag')"
-    size="huge"
+    size="medium"
     :bordered="false"
   >
     <n-form

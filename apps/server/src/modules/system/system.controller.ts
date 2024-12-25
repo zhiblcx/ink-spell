@@ -133,7 +133,7 @@ export class SystemController {
   @APIResponse(null, '删除成功')
   async deleteSystemAnnouncementAndFeedback(@Param('id') id: number) {
     return new R({
-      message: this.translation.t('prompt.submit_successfully'),
+      message: this.translation.t('prompt.deleted_successfully'),
       data: await this.systemService.deleteSystemAnnouncementAndFeedback(Number(id)),
     })
   }
