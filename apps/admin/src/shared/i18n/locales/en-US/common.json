@@ -54,5 +54,7 @@
   "add_tag": "add tag",
   "tag": " tag",
   "announcement": " announcement",
-  "announcement_text": "announcement text"
+  "announcement_text": "announcement text",
+  "feedback": "反馈",
+  "feedback_text": "feedback text"
 }

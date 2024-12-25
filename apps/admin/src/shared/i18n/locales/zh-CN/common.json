@@ -54,5 +54,7 @@
   "add_tag": "添加标签",
   "tag": "标签",
   "announcement": "公告",
-  "announcement_text": "公告内容"
+  "announcement_text": "公告内容",
+  "feedback": "反馈",
+  "feedback_text": "反馈内容"
 }
