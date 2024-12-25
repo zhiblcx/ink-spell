@@ -28,19 +28,20 @@ export const selectPublicBookShelfQuery = (
   page: number,
   limit: number,
   select?: string,
-  value?: Array<string>,
+  selectValue?: string,
   bookshelfName?: string
 ) => {
-  let path = `&${select}=${value}&bookshelfName=${bookshelfName}`
+  console.log(select, selectValue, bookshelfName)
+  let path = `&${select}=${selectValue}&bookshelfName=${bookshelfName}`
   if (select === undefined && bookshelfName === undefined) {
     path = ''
   } else if (select === undefined) {
     path = `&bookshelfName=${bookshelfName}`
   } else if (bookshelfName === undefined) {
-    path = `&${select}=${value}`
+    path = `&${select}=${selectValue}`
   }
   return useQuery({
-    queryKey: [QueryKeysEnum.BOOKSHELF_KEY, page, limit, select, value, bookshelfName],
+    queryKey: [QueryKeysEnum.BOOKSHELF_KEY, page, limit, select, selectValue, bookshelfName],
     queryFn: () => httpRequest.get(`/bookshelf/public?page=${page}&limit=${limit}${path}`)
   })
 }

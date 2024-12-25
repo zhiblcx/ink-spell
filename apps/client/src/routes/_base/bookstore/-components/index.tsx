@@ -15,27 +15,29 @@ export function BookStoreTable() {
   const languageStore = useLanguageStore()
   const { t } = useTranslation(['AUTH', 'COMMON', 'PROMPT'])
   const [tableParams, setTableParams] = useState<tableParamsType>({
-    pagination: {
-      page: PaginationParamsEnum.PAGE,
-      limit: PaginationParamsEnum.LIMIT,
-      select: undefined,
-      value: undefined,
-      bookshelfName: undefined
-    }
+    page: PaginationParamsEnum.PAGE,
+    limit: PaginationParamsEnum.LIMIT,
+    select: undefined,
+    selectValue: undefined,
+    bookshelfName: undefined
   })
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchedColumn] = useState('')
   const router = useRouter()
   const { data: allTagQuery } = getAllTagQuery()
   const { data: publicBookshelfQuery, isLoading } = selectPublicBookShelfQuery(
-    tableParams.pagination.page,
-    tableParams.pagination.limit,
-    tableParams.pagination.select,
-    tableParams.pagination.value,
-    tableParams.pagination.bookshelfName
+    tableParams.page,
+    tableParams.limit,
+    tableParams.select,
+    tableParams.selectValue,
+    tableParams.bookshelfName
   )
 
-  const onChange: PaginationProps['onChange'] = (page) => (tableParams.pagination.page = page)
+  const onChange: PaginationProps['onChange'] = (page) =>
+    setTableParams({
+      ...tableParams,
+      page: page
+    })
 
   const handleSearch = (
     selectedKeys: string[],
@@ -126,10 +128,9 @@ export function BookStoreTable() {
       width: 200,
       filters: allTagQuery?.data.map((tag: TagType) => ({
         text: languageStore.language === LanguageEnum.Chinese ? tag.nameChinese : tag.nameEnglish,
-        value: languageStore.language === LanguageEnum.Chinese ? tag.nameChinese : tag.nameEnglish
+        value: tag.id
       })),
       filterSearch: true,
-      onFilter: (value, record) => record.tags.includes(value as string),
       filterIcon: (filtered: boolean) => (
         <FilterFilled style={{ color: filtered ? '#1677ff' : undefined }} />
       ),
@@ -163,7 +164,7 @@ export function BookStoreTable() {
       username: bookshelf.user.username,
       userId: bookshelf.user.id,
       bookshelf_description: bookshelf.description ?? t('COMMON:no_description'),
-      tags: bookshelf.tags.map((tag) =>
+      tags: bookshelf.tags.map((tag: any) =>
         languageStore.language === LanguageEnum.Chinese ? tag.nameChinese : tag.nameEnglish
       ),
       cover: bookshelf.cover
@@ -172,36 +173,33 @@ export function BookStoreTable() {
 
   const handleTableChange: TableProps<DataType>['onChange'] = (_, filters) => {
     if (filters.bookshelf_name !== null) {
-      setTableParams({
-        pagination: {
-          ...tableParams.pagination,
-          bookshelfName: filters.bookshelf_name[0] as string
-        }
-      })
-    } else if (filters.tags !== null) {
-      setTableParams({
-        pagination: {
-          ...tableParams.pagination,
-          select: languageStore.language === LanguageEnum.Chinese ? 'nameEnglish' : 'nameChinese',
-          value: filters.tags as Array<string>
-        }
-      })
+      setTableParams((prev) => ({
+        ...prev,
+        bookshelfName: filters.bookshelf_name![0] as string
+      }))
     }
+
     if (filters.tags !== null) {
-      setTableParams({
-        pagination: {
-          ...tableParams.pagination,
-          select: undefined
-        }
-      })
+      setTableParams((prev) => ({
+        ...prev,
+        select: 'tagsId',
+        selectValue: filters.tags!.join(',')
+      }))
     }
+
+    if (filters.tags === null) {
+      setTableParams((prev) => ({
+        ...prev,
+        select: undefined,
+        selectValue: undefined
+      }))
+    }
+
     if (filters.bookshelf_name === null) {
-      setTableParams({
-        pagination: {
-          ...tableParams.pagination,
-          bookshelfName: undefined
-        }
-      })
+      setTableParams((prev) => ({
+        ...prev,
+        bookshelfName: undefined
+      }))
     }
   }
   return (
@@ -216,12 +214,12 @@ export function BookStoreTable() {
         size="middle"
         pagination={{
           onChange: onChange,
-          defaultCurrent: tableParams.pagination.page,
+          defaultCurrent: tableParams.page,
           position: ['none', 'bottomCenter'],
           hideOnSinglePage: true,
           showQuickJumper: true,
-          total: publicBookshelfQuery?.data?.totalPages * tableParams.pagination.limit,
-          defaultPageSize: tableParams.pagination.limit
+          total: publicBookshelfQuery?.data?.totalPages * tableParams.limit,
+          defaultPageSize: tableParams.limit
         }}
       />
     </div>

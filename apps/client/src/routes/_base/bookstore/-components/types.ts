@@ -9,13 +9,11 @@ export interface DataType {
 }
 
 export interface tableParamsType {
-  pagination: {
-    page: number
-    limit: number
-    select: string | undefined
-    value: Array<string> | undefined
-    bookshelfName: string | undefined
-  }
+  page: number
+  limit: number
+  select: string | undefined
+  selectValue: string | undefined
+  bookshelfName: string | undefined
 }
 
 export type DataIndex = keyof DataType
