@@ -41,6 +41,6 @@ export const selectPublicBookShelfQuery = (
   }
   return useQuery({
     queryKey: [QueryKeysEnum.BOOKSHELF_KEY, page, limit, select, value, bookshelfName],
-    queryFn: () => httpRequest.get(`/bookshelf/public/?page=${page}&limit=${limit}${path}`)
+    queryFn: () => httpRequest.get(`/bookshelf/public?page=${page}&limit=${limit}${path}`)
   })
 }

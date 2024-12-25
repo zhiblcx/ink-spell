@@ -7,7 +7,7 @@ import {
 } from '@/shared/constants'
 import { AuthUtils } from '@/shared/utils'
 import type { MenuProps } from 'antd'
-import { RecentlyRead, SystemFeedback, SystemRate } from './'
+import { AnnouncementModal, RecentlyRead, SystemFeedback, SystemRate } from './'
 
 interface AvatarItemsType {
   setOpenFlag: React.Dispatch<React.SetStateAction<boolean>>
@@ -20,10 +20,11 @@ export function AvatarItems({ setOpenFlag, avatar }: AvatarItemsType) {
   const [open, setOpen] = useState(false)
   const [rateOpen, setRateOpen] = useState(false)
   const [feedbackOpen, setFeedbackOpen] = useState(false)
+  const [announcementOpen, setAnnouncementOpen] = useState(false)
   const items: MenuProps['items'] = [
     {
       key: 'announcement',
-      label: <div onClick={() => setRateOpen(true)}>{t('COMMON:announcement')}</div>
+      label: <div onClick={() => setAnnouncementOpen(true)}>{t('COMMON:announcement')}</div>
     },
     {
       key: PERSON_INFO.label,
@@ -92,6 +93,11 @@ export function AvatarItems({ setOpenFlag, avatar }: AvatarItemsType) {
           size={34}
         />
       </Dropdown>
+
+      <AnnouncementModal
+        open={announcementOpen}
+        setOpen={setAnnouncementOpen}
+      />
 
       <RecentlyRead
         open={open}
