@@ -22,8 +22,8 @@ export function AnnouncementModal({ open, setOpen }: AnnouncementModalProps) {
 
   const [tableParams] = useState<tableParamsType>({
     pagination: {
-      page: 1,
-      limit: 20
+      page: PaginationParamsEnum.PAGE,
+      limit: PaginationParamsEnum.LIMIT
     }
   })
 

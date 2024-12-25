@@ -16,8 +16,8 @@ export function BookStoreTable() {
   const { t } = useTranslation(['AUTH', 'COMMON', 'PROMPT'])
   const [tableParams, setTableParams] = useState<tableParamsType>({
     pagination: {
-      page: 1,
-      limit: 20,
+      page: PaginationParamsEnum.PAGE,
+      limit: PaginationParamsEnum.LIMIT,
       select: undefined,
       value: undefined,
       bookshelfName: undefined
