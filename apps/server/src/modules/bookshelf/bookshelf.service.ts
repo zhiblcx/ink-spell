@@ -2,7 +2,6 @@ import { appConfig } from '@/config/AppConfig';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { TranslationService } from '../translation/translation.service';
-import { isDataURI } from 'class-validator';
 @Injectable()
 export class BookshelfService {
   constructor(
@@ -120,17 +119,15 @@ export class BookshelfService {
     page: number,
     limit: number,
     bookshelfName?: string,
-    nameChinese?: Array<string>,
-    nameEnglish?: Array<string>
+    tagsId?: string
   ) {
     return await this.prisma.bookShelf.findMany({
       where: {
         label: { contains: bookshelfName },
-        tags: (nameChinese === undefined && nameEnglish === undefined) ? {} : {
+        tags: (tagsId === undefined) ? {} : {
           some: {
-            nameChinese: { in: nameChinese },
-            nameEnglish: { in: nameEnglish },
-          },
+            id: { in: tagsId?.split(',').map(tagId => (parseInt(tagId))) }
+          }
         },
         isDelete: false,
         isPublic: true
@@ -150,16 +147,14 @@ export class BookshelfService {
   async getPublicBookShelfCount(
     limit: number,
     bookshelfName?: string,
-    nameChinese?: Array<string>,
-    nameEnglish?: Array<string>
+    tagsId?: string
   ) {
     return Math.ceil(await this.prisma.bookShelf.count({
       where: {
         label: { contains: bookshelfName },
-        tags: (nameChinese === undefined && nameEnglish === undefined) ? {} : {
+        tags: (tagsId === undefined) ? {} : {
           some: {
-            nameChinese: { in: nameChinese },
-            nameEnglish: { in: nameEnglish },
+            id: { in: tagsId?.split(',').map(tagId => (parseInt(tagId))) }
           }
         },
         isDelete: false,

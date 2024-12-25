@@ -14,6 +14,14 @@ export const nameEnglishQuery = {
   required: false
 }
 
+export const tagsIdQuery = {
+  type: String,
+  example: "1,2,3",
+  description: "标签id",
+  name: "tagsId",
+  required: false
+}
+
 export const nameChineseArrayQuery = {
   type: Array<string>,
   example: "['重生']",
