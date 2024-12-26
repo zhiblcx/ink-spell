@@ -1,5 +1,6 @@
 import { getReadHistoryQuery } from '@/features/read-history'
 import { ReadHistoryVo } from '@/features/read-history/types'
+import { Ink } from '@/shared/types'
 import { BookUtils } from '@/shared/utils'
 import { TransformTimeUtils } from '@ink-spell/utils'
 import React, { Dispatch, SetStateAction } from 'react'
@@ -30,7 +31,10 @@ export function RecentlyRead({ open, setOpen }: RecentlyReadProps) {
           <ul className="space-y-1">
             {recentlyBook?.data.map((item: ReadHistoryVo) => (
               <React.Fragment key={item.id}>
-                <li className="flex cursor-pointer justify-between rounded-xl p-2 hover:bg-[#ececec] dark:hover:bg-[#3a3a3a]">
+                <li
+                  className="flex cursor-pointer justify-between rounded-xl p-2 hover:bg-[#ececec] dark:hover:bg-[#3a3a3a]"
+                  onClick={() => BookUtils.redirectToBookPage(item.book as Ink)}
+                >
                   <img
                     src={import.meta.env.VITE_SERVER_URL + item.book.cover}
                     className="w-[70px] origin-center rounded-xl object-cover"
