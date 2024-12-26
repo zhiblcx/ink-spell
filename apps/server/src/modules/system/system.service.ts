@@ -20,9 +20,7 @@ export class SystemService {
         isDelete: false,
         type: SystemConstant.type.USER_ANNOUNCEMENT
       },
-      orderBy: {
-        createTimer: "desc"
-      }
+      orderBy: { createTimer: "desc" }
     })
   }
 
@@ -32,9 +30,7 @@ export class SystemService {
         type: SystemConstant.type.ANNOUNCEMENT,
         isDelete: false
       },
-      orderBy: {
-        createTimer: "desc"
-      },
+      orderBy: { createTimer: "desc" },
       skip: (page - 1) * limit,
       take: limit
     })
@@ -46,9 +42,7 @@ export class SystemService {
         type: SystemConstant.type.FEEDBACK,
         isDelete: false
       },
-      orderBy: {
-        createTimer: "desc"
-      },
+      orderBy: { createTimer: "desc" },
       skip: (page - 1) * limit,
       take: limit
     })
@@ -115,11 +109,10 @@ export class SystemService {
   }
 
   async putSystemAnnouncementRead(id: number) {
+    console.log(id)
     return await this.prisma.system.update({
       where: { id },
-      data: {
-        status: SystemConstant.status.READ
-      }
+      data: { status: SystemConstant.status.READ }
     })
   }
 
@@ -134,12 +127,8 @@ export class SystemService {
 
   async putSystemAnnouncement(id: number, systemAnnouncementDto: SystemAnnouncementDto) {
     return await this.prisma.system.update({
-      where: {
-        id: id
-      },
-      data: {
-        text: systemAnnouncementDto.text
-      }
+      where: { id: id },
+      data: { text: systemAnnouncementDto.text }
     })
   }
 
