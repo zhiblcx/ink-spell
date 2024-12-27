@@ -113,7 +113,7 @@ export function BookShelfList({ books, setBooks, options, query }: BookShelfList
                       key="ellipsis"
                       onClick={() => {
                         createReadHistoryMutate(item.id)
-                        BookUtils.redirectToBookPage(item)
+                        BookUtils.redirectToBookPage(item.id)
                       }}
                     />
                   ]}

@@ -166,20 +166,20 @@ export class BookUtils {
    * @param {Ink} book - 书籍信息
    * @example
    * ```ts
-   * BookUtils.redirectToBookPage(book)
+   * BookUtils.redirectToBookPage(bookId)
    * ```
    */
-  static redirectToBookPage(book: Ink) {
+  static redirectToBookPage(bookId: number) {
     const localBooks = JSON.parse(BookUtils.getBooks() ?? '[]')
     let chapter = -1
     if (localBooks.length !== 0) {
-      const ink = localBooks.find((item: Array<string>) => parseInt(item[0]) === book.id)
+      const ink = localBooks.find((item: Array<string>) => parseInt(item[0]) === bookId)
       if (ink !== undefined) {
         chapter = ink[1].currentChapter
       }
     }
     window.open(
-      `/book/${UrlUtils.encodeUrlById(book.id.toString())}?chapter=${chapter != -1 ? UrlUtils.encodeUrlById(chapter.toString()) : UrlUtils.encodeUrlById('1')}`,
+      `/book/${UrlUtils.encodeUrlById(bookId.toString())}?chapter=${chapter != -1 ? UrlUtils.encodeUrlById(chapter.toString()) : UrlUtils.encodeUrlById('1')}`,
       '_blank'
     )
   }

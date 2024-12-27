@@ -2,18 +2,12 @@ import { selectBookByBookIdQuery, showBookMarkQuery } from '@/features/book'
 import { Content, Sidebar } from '@/features/layouts/ReadLayout'
 import { updateReadHistoryMutation } from '@/features/read-history'
 import { useSetUpStore } from '@/shared/store/SetupStore'
+import { IndexedDBBookType } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils'
 import { IndexedDB } from '@/shared/utils/IndexedDBUtils'
 
 interface BookChapterType {
   chapter: number
-}
-
-interface selectBookDataType {
-  id: number | undefined
-  chapter: Array<string>
-  content: Array<string[]>
-  bookName: string
 }
 
 export const Route = createLazyFileRoute('/_public/book/$bookId')({
@@ -26,11 +20,12 @@ function Page() {
   const bookID = parseInt(UrlUtils.decodeUrlById(Route.useParams().bookId))
   const currentChapter = parseInt(UrlUtils.decodeUrlById(chapter.toString()))
   const [loading, setLoading] = useState<boolean>(true)
-  const [selectBookData, setSelectBookData] = useState<selectBookDataType>({
+  const [selectBookData, setSelectBookData] = useState<IndexedDBBookType>({
     id: undefined,
     chapter: [],
     content: [],
-    bookName: ''
+    bookName: '',
+    createTimer: 0
   })
   const { data: selectBookByBookIdData, refetch } = selectBookByBookIdQuery(bookID)
   const { data: showBookMarkData } = showBookMarkQuery(bookID)
@@ -44,6 +39,7 @@ function Page() {
     if (selectBookByBookIdData?.code === 200) {
       setSelectBookData(selectBookByBookIdData.data)
       setLoading(false)
+      saveBookIndexedDB()
     }
   }, [selectBookByBookIdData])
 
@@ -52,21 +48,19 @@ function Page() {
     if (data === undefined) {
       refetch()
     } else {
+      saveBookIndexedDB()
       setSelectBookData(data)
       setLoading(false)
     }
-    saveBookIndexedDB()
   }
 
   async function saveBookIndexedDB() {
     // 判断 indexedDB 是否该书籍，没有该书籍，存储
     if ((await IndexedDB.read(bookID)) === undefined) {
-      if (selectBookByBookIdData?.code === 200) {
-        IndexedDB.add({
-          id: bookID,
-          ...selectBookByBookIdData?.data
-        })
-      }
+      IndexedDB.add({
+        id: bookID,
+        ...selectBookByBookIdData?.data
+      })
     } else {
       // 如果有该书籍，刷新时间
       IndexedDB.update(bookID)

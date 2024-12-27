@@ -86,7 +86,7 @@ export default function InkCard({
             )}
             onClick={() => {
               createReadHistoryMutate(book.id)
-              BookUtils.redirectToBookPage(book)
+              BookUtils.redirectToBookPage(book.id)
             }}
           >
             <img

@@ -1,3 +1,5 @@
+import { IndexedDBBookType } from "../types"
+
 export class IndexedDB {
   static readonly #DATABASE_NAME: string = "ink_spell"
   static readonly #VERSION: number = 1
@@ -5,17 +7,17 @@ export class IndexedDB {
   static readonly #BOOK_CONTENT_INDEX: string = "book_content_index"
   static readonly #SAVE_TIMER: number = 1000 * 60 * 60 * 24 * 15
 
-  static db: IDBDatabase | null = null;
+  static db: IDBDatabase | undefined = undefined;
   static db_table: IDBObjectStore | undefined = undefined
-  static store: IDBObjectStore | undefined
+  static store: IDBObjectStore | undefined = undefined
 
   static async ensureDBAndStore() {
-    if (this.db == null) {
+    if (!this.db) {
       await this.openDB();
     }
-
-    if (this.store == undefined) {
-      this.store = this.db?.transaction([this.#BOOK_CONTENT], 'readwrite').objectStore(this.#BOOK_CONTENT);
+    if (!this.store) {
+      const transaction = await this.db?.transaction([this.#BOOK_CONTENT], 'readwrite')
+      this.store = transaction?.objectStore(this.#BOOK_CONTENT);
     }
   }
 
@@ -87,14 +89,13 @@ export class IndexedDB {
    */
   static async read(id: number): Promise<any> {
     await this.ensureDBAndStore()
+
     return new Promise(async (resolve, reject) => {
       const request = this.store?.get(id)
       if (request) {
         request.onsuccess = (event) => {
           if (event.target instanceof IDBRequest) {
             resolve(event.target.result)
-          } else {
-            reject()
           }
         }
         request.onerror = (error) => reject(error)
@@ -146,6 +147,32 @@ export class IndexedDB {
       if (request) {
         request.onsuccess = () => resolve()
         request.onerror = (event) => reject(event)
+      }
+    })
+  }
+
+  /**
+   * @description  读取全部数据
+   * ```ts
+   * IndexedDB.findAll()
+   * ```
+   */
+  static async findAll() {
+    await this.ensureDBAndStore()
+
+    return new Promise((resolve, reject) => {
+      const request = this.store?.index(this.#BOOK_CONTENT_INDEX).getAll()
+      if (request) {
+        request.onsuccess = (event) => {
+          if (event.target instanceof IDBRequest) {
+            const result = event.target.result
+            result.sort((a: IndexedDBBookType, b: IndexedDBBookType) => b.createTimer - a.createTimer)
+            resolve(result)
+          } else {
+            reject()
+          }
+        }
+        request.onerror = (error) => reject(error)
       }
     })
   }
