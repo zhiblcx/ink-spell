@@ -42,7 +42,7 @@ export function Page() {
   }
 
   useEffect(() => {
-    if (!isLoading && announcementUserData?.data.status != SystemConstant.status.READ) {
+    if (!isLoading && announcementUserData?.data.status == SystemConstant.status.UNREAD) {
       openNotification()
     }
   }, [isLoading])

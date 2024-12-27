@@ -3,9 +3,17 @@ import { Content, Sidebar } from '@/features/layouts/ReadLayout'
 import { updateReadHistoryMutation } from '@/features/read-history'
 import { useSetUpStore } from '@/shared/store/SetupStore'
 import { UrlUtils } from '@/shared/utils'
+import { IndexedDB } from '@/shared/utils/IndexedDBUtils'
 
 interface BookChapterType {
   chapter: number
+}
+
+interface selectBookDataType {
+  id: number | undefined
+  chapter: Array<string>
+  content: Array<string[]>
+  bookName: string
 }
 
 export const Route = createLazyFileRoute('/_public/book/$bookId')({
@@ -14,16 +22,61 @@ export const Route = createLazyFileRoute('/_public/book/$bookId')({
 
 function Page() {
   const { chapter } = Route.useSearch<BookChapterType>()
+  const { setup } = useSetUpStore()
   const bookID = parseInt(UrlUtils.decodeUrlById(Route.useParams().bookId))
   const currentChapter = parseInt(UrlUtils.decodeUrlById(chapter.toString()))
-  const { setup } = useSetUpStore()
-  const { data: query, isLoading } = selectBookByBookIdQuery(bookID)
-  const { data: bookMark } = showBookMarkQuery(bookID)
-  const { mutate } = updateReadHistoryMutation()
-  window.addEventListener('beforeunload', () => mutate(bookID))
+  const [loading, setLoading] = useState<boolean>(true)
+  const [selectBookData, setSelectBookData] = useState<selectBookDataType>({
+    id: undefined,
+    chapter: [],
+    content: [],
+    bookName: ''
+  })
+  const { data: selectBookByBookIdData, refetch } = selectBookByBookIdQuery(bookID)
+  const { data: showBookMarkData } = showBookMarkQuery(bookID)
+  const { mutate: updateReadHistoryMutate } = updateReadHistoryMutation()
+
+  useEffect(() => {
+    initData()
+  }, [])
+
+  useEffect(() => {
+    if (selectBookByBookIdData?.code === 200) {
+      setSelectBookData(selectBookByBookIdData.data)
+      setLoading(false)
+    }
+  }, [selectBookByBookIdData])
+
+  async function initData() {
+    const data = await IndexedDB.read(bookID)
+    if (data === undefined) {
+      refetch()
+    } else {
+      setSelectBookData(data)
+      setLoading(false)
+    }
+    saveBookIndexedDB()
+  }
+
+  async function saveBookIndexedDB() {
+    // 判断 indexedDB 是否该书籍，没有该书籍，存储
+    if ((await IndexedDB.read(bookID)) === undefined) {
+      if (selectBookByBookIdData?.code === 200) {
+        IndexedDB.add({
+          id: bookID,
+          ...selectBookByBookIdData?.data
+        })
+      }
+    } else {
+      // 如果有该书籍，刷新时间
+      IndexedDB.update(bookID)
+    }
+  }
+
+  window.addEventListener('beforeunload', () => updateReadHistoryMutate(bookID))
   return (
     <>
-      {isLoading ? (
+      {loading ? (
         <Skeleton
           className="mt-10 p-5"
           active
@@ -40,17 +93,17 @@ function Page() {
         >
           <Sidebar
             bookId={bookID}
-            bookMark={bookMark?.data.bookmark}
-            bookName={query?.data.bookName}
-            allChapter={query?.data.chapter}
+            bookMark={showBookMarkData?.data.bookmark ?? []}
+            bookName={selectBookData?.bookName}
+            allChapter={selectBookData?.chapter}
             currentChapter={currentChapter - 1}
           />
           <Content
             bookId={bookID}
-            bookMark={bookMark?.data.bookmark}
-            allChapterTotal={query?.data.chapter.length}
-            currentChapter={query?.data.chapter[currentChapter - 1]}
-            currentContent={query?.data.content[currentChapter - 1]}
+            bookMark={showBookMarkData?.data.bookmark ?? []}
+            allChapterTotal={selectBookData?.chapter.length}
+            currentChapter={selectBookData?.chapter[currentChapter - 1]}
+            currentContent={selectBookData?.content[currentChapter - 1]}
           />
         </div>
       )}

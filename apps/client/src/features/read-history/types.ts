@@ -5,5 +5,5 @@ export interface ReadHistoryVo {
   startTime: Date;
   endTime: Date;
   readTime: number;
-  book: Book
+  book: Book,
 }

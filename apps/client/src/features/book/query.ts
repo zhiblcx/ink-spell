@@ -4,7 +4,8 @@ import { QueryKeysEnum } from '@/shared/enums'
 export const selectBookByBookIdQuery = (bookID: number) =>
   useQuery({
     queryKey: [QueryKeysEnum.BOOK_KEY, bookID],
-    queryFn: () => httpRequest.get(`/book/${bookID}`)
+    queryFn: () => httpRequest.get(`/book/${bookID}`),
+    enabled: false
   })
 
 export const showBookMarkQuery = (bookID: number) =>
