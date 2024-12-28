@@ -1,5 +1,8 @@
 {
   "author": "author",
   "main_character": "main character",
-  "description": "description"
+  "description": "description",
+  "user": "user",
+  "join_chatroom": "Joined the chat room",
+  "leave_chatroom": "left the chat room"
 }

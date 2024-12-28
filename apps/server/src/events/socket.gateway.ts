@@ -116,7 +116,7 @@ export class SocketGateway {
         const data = {
           id: dayjs().valueOf(),
           userId: id,
-          text: `用户：${nextRequest.name}离开了聊天室`,
+          text: `${this.translation.t("common.user")}：${nextRequest.name}${this.translation.t("common.leave_chatroom")}}`,
           type: MessageEnum.LEAVE,
           createTimer: new Date()
         };
@@ -186,7 +186,7 @@ export class SocketGateway {
         const data = {
           id: dayjs().valueOf(),
           userId: id,
-          text: `用户：${nextRequest.name}加入了聊天室`,
+          text: `${this.translation.t("common.user")}：${nextRequest.name}${this.translation.t("common.join_chatroom")}`,
           type: MessageEnum.JOIN,
           createTimer: new Date()
         };

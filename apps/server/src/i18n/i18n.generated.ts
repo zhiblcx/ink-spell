@@ -18,6 +18,9 @@ export type I18nTranslations = {
         "author": string;
         "main_character": string;
         "description": string;
+        "user": string;
+        "join_chatroom": string;
+        "leave_chatroom": string;
     };
     "prompt": {
         "refresh_successful": string;

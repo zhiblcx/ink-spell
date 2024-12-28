@@ -1,5 +1,8 @@
 {
   "author": "作者",
   "main_character": "主角",
-  "description": "描述"
+  "description": "描述",
+  "user": "用户",
+  "join_chatroom": "加入了聊天室",
+  "leave_chatroom": "离开了聊天室"
 }
