@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import { APP_NAME } from '@/shared/constants/app.ts'
 import { ThemeEnum } from '@/shared/enums/ThemeEnum'
 import { useLanguageStore, useThemeStore } from '@/shared/store'
 import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
+import { useTranslation } from 'i18next-vue'
 import { ConfigProviderProps, createDiscreteApi, darkTheme, dateZhCN, zhCN } from 'naive-ui'
 import { LoadingBarInst } from 'naive-ui/es/loading-bar/src/LoadingBarProvider'
 import { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider'
 import { LanguageEnum } from './shared/enums/LanguageEnum'
+const { t } = useTranslation(['COMMON'])
 
 declare global {
   interface Window {
@@ -22,6 +25,10 @@ const configProviderPropsRef = computed<ConfigProviderProps>(() => ({
 }))
 const { message, loadingBar } = createDiscreteApi(['message', 'loadingBar'], {
   configProviderProps: configProviderPropsRef
+})
+
+onMounted(() => {
+  document.title = `${APP_NAME} ${t('back_stage_management')}`
 })
 
 window.$message = message

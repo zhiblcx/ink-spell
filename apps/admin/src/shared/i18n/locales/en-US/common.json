@@ -55,6 +55,7 @@
   "tag": " tag",
   "announcement": " announcement",
   "announcement_text": "announcement text",
-  "feedback": "反馈",
-  "feedback_text": "feedback text"
+  "feedback": "feedback",
+  "feedback_text": "feedback text",
+  "back_stage_management": "backStage management"
 }
