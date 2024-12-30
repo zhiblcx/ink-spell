@@ -7,6 +7,7 @@
 **apps**
 
 - client: Front-end client application based on React and Vite.
+- admin: Front-end admin application based on Vue and Vite.
 - server: Back-end server based on Next.js.
 
 ## function
@@ -29,6 +30,8 @@
 
 ## design sketch
 
+**client**
+
 ![](./assets/images/login-design.png)
 
 ![](./assets/images/home-design.png)
@@ -36,6 +39,14 @@
 ![](./assets/images/otherBookShelf-design.png)
 
 ![](./assets/images/readBook-design.png)
+
+**admin**
+
+![](./assets/images/tag-management-design.png)
+
+![](./assets/images/admin-home-design.png)
+
+![](./assets/images/admin-login-design.png)
 
 ## License
 
