@@ -121,6 +121,16 @@ export class BookshelfController {
   }
   // #endregion
 
+  @Get("/recommend")
+  @ApiOperation({ summary: "获取推荐书架" })
+  @APIResponse([AllBookShelfInfoVo], '查询成功')
+  async getRecommendBookshelf(@Request() req) {
+    return new R({
+      message: this.translation.t("prompt.acquire_successful"),
+      data: await this.bookshelfService.getRecommendBookshelf(Number(req.user.userId)),
+    })
+  }
+
   @Get('/download/:bookShelfId')
   @ApiOperation({ summary: '下载书架书籍笔记' })
   @HttpCode(HttpStatus.OK)

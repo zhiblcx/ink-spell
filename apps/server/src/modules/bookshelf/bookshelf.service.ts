@@ -163,6 +163,63 @@ export class BookshelfService {
     }) / limit)
   }
 
+
+
+  async getRecommendBookshelf(userId: number) {
+
+    // 首先找到用户的喜爱的三个标签
+    const collectBookshelf = await this.prisma.collectBookShelf.findMany({
+      where: {
+        isDelete: false,
+        userId: userId,
+      },
+      include: {
+        bookShelf: {
+          include: {
+            tags: true
+          }
+        }
+      }
+    })
+    const tags = collectBookshelf.map(item => item.bookShelf.tags).flat().map(item => item.id)
+
+    const idCounts = tags.reduce((acc, id) => {
+      acc[id] = (acc[id] || 0) + 1
+      return acc
+    }, {})
+
+    // 将id和它们出现的次数转换为一个数组
+    const idCountsArray = Object.entries(idCounts)
+
+    // 按照出现次数降序排序
+    idCountsArray.sort((a, b) => Number(b[1]) - Number(a[1]))
+
+    // 选出出现次数最多的三个id
+    const topThreeIds = idCountsArray.slice(0, 3).map(([id]) => id);
+
+    return await this.prisma.bookShelf.findMany({
+      where: {
+        tags: {
+          some: {
+            id: { in: topThreeIds.map(id => parseInt(id)) }
+          }
+        },
+        isDelete: false,
+        isPublic: true
+      },
+      include: {
+        tags: {
+          where: {
+            isDelete: false
+          }
+        },
+        user: true
+      },
+      take: 50,
+    })
+  }
+
+
   async getAllBookInfo(page: number, limit: number, username: string | undefined, bookshelfName: string | undefined) {
     const bookShelfs = await this.prisma.bookShelf.findMany({
       where: {
