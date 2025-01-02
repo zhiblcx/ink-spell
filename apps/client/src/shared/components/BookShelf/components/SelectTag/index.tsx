@@ -17,7 +17,6 @@ export default function SelectTag({ form, tags }: SelectTagProps) {
   const currentTags = tags?.map((tag: TagType) => tag.id)
   const [value, setValue] = useState<number[]>(currentTags ?? [])
 
-  console.log(tags)
   useEffect(() => {
     setValue(currentTags ?? [])
     form.setFieldValue('tags', currentTags)

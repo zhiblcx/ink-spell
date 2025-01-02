@@ -12,3 +12,9 @@ export type BookShelfType = {
   userId: number,
   tags?: Array<TagType> | Array<number>
 }
+
+export type UserCollectType = {
+  id: number
+  userId: number
+  bookShelfId: number
+}

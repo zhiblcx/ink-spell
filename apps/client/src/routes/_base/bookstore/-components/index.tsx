@@ -1,10 +1,16 @@
-import { PublicBookshelfDao, selectPublicBookShelfQuery } from '@/features/bookshelf'
+import {
+  cancelCollectBookShelfMutation,
+  collectBookShelfMutation,
+  PublicBookshelfDao,
+  selectPublicBookShelfQuery,
+  selectUserCollectBookShelfQuery
+} from '@/features/bookshelf'
 import { getAllTagQuery } from '@/features/tag'
 import { DEFAULT_TAG_COLORS } from '@/shared/constants/app'
 import { useLanguageStore } from '@/shared/store'
-import { TagType } from '@/shared/types'
+import { TagType, UserCollectType } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils'
-import { FilterFilled, SearchOutlined } from '@ant-design/icons'
+import { FilterFilled, SearchOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
 import type { PaginationProps, TableColumnType } from 'antd'
 import { Input, Table, TableProps } from 'antd'
 import type { FilterDropdownProps } from 'antd/es/table/interface'
@@ -31,6 +37,26 @@ export function BookStoreTable() {
     tableParams.select,
     tableParams.selectValue,
     tableParams.bookshelfName
+  )
+
+  const queryClient = useQueryClient()
+
+  // 收藏书架
+  const { mutate: collectShelfMutate } = collectBookShelfMutation(() =>
+    queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.USER_COLLECT_KEY] })
+  )
+
+  // 取消收藏书架
+  const { mutate: cancelCollectShelfMutate } = cancelCollectBookShelfMutation(() =>
+    queryClient.invalidateQueries({ queryKey: [QueryKeysEnum.USER_COLLECT_KEY] })
+  )
+
+  const { data: userCollectQuery } = selectUserCollectBookShelfQuery()
+  const userCollectBookShelfIds = userCollectQuery?.data.reduce(
+    (acc: Array<number>, item: UserCollectType) => {
+      return acc.concat(item.bookShelfId)
+    },
+    []
   )
 
   const onChange: PaginationProps['onChange'] = (page) =>
@@ -88,6 +114,34 @@ export function BookStoreTable() {
   })
 
   const columns: TableProps<DataType>['columns'] = [
+    {
+      title: t('COMMON:operate'),
+      dataIndex: 'operate',
+      width: 30,
+      render: (_, { key }) => {
+        return (
+          <div className="text-center">
+            {userCollectBookShelfIds.includes(key) ? (
+              <StarFilled
+                style={{ color: 'rgb(253 224 71)' }}
+                key={key}
+                onClick={() =>
+                  cancelCollectShelfMutate(
+                    userCollectQuery?.data.find((item: UserCollectType) => item.bookShelfId === key)
+                      .id
+                  )
+                }
+              />
+            ) : (
+              <StarOutlined
+                key={key}
+                onClick={() => collectShelfMutate(key)}
+              />
+            )}
+          </div>
+        )
+      }
+    },
     {
       title: t('COMMON:bookshelf_name'),
       dataIndex: 'bookshelf_name',

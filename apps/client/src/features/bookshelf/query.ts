@@ -31,7 +31,6 @@ export const selectPublicBookShelfQuery = (
   selectValue?: string,
   bookshelfName?: string
 ) => {
-  console.log(select, selectValue, bookshelfName)
   let path = `&${select}=${selectValue}&bookshelfName=${bookshelfName}`
   if (select === undefined && bookshelfName === undefined) {
     path = ''

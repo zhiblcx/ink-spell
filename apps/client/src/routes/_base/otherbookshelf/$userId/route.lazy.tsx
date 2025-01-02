@@ -4,17 +4,12 @@ import {
   selectUserCollectBookShelfByUserIdQuery,
   selectUserCollectBookShelfQuery
 } from '@/features/bookshelf'
+import { UserCollectType } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils'
 
 export const Route = createLazyFileRoute('/_base/otherbookshelf/$userId')({
   component: () => <Page />
 })
-
-interface UserCollectType {
-  id: number
-  userId: number
-  bookShelfId: number
-}
 
 export function Page() {
   const { t } = useTranslation(['PROMPT'])
