@@ -3,6 +3,7 @@ import {
   collectBookShelfMutation,
   PublicBookshelfDao,
   selectPublicBookShelfQuery,
+  selectRecommendBookShelfQuery,
   selectUserCollectBookShelfQuery
 } from '@/features/bookshelf'
 import { getAllTagQuery } from '@/features/tag'
@@ -10,10 +11,18 @@ import { DEFAULT_TAG_COLORS } from '@/shared/constants/app'
 import { useLanguageStore } from '@/shared/store'
 import { TagType, UserCollectType } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils'
-import { FilterFilled, SearchOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
+import {
+  FilterFilled,
+  FireOutlined,
+  ReadOutlined,
+  SearchOutlined,
+  StarFilled,
+  StarOutlined
+} from '@ant-design/icons'
 import type { PaginationProps, TableColumnType } from 'antd'
 import { Input, Table, TableProps } from 'antd'
 import type { FilterDropdownProps } from 'antd/es/table/interface'
+import clsx from 'clsx'
 import Highlighter from 'react-highlight-words'
 import { DataIndex, DataType, tableParamsType } from './types'
 
@@ -38,6 +47,8 @@ export function BookStoreTable() {
     tableParams.selectValue,
     tableParams.bookshelfName
   )
+  const { data: recommendBookshelfQuery, isLoading: recommendIsLoading } =
+    selectRecommendBookShelfQuery()
 
   const queryClient = useQueryClient()
 
@@ -211,8 +222,8 @@ export function BookStoreTable() {
     }
   ]
 
-  const data: DataType[] = publicBookshelfQuery?.data?.items?.map(
-    (bookshelf: PublicBookshelfDao) => ({
+  const data: DataType[] =
+    publicBookshelfQuery?.data?.items?.map((bookshelf: PublicBookshelfDao) => ({
       key: bookshelf.id,
       bookshelf_name: bookshelf.label,
       username: bookshelf.user.username,
@@ -222,14 +233,31 @@ export function BookStoreTable() {
         languageStore.language === LanguageEnum.Chinese ? tag.nameChinese : tag.nameEnglish
       ),
       cover: bookshelf.cover
-    })
-  )
+    })) ?? []
+
+  const recommendData: DataType[] =
+    recommendBookshelfQuery?.data?.map((bookshelf: PublicBookshelfDao) => ({
+      key: bookshelf.id,
+      bookshelf_name: bookshelf.label,
+      username: bookshelf.user.username,
+      userId: bookshelf.user.id,
+      bookshelf_description: bookshelf.description ?? t('COMMON:no_description'),
+      tags: bookshelf.tags.map((tag: any) =>
+        languageStore.language === LanguageEnum.Chinese ? tag.nameChinese : tag.nameEnglish
+      ),
+      cover: bookshelf.cover
+    })) ?? []
 
   const handleTableChange: TableProps<DataType>['onChange'] = (_, filters) => {
     if (filters.bookshelf_name !== null) {
       setTableParams((prev) => ({
         ...prev,
         bookshelfName: filters.bookshelf_name![0] as string
+      }))
+    } else {
+      setTableParams((prev) => ({
+        ...prev,
+        bookshelfName: undefined
       }))
     }
 
@@ -239,43 +267,66 @@ export function BookStoreTable() {
         select: 'tagsId',
         selectValue: filters.tags!.join(',')
       }))
-    }
-
-    if (filters.tags === null) {
+    } else {
       setTableParams((prev) => ({
         ...prev,
         select: undefined,
         selectValue: undefined
       }))
     }
-
-    if (filters.bookshelf_name === null) {
-      setTableParams((prev) => ({
-        ...prev,
-        bookshelfName: undefined
-      }))
-    }
   }
   return (
-    <div className="absolute w-[85%]">
-      <Table<DataType>
-        tableLayout="fixed"
-        columns={columns}
-        dataSource={data}
-        loading={isLoading}
-        onChange={handleTableChange}
-        scroll={{ x: '100%', y: 100 * 5 }}
-        size="middle"
-        pagination={{
-          onChange: onChange,
-          defaultCurrent: tableParams.page,
-          position: ['none', 'bottomCenter'],
-          hideOnSinglePage: true,
-          showQuickJumper: true,
-          total: publicBookshelfQuery?.data?.totalPages * tableParams.limit,
-          defaultPageSize: tableParams.limit
-        }}
-      />
-    </div>
+    <Tabs
+      defaultActiveKey="1"
+      className={clsx(window.innerWidth > 500 ? null : 'w-[400px]', 'absolute')}
+      onChange={(activeKey: string) => {
+        console.log(activeKey)
+      }}
+      items={[FireOutlined, ReadOutlined].map((Icon, i) => {
+        const id = String(i + 1)
+        const label = id === '1' ? t('COMMON:recommend') : t('COMMON:all')
+        return {
+          key: id,
+          label: label,
+          children:
+            id === '1' ? (
+              <div className={clsx(window.innerWidth > 400 ? 'w-[95%]' : 'w-[40%]')}>
+                <Table<DataType>
+                  tableLayout="fixed"
+                  columns={columns}
+                  dataSource={recommendData}
+                  loading={recommendIsLoading}
+                  onChange={handleTableChange}
+                  scroll={{ x: '100%', y: window.innerWidth > 400 ? 100 * 5 : 95 * 5 }}
+                  size="middle"
+                  pagination={{ pageSize: 10 }}
+                />
+              </div>
+            ) : (
+              <div className={clsx(window.innerWidth > 400 ? 'w-[95%]' : 'w-[40%]')}>
+                <Table<DataType>
+                  tableLayout="fixed"
+                  columns={columns}
+                  dataSource={data}
+                  loading={isLoading}
+                  onChange={handleTableChange}
+                  scroll={{ x: '100%', y: window.innerWidth > 400 ? 100 * 5 : 95 * 5 }}
+                  size="middle"
+                  pagination={{
+                    onChange: onChange,
+                    defaultCurrent: tableParams.page,
+                    position: ['none', 'bottomCenter'],
+                    hideOnSinglePage: true,
+                    showQuickJumper: true,
+                    total: publicBookshelfQuery?.data?.totalPages * tableParams.limit,
+                    defaultPageSize: tableParams.limit
+                  }}
+                />
+              </div>
+            ),
+          icon: <Icon />
+        }
+      })}
+    />
   )
 }

@@ -2,6 +2,7 @@ export enum QueryKeysEnum {
   BOOK_KEY = 'book_key',
   BOOK_MARK_KEY = 'book_mark_key',
   BOOKSHELF_KEY = 'bookshelf_key',
+  RECOMMEND_BOOKSHELF_KEY = "recommend_bookshelf_key",
   BOOKSHELF_BOOK_KEY = 'bookshelf_book_key',
   USER_COLLECT_KEY = 'user_collect_key',
   USER_BOOKSHELF_KEY = 'user-bookshelf_key',
