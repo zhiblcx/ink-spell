@@ -12,8 +12,9 @@ import {
 } from '@nestjs/websockets';
 import * as dayjs from 'dayjs';
 import { Server, Socket } from 'socket.io';
-// @WebSocketGateway是一个装饰器，用于创建WebSocket网关类。WebSocket网关类是用于处理 WebSocket连接和消息的核心组件之一。
-// 它充当WebSocket服务端的中间人，负责处理客户端发起的连接请求，并定义处理不同类型消息的逻辑
+// @WebSocketGateway 是一个装饰器，用于创建 WebSocket 网关类。
+// WebSocket网关类是用于处理 WebSocket 连接和消息的核心组件之一。
+// 它充当 WebSocket 服务端的中间人，负责处理客户端发起的连接请求，并定义处理不同类型消息的逻辑
 @WebSocketGateway({
   cors: {
     origin: '*',

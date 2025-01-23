@@ -1,5 +1,3 @@
-import { ReadHistoryVo } from '@/features/read-history/types'
-import { Ink } from '../types'
 import { UrlUtils } from './UrlUtils'
 
 export class BookUtils {

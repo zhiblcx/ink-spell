@@ -8,17 +8,19 @@ export class IndexedDB {
   static readonly #SAVE_TIMER: number = 1000 * 60 * 60 * 24 * 15
 
   static db: IDBDatabase | undefined = undefined;
-  static db_table: IDBObjectStore | undefined = undefined
-  static store: IDBObjectStore | undefined = undefined
 
-  static async ensureDBAndStore() {
+
+  /**
+ * @description 确保数据库已打开
+ * ```ts
+ * IndexedDB.ensureDB()
+ * ```
+ */
+  static async ensureDB(): Promise<void> {
     if (!this.db) {
       await this.openDB();
     }
-    if (!this.store) {
-      const transaction = await this.db?.transaction([this.#BOOK_CONTENT], 'readwrite')
-      this.store = transaction?.objectStore(this.#BOOK_CONTENT);
-    }
+
   }
 
   /**
@@ -27,9 +29,10 @@ export class IndexedDB {
    * IndexedDB.openDB()
    * ```
    */
-  static openDB() {
+  static openDB(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       let request = window.indexedDB.open(this.#DATABASE_NAME, this.#VERSION);
+
       // 数据仓库打开失败
       request.onerror = (error) => { reject(error) }
 
@@ -45,12 +48,27 @@ export class IndexedDB {
       request.onupgradeneeded = (res) => {
         if (res.target instanceof IDBOpenDBRequest) {
           this.db = res.target.result;
-          resolve()
+          if (!this.db.objectStoreNames.contains(this.#BOOK_CONTENT)) {
+            const store = this.db.createObjectStore(this.#BOOK_CONTENT, { keyPath: 'id' })
+            store.createIndex(this.#BOOK_CONTENT_INDEX, 'createTimer', { unique: false });
+          }
         }
-        this.db_table = IndexedDB.db?.createObjectStore(this.#BOOK_CONTENT, { keyPath: 'id' });
-        this.db_table?.createIndex(this.#BOOK_CONTENT_INDEX, 'createTimer', { unique: false });
       };
     })
+  }
+
+  /**
+  * @description  获取事物和存储对象
+  * ```ts
+  * IndexedDB.getTransaction()
+  * ```
+  */
+  static async getTransaction(storeName: string, mode: IDBTransactionMode): Promise<IDBObjectStore> {
+    if (!this.db) {
+      throw new Error("Database is not initialized. Call ensureDB first.");
+    }
+    const transaction = this.db.transaction(storeName, mode)
+    return transaction.objectStore(storeName)
   }
 
   /**
@@ -60,10 +78,11 @@ export class IndexedDB {
    * ```
    */
   static async add(data: any): Promise<void> {
-    await this.ensureDBAndStore()
+    await this.ensureDB()
 
     return new Promise<void>(async (resolve, reject) => {
-      let request = this.store?.add({
+      const store = await this.getTransaction(this.#BOOK_CONTENT, "readwrite");
+      const request = store.add({
         ...data,
         createTimer: new Date().valueOf() + this.#SAVE_TIMER
       })
@@ -88,10 +107,11 @@ export class IndexedDB {
    * ```
    */
   static async read(id: number): Promise<any> {
-    await this.ensureDBAndStore()
+    await this.ensureDB()
 
     return new Promise(async (resolve, reject) => {
-      const request = this.store?.get(id)
+      const store = await this.getTransaction(this.#BOOK_CONTENT, "readonly");
+      const request = store.get(id)
       if (request) {
         request.onsuccess = (event) => {
           if (event.target instanceof IDBRequest) {
@@ -105,16 +125,18 @@ export class IndexedDB {
 
   /**
    * @param id 主键
-   * @description  读取数据
+   * @description  更新数据
    * ```ts
    * IndexedDB.update(data)
    * ```
    */
   static async update(id: number): Promise<void> {
-    await this.ensureDBAndStore()
+    await this.ensureDB()
+    const existingData = await this.read(id);
     return new Promise(async (resolve, reject) => {
-      const request = this.store?.put({
-        ...await this.read(id),
+      const store = await this.getTransaction(this.#BOOK_CONTENT, "readwrite");
+      const request = store.put({
+        ...existingData,
         id,
         createTimer: new Date().valueOf() + this.#SAVE_TIMER
       })
@@ -140,10 +162,11 @@ export class IndexedDB {
    * ```
    */
   static async delete(id: number): Promise<void> {
-    await this.ensureDBAndStore()
+    await this.ensureDB()
 
     return new Promise<void>(async (resolve, reject) => {
-      const request = this.store?.delete(id)
+      const store = await this.getTransaction(this.#BOOK_CONTENT, "readwrite");
+      const request = store.delete(id)
       if (request) {
         request.onsuccess = () => resolve()
         request.onerror = (event) => reject(event)
@@ -158,10 +181,11 @@ export class IndexedDB {
    * ```
    */
   static async findAll() {
-    await this.ensureDBAndStore()
+    await this.ensureDB()
 
-    return new Promise((resolve, reject) => {
-      const request = this.store?.index(this.#BOOK_CONTENT_INDEX).getAll()
+    return new Promise(async (resolve, reject) => {
+      const store = await this.getTransaction(this.#BOOK_CONTENT, "readwrite");
+      const request = store.index(this.#BOOK_CONTENT_INDEX).getAll()
       if (request) {
         request.onsuccess = (event) => {
           if (event.target instanceof IDBRequest) {
@@ -178,10 +202,12 @@ export class IndexedDB {
   }
 
   static async baseTimerClearData() {
-    await this.ensureDBAndStore()
+    await this.ensureDB()
 
-    return new Promise((resolve, reject) => {
-      const request = this.store?.index(this.#BOOK_CONTENT_INDEX).getAll(IDBKeyRange.upperBound(+new Date()))
+    return new Promise(async (resolve, reject) => {
+      const store = await this.getTransaction(this.#BOOK_CONTENT, "readwrite");
+
+      const request = store.index(this.#BOOK_CONTENT_INDEX).getAll(IDBKeyRange.upperBound(+new Date()))
       if (request) {
         request.onsuccess = (event) => {
           if (event.target instanceof IDBRequest) {

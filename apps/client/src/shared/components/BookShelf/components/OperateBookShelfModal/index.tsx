@@ -1,6 +1,6 @@
 import { operateBookShelfMutation, updateBookShelfDetailMutation } from '@/features/bookshelf'
 import { useActionBookStore } from '@/shared/store'
-import { BookShelfType } from '@/shared/types'
+import { BookShelfType, TagType } from '@/shared/types'
 import { RadioChangeEvent } from 'antd'
 import { UploadFile } from 'antd/lib'
 import SelectTag from '../SelectTag'
@@ -186,7 +186,7 @@ export function OperateBookShelfModal({
             >
               <SelectTag
                 form={form}
-                tags={currentBookShelf?.tags}
+                tags={currentBookShelf?.tags as TagType[]}
               />
             </Form.Item>
 

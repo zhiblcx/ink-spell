@@ -37,7 +37,7 @@ export const Route = createRootRoute({
         }
 
         useEffect(() => {
-          if (!isLoading && announcementUserData?.data.status == SystemConstant.status.UNREAD) {
+          if (!isLoading && announcementUserData?.data?.status == SystemConstant.status.UNREAD) {
             openNotification()
           }
         }, [isLoading])

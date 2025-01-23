@@ -9,7 +9,6 @@ import {
 } from 'nestjs-i18n';
 import * as path from 'node:path';
 import { PrismaExceptionFilter } from './core/prisma-client-exception/prisma-client-exception.filter';
-import { SocketGateway } from './events/socket.gateway';
 import { AuthModule } from './modules/auth/auth.module';
 import { BookModule } from './modules/book/book.module';
 import { BookmarkModule } from './modules/bookmark/bookmark.module';
@@ -25,6 +24,7 @@ import { ReadHistoryModule } from './modules/read-history/read-history.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { TagModule } from './modules/tag/tag.module';
 import { SystemModule } from './modules/system/system.module';
+import { SocketModule } from './events/socket.module';
 
 @Module({
   imports: [
@@ -59,12 +59,12 @@ import { SystemModule } from './modules/system/system.module';
     ReadHistoryModule,
     AdminModule,
     TagModule,
-    SystemModule
+    SystemModule,
+    SocketModule
   ],
   providers: [
     { provide: APP_PIPE, useClass: I18nValidationPipe },
     { provide: APP_FILTER, useClass: PrismaExceptionFilter },
-    SocketGateway,
     UserService,
   ],
 })
