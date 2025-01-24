@@ -25,7 +25,7 @@ export class AdminController {
   @APIResponse(DashboardStateVo, '获取成功')
   async getDashboardState() {
     return new R({
-      message: "获取成功",
+      message: this.translation.t('prompt.acquire_successful'),
       data: await this.adminService.getDashboardState()
     })
   }

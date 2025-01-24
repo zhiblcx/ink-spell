@@ -199,18 +199,13 @@ export class UserService {
         },
       },
       skip: (page - 1) * limit,
-      take: parseInt(limit),
+      take: limit,
     });
     if (users.length === 0) {
       throw new NotFoundException(
         this.translation.t('validation.no_matching_user_found'),
       );
     } else {
-      return users.map((user) => ({
-        ...user,
-        _count: undefined,
-        ...user._count,
-      }));
     }
   }
 

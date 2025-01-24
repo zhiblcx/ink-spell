@@ -10,6 +10,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -197,8 +198,8 @@ export class BookController {
   @ApiQuery(bookshelfNameQuery)
   @APIResponse([AllBookInfoVo], '查询成功', true)
   async getAllBookInfo(
-    @Query("page") page: number,
-    @Query("limit") limit: number,
+    @Query("page", ParseIntPipe) page: number,
+    @Query("limit", ParseIntPipe) limit: number,
     @Query("username") username: string,
     @Query("bookshelfName") bookshelfName: string,
   ) {
@@ -206,15 +207,15 @@ export class BookController {
       message: this.translation.t("prompt.acquire_successful"),
       data: new E({
         items: await this.bookService.getAllBookInfo(
-          Number(page),
-          Number(limit),
+          page,
+          limit,
           username,
           bookshelfName
         ),
         totalPages: await this.bookService.getAllBookInfoCount(limit, username,
           bookshelfName),
-        currentPage: Number(page),
-        itemsPerPage: Number(limit),
+        currentPage: page,
+        itemsPerPage: limit,
       })
     })
   }

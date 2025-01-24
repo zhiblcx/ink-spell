@@ -11,6 +11,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Put,
   Query,
   Request,
@@ -72,8 +73,8 @@ export class UserController {
   @APIResponse([UserVo], '查询成功', true)
   async getUserInfoByUsername(
     @Param('username') username: string,
-    @Query('page') page: number,
-    @Query('limit') limit: number,
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
   ) {
     return new R({
       message: this.translation.t('prompt.acquire_successful'),
@@ -239,19 +240,19 @@ export class UserController {
   @ApiQuery(limitQuery)
   @APIResponse([AllUserVo], '查询成功', true)
   async getAllUserInfo(
-    @Query('page') page: number,
-    @Query('limit') limit: number,
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
   ) {
     return new R({
       message: this.translation.t('prompt.acquire_successful'),
       data: new E({
         items: await this.userService.getAllUserInfo(
-          Number(page),
-          Number(limit),
+          page,
+          limit,
         ),
         totalPages: await this.userService.getAllUserInfoCount(limit),
-        currentPage: Number(page),
-        itemsPerPage: Number(limit),
+        currentPage: page,
+        itemsPerPage: limit,
       }),
     });
   }

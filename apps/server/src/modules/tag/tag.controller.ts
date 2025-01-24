@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
 import { TagService } from './tag.service';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { TranslationService } from '../translation/translation.service';
@@ -36,8 +36,8 @@ export class TagController {
   @ApiQuery(nameChineseQuery)
   @APIResponse([TagVo], "获取成功", true)
   async getTags(
-    @Query("page") page?: number,
-    @Query("limit") limit?: number,
+    @Query("page", ParseIntPipe) page?: number,
+    @Query("limit", ParseIntPipe) limit?: number,
     @Query('nameChinese') nameChinese?: string,
     @Query('nameEnglish') nameEnglish?: string
   ) {
@@ -51,10 +51,10 @@ export class TagController {
       return new R({
         message: this.translation.t("prompt.acquire_successful"),
         data: new E({
-          items: await this.tagService.getTags(Number(page), Number(limit), nameChinese, nameEnglish),
+          items: await this.tagService.getTags(page, limit, nameChinese, nameEnglish),
           currentPage: page,
           itemsPerPage: limit,
-          totalPages: await this.tagService.getTotalPages(Number(limit), nameChinese, nameEnglish)
+          totalPages: await this.tagService.getTotalPages(limit, nameChinese, nameEnglish)
         })
       })
     }

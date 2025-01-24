@@ -7,6 +7,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Post,
   Query,
   Request,
@@ -38,8 +39,8 @@ export class FollowController {
   @APIResponse([FollowVo], '获取成功', true)
   async getFollower(
     @Request() req,
-    @Query('page') page: number,
-    @Query('limit') limit: number,
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
   ) {
     return await this.followService.getFollower(req.user.userId, page, limit);
   }
@@ -52,8 +53,8 @@ export class FollowController {
   @APIResponse([FollowVo], '获取成功', true)
   async getFollowing(
     @Request() req,
-    @Query('page') page: number,
-    @Query('limit') limit: number,
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
   ) {
     return await this.followService.getFollowing(req.user.userId, page, limit);
   }

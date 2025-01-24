@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query, Request } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Query, Request } from '@nestjs/common';
 import { SystemService } from './system.service';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { limitQuery, pageQuery } from '@/shared/constants/pagination';
@@ -40,18 +40,16 @@ export class SystemController {
   @ApiQuery(limitQuery)
   @APIResponse([SystemAnnouncementVo], '获取成功', true)
   async getSystemAnnouncement(
-    @Query('page') page: number,
-    @Query('limit') limit: number,
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
   ) {
-    const currentPage = Number(page)
-    const currentLimit = Number(limit)
     return new R({
       message: this.translation.t('prompt.acquire_successful'),
       data: new E({
-        items: await this.systemService.getSystemAnnouncement(currentPage, currentLimit),
-        currentPage: currentPage,
-        itemsPerPage: currentLimit,
-        totalPages: await this.systemService.getSystemAnnouncementTotalPage(currentLimit),
+        items: await this.systemService.getSystemAnnouncement(page, limit),
+        currentPage: page,
+        itemsPerPage: limit,
+        totalPages: await this.systemService.getSystemAnnouncementTotalPage(limit),
       })
     })
   }
@@ -64,18 +62,16 @@ export class SystemController {
   @ApiQuery(limitQuery)
   @APIResponse([SystemAnnouncementVo], '获取成功', true)
   async getSystemFeedback(
-    @Query('page') page: number,
-    @Query('limit') limit: number,
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
   ) {
-    const currentPage = Number(page)
-    const currentLimit = Number(limit)
     return new R({
       message: this.translation.t('prompt.acquire_successful'),
       data: new E({
-        items: await this.systemService.getSystemFeedback(currentPage, currentLimit),
-        currentPage: currentPage,
-        itemsPerPage: currentLimit,
-        totalPages: await this.systemService.getSystemFeedbackTotalPage(currentLimit),
+        items: await this.systemService.getSystemFeedback(page, limit),
+        currentPage: page,
+        itemsPerPage: limit,
+        totalPages: await this.systemService.getSystemFeedbackTotalPage(limit),
       })
     })
   }

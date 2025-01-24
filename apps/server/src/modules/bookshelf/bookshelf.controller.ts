@@ -10,6 +10,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -95,8 +96,8 @@ export class BookshelfController {
   @ApiQuery(tagsIdQuery)
   @APIResponse([CreateBookShelfVo], '获取成功')
   async acquirePublicBookShelf(
-    @Query("page") page: number,
-    @Query("limit") limit: number,
+    @Query("page", ParseIntPipe) page: number,
+    @Query("limit", ParseIntPipe) limit: number,
     @Query('bookshelfName') bookshelfName?: string,
     @Query('tagsId') tagsId?: string,
   ) {
@@ -104,13 +105,13 @@ export class BookshelfController {
       message: this.translation.t('prompt.acquire_successful'),
       data: new E({
         items: await this.bookshelfService.acquirePublicBookShelf(
-          Number(page),
-          Number(limit),
+          page,
+          limit,
           bookshelfName,
           tagsId,
         ),
-        currentPage: Number(page),
-        itemsPerPage: Number(limit),
+        currentPage: page,
+        itemsPerPage: limit,
         totalPages: await this.bookshelfService.getPublicBookShelfCount(
           limit,
           bookshelfName,
@@ -121,6 +122,7 @@ export class BookshelfController {
   }
   // #endregion
 
+  // #region Recommend Bookshelf API
   @Get("/recommend")
   @ApiOperation({ summary: "获取推荐书架" })
   @APIResponse([AllBookShelfInfoVo], '查询成功')
@@ -130,7 +132,9 @@ export class BookshelfController {
       data: await this.bookshelfService.getRecommendBookshelf(Number(req.user.userId)),
     })
   }
+  // #endregion
 
+  // #region Bookshelf Detail Note API
   @Get('/download/:bookShelfId')
   @ApiOperation({ summary: '下载书架书籍笔记' })
   @HttpCode(HttpStatus.OK)
@@ -161,6 +165,9 @@ export class BookshelfController {
     });
   }
 
+  //#endregion
+
+  // #region Bookshelf Books API
   @Get(':bookShelfId')
   @ApiOperation({ summary: '查询书架书本' })
   @HttpCode(HttpStatus.OK)
@@ -175,7 +182,9 @@ export class BookshelfController {
       ),
     });
   }
+  // #endregion
 
+  // #region Update Bookshelf API
   @Put(':bookShelfId')
   @ApiOperation({ summary: '更新书架' })
   @HttpCode(HttpStatus.OK)
@@ -192,7 +201,9 @@ export class BookshelfController {
       ),
     });
   }
+  // #endregion
 
+  // #region Bookshelf Info API
   @Roles(Role.Admin)
   @Get("/all/info")
   @ApiOperation({ summary: "获取所有书架信息" })
@@ -202,8 +213,8 @@ export class BookshelfController {
   @ApiQuery(limitQuery)
   @APIResponse([AllBookShelfInfoVo], '查询成功', true)
   async getAllBookInfo(
-    @Query("page") page: number,
-    @Query("limit") limit: number,
+    @Query("page", ParseIntPipe) page: number,
+    @Query("limit", ParseIntPipe) limit: number,
     @Query("username") username?: string,
     @Query("bookshelfName") bookshelfName?: string,
   ) {
@@ -211,16 +222,17 @@ export class BookshelfController {
       message: this.translation.t("prompt.acquire_successful"),
       data: new E({
         items: await this.bookshelfService.getAllBookInfo(
-          Number(page),
-          Number(limit),
+          page,
+          limit,
           username,
           bookshelfName
         ),
         totalPages: await this.bookshelfService.getAllBookInfoCount(limit, username,
           bookshelfName),
-        currentPage: Number(page),
-        itemsPerPage: Number(limit),
+        currentPage: page,
+        itemsPerPage: limit,
       })
     })
   }
+  // #endregion
 }

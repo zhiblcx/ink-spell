@@ -231,7 +231,6 @@ export class SocketGateway {
   // 获取消息
   @SubscribeMessage('getMessages')
   async handleGetMessages() {
-    console.log(this.allMessages)
     this.server.to(this.roomId).emit('getMessages', this.allMessages);
   }
 }

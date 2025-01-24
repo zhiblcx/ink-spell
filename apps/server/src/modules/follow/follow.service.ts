@@ -9,7 +9,7 @@ export class FollowService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly translation: TranslationService,
-  ) {}
+  ) { }
 
   // 获取关注列表
   async getFollower(userId, page, limit) {
@@ -25,7 +25,7 @@ export class FollowService {
         id: 'desc',
       },
       skip: (page - 1) * limit,
-      take: parseInt(limit),
+      take: limit,
     });
 
     const following = await this.prisma.follow.findMany({
@@ -71,7 +71,7 @@ export class FollowService {
         id: 'desc',
       },
       skip: (page - 1) * limit,
-      take: parseInt(limit),
+      take: limit,
     });
 
     const follower = await this.prisma.follow.findMany({
