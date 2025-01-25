@@ -13,6 +13,8 @@ interface CharContentType {
   setOpenFlag: React.Dispatch<React.SetStateAction<boolean>>
   messages: MessageType[]
   scrollTo: (target?: string | number | undefined, offset?: number | undefined) => void
+  count: number
+  setCount: React.Dispatch<React.SetStateAction<number>>
 }
 
 export default function CharContent({
@@ -20,17 +22,15 @@ export default function CharContent({
   setOpenFlag,
   setLookUser,
   messages,
-  scrollTo
+  scrollTo,
+  count,
+  setCount
 }: CharContentType) {
   const { menu } = useMenuStore()
-  const [count, setCount] = useState(0)
 
-  function handleScrollBottom(scroll: React.UIEvent<HTMLUListElement, UIEvent>) {
-    const scrollElement = scroll.target as HTMLElement
-    const scrollTop = Math.ceil(scrollElement.scrollTop)
-    const scrollHeight = scrollElement.scrollHeight
-    const clientHeight = scrollElement.clientHeight
-    if (scrollHeight - scrollTop <= clientHeight) {
+  function handleScrollBottom(scroll: React.UIEvent<HTMLUListElement>) {
+    const { scrollTop, scrollHeight, clientHeight } = scroll.currentTarget
+    if (scrollHeight - Math.ceil(scrollTop) <= clientHeight) {
       setCount(0)
     }
   }

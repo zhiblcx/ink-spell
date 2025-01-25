@@ -25,7 +25,7 @@ export default function ChatRoom() {
   const [messages, setMessages] = useState([] as MessageType[])
   const [count, setCount] = useState(0)
   const { data: query, isSuccess } = selectOneselfInfoQuery()
-  const { emoticon, setEmoticon } = useEmoticonStore()
+  const { emoticon } = useEmoticonStore()
   const { scrollTo } = useSmoothScroll({
     ref: chatContent,
     speed: Infinity,
@@ -179,6 +179,8 @@ export default function ChatRoom() {
                 setOpenFlag={setOpenFlag}
                 messages={messages}
                 scrollTo={scrollTo}
+                count={count}
+                setCount={setCount}
               />
 
               <ChatFooter
