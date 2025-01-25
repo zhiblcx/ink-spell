@@ -1,18 +1,13 @@
 import { selectOneselfInfoQuery } from '@/features/user'
-import { ChatEmojiAndPhoto } from '@/shared/components'
 import { CHAR_ROOM } from '@/shared/constants'
-import { useEmojiStore, useMenuStore } from '@/shared/store'
 import { useEmoticonStore } from '@/shared/store/EmoticonStore'
 import { User } from '@/shared/types'
 import { MessageType } from '@/shared/types/MessageType'
-import { VerticalAlignBottomOutlined } from '@ant-design/icons'
-import { TransformTimeUtils } from '@ink-spell/utils'
 import { message } from 'antd'
 import { TextAreaRef } from 'antd/es/input/TextArea'
-import clsx from 'clsx'
-import React from 'react'
 import useSmoothScroll from 'react-smooth-scroll-hook'
-import styles from '../index.module.scss'
+import CharContent from './CharContent'
+import ChatFooter from './ChatFooter'
 import { socket } from './socket.io'
 
 export default function ChatRoom() {
@@ -29,9 +24,6 @@ export default function ChatRoom() {
   const [loading, setLoading] = useState(true)
   const [messages, setMessages] = useState([] as MessageType[])
   const [count, setCount] = useState(0)
-  const { TextArea } = Input
-  const { menu } = useMenuStore()
-  const { clickEmoji } = useEmojiStore()
   const { data: query, isSuccess } = selectOneselfInfoQuery()
   const { emoticon, setEmoticon } = useEmoticonStore()
   const { scrollTo } = useSmoothScroll({
@@ -39,29 +31,6 @@ export default function ChatRoom() {
     speed: Infinity,
     direction: 'y'
   })
-
-  useEffect(() => {
-    if (clickEmoji.emoji) {
-      if (messageValue === undefined || messageValue === '') {
-        setMessageValue(clickEmoji.emoji)
-      } else {
-        // 此时输入框已有文字 selectionStart
-        // inputRef.current?.resizableTextArea?.textArea.selectionStart 此时光标下标
-        // 将 clickEmoji 插入到光标位置
-        const start = inputRef.current?.resizableTextArea?.textArea.selectionStart
-        const end = inputRef.current?.resizableTextArea?.textArea.selectionEnd
-        const value = messageValue.slice(0, start) + clickEmoji.emoji + messageValue.slice(end)
-        setMessageValue(value)
-      }
-    }
-  }, [clickEmoji.timer])
-
-  useEffect(() => {
-    if (emoticon !== null) {
-      sendMessage(true)
-      setEmoticon(null)
-    }
-  }, [emoticon])
 
   // 初始化数据
   useEffect(() => {
@@ -146,7 +115,7 @@ export default function ChatRoom() {
       if (
         Math.ceil(container.scrollHeight) - 5 - Math.floor(container.scrollTop) <=
           Math.ceil(container.clientHeight) ||
-        data.type === MessageEnum.MESSAGE_SELF
+        data.type.includes(MessageEnum.MESSAGE_SELF)
       ) {
         setMessages((prevMessages) => {
           setTimeout(() => {
@@ -163,11 +132,9 @@ export default function ChatRoom() {
 
   // 用户发送消息
   const sendMessage = (enable = false) => {
-    console.log(enable)
     if (enable) {
       socket.emit('newMessage', { message: emoticon, userId: query?.data.id, enable })
     } else {
-      console.log('222')
       if (messageValue.trim() === '') {
         message.error(t('PROMPT:no_blank_message'))
         return
@@ -185,16 +152,6 @@ export default function ChatRoom() {
     setTimeout(() => {
       setDisableFlag(false)
     }, 1000)
-  }
-
-  function handleScrollBottom(scroll: React.UIEvent<HTMLUListElement, UIEvent>) {
-    const scrollElement = scroll.target as HTMLElement
-    const scrollTop = Math.ceil(scrollElement.scrollTop)
-    const scrollHeight = scrollElement.scrollHeight
-    const clientHeight = scrollElement.clientHeight
-    if (scrollHeight - scrollTop <= clientHeight) {
-      setCount(0)
-    }
   }
 
   return (
@@ -216,139 +173,21 @@ export default function ChatRoom() {
             <EmptyPage name={t('PROMPT:connection_failed')} />
           ) : (
             <>
-              <ul
-                ref={chatContent}
-                onScroll={(scroll) => handleScrollBottom(scroll)}
-                className={clsx(
-                  `scroll absolute mt-2 space-y-4 overflow-y-scroll ${styles.height}`,
-                  menu === MenuEnum.EXTEND
-                    ? `min-[375px]:w-[92%] ${styles.width_extend} `
-                    : `min-[375px]:min-w-[20%] ${styles.width_shrink}`
-                )}
-              >
-                {messages.map((item: MessageType) => {
-                  return (
-                    <React.Fragment key={item.id}>
-                      {item.type.includes(MessageEnum.MESSAGE_OTHER) && (
-                        <li
-                          className="ml-2 flex"
-                          id={`y-item-${item.id}`}
-                        >
-                          <Avatar
-                            className="cursor-pointer"
-                            src={import.meta.env.VITE_SERVER_URL + item.user?.avatar}
-                            size={34}
-                            onClick={() => {
-                              setLookUser(item.user ?? null)
-                              setOpenFlag(true)
-                            }}
-                          />
-                          <div className="ml-2 flex max-w-[80%] flex-col items-start">
-                            <div className="flex">
-                              <span className="mr-1 text-xs">{item.user?.username}</span>
-                              <span className="text-xs text-gray-400">
-                                {TransformTimeUtils.formatDateMDHM()}
-                              </span>
-                            </div>
-                            <div className="break-all rounded-md bg-[#f5f5f5] p-2 dark:bg-[#262729]">
-                              {item.type.includes(MessageEnum.IMAGE) ? (
-                                <img src={item.text} />
-                              ) : (
-                                item.text
-                              )}
-                            </div>
-                          </div>
-                        </li>
-                      )}
+              <CharContent
+                chatContent={chatContent}
+                setLookUser={setLookUser}
+                setOpenFlag={setOpenFlag}
+                messages={messages}
+                scrollTo={scrollTo}
+              />
 
-                      {item.type.includes(MessageEnum.MESSAGE_SELF) && (
-                        <li
-                          className="mr-2 flex justify-end"
-                          id={`y-item-${item.id}`}
-                        >
-                          <div className="mr-2 flex max-w-[80%] flex-col items-end overflow-hidden">
-                            <div className="flex">
-                              <span className="mr-1 text-xs text-gray-400">
-                                {TransformTimeUtils.formatDateMDHM()}
-                              </span>
-                              <span className="text-xs">{item.user?.username}</span>
-                            </div>
-                            <div className="break-all rounded-md bg-[#89d961] p-2 dark:bg-[#262729]">
-                              {item.type.includes(MessageEnum.IMAGE) ? (
-                                <img src={item.text} />
-                              ) : (
-                                item.text
-                              )}
-                            </div>
-                          </div>
-                          <Avatar
-                            src={import.meta.env.VITE_SERVER_URL + item.user?.avatar}
-                            size={34}
-                          />
-                        </li>
-                      )}
-
-                      {(item.type === MessageEnum.JOIN || item.type === MessageEnum.LEAVE) && (
-                        <li
-                          className="flex justify-center"
-                          id={`y-item-${item.id}`}
-                        >
-                          {item.type === MessageEnum.LEAVE && (
-                            <span className="rounded-md p-2 text-red-400">{item.text}</span>
-                          )}
-                          {item.type === MessageEnum.JOIN && (
-                            <span className="rounded-md p-2 text-[#89d961]">{item.text}</span>
-                          )}
-                        </li>
-                      )}
-                    </React.Fragment>
-                  )
-                })}
-
-                {/* 悬浮按钮 */}
-                <FloatButton
-                  icon={<VerticalAlignBottomOutlined />}
-                  className={clsx(
-                    count === 0 ? 'hidden' : 'block',
-                    'min-[375px]:bottom-[100px] min-[375px]:right-[30px] md:bottom-[110px] md:right-[200px]'
-                  )}
-                  onClick={() => {
-                    scrollTo(`#y-item-${messages[messages.length - 1].id}`)
-                    setCount(0)
-                  }}
-                  badge={{ count: count, overflowCount: 99 }}
-                />
-              </ul>
-
-              <div className="absolute bottom-8 pt-1 min-[375px]:min-w-[90%] md:min-w-[70%]">
-                <ChatEmojiAndPhoto />
-                <div
-                  className={clsx(
-                    menu === MenuEnum.EXTEND ? '' : 'min-[375px]:hidden md:flex',
-                    'mt-3 flex items-center space-x-3'
-                  )}
-                >
-                  <TextArea
-                    value={messageValue}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-                      setMessageValue(e.target.value)
-                    }
-                    ref={inputRef}
-                    placeholder={t('VALIDATION:enter_message')}
-                    showCount
-                    onPressEnter={() => sendMessage(false)}
-                    maxLength={200}
-                    style={{ resize: 'none' }}
-                  />
-                  <Button
-                    onClick={() => sendMessage(false)}
-                    disabled={disableFlag}
-                    className="min-[375px]:min-w-[70px]"
-                  >
-                    {t('COMMON:send')}
-                  </Button>
-                </div>
-              </div>
+              <ChatFooter
+                disableFlag={disableFlag}
+                messageValue={messageValue}
+                setMessageValue={setMessageValue}
+                inputRef={inputRef}
+                sendMessage={sendMessage}
+              />
             </>
           )}
           <PersonCard
