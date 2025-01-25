@@ -26,6 +26,7 @@ export class PhotoUtils {
     })
   }
 
+  // 压缩 png 图片
   static async compressPNG(file: File, quality = 0.2) {
     return new Promise(async (resolve) => {
       const arrayBuffer = await file.arrayBuffer()
@@ -33,6 +34,16 @@ export class PhotoUtils {
       const rgba8 = UPNG.toRGBA8(decoded)
       const compressed = UPNG.encode(rgba8, decoded.width, decoded.height, 256 * quality)
       resolve(new File([compressed], file.name, { type: 'image/png' }))
+    })
+  }
+
+  // 图片转换为 base64
+  static async fileToBase64(file: File) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(reader.result)
+      reader.onerror = (error) => reject(error)
+      reader.readAsDataURL(file) // 将文件转换为 Base64
     })
   }
 }

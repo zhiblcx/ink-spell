@@ -17,9 +17,6 @@ export const useEmojiStore = create<EmojiStoreType>()(
       set({ emojis: uniqueEmoji, clickEmoji: { emoji: uniqueEmoji[0], timer: new Date().getTime().toString() } })
       EmojiUtils.setRecentlyEmoji(uniqueEmoji.join())
     },
-    clickEmoji: {
-      emoji: undefined,
-      timer: undefined
-    },
+    clickEmoji: { emoji: undefined, timer: undefined },
   }))
 )

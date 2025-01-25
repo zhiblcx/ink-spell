@@ -21,7 +21,10 @@ export const updateUserInfoMutation = (
   })
 }
 
-export const followUserByUserIdMutation = (queryClient1?: () => Promise<void>, queryClient2?: () => Promise<void>) => {
+export const followUserByUserIdMutation = (
+  queryClient1?: () => Promise<void>,
+  queryClient2?: () => Promise<void>
+) => {
   return useMutation({
     mutationFn: (followID: number) => httpRequest.post(`/follow/${followID}`),
     onSuccess: async (data) => {
@@ -33,7 +36,9 @@ export const followUserByUserIdMutation = (queryClient1?: () => Promise<void>, q
   })
 }
 
-export const unfollowUserByFollowMutation = (queryClient: () => Promise<void>) => {
+export const unfollowUserByFollowMutation = (
+  queryClient: () => Promise<void>
+) => {
   return useMutation({
     mutationFn: (followID: number) => httpRequest.delete(`/follow/${followID}`),
     onSuccess: async (data) => {

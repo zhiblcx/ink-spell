@@ -2,7 +2,9 @@ import { selectOneselfInfoQuery } from '@/features/user'
 import { ChatEmojiAndPhoto } from '@/shared/components'
 import { CHAR_ROOM } from '@/shared/constants'
 import { useEmojiStore, useMenuStore } from '@/shared/store'
+import { useEmoticonStore } from '@/shared/store/EmoticonStore'
 import { User } from '@/shared/types'
+import { MessageType } from '@/shared/types/MessageType'
 import { VerticalAlignBottomOutlined } from '@ant-design/icons'
 import { TransformTimeUtils } from '@ink-spell/utils'
 import { message } from 'antd'
@@ -12,15 +14,6 @@ import React from 'react'
 import useSmoothScroll from 'react-smooth-scroll-hook'
 import styles from '../index.module.scss'
 import { socket } from './socket.io'
-
-interface MessageType {
-  id: number
-  userId: number
-  text: string
-  user?: User
-  type: string
-  createTimer: string
-}
 
 export default function ChatRoom() {
   const { t } = useTranslation(['COMMON', 'VALIDATION', 'PROMPT'])
@@ -40,12 +33,12 @@ export default function ChatRoom() {
   const { menu } = useMenuStore()
   const { clickEmoji } = useEmojiStore()
   const { data: query, isSuccess } = selectOneselfInfoQuery()
+  const { emoticon, setEmoticon } = useEmoticonStore()
   const { scrollTo } = useSmoothScroll({
     ref: chatContent,
     speed: Infinity,
     direction: 'y'
   })
-  let reconnect = false
 
   useEffect(() => {
     if (clickEmoji.emoji) {
@@ -63,16 +56,19 @@ export default function ChatRoom() {
     }
   }, [clickEmoji.timer])
 
+  useEffect(() => {
+    if (emoticon !== null) {
+      sendMessage(true)
+      setEmoticon(null)
+    }
+  }, [emoticon])
+
   // 初始化数据
   useEffect(() => {
-    if (isSuccess && !reconnect) {
-      console.log('正在连接')
-      reconnect = true
-      socket.open()
+    if (isSuccess && socket.connected) {
       socket.emit('join', { name: query?.data.username, id: query?.data.id })
 
       socket.on('join', (data) => {
-        console.log('连接成功')
         setConnect(true)
         if (query?.data.id !== data.userId) {
           handleNewMessage(data)
@@ -100,7 +96,7 @@ export default function ChatRoom() {
       // 关闭网站触发
       window.addEventListener('beforeunload', leaveRoom)
     }
-  }, [isSuccess])
+  }, [isSuccess, socket.connected])
 
   // 离开页面退出房间
   useEffect(() => {
@@ -112,9 +108,11 @@ export default function ChatRoom() {
   function acquireMessage(data: MessageType[]) {
     // 获取历史消息
     const result = data.map((item: MessageType) => {
-      if (item.type === MessageEnum.MESSAGE) {
+      if (item.type.includes(MessageEnum.IMAGE) || item.type.includes(MessageEnum.TEXT)) {
         item.type =
-          item.userId === query?.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
+          (item.userId === query?.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER) +
+          '-' +
+          item.type
       }
       return item
     })
@@ -131,7 +129,6 @@ export default function ChatRoom() {
 
   // 离开房间
   const leaveRoom = () => {
-    console.log('离开房间')
     socket.emit('leave', { name: query?.data.username, id: query?.data.id })
     socket.close()
   }
@@ -140,7 +137,9 @@ export default function ChatRoom() {
   const handleNewMessage = (data: MessageType) => {
     if (data.type !== MessageEnum.JOIN) {
       data.type =
-        data.userId === query?.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER
+        (data.userId === query?.data.id ? MessageEnum.MESSAGE_SELF : MessageEnum.MESSAGE_OTHER) +
+        '-' +
+        data.type
     }
     if (chatContent.current) {
       const container = chatContent.current
@@ -163,15 +162,21 @@ export default function ChatRoom() {
   }
 
   // 用户发送消息
-  const sendMessage = () => {
-    if (messageValue.trim() === '') {
-      message.error(t('PROMPT:no_blank_message'))
-      return
+  const sendMessage = (enable = false) => {
+    console.log(enable)
+    if (enable) {
+      socket.emit('newMessage', { message: emoticon, userId: query?.data.id, enable })
+    } else {
+      console.log('222')
+      if (messageValue.trim() === '') {
+        message.error(t('PROMPT:no_blank_message'))
+        return
+      }
+      const newMessage = { message: messageValue, userId: query?.data.id, enable }
+      socket.emit('newMessage', newMessage)
+      setMessageValue('')
+      handlerDisableButton()
     }
-    const newMessage = { message: messageValue, userId: query?.data.id }
-    socket.emit('newMessage', newMessage)
-    setMessageValue('')
-    handlerDisableButton()
   }
 
   // 发送消息后禁用按钮，1秒后启用
@@ -224,7 +229,7 @@ export default function ChatRoom() {
                 {messages.map((item: MessageType) => {
                   return (
                     <React.Fragment key={item.id}>
-                      {item.type === MessageEnum.MESSAGE_OTHER && (
+                      {item.type.includes(MessageEnum.MESSAGE_OTHER) && (
                         <li
                           className="ml-2 flex"
                           id={`y-item-${item.id}`}
@@ -246,13 +251,17 @@ export default function ChatRoom() {
                               </span>
                             </div>
                             <div className="break-all rounded-md bg-[#f5f5f5] p-2 dark:bg-[#262729]">
-                              {item.text}
+                              {item.type.includes(MessageEnum.IMAGE) ? (
+                                <img src={item.text} />
+                              ) : (
+                                item.text
+                              )}
                             </div>
                           </div>
                         </li>
                       )}
 
-                      {item.type === MessageEnum.MESSAGE_SELF && (
+                      {item.type.includes(MessageEnum.MESSAGE_SELF) && (
                         <li
                           className="mr-2 flex justify-end"
                           id={`y-item-${item.id}`}
@@ -265,7 +274,11 @@ export default function ChatRoom() {
                               <span className="text-xs">{item.user?.username}</span>
                             </div>
                             <div className="break-all rounded-md bg-[#89d961] p-2 dark:bg-[#262729]">
-                              {item.text}
+                              {item.type.includes(MessageEnum.IMAGE) ? (
+                                <img src={item.text} />
+                              ) : (
+                                item.text
+                              )}
                             </div>
                           </div>
                           <Avatar
@@ -323,12 +336,12 @@ export default function ChatRoom() {
                     ref={inputRef}
                     placeholder={t('VALIDATION:enter_message')}
                     showCount
-                    onPressEnter={sendMessage}
+                    onPressEnter={() => sendMessage(false)}
                     maxLength={200}
                     style={{ resize: 'none' }}
                   />
                   <Button
-                    onClick={sendMessage}
+                    onClick={() => sendMessage(false)}
                     disabled={disableFlag}
                     className="min-[375px]:min-w-[70px]"
                   >

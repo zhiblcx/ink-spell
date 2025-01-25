@@ -1,18 +1,18 @@
 import { emojis, emojisType, emojiType } from '@/mock/emojis'
 import { useEmojiStore } from '@/shared/store/EmojiStore'
-import { PictureOutlined, SmileOutlined } from '@ant-design/icons'
+import { SmileOutlined } from '@ant-design/icons'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
+import { PhotoTransformBase64 } from '../PhotoTransformBase64'
 export function ChatEmojiAndPhoto() {
   const { t } = useTranslation(['EMOJI'])
   const [emojiOpen, setEmojiOpen] = useState(false)
-  const [photoOpen, setPhotoOpen] = useState(false)
   const emojiStore = useEmojiStore()
   return (
     <>
       <div className="space-x-3 text-2xl">
         <SmileOutlined onClick={() => setEmojiOpen(!emojiOpen)} />
-        <PictureOutlined onClick={() => setPhotoOpen(!photoOpen)} />
+        <PhotoTransformBase64 />
 
         <motion.div
           initial={{ opacity: 0 }}
