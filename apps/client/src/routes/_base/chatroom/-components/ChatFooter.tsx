@@ -1,5 +1,4 @@
 import { ChatEmojiAndPhoto } from '@/shared/components'
-import { useEmojiStore, useMenuStore } from '@/shared/store'
 import TextArea, { TextAreaRef } from 'antd/es/input/TextArea'
 import clsx from 'clsx'
 

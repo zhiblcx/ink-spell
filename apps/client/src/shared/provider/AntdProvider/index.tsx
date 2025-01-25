@@ -1,5 +1,3 @@
-import { useLanguageStore } from '@/shared/store'
-import { useThemeStore } from '@/shared/store/ThemeStore'
 import { HappyProvider } from '@ant-design/happy-work-theme'
 import { ConfigProvider, theme } from 'antd'
 import English from 'antd/locale/en_US'

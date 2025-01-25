@@ -1,5 +1,4 @@
 import { selectBookByBookShelfIdQuery, selectMyBookShelfQuery } from '@/features/bookshelf'
-import { useActionBookStore } from '@/shared/store'
 import { Ink } from '@/shared/types'
 
 export function Page() {

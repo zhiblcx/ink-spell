@@ -90,6 +90,12 @@
     "Rate": true,
     "Tag": true,
     "Table": true,
-    "Space": true
+    "Space": true,
+    "useMenuStore": true,
+    "useActionBookStore": true,
+    "useThemeStore": true,
+    "useLanguageStore": true,
+    "useEmoticonStore": true,
+    "useEmojiStore": true
   }
 }

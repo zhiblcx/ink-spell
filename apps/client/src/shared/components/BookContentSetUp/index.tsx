@@ -1,4 +1,3 @@
-import { useActionBookStore } from '@/shared/store'
 import { SetupBottom } from './components/SetupBottom'
 import { SetupTop } from './components/SetupTop'
 import { ClickSetupEnum } from './enums/ClickSetupEnum'

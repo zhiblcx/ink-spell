@@ -1,5 +1,4 @@
 import { getAllTagQuery } from '@/features/tag'
-import { useLanguageStore } from '@/shared/store'
 import { TagType as LabelType, TagType } from '@/shared/types'
 import { DownOutlined } from '@ant-design/icons'
 import { FormInstance, type SelectProps } from 'antd'

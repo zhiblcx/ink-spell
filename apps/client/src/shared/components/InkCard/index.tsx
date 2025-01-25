@@ -1,7 +1,6 @@
 import { imageLoadingImg } from '@/assets/images'
 import { updateBookByBookIdMutation } from '@/features/book'
 import { insertReadHistoryMutation } from '@/features/read-history'
-import { useActionBookStore } from '@/shared/store'
 import { type Ink } from '@/shared/types'
 import { BookUtils } from '@/shared/utils'
 import { type UploadFile, Input } from 'antd'

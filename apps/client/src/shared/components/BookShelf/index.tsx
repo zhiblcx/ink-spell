@@ -1,7 +1,6 @@
 import { selectMyBookShelfQuery } from '@/features/bookshelf'
 import { selectOneselfInfoQuery } from '@/features/user'
 import { ALL_BOOK } from '@/shared/constants'
-import { useActionBookStore } from '@/shared/store'
 import { BookShelfType, Ink } from '@/shared/types'
 import { BookShelfList, OperateBookShelfModal } from './components'
 

@@ -1,6 +1,5 @@
 import { selectOneselfInfoQuery } from '@/features/user'
 import { CHAR_ROOM } from '@/shared/constants'
-import { useEmoticonStore } from '@/shared/store/EmoticonStore'
 import { User } from '@/shared/types'
 import { MessageType } from '@/shared/types/MessageType'
 import { message } from 'antd'

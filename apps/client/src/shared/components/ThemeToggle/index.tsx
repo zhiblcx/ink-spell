@@ -1,4 +1,3 @@
-import { useThemeStore } from '@/shared/store'
 import { MoonStar, Sun } from 'lucide-react'
 
 export function ThemeToggle({ size = 24 }) {

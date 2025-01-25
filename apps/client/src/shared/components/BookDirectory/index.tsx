@@ -1,5 +1,3 @@
-import { useActionBookStore } from '@/shared/store'
-import { useSetUpStore } from '@/shared/store/SetupStore'
 import { BookUtils, UrlUtils } from '@/shared/utils'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'

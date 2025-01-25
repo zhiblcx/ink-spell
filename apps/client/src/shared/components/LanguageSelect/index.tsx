@@ -1,6 +1,5 @@
 import { LANGUAGE } from '@/shared/constants'
 import { LanguageEnum } from '@/shared/enums'
-import { useLanguageStore } from '@/shared/store'
 
 export function LanguageSelect() {
   const { language, setLanguage } = useLanguageStore()

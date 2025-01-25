@@ -1,5 +1,4 @@
 import { emojis, emojisType, emojiType } from '@/mock/emojis'
-import { useEmojiStore } from '@/shared/store/EmojiStore'
 import { SmileOutlined } from '@ant-design/icons'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'

@@ -1,4 +1,3 @@
-import { useMenuStore } from '@/shared/store'
 import { User } from '@/shared/types'
 import { MessageType } from '@/shared/types/MessageType'
 import { VerticalAlignBottomOutlined } from '@ant-design/icons'
@@ -105,12 +104,16 @@ export default function CharContent({
                 className="flex justify-center"
                 id={`y-item-${item.id}`}
               >
-                {item.type === MessageEnum.LEAVE && (
-                  <span className="rounded-md p-2 text-red-400">{item.text}</span>
-                )}
-                {item.type === MessageEnum.JOIN && (
-                  <span className="rounded-md p-2 text-[#89d961]">{item.text}</span>
-                )}
+                {
+                  <span
+                    className={clsx(
+                      item.type === MessageEnum.LEAVE ? 'text-red-400' : 'text-[#89d961]',
+                      'rounded-md p-2'
+                    )}
+                  >
+                    {item.text}
+                  </span>
+                }
               </li>
             )}
           </React.Fragment>

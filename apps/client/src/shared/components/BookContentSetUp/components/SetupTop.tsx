@@ -1,4 +1,3 @@
-import { useSetUpStore } from '@/shared/store/SetupStore'
 import { SetUp } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils/UrlUtils'
 import { DownOutlined } from '@ant-design/icons'

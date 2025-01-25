@@ -1,5 +1,4 @@
 import { GhostSvg } from '@/assets/SVG'
-import { useThemeStore } from '@/shared/store'
 
 interface EmptyPageType {
   name: string

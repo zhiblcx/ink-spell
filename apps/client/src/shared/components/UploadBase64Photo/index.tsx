@@ -1,4 +1,3 @@
-import { useSetUpStore } from '@/shared/store/SetupStore'
 import { UploadOutlined } from '@ant-design/icons'
 import { message, UploadProps } from 'antd'
 import ImgCrop from 'antd-img-crop'

@@ -1,7 +1,6 @@
 import { selectBookByBookIdQuery, showBookMarkQuery } from '@/features/book'
 import { Content, Sidebar } from '@/features/layouts/ReadLayout'
 import { updateReadHistoryMutation } from '@/features/read-history'
-import { useSetUpStore } from '@/shared/store/SetupStore'
 import { IndexedDBBookType } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils'
 import { IndexedDB } from '@/shared/utils/IndexedDBUtils'

@@ -108,7 +108,7 @@ export class SocketGateway {
           id: dayjs().valueOf(),
           userId: id,
           text:
-            `${this.translation.t("common.user")}：${nextRequest.name}${this.translation.t("common.leave_chatroom")}}`,
+            `${this.translation.t("common.user")}：${nextRequest.name}${this.translation.t("common.leave_chatroom")}`,
           type: MessageEnum.LEAVE,
           createTimer: new Date()
         };

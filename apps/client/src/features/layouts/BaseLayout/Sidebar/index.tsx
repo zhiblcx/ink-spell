@@ -1,7 +1,6 @@
 import { iconDarkImg, iconLightImg, logoDarkImg, logoLightImg } from '@/assets/images'
 import { selectMyBookShelfQuery } from '@/features/bookshelf'
 import { ALL_BOOK, BOOK_STORE, CHAR_ROOM, MY_FRIEND } from '@/shared/constants'
-import { useMenuStore, useThemeStore } from '@/shared/store'
 import { BookShelfType } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils'
 import clsx from 'clsx'

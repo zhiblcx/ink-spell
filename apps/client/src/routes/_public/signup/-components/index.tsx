@@ -1,7 +1,6 @@
 import { loginDarkImg, loginLightImg, logoLightImg } from '@/assets/images'
 import { signupMutation, SignupValue } from '@/features/auth'
 import { APP_NAME } from '@/shared/constants/app'
-import { useThemeStore } from '@/shared/store'
 import { confirmPasswordRule } from '@/shared/utils/confirmPasswordRule'
 import { EditOutlined, LockOutlined, UserOutlined, VerifiedOutlined } from '@ant-design/icons'
 import { motion } from 'framer-motion'

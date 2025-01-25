@@ -7,7 +7,6 @@ import {
 } from '@/assets/images'
 import { signinMutation } from '@/features/auth'
 import { APP_NAME } from '@/shared/constants/app'
-import { useThemeStore } from '@/shared/store'
 import { AuthUtils } from '@/shared/utils'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { motion } from 'framer-motion'

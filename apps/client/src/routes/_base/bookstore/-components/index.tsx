@@ -8,7 +8,6 @@ import {
 } from '@/features/bookshelf'
 import { getAllTagQuery } from '@/features/tag'
 import { DEFAULT_TAG_COLORS } from '@/shared/constants/app'
-import { useLanguageStore } from '@/shared/store'
 import { TagType, UserCollectType } from '@/shared/types'
 import { UrlUtils } from '@/shared/utils'
 import {

@@ -1,6 +1,5 @@
 import { collectBookByBookIdMutation, deleteBookByBookIdMutation } from '@/features/book'
 import { insertReadHistoryMutation } from '@/features/read-history'
-import { useActionBookStore } from '@/shared/store'
 import { Book, Ink } from '@/shared/types'
 import { BookUtils } from '@/shared/utils'
 import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons'

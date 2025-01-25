@@ -1,4 +1,3 @@
-import { useEmoticonStore } from '@/shared/store/EmoticonStore'
 import { PhotoUtils } from '@/shared/utils'
 import { PictureOutlined } from '@ant-design/icons'
 import { UploadProps } from 'antd'
