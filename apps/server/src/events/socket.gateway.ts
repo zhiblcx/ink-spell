@@ -51,9 +51,7 @@ export class SocketGateway {
       const messages = this.allMessages
         .slice(this.saveIndex)
         .map(({ id: _, user: __, ...rest }) => rest);
-      await this.prisma.message.createMany({
-        data: messages,
-      });
+      await this.prisma.message.createMany({ data: messages, });
       this.allMessages = [];
       this.allMessages = await this.userService.handleGetMessages();
       this.saveIndex = this.allMessages.length;
@@ -68,18 +66,16 @@ export class SocketGateway {
   // 发送消息
   @SubscribeMessage('newMessage')
   async handleMessage(@MessageBody() body: any) {
-    const msg: any = {};
-    const { userId, message } = body || {};
+    const { userId, message, enable } = body;
+    const msg = {
+      text: message,
+      userId,
+      user: await this.userService.getUserInfo(userId),
+      type: enable ? MessageEnum.IMAGE : MessageEnum.TEXT,
+      createTimer: new Date()
+    }
 
-    msg.text = message;
-    msg.userId = userId;
-    msg.user = await this.userService.getUserInfo(userId);
-    msg.type = MessageEnum.MESSAGE;
-    msg.createTimer = new Date()
-    this.allMessages.push({
-      id: dayjs().valueOf(),
-      ...msg,
-    });
+    this.allMessages.push({ id: dayjs().valueOf(), ...msg, });
     this.server
       .to(this.roomId)
       .emit('newMessage', { ...msg, id: dayjs().toDate().valueOf() });
@@ -91,24 +87,18 @@ export class SocketGateway {
     @MessageBody() body: any,
     @ConnectedSocket() client: Socket,
   ) {
-    const { name, id } = body || {};
+    const { name, id } = body;
 
     // 如果当前用户存在，则执行下一步
-    if (!this.currentUsers.has(id)) {
-      return;
-    }
-
+    if (!this.currentUsers.has(id)) return;
     // 检查用户是否已经在队列中
-    if (this.leaveQueue.some((user) => user.id === id)) {
-      return;
-    }
+    if (this.leaveQueue.some((user) => user.id === id)) return;
 
     this.leaveQueue.push({ name, id });
 
     // 如果当前有请求正在处理或队列为空，则直接返回
-    if (this.isHandlingLeave || this.leaveQueue.length < 1) {
-      return;
-    }
+    if (this.isHandlingLeave || this.leaveQueue.length < 1) return;
+
     this.isHandlingLeave = true;
     // 处理队列中的请求;
     const processQueue = async () => {
@@ -117,7 +107,8 @@ export class SocketGateway {
         const data = {
           id: dayjs().valueOf(),
           userId: id,
-          text: `${this.translation.t("common.user")}：${nextRequest.name}${this.translation.t("common.leave_chatroom")}}`,
+          text:
+            `${this.translation.t("common.user")}：${nextRequest.name}${this.translation.t("common.leave_chatroom")}}`,
           type: MessageEnum.LEAVE,
           createTimer: new Date()
         };
@@ -159,27 +150,16 @@ export class SocketGateway {
     @MessageBody() body: any,
     @ConnectedSocket() client: Socket,
   ) {
-    const { name, id } = body || {};
+    const { name, id } = body;
     // 如果用户不存在则执行下一步
-    if (this.currentUsers.has(id)) {
-      return;
-    }
-
+    if (this.currentUsers.has(id)) return;
     // 检查用户是否已经在队列中，存在的话，退出
-    if (this.joinQueue.some((user) => user.id === id)) {
-      return;
-    }
-
+    if (this.joinQueue.some((user) => user.id === id)) return;
     // 将用户添加到队列当中
     this.joinQueue.push({ name, id });
-
     // 如果正在处理或者队列已经没有任务了，则退出，等待任务队列自己处理
-    if (this.isHandlingJoin || this.joinQueue.length < 1) {
-      return;
-    }
-
+    if (this.isHandlingJoin || this.joinQueue.length < 1) return;
     this.isHandlingJoin = true;
-
     // 处理队列中的请求
     const processQueue = async () => {
       const nextRequest = this.joinQueue[0];
@@ -195,13 +175,10 @@ export class SocketGateway {
         this.allMessages.push(data);
         // 加入房间
         client.join(this.roomId);
-
         await this.server.to(this.roomId).emit('join', data);
       } catch (error) {
         // 处理错误
-        throw new BadRequestException(
-          this.translation.t('prompt.server_error'),
-        );
+        throw new BadRequestException(this.translation.t('prompt.server_error'),);
       } finally {
         // 加入这个人
         this.currentUsers.add(id);
