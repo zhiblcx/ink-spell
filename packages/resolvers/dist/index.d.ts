@@ -8,4 +8,8 @@ declare const clientI18nResolver: () => Resolver;
 
 declare const clientStoreResolver: () => Resolver;
 
-export { clientComponentResolver, clientEnumsResolver, clientI18nResolver, clientStoreResolver };
+declare const serverNestCommonResolver: () => Resolver;
+
+declare const serverSwaggerResolver: () => Resolver;
+
+export { clientComponentResolver, clientEnumsResolver, clientI18nResolver, clientStoreResolver, serverNestCommonResolver, serverSwaggerResolver };
