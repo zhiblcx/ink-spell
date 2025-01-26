@@ -1,7 +1,6 @@
 import { appConfig } from '@/config/AppConfig';
 import { APIResponse } from '@/core/decorator/APIResponse';
 import { FileValidationPipe } from '@/core/pipe/ParseFilePipeBuilder';
-import { R } from '@/shared/res/r';
 import {
   Body,
   Controller,
@@ -32,19 +31,11 @@ import {
 import { MultipleStorage } from 'src/config/MultipleStorage';
 import { TranslationService } from '../translation/translation.service';
 import { BookService } from './book.service';
-import { BookContentDto } from './dto/book-content.dto';
-import { BookFileDto } from './dto/book-file.dto';
-import { CoverLoadDto } from './dto/cover-load.dto';
-import { Md5Dto } from './dto/md5.dto';
-import { BookContentVo } from './vo/book-content.vo';
-import { BookInfoVo } from './vo/book.info.vo';
-import { CoverVo } from './vo/cover.vo';
-import { FileVo } from './vo/file.vo';
-import { Md5Vo } from './vo/md5.vo';
+import { BookContentDto, BookFileDto, CoverLoadDto, Md5Dto } from './dto';
+import { BookContentVo, BookInfoVo, CoverVo, FileVo, Md5Vo, AllBookInfoVo } from './vo';
 import { Roles } from '@/core/decorator/roles.decorator';
 import { Role } from '@/shared/enums/role.enum';
-import { E } from '@/shared/res/e';
-import { AllBookInfoVo } from './vo/all-book-info.vo';
+import { E, R } from '@/shared/res';
 import { bookshelfNameQuery, limitQuery, pageQuery, usernameQuery } from '@/shared/constants/pagination';
 
 @Controller('book')

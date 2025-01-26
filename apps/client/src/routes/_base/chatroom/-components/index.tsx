@@ -82,12 +82,6 @@ export default function ChatRoom() {
     })
   }
 
-  // 离开房间
-  const leaveRoom = () => {
-    socket.emit('leave', { name: query?.data.username, id: query?.data.id })
-    socket.close()
-  }
-
   // 处理新消息
   const handleNewMessage = (data: MessageType) => {
     if (data.type !== MessageEnum.JOIN) {
@@ -114,6 +108,12 @@ export default function ChatRoom() {
         setCount((preCount) => preCount + 1)
       }
     }
+  }
+
+  // 离开房间
+  const leaveRoom = () => {
+    socket.emit('leave', { name: query?.data.username, id: query?.data.id })
+    socket.close()
   }
 
   return (

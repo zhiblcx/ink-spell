@@ -1,6 +1,5 @@
 import { appConfig } from '@/config/AppConfig';
 import { APIResponse } from '@/core/decorator/APIResponse';
-import { R } from '@/shared/res/r';
 import {
   BadRequestException,
   Body,
@@ -26,10 +25,10 @@ import { BookShelfInfoVo } from './vo/bookshelf.info.vo';
 import { CreateBookShelfVo } from './vo/create-bookshelf.vo';
 import { Roles } from '@/core/decorator/roles.decorator';
 import { Role } from '@/shared/enums/role.enum';
-import { E } from '@/shared/res/e';
+import { R, E } from '@/shared/res';
 import { AllBookShelfInfoVo } from './vo/all-bookshelf-info.vo';
 import { bookshelfNameQuery, limitQuery, pageQuery, usernameQuery } from '@/shared/constants/pagination'
-import { tagsIdQuery, } from '@/shared/constants/tagQuery';
+import { tagsIdQuery } from '@/shared/constants/tagQuery';
 
 @Controller('bookshelf')
 @ApiTags('书架管理')

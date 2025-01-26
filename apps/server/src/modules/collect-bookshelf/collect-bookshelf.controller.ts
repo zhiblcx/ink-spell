@@ -1,5 +1,5 @@
 import { APIResponse } from '@/core/decorator/APIResponse';
-import { R } from '@/shared/res/r';
+import { R } from '@/shared/res';
 import {
   Controller,
   Delete,
@@ -20,7 +20,7 @@ import { CollectBookshelfVo } from './vo/collect-bookshelf.vo';
 export class CollectBookshelfController {
   constructor(
     private readonly collectBookshelfService: CollectBookshelfService,
-  ) {}
+  ) { }
   @Get()
   @ApiOperation({ summary: '获得收藏书架列表' })
   @HttpCode(HttpStatus.OK)
