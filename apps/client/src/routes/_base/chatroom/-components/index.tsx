@@ -1,8 +1,6 @@
 import { selectOneselfInfoQuery } from '@/features/user'
 import { CHAR_ROOM } from '@/shared/constants'
-import { User } from '@/shared/types'
-import { MessageType } from '@/shared/types/MessageType'
-import { message } from 'antd'
+import { MessageType, User } from '@/shared/types'
 import { TextAreaRef } from 'antd/es/input/TextArea'
 import useSmoothScroll from 'react-smooth-scroll-hook'
 import CharContent from './CharContent'
@@ -10,21 +8,19 @@ import ChatFooter from './ChatFooter'
 import { socket } from './socket.io'
 
 export default function ChatRoom() {
-  const { t } = useTranslation(['COMMON', 'VALIDATION', 'PROMPT'])
+  const { t } = useTranslation(['PROMPT'])
   const inputRef = useRef<TextAreaRef>(null)
   const chatContent = useRef<HTMLUListElement>(null)
   const location = useLocation()
   const [connect, setConnect] = useState(false)
   const [lookUser, setLookUser] = useState<User | null>(null)
   const [openFlag, setOpenFlag] = useState(false)
-  const [disableFlag, setDisableFlag] = useState(false)
   const [messageValue, setMessageValue] = useState('')
   const [peopleNumber, setPeopleNumber] = useState(0)
   const [loading, setLoading] = useState(true)
   const [messages, setMessages] = useState([] as MessageType[])
   const [count, setCount] = useState(0)
   const { data: query, isSuccess } = selectOneselfInfoQuery()
-  const { emoticon } = useEmoticonStore()
   const { scrollTo } = useSmoothScroll({
     ref: chatContent,
     speed: Infinity,
@@ -35,7 +31,6 @@ export default function ChatRoom() {
   useEffect(() => {
     if (isSuccess && socket.connected) {
       socket.emit('join', { name: query?.data.username, id: query?.data.id })
-
       socket.on('join', (data) => {
         setConnect(true)
         if (query?.data.id !== data.userId) {
@@ -44,17 +39,9 @@ export default function ChatRoom() {
         socket.emit('getMessages')
         socket.emit('getRoomUsers')
       })
-
-      socket.once('getMessages', (data: MessageType[]) => {
-        acquireMessage(data)
-      })
-
-      socket.on('getRoomUsers', (num) => {
-        setPeopleNumber(num)
-      })
-
+      socket.once('getMessages', acquireMessage)
+      socket.on('getRoomUsers', setPeopleNumber)
       socket.on('newMessage', handleNewMessage)
-
       socket.on('leave', (data) => {
         socket.emit('getRoomUsers')
         setMessages((prevMessages) => [...prevMessages, data])
@@ -129,30 +116,6 @@ export default function ChatRoom() {
     }
   }
 
-  // 用户发送消息
-  const sendMessage = (enable = false) => {
-    if (enable) {
-      socket.emit('newMessage', { message: emoticon, userId: query?.data.id, enable })
-    } else {
-      if (messageValue.trim() === '') {
-        message.error(t('PROMPT:no_blank_message'))
-        return
-      }
-      const newMessage = { message: messageValue, userId: query?.data.id, enable }
-      socket.emit('newMessage', newMessage)
-      setMessageValue('')
-      handlerDisableButton()
-    }
-  }
-
-  // 发送消息后禁用按钮，1秒后启用
-  const handlerDisableButton = () => {
-    setDisableFlag(true)
-    setTimeout(() => {
-      setDisableFlag(false)
-    }, 1000)
-  }
-
   return (
     <>
       {loading ? (
@@ -181,13 +144,12 @@ export default function ChatRoom() {
                 count={count}
                 setCount={setCount}
               />
-
               <ChatFooter
-                disableFlag={disableFlag}
                 messageValue={messageValue}
                 setMessageValue={setMessageValue}
                 inputRef={inputRef}
-                sendMessage={sendMessage}
+                socket={socket}
+                userId={query?.data.id}
               />
             </>
           )}

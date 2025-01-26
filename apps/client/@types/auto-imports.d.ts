@@ -15,6 +15,7 @@ declare global {
   const BookShelfDetail: typeof import('@/shared/components')['BookShelfDetail']
   const Button: typeof import('antd')['Button']
   const Card: typeof import('antd')['Card']
+  const ChatEmojiAndPhoto: typeof import('@/shared/components')['ChatEmojiAndPhoto']
   const Checkbox: typeof import('antd')['Checkbox']
   const ColorPicker: typeof import('antd')['ColorPicker']
   const ConfigProvider: typeof import('antd')['ConfigProvider']

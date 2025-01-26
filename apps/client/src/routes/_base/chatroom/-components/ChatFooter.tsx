@@ -1,29 +1,56 @@
-import { ChatEmojiAndPhoto } from '@/shared/components'
+import { message } from 'antd'
 import TextArea, { TextAreaRef } from 'antd/es/input/TextArea'
 import clsx from 'clsx'
+import { Socket } from 'socket.io-client'
 
 interface ChatFooterType {
-  disableFlag: boolean
   messageValue: string
   setMessageValue: React.Dispatch<React.SetStateAction<string>>
   inputRef: React.RefObject<TextAreaRef>
-  sendMessage: (enable?: boolean) => void
+  socket: Socket
+  userId: number
 }
 
 export default function ChatFooter({
-  disableFlag,
   messageValue,
   setMessageValue,
   inputRef,
-  sendMessage
+  socket,
+  userId
 }: ChatFooterType) {
-  const { t } = useTranslation(['COMMON', 'VALIDATION'])
+  const { t } = useTranslation(['COMMON', 'VALIDATION', 'PROMPT'])
   const { menu } = useMenuStore()
   const { clickEmoji } = useEmojiStore()
+  const { emoticon } = useEmoticonStore()
+  const [disableFlag, setDisableFlag] = useState(false)
+
+  // 用户发送消息
+  const sendMessage = (enable = false) => {
+    if (enable) {
+      socket.emit('newMessage', { message: emoticon, userId: userId, enable })
+    } else {
+      if (!messageValue.trim()) {
+        message.error(t('PROMPT:no_blank_message'))
+        return
+      }
+      const newMessage = { message: messageValue, userId: userId, enable }
+      socket.emit('newMessage', newMessage)
+      setMessageValue('')
+      handlerDisableButton()
+    }
+  }
+
+  // 发送消息后禁用按钮，1秒后启用
+  const handlerDisableButton = () => {
+    setDisableFlag(true)
+    setTimeout(() => {
+      setDisableFlag(false)
+    }, 1000)
+  }
 
   useEffect(() => {
     if (clickEmoji.emoji) {
-      if (messageValue === undefined || messageValue === '') {
+      if (!messageValue) {
         setMessageValue(clickEmoji.emoji)
       } else {
         // 此时输入框已有文字 selectionStart
@@ -42,7 +69,7 @@ export default function ChatFooter({
       <ChatEmojiAndPhoto />
       <div
         className={clsx(
-          menu === MenuEnum.EXTEND ? '' : 'min-[375px]:hidden md:flex',
+          { 'min-[375px]:hidden md:flex': menu !== MenuEnum.EXTEND },
           'mt-3 flex items-center space-x-3'
         )}
       >
@@ -54,12 +81,12 @@ export default function ChatFooter({
           ref={inputRef}
           placeholder={t('VALIDATION:enter_message')}
           showCount
-          onPressEnter={() => sendMessage(false)}
+          onPressEnter={() => sendMessage()}
           maxLength={200}
           style={{ resize: 'none' }}
         />
         <Button
-          onClick={() => sendMessage(false)}
+          onClick={() => sendMessage()}
           disabled={disableFlag}
           className="min-[375px]:min-w-[70px]"
         >

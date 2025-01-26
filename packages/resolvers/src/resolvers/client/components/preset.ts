@@ -3,6 +3,7 @@ export const componentBuiltInApi = [
   'BookDirectory',
   'BookShelf',
   'BookShelfDetail',
+  'ChatEmojiAndPhoto',
   'EmptyPage',
   'EmailInput',
   'ErrorPage',

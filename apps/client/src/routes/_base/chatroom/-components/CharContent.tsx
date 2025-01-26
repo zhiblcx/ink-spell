@@ -1,11 +1,9 @@
-import { User } from '@/shared/types'
-import { MessageType } from '@/shared/types/MessageType'
+import { MessageType, User } from '@/shared/types'
 import { VerticalAlignBottomOutlined } from '@ant-design/icons'
 import { TransformTimeUtils } from '@ink-spell/utils'
 import clsx from 'clsx'
 import React from 'react'
 import styles from '../index.module.scss'
-
 interface CharContentType {
   chatContent: React.RefObject<HTMLUListElement>
   setLookUser: React.Dispatch<React.SetStateAction<User | null>>
