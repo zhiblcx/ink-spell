@@ -126,15 +126,14 @@ export default function ChatRoom() {
         />
       ) : (
         <>
-          <div>
-            {!connect
-              ? t('PROMPT:failed_to_join_room')
-              : t('PROMPT:people_in_room', { peopleNumber: peopleNumber })}
-          </div>
           {!connect ? (
-            <EmptyPage name={t('PROMPT:connection_failed')} />
+            <>
+              {t('PROMPT:failed_to_join_room')}
+              <EmptyPage name={t('PROMPT:connection_failed')} />
+            </>
           ) : (
             <>
+              {t('PROMPT:people_in_room', { peopleNumber: peopleNumber })}
               <CharContent
                 chatContent={chatContent}
                 setLookUser={setLookUser}

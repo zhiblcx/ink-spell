@@ -137,28 +137,24 @@ export class BookService {
     return result;
   }
 
-  async deleteBook(bookId) {
+  async deleteBook(bookId: number) {
     await this.prisma.book.update({
       data: { isDelete: true },
-      where: { id: parseInt(bookId) },
+      where: { id: bookId },
     });
   }
 
-  async showBookContent(bookId) {
+  async showBookContent(bookId: number) {
     const currentBook = await this.prisma.book.findUnique({
-      where: { id: Number(bookId), isDelete: false },
+      where: { id: bookId, isDelete: false },
     });
-
-
-
     const fileName = currentBook.bookFile.replace(/static/, 'public');
-    const content =
-      (await readFileContent(fileName, currentBook.encoding)) || {};
+    const content = await readFileContent(fileName, currentBook.encoding);
     content['bookName'] = currentBook.name;
     return content;
   }
 
-  async updateBookDescription(bookID, bookDescription: BookContentDto) {
+  async updateBookDescription(bookID: number, bookDescription: BookContentDto) {
     return await this.prisma.book.update({
       data: {
         name: bookDescription.name,
@@ -168,7 +164,7 @@ export class BookService {
         description: bookDescription.description,
         bookShelfId: bookDescription.bookShelfId,
       },
-      where: { id: Number(bookID) },
+      where: { id: bookID },
     });
   }
 

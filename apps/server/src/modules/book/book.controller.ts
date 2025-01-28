@@ -113,10 +113,10 @@ export class BookController {
   @ApiOperation({ summary: '收藏书籍' })
   @HttpCode(HttpStatus.OK)
   @APIResponse(null, '收藏成功')
-  async collectBook(@Request() req, @Param('bookID') bookID: number) {
+  async collectBook(@Request() req, @Param('bookID', ParseIntPipe) bookID: number) {
     return new R({
       message: this.translation.t('prompt.collection_successful'),
-      data: await this.bookService.collectBook(Number(req.user.userId), Number(bookID)),
+      data: await this.bookService.collectBook(Number(req.user.userId), bookID),
     });
   }
 
@@ -135,7 +135,7 @@ export class BookController {
   @ApiOperation({ summary: '删除书籍' })
   @HttpCode(HttpStatus.OK)
   @APIResponse(null, '删除成功')
-  async deleteBook(@Param('bookID') bookID: number) {
+  async deleteBook(@Param('bookID', ParseIntPipe) bookID: number) {
     return new R({
       message: this.translation.t('prompt.deleted_successfully'),
       data: await this.bookService.deleteBook(bookID),
@@ -146,7 +146,7 @@ export class BookController {
   @ApiOperation({ summary: '查看书籍' })
   @HttpCode(HttpStatus.OK)
   @APIResponse(BookContentVo, '获取成功')
-  async showBookContent(@Param('bookID') bookID: number) {
+  async showBookContent(@Param('bookID', ParseIntPipe) bookID: number) {
     return new R({
       message: this.translation.t('prompt.acquire_successful'),
       data: await this.bookService.showBookContent(Number(bookID)),
@@ -158,7 +158,7 @@ export class BookController {
   @HttpCode(HttpStatus.OK)
   @APIResponse(BookInfoVo, '更新成功')
   async updateBookDescription(
-    @Param('bookID') bookID: number,
+    @Param('bookID', ParseIntPipe) bookID: number,
     @Body() bookContentDto: BookContentDto,
   ) {
     return new R({
@@ -203,8 +203,7 @@ export class BookController {
           username,
           bookshelfName
         ),
-        totalPages: await this.bookService.getAllBookInfoCount(limit, username,
-          bookshelfName),
+        totalPages: await this.bookService.getAllBookInfoCount(limit, username, bookshelfName),
         currentPage: page,
         itemsPerPage: limit,
       })

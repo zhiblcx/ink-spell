@@ -2,13 +2,11 @@ import * as iconv from 'iconv-lite';
 import * as jschardet from 'jschardet';
 import * as fs from 'node:fs';
 import * as readline from 'node:readline';
-
 export function detectFileEncoding(filePath) {
   const buffer = fs.readFileSync(filePath);
   const result = jschardet.detect(buffer);
   return result.encoding;
 }
-
 export function readFileContent(path, detectedEncoding) {
   const filePath = process.cwd() + path;
   const fileStream = fs.createReadStream(filePath);
@@ -16,42 +14,35 @@ export function readFileContent(path, detectedEncoding) {
     input: fileStream.pipe(iconv.decodeStream(detectedEncoding)),
     crlfDelay: Infinity,
   });
-  const chapterPattern =
-    /^((.{0,7}第\s*([一二三四五六七八九十零\d]){1,3}\s*章|[\d]+[.|、]\s*第\s*([一二三四五六七八九十零\d]){1,3}\s*章)\s*(.{0,10}))|章节目录+\s*(.{0,10})|(🔒\d(.{0,10}))$/;
+
+  // 优化后的章节匹配规则
+  const chapterPattern = /^((.{0,7}第\s*([一二三四五六七八九十零\d]){1,3}\s*章|[\d]+[.|、]\s*第\s*([一二三四五六七八九十零\d]){1,3}\s*章)\s*(.{0,10}))|章节目录+\s*(.{0,10})|(🔒\d(.{0,10}))$/;
 
   const chapter = ['简介'];
   const content = [[]];
-  let currentChapterIndex = 0; // 当前章节的下标
-  let index = 0; // 记录是否满50，如果满了50，则强制为一段
+  let currentChapterIndex = 0;
+  let lineCount = 0;
 
   return new Promise((resolve) => {
     rl.on('line', (line) => {
+      lineCount++;
+      // 章节匹配，如果找到新章节，创建新章节
       const chapterMatch = line.match(chapterPattern);
-      index++;
       if (chapterMatch) {
-        const chapterTitle = chapterMatch[0];
-        chapter.push(chapterTitle);
-        content.push([]); // 创建一个空数组用于存储该章节的内容
-        currentChapterIndex++; // 更新当前章节的下标
-        index = 0;
-      } else if (currentChapterIndex > 0) {
-        if (index >= 310) {
-          createNewChapter();
-        }
-        content[currentChapterIndex].push(line); // 将行内容存储到对应章节的内容数组中
-      } else if (currentChapterIndex == 0) {
-        if (index >= 100) {
-          createNewChapter();
+        chapter.push(line);
+        content.push([]); // 创建新的章节内容
+        currentChapterIndex++;
+        lineCount = 0;
+      } else if (currentChapterIndex >= 0) {
+        // 当前章节内容，超过50行时会强制换章节
+        if (lineCount >= 310) {
+          const chapterTitle = `第${chapter.length}章(*)`;
+          chapter.push(chapterTitle);
+          content.push([]);
+          currentChapterIndex++;
+          lineCount = 0;
         }
         content[currentChapterIndex].push(line);
-      }
-
-      function createNewChapter() {
-        const chapterTitle = `第${chapter.length}章(*)`;
-        chapter.push(chapterTitle);
-        content.push([]);
-        currentChapterIndex++;
-        index = 0;
       }
     });
 

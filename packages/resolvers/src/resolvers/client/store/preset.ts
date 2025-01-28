@@ -5,5 +5,6 @@ export const storeBuiltInApi = [
   'useMenuStore',
   'useSetupStore',
   'useThemeStore',
-  'useEmoticonStore'
+  'useEmoticonStore',
+  "useSetUpStore"
 ]

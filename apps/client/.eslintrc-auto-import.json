@@ -97,6 +97,7 @@
     "useLanguageStore": true,
     "useEmoticonStore": true,
     "useEmojiStore": true,
-    "ChatEmojiAndPhoto": true
+    "ChatEmojiAndPhoto": true,
+    "useSetUpStore": true
   }
 }

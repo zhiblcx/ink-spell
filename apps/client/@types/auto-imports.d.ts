@@ -99,6 +99,7 @@ declare global {
   const useReducer: typeof import('react')['useReducer']
   const useRef: typeof import('react')['useRef']
   const useRouter: typeof import('@tanstack/react-router')['useRouter']
+  const useSetUpStore: typeof import('@/shared/store')['useSetUpStore']
   const useState: typeof import('react')['useState']
   const useSyncExternalStore: typeof import('react')['useSyncExternalStore']
   const useThemeStore: typeof import('@/shared/store')['useThemeStore']

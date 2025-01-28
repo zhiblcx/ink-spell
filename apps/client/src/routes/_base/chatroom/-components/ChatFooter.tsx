@@ -21,7 +21,7 @@ export default function ChatFooter({
   const { t } = useTranslation(['COMMON', 'VALIDATION', 'PROMPT'])
   const { menu } = useMenuStore()
   const { clickEmoji } = useEmojiStore()
-  const { emoticon } = useEmoticonStore()
+  const { emoticon, setEmoticon } = useEmoticonStore()
   const [disableFlag, setDisableFlag] = useState(false)
 
   // 用户发送消息
@@ -63,6 +63,13 @@ export default function ChatFooter({
       }
     }
   }, [clickEmoji.timer])
+
+  useEffect(() => {
+    if (emoticon !== null) {
+      sendMessage(true)
+      setEmoticon(null)
+    }
+  }, [emoticon])
 
   return (
     <div className="absolute bottom-8 pt-1 min-[375px]:min-w-[90%] md:min-w-[70%]">
