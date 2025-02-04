@@ -24,23 +24,20 @@ export default function Header() {
 
   const { data: myBookShelf } = selectMyBookShelfQuery()
   let bookShelfId = match !== null ? match[0] : myBookShelf?.data[0].id
-
-  // TODO: remove undefined
   const { data: queryBook, isSuccess } = selectBookByBookShelfIdQuery(bookShelfId as string)
+  const { data: selectOneselfInfoData } = selectOneselfInfoQuery()
+  const { mutate: updateUserPasswordMutate } = updateUserPasswordMutation()
 
   useEffect(() => {
     if (isSuccess) {
       setOptionTotal(
-        queryBook.data.map((item: Book) => ({
+        queryBook?.data.map((item: Book) => ({
           label: item.name,
           value: item.name
         }))
       )
     }
   }, [isSuccess])
-
-  const query = selectOneselfInfoQuery()
-  const { mutate } = updateUserPasswordMutation()
 
   function Icon(props: ReactNode) {
     return (
@@ -107,14 +104,11 @@ export default function Header() {
       </div>
       <div className="flex items-center justify-center min-[375px]:ml-2 min-[375px]:space-x-2 md:mr-10 md:space-x-4">
         <RotateCw onClick={refresh} />
-
         <SettingMenu />
-
         <AvatarItems
           setOpenFlag={setOpenFlag}
-          avatar={query.data?.data.avatar}
+          avatar={selectOneselfInfoData?.data.avatar}
         />
-
         <ImportBook bookShelfId={bookShelfId} />
       </div>
 
@@ -122,7 +116,7 @@ export default function Header() {
         form={form}
         openFlag={openFlag}
         setOpenFlag={setOpenFlag}
-        mutate={mutate}
+        mutate={updateUserPasswordMutate}
       />
     </div>
   )

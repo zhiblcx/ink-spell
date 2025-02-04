@@ -1,6 +1,10 @@
 import { selectBookByBookShelfIdQuery, selectMyBookShelfQuery } from '@/features/bookshelf'
 import { Ink } from '@/shared/types'
 
+export const Route = createLazyFileRoute('/_base/')({
+  component: () => <Page />
+})
+
 export function Page() {
   const [_, setBooks] = useState<Ink[]>([])
   const {
@@ -12,8 +16,8 @@ export function Page() {
     updateIsOtherBookShelfFlag
   } = useActionBookStore()
 
-  const { data } = selectMyBookShelfQuery()
-  const bookShelfId = data?.data[0].id
+  const { data: selectMyBookShelfData } = selectMyBookShelfQuery()
+  const bookShelfId = selectMyBookShelfData?.data[0].id
   const { data: queryBook, isLoading } = selectBookByBookShelfIdQuery(bookShelfId)
 
   const queryClient = useQueryClient()
@@ -43,14 +47,10 @@ export function Page() {
       ) : (
         <BookShelf
           bookShelfId={bookShelfId}
-          books={queryBook?.data}
+          books={queryBook?.data ?? []}
           setBooks={setBooks}
         />
       )}
     </>
   )
 }
-
-export const Route = createLazyFileRoute('/_base/')({
-  component: () => <Page />
-})

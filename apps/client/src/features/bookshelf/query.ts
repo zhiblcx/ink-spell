@@ -9,7 +9,8 @@ export const selectMyBookShelfQuery = () =>
 export const selectBookByBookShelfIdQuery = (bookShelfId: string) =>
   useQuery({
     queryKey: [QueryKeysEnum.BOOKSHELF_BOOK_KEY, bookShelfId],
-    queryFn: () => httpRequest.get(`/bookshelf/${bookShelfId}`)
+    queryFn: () => httpRequest.get(`/bookshelf/${bookShelfId}`),
+    enabled: !!bookShelfId
   })
 
 export const selectUserCollectBookShelfQuery = () =>
@@ -41,8 +42,7 @@ export const selectPublicBookShelfQuery = (
   }
   return useQuery({
     queryKey: [QueryKeysEnum.BOOKSHELF_KEY, page, limit, select, selectValue, bookshelfName],
-    queryFn: () => httpRequest.get(`/bookshelf/public?page=${page}&limit=${limit}${path}`),
-
+    queryFn: () => httpRequest.get(`/bookshelf/public?page=${page}&limit=${limit}${path}`)
   })
 }
 

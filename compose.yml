@@ -11,3 +11,17 @@ services:
         required: false
       - path: apps/server/.env.example
         required: false
+
+  redis:
+    container_name: ink-spell-redis
+    image: redis:latest
+    restart: always
+    shm_size: 128mb
+    ports:
+      - 6380:6379
+    env_file:
+      - path: apps/server/.env.local
+        required: false
+      - path: apps/server/.env.example
+        required: false
+
