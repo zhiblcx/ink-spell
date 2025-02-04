@@ -1,6 +1,10 @@
+import { createKeyv } from '@keyv/redis';
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { CacheableMemory } from 'cacheable';
+import Keyv from 'keyv';
 import {
   HeaderResolver,
   I18nModule,
@@ -8,7 +12,10 @@ import {
   QueryResolver,
 } from 'nestjs-i18n';
 import * as path from 'node:path';
+import { env } from 'node:process';
 import { PrismaExceptionFilter } from './core/prisma-client-exception/prisma-client-exception.filter';
+import { SocketModule } from './events/socket.module';
+import { AdminModule } from './modules/admin/admin.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { BookModule } from './modules/book/book.module';
 import { BookmarkModule } from './modules/bookmark/bookmark.module';
@@ -16,20 +23,34 @@ import { BookshelfModule } from './modules/bookshelf/bookshelf.module';
 import { CollectBookshelfModule } from './modules/collect-bookshelf/collect-bookshelf.module';
 import { FollowModule } from './modules/follow/follow.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
+import { ReadHistoryModule } from './modules/read-history/read-history.module';
+import { SystemModule } from './modules/system/system.module';
+import { TagModule } from './modules/tag/tag.module';
 import { TranslationModule } from './modules/translation/translation.module';
 import { defaultLang } from './modules/translation/translation.service';
 import { UserModule } from './modules/user/user.module';
 import { UserService } from './modules/user/user.service';
-import { ReadHistoryModule } from './modules/read-history/read-history.module';
-import { AdminModule } from './modules/admin/admin.module';
-import { TagModule } from './modules/tag/tag.module';
-import { SystemModule } from './modules/system/system.module';
-import { SocketModule } from './events/socket.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: ['.env.local', '.env.example'],
+    }),
+    // redis缓存
+    CacheModule.registerAsync({
+      useFactory: async () => ({
+        stores: [
+          new Keyv({
+            store: new CacheableMemory({
+              // 缓存存活时间
+              ttl: 60 * 1000,
+              // 缓存大小
+              lruSize: 1000,
+            }),
+          }),
+          createKeyv(env.REDIS_LOCAL + env.REDIS_PORT),
+        ],
+      }),
     }),
     I18nModule.forRoot({
       fallbackLanguage: defaultLang,
@@ -60,12 +81,13 @@ import { SocketModule } from './events/socket.module';
     AdminModule,
     TagModule,
     SystemModule,
-    SocketModule
+    SocketModule,
   ],
   providers: [
     { provide: APP_PIPE, useClass: I18nValidationPipe },
     { provide: APP_FILTER, useClass: PrismaExceptionFilter },
+    { provide: APP_INTERCEPTOR, useClass: CacheInterceptor },
     UserService,
   ],
 })
-export class AppModule { }
+export class AppModule {}

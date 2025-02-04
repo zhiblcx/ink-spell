@@ -1,5 +1,15 @@
 import { appConfig } from '@/config/AppConfig';
 import { APIResponse } from '@/core/decorator/APIResponse';
+import { Roles } from '@/core/decorator/roles.decorator';
+import {
+  bookshelfNameQuery,
+  limitQuery,
+  pageQuery,
+  usernameQuery,
+} from '@/shared/constants/pagination';
+import { tagsIdQuery } from '@/shared/constants/tagQuery';
+import { Role } from '@/shared/enums/role.enum';
+import { E, R } from '@/shared/res';
 import {
   BadRequestException,
   Body,
@@ -16,19 +26,19 @@ import {
   Request,
   Res,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import * as fs from 'node:fs';
 import { TranslationService } from '../translation/translation.service';
 import { BookshelfService } from './bookshelf.service';
 import { CreateBookshelfDto } from './dto/create-bookshelf.dto';
+import { AllBookShelfInfoVo } from './vo/all-bookshelf-info.vo';
 import { BookShelfInfoVo } from './vo/bookshelf.info.vo';
 import { CreateBookShelfVo } from './vo/create-bookshelf.vo';
-import { Roles } from '@/core/decorator/roles.decorator';
-import { Role } from '@/shared/enums/role.enum';
-import { R, E } from '@/shared/res';
-import { AllBookShelfInfoVo } from './vo/all-bookshelf-info.vo';
-import { bookshelfNameQuery, limitQuery, pageQuery, usernameQuery } from '@/shared/constants/pagination'
-import { tagsIdQuery } from '@/shared/constants/tagQuery';
 
 @Controller('bookshelf')
 @ApiTags('书架管理')
@@ -37,7 +47,7 @@ export class BookshelfController {
   constructor(
     private readonly bookshelfService: BookshelfService,
     private readonly translation: TranslationService,
-  ) { }
+  ) {}
 
   @Post()
   @ApiOperation({ summary: '新增书架' })
@@ -86,7 +96,7 @@ export class BookshelfController {
   }
 
   // #region Public Bookshelf API
-  @Get("/public")
+  @Get('/public')
   @ApiOperation({ summary: '查询以及搜索公开书架' })
   @HttpCode(HttpStatus.OK)
   @ApiQuery(pageQuery)
@@ -95,8 +105,8 @@ export class BookshelfController {
   @ApiQuery(tagsIdQuery)
   @APIResponse([CreateBookShelfVo], '获取成功')
   async acquirePublicBookShelf(
-    @Query("page", ParseIntPipe) page: number,
-    @Query("limit", ParseIntPipe) limit: number,
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
     @Query('bookshelfName') bookshelfName?: string,
     @Query('tagsId') tagsId?: string,
   ) {
@@ -114,22 +124,24 @@ export class BookshelfController {
         totalPages: await this.bookshelfService.getPublicBookShelfCount(
           limit,
           bookshelfName,
-          tagsId
-        )
-      })
+          tagsId,
+        ),
+      }),
     });
   }
   // #endregion
 
   // #region Recommend Bookshelf API
-  @Get("/recommend")
-  @ApiOperation({ summary: "获取推荐书架" })
+  @Get('/recommend')
+  @ApiOperation({ summary: '获取推荐书架' })
   @APIResponse([AllBookShelfInfoVo], '查询成功')
   async getRecommendBookshelf(@Request() req) {
     return new R({
-      message: this.translation.t("prompt.acquire_successful"),
-      data: await this.bookshelfService.getRecommendBookshelf(Number(req.user.userId)),
-    })
+      message: this.translation.t('prompt.acquire_successful'),
+      data: await this.bookshelfService.getRecommendBookshelf(
+        Number(req.user.userId),
+      ),
+    });
   }
   // #endregion
 
@@ -204,34 +216,37 @@ export class BookshelfController {
 
   // #region Bookshelf Info API
   @Roles(Role.Admin)
-  @Get("/all/info")
-  @ApiOperation({ summary: "获取所有书架信息" })
+  @Get('/all/info')
+  @ApiOperation({ summary: '获取所有书架信息' })
   @ApiQuery(usernameQuery)
   @ApiQuery(bookshelfNameQuery)
   @ApiQuery(pageQuery)
   @ApiQuery(limitQuery)
   @APIResponse([AllBookShelfInfoVo], '查询成功', true)
   async getAllBookInfo(
-    @Query("page", ParseIntPipe) page: number,
-    @Query("limit", ParseIntPipe) limit: number,
-    @Query("username") username?: string,
-    @Query("bookshelfName") bookshelfName?: string,
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
+    @Query('username') username?: string,
+    @Query('bookshelfName') bookshelfName?: string,
   ) {
     return new R({
-      message: this.translation.t("prompt.acquire_successful"),
+      message: this.translation.t('prompt.acquire_successful'),
       data: new E({
         items: await this.bookshelfService.getAllBookInfo(
           page,
           limit,
           username,
-          bookshelfName
+          bookshelfName,
         ),
-        totalPages: await this.bookshelfService.getAllBookInfoCount(limit, username,
-          bookshelfName),
+        totalPages: await this.bookshelfService.getAllBookInfoCount(
+          limit,
+          username,
+          bookshelfName,
+        ),
         currentPage: page,
         itemsPerPage: limit,
-      })
-    })
+      }),
+    });
   }
   // #endregion
 }
