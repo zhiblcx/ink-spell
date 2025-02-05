@@ -1,4 +1,5 @@
 import {
+  giteeMarkImg,
   githubMarkImg,
   githubMarkWhiteImg,
   loginDarkImg,
@@ -6,6 +7,7 @@ import {
   logoLightImg
 } from '@/assets/images'
 import { signinMutation } from '@/features/auth'
+import { GITEE_LOGIN_URL, GITHUB_LOGIN_URL } from '@/shared/constants'
 import { APP_NAME } from '@/shared/constants/app'
 import { AuthUtils } from '@/shared/utils'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
@@ -137,19 +139,19 @@ export default function Signin() {
                 {t('AUTH:forgot_password')}
               </span>
             </Form.Item>
-            <Divider>其他方式登录</Divider>
+            <Divider>{t('COMMON:other_login_methods')}</Divider>
             <ul className="flex space-x-4">
               <li
                 className="w-[35px] cursor-pointer rounded-lg bg-white p-1 dark:bg-black"
-                onClick={() => {
-                  window.open(
-                    `https://github.com/login/oauth/authorize?client_id=${import.meta.env.VITE_CLIENT_ID}&redirect_uri=http://127.0.0.1:6600/oauth`,
-                    '_blank',
-                    'height=600, width=700'
-                  )
-                }}
+                onClick={() => window.open(GITHUB_LOGIN_URL, '_blank', 'height=600, width=700')}
               >
                 <img src={theme === ThemeEnum.DARK ? githubMarkWhiteImg : githubMarkImg} />
+              </li>
+              <li
+                className="w-[35px] cursor-pointer rounded-lg bg-white p-1 dark:bg-black"
+                onClick={() => window.open(GITEE_LOGIN_URL, '_blank', 'height=600, width=700')}
+              >
+                <img src={giteeMarkImg} />
               </li>
             </ul>
           </Form>

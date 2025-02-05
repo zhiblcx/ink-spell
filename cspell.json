@@ -29,6 +29,7 @@
     "iconify",
     "axios",
     "popconfirm",
-    "bookshelfs"
+    "bookshelfs",
+    "gitee"
   ]
 }
