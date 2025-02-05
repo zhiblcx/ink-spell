@@ -1,4 +1,5 @@
 import { ALL_BOOK } from '@/shared/constants';
+import { OauthEnum } from '@/shared/enums/oauth.enum';
 import { R } from '@/shared/res/r';
 import Email from '@/shared/utils/EmailTool';
 import {
@@ -16,7 +17,6 @@ import { PrismaService } from '../prisma/prisma.service';
 import { TranslationService } from '../translation/translation.service';
 import { LoginDao } from './dto/login-auth.dto';
 import { RegisterDto } from './dto/register-auth.dto';
-import { OauthEnum } from '@/shared/enums/oauth.enum';
 
 @Injectable()
 export class AuthService {
@@ -24,13 +24,17 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
     private readonly translation: TranslationService,
-  ) { }
+  ) {}
 
-  async generateToken(payload: { userId: number; account: string, roles: string }) {
+  async generateToken(payload: {
+    userId: number;
+    account: string;
+    roles: string;
+  }) {
     await this.prisma.user.update({
       where: { id: payload.userId },
-      data: { offlineTime: new Date() }
-    })
+      data: { offlineTime: new Date() },
+    });
     return {
       access_token: await this.jwtService.signAsync(payload, {
         expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
@@ -65,7 +69,7 @@ export class AuthService {
         data: await this.generateToken({
           userId: user.id,
           account: user.account,
-          roles: user.rolesId
+          roles: user.rolesId,
         }),
         message: this.translation.t('prompt.login_successful'),
       });
@@ -85,12 +89,12 @@ export class AuthService {
       code = null,
     } = registerDao;
     const user = await this.prisma.user.findFirst({
-      where: { OR: [{ account }, { username }] },
+      where: { OR: [{ account }, { username }], AND: { oauth } },
     });
     if (user) {
       if (user.account === account) {
         throw new UnprocessableEntityException(
-          this.translation.t("auth.account_exists"),
+          this.translation.t('auth.account_exists'),
         );
       }
       if (user.username === username) {
@@ -133,7 +137,7 @@ export class AuthService {
         data: await this.generateToken({
           userId: currentUser.id,
           account: currentUser.account,
-          roles: currentUser.rolesId
+          roles: currentUser.rolesId,
         }),
         message: this.translation.t('prompt.login_successful'),
       });
@@ -163,12 +167,12 @@ export class AuthService {
       where: {
         account_oauth: {
           account,
-          oauth
+          oauth,
         },
-        isDelete: false
-      }
-    })
-    return user !== null
+        isDelete: false,
+      },
+    });
+    return user !== null;
   }
 
   async oauth(registerDao: RegisterDto, oauthMethod: OauthEnum) {
@@ -176,22 +180,22 @@ export class AuthService {
       where: {
         account_oauth: {
           account: registerDao.account,
-          oauth: oauthMethod
+          oauth: oauthMethod,
         },
-        isDelete: false
-      }
-    })
+        isDelete: false,
+      },
+    });
 
     // 如果没有账号则进行注册
     if (!user) {
-      return await this.signUp(registerDao, oauthMethod)
+      return await this.signUp(registerDao, oauthMethod);
     } else {
       // 直接登录
       return new R({
         data: await this.generateToken({
           userId: user.id,
           account: user.account,
-          roles: user.rolesId
+          roles: user.rolesId,
         }),
         message: this.translation.t('prompt.login_successful'),
       });

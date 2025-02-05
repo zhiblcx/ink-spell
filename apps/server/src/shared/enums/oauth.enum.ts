@@ -1,6 +1,10 @@
 export enum OauthEnum {
   // Local
-  LOCAL = "local",
+  LOCAL = 'local',
   // Github
-  GITHUB = 'github'
+  GITHUB = 'github',
+  // Google
+  GOOGLE = 'google',
+  // Gitee
+  GITEE = 'gitee',
 }
