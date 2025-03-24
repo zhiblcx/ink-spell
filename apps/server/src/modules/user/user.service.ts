@@ -5,7 +5,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { compare, hash } from 'bcrypt';
+import { compare, hash } from 'bcryptjs';
 import { env } from 'process';
 import { PrismaService } from '../prisma/prisma.service';
 import { TranslationService } from '../translation/translation.service';
@@ -15,7 +15,7 @@ export class UserService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly translation: TranslationService,
-  ) { }
+  ) {}
 
   async getProfileData(userId: number) {
     try {
@@ -194,8 +194,8 @@ export class UserService {
             followers: { where: { isDelete: false } },
             following: { where: { isDelete: false } },
             bookShelfs: { where: { isDelete: false } },
-            books: { where: { isDelete: false } }
-          }
+            books: { where: { isDelete: false } },
+          },
         },
       },
       skip: (page - 1) * limit,
@@ -295,7 +295,7 @@ export class UserService {
     return await this.prisma.user.update({
       where: { id: userId },
       data: { systemScore: rate },
-    })
+    });
   }
 
   async getAllUserInfo(page: number, limit: number) {
@@ -306,22 +306,22 @@ export class UserService {
       include: {
         readingHistory: {
           select: {
-            readTime: true
-          }
+            readTime: true,
+          },
         },
         _count: {
           select: {
             followers: { where: { isDelete: false } },
             following: { where: { isDelete: false } },
             bookShelfs: { where: { isDelete: false } },
-            books: { where: { isDelete: false } }
-          }
+            books: { where: { isDelete: false } },
+          },
         },
       },
       skip: (page - 1) * limit,
-      take: limit
+      take: limit,
     });
-    return users.map(user => ({
+    return users.map((user) => ({
       ...user,
       password: undefined,
       _count: undefined,
@@ -330,15 +330,20 @@ export class UserService {
       oauth: undefined,
       readingHistory: undefined,
       ...user._count,
-      readTime: user.readingHistory.reduce((sum, history) => sum + history.readTime, 0)
-    }))
+      readTime: user.readingHistory.reduce(
+        (sum, history) => sum + history.readTime,
+        0,
+      ),
+    }));
   }
 
   async getAllUserInfoCount(limit) {
-    return Math.ceil(await this.prisma.user.count({
-      where: {
-        isDelete: false,
-      }
-    }) / limit)
+    return Math.ceil(
+      (await this.prisma.user.count({
+        where: {
+          isDelete: false,
+        },
+      })) / limit,
+    );
   }
 }

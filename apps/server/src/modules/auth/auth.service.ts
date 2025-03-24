@@ -9,7 +9,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { compare, hash } from 'bcrypt';
+import { compare, hash } from 'bcryptjs';
 import * as dayjs from 'dayjs';
 import { env } from 'process';
 import { appConfig } from '../../config/AppConfig';
