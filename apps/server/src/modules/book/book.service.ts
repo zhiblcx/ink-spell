@@ -10,9 +10,7 @@ import { BookContentDto } from './dto/book-content.dto';
 
 @Injectable()
 export class BookService {
-  constructor(
-    private prisma: PrismaService,
-  ) { }
+  constructor(private prisma: PrismaService) {}
   async uploadFile(req, file, md5, bookShelfId) {
     const encoding = detectFileEncoding(file.path);
     const filePath = file.path.replace(/\\/g, '/').replace('public', '/static');
@@ -39,7 +37,7 @@ export class BookService {
     // 找到该书籍
     const { id: _, ...book } = await this.prisma.book.findUnique({
       where: {
-        id: bookId
+        id: bookId,
       },
     });
 
@@ -155,6 +153,18 @@ export class BookService {
   }
 
   async updateBookDescription(bookID: number, bookDescription: BookContentDto) {
+    const book = await this.prisma.book.findUnique({ where: { id: bookID } });
+    if (book.bookShelfId !== bookDescription.bookShelfId) {
+      const bookshelf = await this.prisma.bookShelf.findUnique({
+        where: { id: bookDescription.bookShelfId },
+      });
+      if (bookshelf.label !== '全部图书') {
+        await this.prisma.bookShelf.update({
+          data: { review: 'UNREVIEWED' },
+          where: { id: bookDescription.bookShelfId },
+        });
+      }
+    }
     return await this.prisma.book.update({
       data: {
         name: bookDescription.name,
@@ -175,20 +185,25 @@ export class BookService {
     return book.bookFile.split('/')[3];
   }
 
-  async getAllBookInfo(page: number, limit: number, username: string | undefined, bookshelfName: string | undefined) {
+  async getAllBookInfo(
+    page: number,
+    limit: number,
+    username: string | undefined,
+    bookshelfName: string | undefined,
+  ) {
     return await this.prisma.book.findMany({
       where: {
         user: {
           username: {
-            contains: username ?? ''
+            contains: username ?? '',
           },
         },
         bookShelf: {
           label: {
-            contains: bookshelfName ?? ''
-          }
+            contains: bookshelfName ?? '',
+          },
         },
-        isDelete: false
+        isDelete: false,
       },
       include: {
         user: {
@@ -197,8 +212,8 @@ export class BookService {
             username: true,
             account: true,
             email: true,
-            avatar: true
-          }
+            avatar: true,
+          },
         },
         bookShelf: {
           select: {
@@ -206,30 +221,36 @@ export class BookService {
             label: true,
             cover: true,
             description: true,
-            isPublic: true
-          }
-        }
+            isPublic: true,
+          },
+        },
       },
       skip: (page - 1) * limit,
       take: limit,
-    })
+    });
   }
 
-  async getAllBookInfoCount(limit: number, username: string | undefined, bookshelfName: string | undefined) {
-    return Math.ceil(await this.prisma.book.count({
-      where: {
-        user: {
-          username: {
-            contains: username ?? ''
+  async getAllBookInfoCount(
+    limit: number,
+    username: string | undefined,
+    bookshelfName: string | undefined,
+  ) {
+    return Math.ceil(
+      (await this.prisma.book.count({
+        where: {
+          user: {
+            username: {
+              contains: username ?? '',
+            },
           },
+          bookShelf: {
+            label: {
+              contains: bookshelfName ?? '',
+            },
+          },
+          isDelete: false,
         },
-        bookShelf: {
-          label: {
-            contains: bookshelfName ?? ''
-          }
-        },
-        isDelete: false
-      }
-    }) / limit)
+      })) / limit,
+    );
   }
 }

@@ -226,6 +226,18 @@ export function OperateBookShelfModal({
                 autoSize={{ minRows: 2, maxRows: 4 }}
               />
             </Form.Item>
+            <>
+              {value && (
+                <div>
+                  <h1>{t('COMMON:copyright.title')}</h1>
+                  <ul>
+                    <li>{t('COMMON:copyright.points.0')}</li>
+                    <li>{t('COMMON:copyright.points.1')}</li>
+                    <li>{t('COMMON:copyright.points.2')}</li>
+                  </ul>
+                </div>
+              )}
+            </>
           </>
         ) : null}
       </Form>

@@ -12,7 +12,6 @@ export default function ChatRoom() {
   const inputRef = useRef<TextAreaRef>(null)
   const chatContent = useRef<HTMLUListElement>(null)
   const location = useLocation()
-  const [connect, setConnect] = useState(false)
   const [lookUser, setLookUser] = useState<User | null>(null)
   const [openFlag, setOpenFlag] = useState(false)
   const [messageValue, setMessageValue] = useState('')
@@ -21,37 +20,51 @@ export default function ChatRoom() {
   const [messages, setMessages] = useState([] as MessageType[])
   const [count, setCount] = useState(0)
   const { data: query, isSuccess } = selectOneselfInfoQuery()
+  const connectionInitializedRef = useRef(false)
   const { scrollTo } = useSmoothScroll({
     ref: chatContent,
     speed: Infinity,
     direction: 'y'
   })
 
+  function socketConnect() {
+    socket.emit('join', { name: query?.data.username, id: query?.data.id })
+    socket.on('join', (data) => {
+      if (query?.data.id !== data.userId) {
+        handleNewMessage(data)
+      }
+      socket.emit('getMessages')
+      socket.emit('getRoomUsers')
+    })
+    socket.once('getMessages', acquireMessage)
+    socket.on('getRoomUsers', setPeopleNumber)
+    socket.on('newMessage', handleNewMessage)
+    socket.on('leave', (data) => {
+      socket.emit('getRoomUsers')
+      setMessages((prevMessages) => [...prevMessages, data])
+      setCount((preCount) => preCount + 1)
+    })
+  }
+
   // 初始化数据
   useEffect(() => {
-    if (isSuccess && socket.connected) {
-      socket.emit('join', { name: query?.data.username, id: query?.data.id })
-      socket.on('join', (data) => {
-        setConnect(true)
-        if (query?.data.id !== data.userId) {
-          handleNewMessage(data)
-        }
-        socket.emit('getMessages')
-        socket.emit('getRoomUsers')
-      })
-      socket.once('getMessages', acquireMessage)
-      socket.on('getRoomUsers', setPeopleNumber)
-      socket.on('newMessage', handleNewMessage)
-      socket.on('leave', (data) => {
-        socket.emit('getRoomUsers')
-        setMessages((prevMessages) => [...prevMessages, data])
-        setCount((preCount) => preCount + 1)
-      })
+    if (!isSuccess || connectionInitializedRef.current) return
 
-      // 关闭网站触发
-      window.addEventListener('beforeunload', leaveRoom)
+    connectionInitializedRef.current = true
+
+    socket.connect()
+
+    if (socket.connected) {
+      console.log('socket 已连接，立即执行')
+      socketConnect()
+    } else {
+      console.log('等待 socket 连接')
+      socket.once('connect', socketConnect)
     }
-  }, [isSuccess, socket.connected])
+
+    // 关闭网站触发
+    window.addEventListener('beforeunload', leaveRoom)
+  }, [isSuccess])
 
   // 离开页面退出房间
   useEffect(() => {
@@ -73,7 +86,6 @@ export default function ChatRoom() {
     })
 
     setMessages(() => [...(result as MessageType[])])
-
     setLoading(false)
     setTimeout(() => {
       if (chatContent.current) {
@@ -113,7 +125,7 @@ export default function ChatRoom() {
   // 离开房间
   const leaveRoom = () => {
     socket.emit('leave', { name: query?.data.username, id: query?.data.id })
-    socket.close()
+    socket.disconnect()
   }
 
   return (
@@ -126,7 +138,7 @@ export default function ChatRoom() {
         />
       ) : (
         <>
-          {!connect ? (
+          {!socket.connected ? (
             <>
               {t('PROMPT:failed_to_join_room')}
               <EmptyPage name={t('PROMPT:connection_failed')} />

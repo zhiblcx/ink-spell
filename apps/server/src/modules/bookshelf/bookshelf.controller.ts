@@ -201,7 +201,7 @@ export class BookshelfController {
   @HttpCode(HttpStatus.OK)
   @APIResponse(CreateBookShelfVo, '更新成功')
   async updateBookShelf(
-    @Param('bookShelfId') bookShelfId: number,
+    @Param('bookShelfId', ParseIntPipe) bookShelfId: number,
     @Body() updateBookshelfDto: CreateBookshelfDto,
   ) {
     return new R({
@@ -246,6 +246,81 @@ export class BookshelfController {
         currentPage: page,
         itemsPerPage: limit,
       }),
+    });
+  }
+  // #endregion
+
+  // #region Bookshelf review API
+  @Get('/review/reject/bookshelf')
+  @ApiOperation({ summary: '查看被拒绝公开书架' })
+  @APIResponse(null, '查询成功')
+  async getReviewPublicBookshelf(@Request() req) {
+    return new R({
+      message: this.translation.t('prompt.acquire_successful'),
+      data: await this.bookshelfService.getReviewPublicBookshelf(
+        Number(req.user.userId),
+      ),
+    });
+  }
+  // #endregion
+
+  // #region Bookshelf review API
+  @Put('/review/apply/bookshelf/:bookshelfId')
+  @ApiOperation({ summary: '重新申请公开书架' })
+  @APIResponse(null, '申请成功')
+  async getReviewApplyBookshelf(
+    @Request() req,
+    @Param('bookShelfId', ParseIntPipe) bookShelfId: number,
+  ) {
+    return new R({
+      message: this.translation.t('prompt.update_successful'),
+      data: await this.bookshelfService.putReviewApplyBookshelf(
+        Number(req.user.userId),
+        bookShelfId,
+      ),
+    });
+  }
+  // #endregion
+
+  // #region Bookshelf review API
+  @Roles(Role.Admin)
+  @Get('/review/bookshelf')
+  @ApiOperation({ summary: '查看审核书架' })
+  @ApiQuery(pageQuery)
+  @ApiQuery(limitQuery)
+  @APIResponse([AllBookShelfInfoVo], '查询成功', true)
+  async getReviewBookshelf(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
+  ) {
+    return new R({
+      message: this.translation.t('prompt.acquire_successful'),
+      data: new E({
+        items: await this.bookshelfService.getReviewBookshelf(page, limit),
+        totalPages: await this.bookshelfService.getReviewBookshelfCount(limit),
+        currentPage: page,
+        itemsPerPage: limit,
+      }),
+    });
+  }
+  // #endregion
+
+  // #region Bookshelf review API
+  @Roles(Role.Admin)
+  @Put('/review/bookshelf/:bookShelfId')
+  @ApiOperation({ summary: '审核公开书架' })
+  @APIResponse(null, '更改成功')
+  async updateReviewBookshelf(
+    @Param('bookShelfId', ParseIntPipe) bookShelfId: number,
+    @Body()
+    review: ReviewStatus,
+  ) {
+    return new R({
+      message: this.translation.t('prompt.update_successful'),
+      data: await this.bookshelfService.updateReviewBookshelf(
+        bookShelfId,
+        review,
+      ),
     });
   }
   // #endregion
