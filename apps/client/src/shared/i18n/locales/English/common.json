@@ -99,5 +99,13 @@
   "operate": "operate",
   "recommend": "recommend",
   "all": "all",
-  "other_login_methods": "Other login methods"
+  "other_login_methods": "Other login methods",
+  "copyright": {
+    "title": "Copyright Notice",
+    "points": [
+      "1.By uploading content, users confirm they hold proper rights or authorization",
+      "2.Report infringement to: nicolezhi@qq.com",
+      "3.This system is for academic research only"
+    ]
+  }
 }

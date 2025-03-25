@@ -103,5 +103,13 @@
   "operate": "操作",
   "recommend": "推荐",
   "all": "全部",
-  "other_login_methods": "其他方式登录"
+  "other_login_methods": "其他方式登录",
+  "copyright": {
+    "title": "版权声明",
+    "points": [
+      "1.用户上传即承诺拥有作品版权或授权",
+      "2.发现侵权内容请联系nicolezhi@qq.com",
+      "3.本系统仅用于教学研究，不存储侵权内容副本"
+    ]
+  }
 }
