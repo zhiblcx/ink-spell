@@ -1,3 +1,10 @@
+enum ReviewStatus {
+  PENDING // 审核中
+  UNREVIEWED // 未审核
+  APPROVED // 已通过
+  REJECTED // 已拒绝
+}
+
 model BookShelf {
   id               Int                @id @default(autoincrement())
   label            String
@@ -8,6 +15,7 @@ model BookShelf {
   isDelete         Boolean            @default(false) @map("is_delete")
   position         Int
   isPublic         Boolean            @default(false) @map("is_public") // 书架的状态
+  review           ReviewStatus       @default(UNREVIEWED) // 审核状态
   cover            String
   description      String?
   books            Book[]
