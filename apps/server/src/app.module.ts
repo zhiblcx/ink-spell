@@ -1,7 +1,6 @@
-import { CacheInterceptor } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import {
   HeaderResolver,
   I18nModule,
@@ -82,7 +81,7 @@ import { UserService } from './modules/user/user.service';
   providers: [
     { provide: APP_PIPE, useClass: I18nValidationPipe },
     { provide: APP_FILTER, useClass: PrismaExceptionFilter },
-    { provide: APP_INTERCEPTOR, useClass: CacheInterceptor },
+    // { provide: APP_INTERCEPTOR, useClass: CacheInterceptor },
     UserService,
   ],
 })
