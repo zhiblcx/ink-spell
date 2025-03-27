@@ -107,5 +107,10 @@
       "2.Report infringement to: nicolezhi@qq.com",
       "3.This system is for academic research only"
     ]
+  },
+  "review_status": {
+    "pending": "pending",
+    "rejected": "reapply",
+    "approved": "approved"
   }
 }

@@ -55,10 +55,8 @@ export default function ChatRoom() {
     socket.connect()
 
     if (socket.connected) {
-      console.log('socket 已连接，立即执行')
       socketConnect()
     } else {
-      console.log('等待 socket 连接')
       socket.once('connect', socketConnect)
     }
 

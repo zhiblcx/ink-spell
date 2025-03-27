@@ -27,7 +27,7 @@ export function OperateBookShelfModal({
     updateBookToBookShelfFlag,
     updateModifyBookShelfFlag
   } = useActionBookStore()
-  const [value, setValue] = useState(true)
+  const [value, setValue] = useState(false)
   const [editBookShelfOpenFlag, setEditBookShelfOpenFlag] = useState(false)
   const [cover, setCover] = useState<UploadFile[]>([])
 

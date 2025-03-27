@@ -16,6 +16,10 @@ export const MY_FAVORITES = {
   label: 'my_favorites'
 }
 
+export const REVIEW_BOOKSHELF = {
+  label: 'review_bookshelf'
+}
+
 export const RECENTLY_READ = {
   label: 'recently_read'
 }

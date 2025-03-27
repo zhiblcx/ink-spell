@@ -20,7 +20,8 @@ export const deleteBookShelfMutation = (deleteId: string, queryClient: () => Pro
 
 export const updateBookShelfPositionMutation = (showMessage: (data: AxiosResponse) => void) =>
   useMutation({
-    mutationFn: (data: BookShelfDao) => httpRequest.put<AxiosResponse>(`bookshelf/${data.id}`, data, { expectData: true }),
+    mutationFn: (data: BookShelfDao) =>
+      httpRequest.put<AxiosResponse>(`bookshelf/${data.id}`, data, { expectData: true }),
     onSuccess: (data: AxiosResponse) => {
       showMessage(data)
     },
@@ -29,7 +30,8 @@ export const updateBookShelfPositionMutation = (showMessage: (data: AxiosRespons
 
 export const updateBookShelfDetailMutation = (queryClient: () => Promise<void>) =>
   useMutation({
-    mutationFn: (bookShelfData: BookShelfType) => httpRequest.put(`/bookshelf/${bookShelfData.id}`, bookShelfData),
+    mutationFn: (bookShelfData: BookShelfType) =>
+      httpRequest.put(`/bookshelf/${bookShelfData.id}`, bookShelfData),
     onSuccess: async (data) => {
       message.success(data.message)
       await queryClient()
@@ -91,7 +93,12 @@ export const collectBookShelfMutation = (queryClient: () => Promise<void>) =>
 
 export const downloadBookShelfNotesMutation = () =>
   useMutation({
-    mutationFn: (bookShelfId: number) => httpRequest.get<AxiosResponse>(`/bookshelf/download/${bookShelfId}`, {}, { expectData: true }),
+    mutationFn: (bookShelfId: number) =>
+      httpRequest.get<AxiosResponse>(
+        `/bookshelf/download/${bookShelfId}`,
+        {},
+        { expectData: true }
+      ),
     onSuccess: (data) => {
       const fileName = data.headers['content-disposition'].split('"')[1]
       const url = window.URL.createObjectURL(new Blob([data.data]))
@@ -102,4 +109,14 @@ export const downloadBookShelfNotesMutation = () =>
       a.click()
       window.URL.revokeObjectURL(url)
     }
+  })
+
+export const applyBookShelfMutation = (queryClient: () => Promise<void>) =>
+  useMutation({
+    mutationFn: (bookShelfId: number) => httpRequest.put(`bookshelf/review/apply/${bookShelfId}`),
+    onSuccess: async (data) => {
+      message.success(data.message)
+      await queryClient()
+    },
+    onError: handleAxiosError
   })

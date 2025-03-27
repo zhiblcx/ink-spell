@@ -111,5 +111,10 @@
       "2.发现侵权内容请联系nicolezhi@qq.com",
       "3.本系统仅用于教学研究，不存储侵权内容副本"
     ]
+  },
+  "review_status": {
+    "pending": "审核中",
+    "rejected": "重新申请",
+    "approved": "已同意"
   }
 }

@@ -51,3 +51,9 @@ export const selectRecommendBookShelfQuery = () =>
     queryKey: [QueryKeysEnum.RECOMMEND_BOOKSHELF_KEY],
     queryFn: () => httpRequest.get('/bookshelf/recommend')
   })
+
+export const showApplyBookShelfQuery = () =>
+  useQuery({
+    queryKey: [QueryKeysEnum.REVIEW_BOOKSHELF_KEY],
+    queryFn: () => httpRequest.get('/bookshelf/review/apply')
+  })

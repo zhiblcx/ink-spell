@@ -3,11 +3,13 @@ import {
   MY_FAVORITES,
   PERSON_INFO,
   RECENTLY_READ,
-  RESET_PASSWORD
+  RESET_PASSWORD,
+  REVIEW_BOOKSHELF
 } from '@/shared/constants'
 import { AuthUtils } from '@/shared/utils'
 import type { MenuProps } from 'antd'
 import { AnnouncementModal, RecentlyRead, SystemFeedback, SystemRate } from './'
+import { ReviewBookshelfModal } from './ReviewBookshelfModal'
 
 interface AvatarItemsType {
   setOpenFlag: React.Dispatch<React.SetStateAction<boolean>>
@@ -18,6 +20,7 @@ export function AvatarItems({ setOpenFlag, avatar }: AvatarItemsType) {
   const navigate = useNavigate()
   const { t } = useTranslation(['AUTH', 'COMMON'])
   const [open, setOpen] = useState(false)
+  const [reviewOpen, setReviewOpen] = useState(false)
   const [rateOpen, setRateOpen] = useState(false)
   const [feedbackOpen, setFeedbackOpen] = useState(false)
   const [announcementOpen, setAnnouncementOpen] = useState(false)
@@ -47,6 +50,14 @@ export function AvatarItems({ setOpenFlag, avatar }: AvatarItemsType) {
       label: (
         <div onClick={() => setOpen(true)}>
           {t('COMMON:profile', { context: RECENTLY_READ.label })}
+        </div>
+      )
+    },
+    {
+      key: REVIEW_BOOKSHELF.label,
+      label: (
+        <div onClick={() => setReviewOpen(true)}>
+          {t('AUTH:profile', { context: REVIEW_BOOKSHELF.label })}
         </div>
       )
     },
@@ -102,6 +113,11 @@ export function AvatarItems({ setOpenFlag, avatar }: AvatarItemsType) {
       <RecentlyRead
         open={open}
         setOpen={setOpen}
+      />
+
+      <ReviewBookshelfModal
+        open={reviewOpen}
+        setOpen={setReviewOpen}
       />
 
       <SystemFeedback
