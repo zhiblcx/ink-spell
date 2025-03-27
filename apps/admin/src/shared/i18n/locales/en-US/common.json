@@ -57,5 +57,10 @@
   "announcement_text": "announcement text",
   "feedback": "feedback",
   "feedback_text": "feedback text",
-  "back_stage_management": "backStage management"
+  "back_stage_management": "backStage management",
+  "reject": "reject",
+  "agree": "agree",
+  "discontinue": "discontinue",
+  "review_bookshelf": "review bookshelf",
+  "detail": "detail"
 }

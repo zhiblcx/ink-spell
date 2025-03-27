@@ -57,5 +57,10 @@
   "announcement_text": "公告内容",
   "feedback": "反馈",
   "feedback_text": "反馈内容",
-  "back_stage_management": "后台管理"
+  "back_stage_management": "后台管理",
+  "reject": "拒绝",
+  "agree": "同意",
+  "discontinue": "下架",
+  "review_bookshelf": "审核书架",
+  "detail": "详情"
 }

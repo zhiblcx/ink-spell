@@ -1,17 +1,29 @@
 <script setup lang="ts">
-import { deleteBookShelfByIdMutation, selectAllBookshelfQuery, selectBookshelfSearchQuery } from '@/features/bookshelf'
+import {
+  deleteBookShelfByIdMutation,
+  operateBookShelfByIdMutation,
+  selectAllBookshelfQuery,
+  selectBookshelfSearchQuery
+} from '@/features/bookshelf'
 import { BookshelfDataVo } from '@/features/bookshelf/types'
 import { TagVo } from '@/features/tag'
-import { DataTablePagination, PopconfirmDelete } from '@/shared/components'
+import {
+  BookshelfIdShowBookModal,
+  DataTablePagination,
+  PopconfirmDelete,
+  ReviewBookshelfModal
+} from '@/shared/components'
 import { DEFAULT_TAG_COLORS, PaginationParams, SERVER_URL } from '@/shared/constants'
 import { LanguageEnum } from '@/shared/enums/LanguageEnum'
 import { useLanguageStore } from '@/shared/store'
+import { ReviewStatus } from '@/shared/types/ReviewStatus'
 import { useTranslation } from 'i18next-vue'
 import { DataTableColumn, NAvatar, NButton, NTag } from 'naive-ui'
 import { InternalRowData } from 'naive-ui/es/data-table/src/interface'
 
 const languageStore = useLanguageStore()
 const { t } = useTranslation(['COMMON', 'VALIDATION'])
+const reviewOpen = ref<boolean>(false)
 const selectOptions = computed(() => [
   { label: t('COMMON:bookshelf_name'), value: 'bookshelfName' },
   { label: t('COMMON:username'), value: 'username' }
@@ -20,6 +32,11 @@ const page = ref(PaginationParams.DEFAULT_PAGE)
 const pageSize = ref(PaginationParams.DEFAULT_PAGESIZE)
 const columns = computed(
   (): Array<DataTableColumn> => [
+    {
+      title: 'id',
+      key: 'id',
+      width: '50px'
+    },
     {
       title: t('COMMON:username'),
       key: 'username'
@@ -41,6 +58,7 @@ const columns = computed(
     {
       title: t('COMMON:tag'),
       key: 'label',
+      width: 240,
       render: bookshelfTag
     },
     {
@@ -58,7 +76,7 @@ const columns = computed(
     {
       title: t('COMMON:actions'),
       key: 'actions',
-      width: '200px',
+      width: '240px',
       render: deleteBookshelf
     }
   ]
@@ -68,8 +86,11 @@ const data = computed(() => processData(allBookshelfData?.value?.data.items))
 const search = ref<string>('')
 const select = ref(selectOptions.value[0].value)
 const searchData = ref<any>([])
+const BookshelfDetailOpen = ref<boolean>(false)
+const selectBookshelfId = ref<number>(0)
 const { data: allBookshelfData, isPending } = selectAllBookshelfQuery(page, pageSize)
 const { mutate: deleteBookshelfMutate } = deleteBookShelfByIdMutation(page.value, pageSize.value)
+const { mutate: operateBookshelfByIdMutate } = operateBookShelfByIdMutation()
 const { data: selectBookshelfSearchData, refetch: selectBookshelfSearchRefetch } = selectBookshelfSearchQuery(
   page,
   pageSize,
@@ -78,10 +99,30 @@ const { data: selectBookshelfSearchData, refetch: selectBookshelfSearchRefetch }
 )
 
 const deleteBookshelf = (bookshelf: InternalRowData) =>
-  h(PopconfirmDelete, {
-    disabled: bookshelf.disabled as boolean,
-    onConfirm: () => deleteBookshelfMutate(bookshelf.id as number)
-  })
+  h('div', { style: { display: 'flex', gap: '5px' } }, [
+    h(
+      NButton,
+      {
+        type: 'info',
+        onClick: () => {
+          selectBookshelfId.value = bookshelf.id as number
+          BookshelfDetailOpen.value = true
+        }
+      },
+      t('COMMON:detail')
+    ),
+    h(PopconfirmDelete, {
+      content: t('COMMON:discontinue'),
+      type: 'warning',
+      disabled: bookshelf.review as boolean,
+      onConfirm: () =>
+        operateBookshelfByIdMutate({ bookShelfId: bookshelf.id as number, review: ReviewStatus.REJECTED })
+    }),
+    h(PopconfirmDelete, {
+      disabled: bookshelf.disabled as boolean,
+      onConfirm: () => deleteBookshelfMutate(bookshelf.id as number)
+    })
+  ])
 
 const bookshelfTag = (bookshelf: InternalRowData, index: number) => {
   return (bookshelf?.tags as TagVo[])?.map((tag: TagVo, i: number) =>
@@ -110,7 +151,8 @@ const processData = (bookshelfs: BookshelfDataVo[]) =>
     bookshelf_details: data.description ?? t('COMMON:not_available'),
     cover: SERVER_URL + data.cover,
     disabled: data.allFlag,
-    tags: data.tags
+    tags: data.tags,
+    review: !(data.review === ReviewStatus.APPROVED)
   }))
 
 const handlerSelect = (value: string) => (select.value = value)
@@ -130,25 +172,34 @@ const handlerSearch = async () => {
     v-if="isPending"
   />
   <div v-else>
-    <n-input-group class="mb-4">
-      <n-select
-        :style="{ width: '120px' }"
-        :options="selectOptions"
-        :placeholder="selectOptions[0].label"
-        @update:value="handlerSelect"
-      />
-      <n-input
-        :style="{ width: '200px' }"
-        :placeholder="t('VALIDATION:search_keywords')"
-        v-model:value="search"
-      />
+    <div class="flex">
+      <n-input-group class="mb-4">
+        <n-select
+          :style="{ width: '120px' }"
+          :options="selectOptions"
+          :placeholder="selectOptions[0].label"
+          @update:value="handlerSelect"
+        />
+        <n-input
+          :style="{ width: '200px' }"
+          :placeholder="t('VALIDATION:search_keywords')"
+          v-model:value="search"
+        />
+        <n-button
+          type="primary"
+          @click="handlerSearch"
+        >
+          {{ t('COMMON:search') }}
+        </n-button>
+      </n-input-group>
+
       <n-button
         type="primary"
-        @click="handlerSearch"
+        @click="reviewOpen = true"
+        >{{ t('COMMON:review_bookshelf') }}</n-button
       >
-        {{ t('COMMON:search') }}
-      </n-button>
-    </n-input-group>
+      <ReviewBookshelfModal v-model="reviewOpen" />
+    </div>
 
     <DataTablePagination
       :columns="columns"
@@ -158,6 +209,11 @@ const handlerSearch = async () => {
       "
       v-model:page="page"
       v-model:page-size="pageSize"
+    />
+
+    <BookshelfIdShowBookModal
+      v-model:bookshelfId="selectBookshelfId"
+      v-model:showModal="BookshelfDetailOpen"
     />
   </div>
 </template>
