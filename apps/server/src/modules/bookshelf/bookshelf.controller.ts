@@ -49,6 +49,116 @@ export class BookshelfController {
     private readonly translation: TranslationService,
   ) {}
 
+  // #region Bookshelf review API
+  @Get('/review/apply')
+  @ApiOperation({ summary: '查看申请公开书架' })
+  @APIResponse(null, '查询成功')
+  async getReviewPublicBookshelf(@Request() req) {
+    return new R({
+      message: this.translation.t('prompt.acquire_successful'),
+      data: await this.bookshelfService.getReviewPublicBookshelf(
+        Number(req.user.userId),
+      ),
+    });
+  }
+  // #endregion
+
+  // #region Bookshelf review API
+  @Put('/review/apply/:bookshelfId')
+  @ApiOperation({ summary: '重新申请公开书架' })
+  @APIResponse(null, '申请成功')
+  async getReviewApplyBookshelf(
+    @Request() req,
+    @Param('bookshelfId', ParseIntPipe) bookshelfId: number,
+  ) {
+    return new R({
+      message: this.translation.t('prompt.update_successful'),
+      data: await this.bookshelfService.putReviewApplyBookshelf(
+        Number(req.user.userId),
+        bookshelfId,
+      ),
+    });
+  }
+  // #endregion
+
+  // #region Bookshelf Info API
+  @Roles(Role.Admin)
+  @Get('/all/info')
+  @ApiOperation({ summary: '获取所有书架信息' })
+  @ApiQuery(usernameQuery)
+  @ApiQuery(bookshelfNameQuery)
+  @ApiQuery(pageQuery)
+  @ApiQuery(limitQuery)
+  @APIResponse([AllBookShelfInfoVo], '查询成功', true)
+  async getAllBookInfo(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
+    @Query('username') username?: string,
+    @Query('bookshelfName') bookshelfName?: string,
+  ) {
+    return new R({
+      message: this.translation.t('prompt.acquire_successful'),
+      data: new E({
+        items: await this.bookshelfService.getAllBookInfo(
+          page,
+          limit,
+          username,
+          bookshelfName,
+        ),
+        totalPages: await this.bookshelfService.getAllBookInfoCount(
+          limit,
+          username,
+          bookshelfName,
+        ),
+        currentPage: page,
+        itemsPerPage: limit,
+      }),
+    });
+  }
+  // #endregion
+
+  // #region Bookshelf review API
+  @Roles(Role.Admin)
+  @Get('/review')
+  @ApiOperation({ summary: '查看审核书架' })
+  @ApiQuery(pageQuery)
+  @ApiQuery(limitQuery)
+  @APIResponse([AllBookShelfInfoVo], '查询成功', true)
+  async getReviewBookshelf(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
+  ) {
+    return new R({
+      message: this.translation.t('prompt.acquire_successful'),
+      data: new E({
+        items: await this.bookshelfService.getReviewBookshelf(page, limit),
+        totalPages: await this.bookshelfService.getReviewBookshelfCount(limit),
+        currentPage: page,
+        itemsPerPage: limit,
+      }),
+    });
+  }
+  // #endregion
+
+  // #region Bookshelf review API
+  @Roles(Role.Admin)
+  @Put('/review/:bookShelfId')
+  @ApiOperation({ summary: '审核公开书架' })
+  @APIResponse(null, '更改成功')
+  async updateReviewBookshelf(
+    @Param('bookShelfId', ParseIntPipe) bookShelfId: number,
+    @Body('review') review: ReviewStatus,
+  ) {
+    return new R({
+      message: this.translation.t('prompt.update_successful'),
+      data: await this.bookshelfService.updateReviewBookshelf(
+        bookShelfId,
+        review,
+      ),
+    });
+  }
+  // #endregion
+
   @Post()
   @ApiOperation({ summary: '新增书架' })
   @HttpCode(HttpStatus.OK)
@@ -182,16 +292,40 @@ export class BookshelfController {
   @Get(':bookShelfId')
   @ApiOperation({ summary: '查询书架书本' })
   @HttpCode(HttpStatus.OK)
+  @ApiQuery({ ...pageQuery, required: false })
+  @ApiQuery({ ...limitQuery, required: false })
   @APIResponse(BookShelfInfoVo, '获取成功')
   async acquireBookShelfByBookShelfId(
-    @Param('bookShelfId') bookShelfId: number,
+    @Param('bookShelfId', ParseIntPipe) bookShelfId: number,
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
   ) {
-    return new R({
-      message: this.translation.t('prompt.acquire_successful'),
-      data: await this.bookshelfService.acquireBookShelfByBookShelfId(
-        bookShelfId,
-      ),
-    });
+    if (page === undefined || limit === undefined) {
+      return new R({
+        message: this.translation.t('prompt.acquire_successful'),
+        data: await this.bookshelfService.acquireBookShelfByBookShelfId(
+          bookShelfId,
+        ),
+      });
+    } else {
+      return new R({
+        message: this.translation.t('prompt.acquire_successful'),
+        data: new E({
+          items: await this.bookshelfService.acquireBookShelfByBookShelfIdPage(
+            bookShelfId,
+            Number(page),
+            Number(limit),
+          ),
+          currentPage: Number(page),
+          itemsPerPage: Number(limit),
+          totalPages:
+            await this.bookshelfService.acquireBookShelfByBookShelfITotalPages(
+              bookShelfId,
+              Number(limit),
+            ),
+        }),
+      });
+    }
   }
   // #endregion
 
@@ -209,117 +343,6 @@ export class BookshelfController {
       data: await this.bookshelfService.updateBookShelf(
         bookShelfId,
         updateBookshelfDto,
-      ),
-    });
-  }
-  // #endregion
-
-  // #region Bookshelf Info API
-  @Roles(Role.Admin)
-  @Get('/all/info')
-  @ApiOperation({ summary: '获取所有书架信息' })
-  @ApiQuery(usernameQuery)
-  @ApiQuery(bookshelfNameQuery)
-  @ApiQuery(pageQuery)
-  @ApiQuery(limitQuery)
-  @APIResponse([AllBookShelfInfoVo], '查询成功', true)
-  async getAllBookInfo(
-    @Query('page', ParseIntPipe) page: number,
-    @Query('limit', ParseIntPipe) limit: number,
-    @Query('username') username?: string,
-    @Query('bookshelfName') bookshelfName?: string,
-  ) {
-    return new R({
-      message: this.translation.t('prompt.acquire_successful'),
-      data: new E({
-        items: await this.bookshelfService.getAllBookInfo(
-          page,
-          limit,
-          username,
-          bookshelfName,
-        ),
-        totalPages: await this.bookshelfService.getAllBookInfoCount(
-          limit,
-          username,
-          bookshelfName,
-        ),
-        currentPage: page,
-        itemsPerPage: limit,
-      }),
-    });
-  }
-  // #endregion
-
-  // #region Bookshelf review API
-  @Get('/review/reject/bookshelf')
-  @ApiOperation({ summary: '查看被拒绝公开书架' })
-  @APIResponse(null, '查询成功')
-  async getReviewPublicBookshelf(@Request() req) {
-    return new R({
-      message: this.translation.t('prompt.acquire_successful'),
-      data: await this.bookshelfService.getReviewPublicBookshelf(
-        Number(req.user.userId),
-      ),
-    });
-  }
-  // #endregion
-
-  // #region Bookshelf review API
-  @Put('/review/apply/bookshelf/:bookshelfId')
-  @ApiOperation({ summary: '重新申请公开书架' })
-  @APIResponse(null, '申请成功')
-  async getReviewApplyBookshelf(
-    @Request() req,
-    @Param('bookShelfId', ParseIntPipe) bookShelfId: number,
-  ) {
-    return new R({
-      message: this.translation.t('prompt.update_successful'),
-      data: await this.bookshelfService.putReviewApplyBookshelf(
-        Number(req.user.userId),
-        bookShelfId,
-      ),
-    });
-  }
-  // #endregion
-
-  // #region Bookshelf review API
-  @Roles(Role.Admin)
-  @Get('/review/bookshelf')
-  @ApiOperation({ summary: '查看审核书架' })
-  @ApiQuery(pageQuery)
-  @ApiQuery(limitQuery)
-  @APIResponse([AllBookShelfInfoVo], '查询成功', true)
-  async getReviewBookshelf(
-    @Query('page', ParseIntPipe) page: number,
-    @Query('limit', ParseIntPipe) limit: number,
-  ) {
-    return new R({
-      message: this.translation.t('prompt.acquire_successful'),
-      data: new E({
-        items: await this.bookshelfService.getReviewBookshelf(page, limit),
-        totalPages: await this.bookshelfService.getReviewBookshelfCount(limit),
-        currentPage: page,
-        itemsPerPage: limit,
-      }),
-    });
-  }
-  // #endregion
-
-  // #region Bookshelf review API
-  @Roles(Role.Admin)
-  @Put('/review/bookshelf/:bookShelfId')
-  @ApiOperation({ summary: '审核公开书架' })
-  @APIResponse(null, '更改成功')
-  async updateReviewBookshelf(
-    @Param('bookShelfId', ParseIntPipe) bookShelfId: number,
-    @Body()
-    review: ReviewStatus,
-  ) {
-    return new R({
-      message: this.translation.t('prompt.update_successful'),
-      data: await this.bookshelfService.updateReviewBookshelf(
-        bookShelfId,
-        review,
       ),
     });
   }

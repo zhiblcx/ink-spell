@@ -92,6 +92,42 @@ export class BookshelfService {
     });
   }
 
+  async acquireBookShelfByBookShelfIdPage(bookShelfId, page, limit) {
+    return await this.prisma.book.findMany({
+      where: { bookShelfId: parseInt(bookShelfId), isDelete: false },
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+            account: true,
+            email: true,
+            avatar: true,
+          },
+        },
+        bookShelf: {
+          select: {
+            id: true,
+            label: true,
+            cover: true,
+            description: true,
+            isPublic: true,
+          },
+        },
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+  }
+
+  async acquireBookShelfByBookShelfITotalPages(bookShelfId, limit) {
+    return Math.ceil(
+      (await this.prisma.book.count({
+        where: { bookShelfId: parseInt(bookShelfId), isDelete: false },
+      })) / limit,
+    );
+  }
+
   async updateBookShelf(bookShelfId, updateBookshelfDto) {
     const tags = [];
     for (let i = 0; i < updateBookshelfDto.tags?.length; i++) {
@@ -312,6 +348,13 @@ export class BookshelfService {
         isPublic: true,
         review: 'PENDING',
       },
+      include: {
+        tags: {
+          where: {
+            isDelete: false,
+          },
+        },
+      },
       skip: (page - 1) * limit,
       take: limit,
     });
@@ -342,13 +385,8 @@ export class BookshelfService {
 
   async putReviewApplyBookshelf(userId: number, bookshelfId: number) {
     return await this.prisma.bookShelf.update({
-      where: {
-        id: bookshelfId,
-      },
-      data: {
-        review: 'PENDING',
-        userId: userId,
-      },
+      where: { id: bookshelfId },
+      data: { review: 'PENDING', userId: userId },
     });
   }
 
@@ -358,6 +396,7 @@ export class BookshelfService {
       where: {
         userId: userId,
         review: 'REJECTED',
+        isDelete: false,
       },
     });
 
@@ -366,6 +405,7 @@ export class BookshelfService {
       where: {
         userId: userId,
         review: 'PENDING',
+        isDelete: false,
       },
     });
 
@@ -374,6 +414,7 @@ export class BookshelfService {
       where: {
         userId: userId,
         review: 'APPROVED',
+        isDelete: false,
       },
     });
 
